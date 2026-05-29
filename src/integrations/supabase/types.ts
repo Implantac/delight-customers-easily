@@ -153,6 +153,54 @@ export type Database = {
         }
         Relationships: []
       }
+      automations: {
+        Row: {
+          action_config: Json
+          action_type: string
+          conditions: Json
+          created_at: string
+          created_by: string
+          enabled: boolean
+          id: string
+          last_run_at: string | null
+          name: string
+          organization_id: string
+          run_count: number
+          trigger_event: string
+          updated_at: string
+        }
+        Insert: {
+          action_config?: Json
+          action_type: string
+          conditions?: Json
+          created_at?: string
+          created_by: string
+          enabled?: boolean
+          id?: string
+          last_run_at?: string | null
+          name: string
+          organization_id: string
+          run_count?: number
+          trigger_event: string
+          updated_at?: string
+        }
+        Update: {
+          action_config?: Json
+          action_type?: string
+          conditions?: Json
+          created_at?: string
+          created_by?: string
+          enabled?: boolean
+          id?: string
+          last_run_at?: string | null
+          name?: string
+          organization_id?: string
+          run_count?: number
+          trigger_event?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       companies: {
         Row: {
           created_at: string
