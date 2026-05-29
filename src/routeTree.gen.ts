@@ -23,6 +23,7 @@ import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppContactsRouteImport } from './routes/_app.contacts'
 import { Route as AppCompaniesRouteImport } from './routes/_app.companies'
 import { Route as AppCommandRouteImport } from './routes/_app.command'
+import { Route as AppChatRouteImport } from './routes/_app.chat'
 import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
 import { Route as AppActivitiesRouteImport } from './routes/_app.activities'
 import { Route as ApiPublicInboundEmailRouteImport } from './routes/api/public/inbound-email'
@@ -106,6 +107,11 @@ const AppCommandRoute = AppCommandRouteImport.update({
   path: '/command',
   getParentRoute: () => AppRoute,
 } as any)
+const AppChatRoute = AppChatRouteImport.update({
+  id: '/chat',
+  path: '/chat',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppAlertsRoute = AppAlertsRouteImport.update({
   id: '/alerts',
   path: '/alerts',
@@ -179,6 +185,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/activities': typeof AppActivitiesRoute
   '/alerts': typeof AppAlertsRoute
+  '/chat': typeof AppChatRoute
   '/command': typeof AppCommandRoute
   '/companies': typeof AppCompaniesRouteWithChildren
   '/contacts': typeof AppContactsRouteWithChildren
@@ -207,6 +214,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/activities': typeof AppActivitiesRoute
   '/alerts': typeof AppAlertsRoute
+  '/chat': typeof AppChatRoute
   '/command': typeof AppCommandRoute
   '/companies': typeof AppCompaniesRouteWithChildren
   '/contacts': typeof AppContactsRouteWithChildren
@@ -237,6 +245,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/_app/activities': typeof AppActivitiesRoute
   '/_app/alerts': typeof AppAlertsRoute
+  '/_app/chat': typeof AppChatRoute
   '/_app/command': typeof AppCommandRoute
   '/_app/companies': typeof AppCompaniesRouteWithChildren
   '/_app/contacts': typeof AppContactsRouteWithChildren
@@ -267,6 +276,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/activities'
     | '/alerts'
+    | '/chat'
     | '/command'
     | '/companies'
     | '/contacts'
@@ -295,6 +305,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/activities'
     | '/alerts'
+    | '/chat'
     | '/command'
     | '/companies'
     | '/contacts'
@@ -324,6 +335,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/_app/activities'
     | '/_app/alerts'
+    | '/_app/chat'
     | '/_app/command'
     | '/_app/companies'
     | '/_app/contacts'
@@ -457,6 +469,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCommandRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/chat': {
+      id: '/_app/chat'
+      path: '/chat'
+      fullPath: '/chat'
+      preLoaderRoute: typeof AppChatRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/alerts': {
       id: '/_app/alerts'
       path: '/alerts'
@@ -578,6 +597,7 @@ const AppContactsRouteWithChildren = AppContactsRoute._addFileChildren(
 interface AppRouteChildren {
   AppActivitiesRoute: typeof AppActivitiesRoute
   AppAlertsRoute: typeof AppAlertsRoute
+  AppChatRoute: typeof AppChatRoute
   AppCommandRoute: typeof AppCommandRoute
   AppCompaniesRoute: typeof AppCompaniesRouteWithChildren
   AppContactsRoute: typeof AppContactsRouteWithChildren
@@ -600,6 +620,7 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppActivitiesRoute: AppActivitiesRoute,
   AppAlertsRoute: AppAlertsRoute,
+  AppChatRoute: AppChatRoute,
   AppCommandRoute: AppCommandRoute,
   AppCompaniesRoute: AppCompaniesRouteWithChildren,
   AppContactsRoute: AppContactsRouteWithChildren,
@@ -632,3 +653,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
