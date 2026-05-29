@@ -155,9 +155,11 @@ function CompaniesPage() {
                   <Link to="/companies/$id" params={{ id: c.id }} className="block truncate font-semibold hover:underline">{c.name}</Link>
                   {c.industry && <p className="text-xs text-muted-foreground">{c.industry}{c.size ? ` · ${c.size}` : ""}</p>}
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => { if (confirm("Remover empresa?")) del.mutate(c.id); }}>
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+                {canDelete && (
+                  <Button variant="ghost" size="sm" onClick={() => { if (confirm("Remover empresa?")) del.mutate(c.id); }}>
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                )}
               </div>
               {c.website && (
                 <a href={c.website} target="_blank" rel="noreferrer" className="mt-3 flex items-center gap-1.5 text-xs text-primary hover:underline">
