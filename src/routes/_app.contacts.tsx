@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import { contactSchema, fromForm } from "@/lib/validation";
 import { ContactDuplicateWarning } from "@/components/duplicate-warning";
 import { toCSV, downloadCSV } from "@/lib/csv-export";
+import { SavedViews } from "@/components/saved-views";
 
 export const Route = createFileRoute("/_app/contacts")({ component: ContactsPage });
 
@@ -130,9 +131,16 @@ function ContactsPage() {
         }
       />
 
-      <div className="mt-6 mb-4 relative max-w-sm">
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-        <Input placeholder="Buscar contatos…" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
+      <div className="mt-6 mb-4 flex items-center gap-2">
+        <div className="relative flex-1 max-w-sm">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input placeholder="Buscar contatos…" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
+        </div>
+        <SavedViews
+          entity="contacts"
+          currentFilters={{ search }}
+          onApply={(f: Record<string, unknown>) => setSearch((f.search as string) ?? "")}
+        />
       </div>
 
       {selected.size > 0 && (
