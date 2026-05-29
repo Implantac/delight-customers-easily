@@ -114,11 +114,11 @@ function OrgSettings() {
   };
 
   if (loading) {
-    return <div className="p-8 space-y-4"><Skeleton className="h-8 w-48" /><Skeleton className="h-32 w-full" /></div>;
+    return <div className="p-4 md:p-8 space-y-4"><Skeleton className="h-8 w-48" /><Skeleton className="h-32 w-full" /></div>;
   }
 
   return (
-    <div className="p-8 max-w-3xl">
+    <div className="p-4 md:p-8 max-w-3xl">
       <PageHeader title="Organização" subtitle={`Você é ${role === "owner" ? "owner" : role === "admin" ? "admin" : "membro"}`} />
 
       <Card className="mt-6 p-6">

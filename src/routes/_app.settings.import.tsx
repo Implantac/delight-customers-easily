@@ -39,7 +39,7 @@ function ImportPage() {
   const [kind, setKind] = useState<Kind>("contacts");
 
   return (
-    <div className="p-8 max-w-4xl">
+    <div className="p-4 md:p-8 max-w-4xl">
       <PageHeader title="Importar CSV" subtitle="Carregue um arquivo CSV e mapeie as colunas para os campos do CRM." />
       <Tabs value={kind} onValueChange={(v) => setKind(v as Kind)} className="mt-6">
         <TabsList>
