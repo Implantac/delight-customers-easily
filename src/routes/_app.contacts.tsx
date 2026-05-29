@@ -25,7 +25,8 @@ export const Route = createFileRoute("/_app/contacts")({ component: ContactsPage
 
 function ContactsPage() {
   const { user } = useAuth();
-  const { orgId } = useCurrentOrg();
+  const { orgId, role } = useCurrentOrg();
+  const canDelete = role === "owner" || role === "admin";
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -146,9 +147,11 @@ function ContactsPage() {
               ] as any);
               downloadCSV(`contatos-selecionados-${new Date().toISOString().slice(0,10)}.csv`, csv);
             }}><Download className="mr-2 h-4 w-4" />Exportar</Button>
-            <Button variant="destructive" size="sm" disabled={bulkDel.isPending} onClick={() => {
-              if (confirm(`Remover ${selected.size} contato(s)?`)) bulkDel.mutate(Array.from(selected));
-            }}><Trash2 className="mr-2 h-4 w-4" />Remover</Button>
+            {canDelete && (
+              <Button variant="destructive" size="sm" disabled={bulkDel.isPending} onClick={() => {
+                if (confirm(`Remover ${selected.size} contato(s)?`)) bulkDel.mutate(Array.from(selected));
+              }}><Trash2 className="mr-2 h-4 w-4" />Remover</Button>
+            )}
             <Button variant="ghost" size="sm" onClick={() => setSelected(new Set())}><X className="h-4 w-4" /></Button>
           </div>
         </div>
@@ -205,9 +208,11 @@ function ContactsPage() {
                     </div>
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <Button variant="ghost" size="sm" onClick={() => { if (confirm("Remover contato?")) del.mutate(c.id); }}>
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    {canDelete && (
+                      <Button variant="ghost" size="sm" onClick={() => { if (confirm("Remover contato?")) del.mutate(c.id); }}>
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
                   </td>
                 </tr>
               ))}

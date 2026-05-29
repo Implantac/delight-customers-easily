@@ -24,7 +24,8 @@ export const Route = createFileRoute("/_app/companies")({ component: CompaniesPa
 
 function CompaniesPage() {
   const { user } = useAuth();
-  const { orgId } = useCurrentOrg();
+  const { orgId, role } = useCurrentOrg();
+  const canDelete = role === "owner" || role === "admin";
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
   const [dupName, setDupName] = useState("");
@@ -117,9 +118,11 @@ function CompaniesPage() {
               ] as any);
               downloadCSV(`empresas-selecionadas-${new Date().toISOString().slice(0,10)}.csv`, csv);
             }}><Download className="mr-2 h-4 w-4" />Exportar</Button>
-            <Button variant="destructive" size="sm" disabled={bulkDel.isPending} onClick={() => {
-              if (confirm(`Remover ${selected.size} empresa(s)?`)) bulkDel.mutate(Array.from(selected));
-            }}><Trash2 className="mr-2 h-4 w-4" />Remover</Button>
+            {canDelete && (
+              <Button variant="destructive" size="sm" disabled={bulkDel.isPending} onClick={() => {
+                if (confirm(`Remover ${selected.size} empresa(s)?`)) bulkDel.mutate(Array.from(selected));
+              }}><Trash2 className="mr-2 h-4 w-4" />Remover</Button>
+            )}
             <Button variant="ghost" size="sm" onClick={() => setSelected(new Set())}><X className="h-4 w-4" /></Button>
           </div>
         </div>
@@ -152,9 +155,11 @@ function CompaniesPage() {
                   <Link to="/companies/$id" params={{ id: c.id }} className="block truncate font-semibold hover:underline">{c.name}</Link>
                   {c.industry && <p className="text-xs text-muted-foreground">{c.industry}{c.size ? ` · ${c.size}` : ""}</p>}
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => { if (confirm("Remover empresa?")) del.mutate(c.id); }}>
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+                {canDelete && (
+                  <Button variant="ghost" size="sm" onClick={() => { if (confirm("Remover empresa?")) del.mutate(c.id); }}>
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                )}
               </div>
               {c.website && (
                 <a href={c.website} target="_blank" rel="noreferrer" className="mt-3 flex items-center gap-1.5 text-xs text-primary hover:underline">
