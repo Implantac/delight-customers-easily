@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import { contactSchema, fromForm } from "@/lib/validation";
 import { ContactDuplicateWarning } from "@/components/duplicate-warning";
 import { toCSV, downloadCSV } from "@/lib/csv-export";
+import { SavedViews } from "@/components/saved-views";
 
 export const Route = createFileRoute("/_app/contacts")({ component: ContactsPage });
 
@@ -138,7 +139,7 @@ function ContactsPage() {
         <SavedViews
           entity="contacts"
           currentFilters={{ search }}
-          onApply={(f) => setSearch((f.search as string) ?? "")}
+          onApply={(f: Record<string, unknown>) => setSearch((f.search as string) ?? "")}
         />
       </div>
 
