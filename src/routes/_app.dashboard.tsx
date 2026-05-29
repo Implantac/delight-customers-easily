@@ -24,7 +24,7 @@ function DashboardPage() {
         supabase.from("contacts").select("id", { count: "exact", head: true }),
         supabase.from("companies").select("id", { count: "exact", head: true }),
         supabase.from("deals").select("id, value, stage"),
-        supabase.from("activities").select("id, title, due_date, completed, type").eq("completed", false).order("due_date", { ascending: true, nullsFirst: false }).limit(5),
+        supabase.from("activities").select("id, title, due_date, completed, type").eq("completed", false).order("due_date", { ascending: true, nullsFirst: false }).limit(8),
         supabase.from("activities").select("created_at, completed").gte("created_at", sinceISO),
       ]);
       return {
@@ -143,19 +143,37 @@ function DashboardPage() {
           {(data?.upcoming ?? []).length === 0 && (
             <p className="text-sm text-muted-foreground">Nenhuma atividade pendente.</p>
           )}
-          {(data?.upcoming ?? []).map((a) => (
-            <div key={a.id} className="flex items-start gap-3 rounded-md border p-3">
-              <div className="mt-0.5 flex h-7 w-7 items-center justify-center rounded-md bg-accent text-accent-foreground">
-                <Building2 className="h-3.5 w-3.5" />
+          {(data?.upcoming ?? []).map((a) => {
+            const due = a.due_date ? new Date(a.due_date) : null;
+            const now = new Date();
+            const startOfToday = new Date(now); startOfToday.setHours(0, 0, 0, 0);
+            const startOfTomorrow = new Date(startOfToday); startOfTomorrow.setDate(startOfTomorrow.getDate() + 1);
+            const overdue = due && due < startOfToday;
+            const today = due && due >= startOfToday && due < startOfTomorrow;
+            const badge = overdue
+              ? { label: "Atrasada", cls: "bg-destructive/15 text-destructive" }
+              : today
+                ? { label: "Hoje", cls: "bg-warning/20 text-warning" }
+                : null;
+            return (
+              <div key={a.id} className="flex items-start gap-3 rounded-md border p-3">
+                <div className="mt-0.5 flex h-7 w-7 items-center justify-center rounded-md bg-accent text-accent-foreground">
+                  <Building2 className="h-3.5 w-3.5" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <p className="truncate text-sm font-medium">{a.title}</p>
+                    {badge && (
+                      <span className={`shrink-0 rounded px-1.5 py-0.5 text-[10px] font-medium ${badge.cls}`}>{badge.label}</span>
+                    )}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {a.type} {due ? `· ${due.toLocaleString("pt-BR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}` : ""}
+                  </p>
+                </div>
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="truncate text-sm font-medium">{a.title}</p>
-                <p className="text-xs text-muted-foreground">
-                  {a.type} {a.due_date ? `· ${new Date(a.due_date).toLocaleDateString("pt-BR")}` : ""}
-                </p>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </Card>
     </div>
