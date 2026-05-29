@@ -15,7 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "@/components/page-header";
 import { EmptyState } from "@/components/empty-state";
-import { Plus, Trash2, Phone, Mail, Users, FileText, CheckSquare, CalendarPlus } from "lucide-react";
+import { Plus, Trash2, Phone, Mail, Users, FileText, CheckSquare, CalendarPlus, List, CalendarDays } from "lucide-react";
 import { toast } from "sonner";
 import { activitySchema, fromForm } from "@/lib/validation";
 import { downloadICS } from "@/lib/ics";
