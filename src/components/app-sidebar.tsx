@@ -23,6 +23,9 @@ const nav = [
   { to: "/activities", label: "Atividades", icon: CheckSquare, shortcut: "G A", managerOnly: false },
   { to: "/alerts", label: "Alertas", icon: AlertTriangle, shortcut: "G L", managerOnly: false },
   { to: "/forecast", label: "Previsão", icon: Target, shortcut: "G F", managerOnly: false },
+  { to: "/retention", label: "Retenção", icon: HeartPulse, shortcut: "", managerOnly: false },
+  { to: "/finance", label: "Financeiro", icon: DollarSign, shortcut: "", managerOnly: false },
+  { to: "/opportunity-map", label: "Mapa de Oportunidades", icon: Map, shortcut: "", managerOnly: false },
   { to: "/reports", label: "Relatórios", icon: BarChart3, shortcut: "G R", managerOnly: true },
 ] as const;
 
