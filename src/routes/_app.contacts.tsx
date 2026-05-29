@@ -32,6 +32,7 @@ function ContactsPage() {
   const [dupName, setDupName] = useState("");
   const [dupEmail, setDupEmail] = useState("");
   const [dupPhone, setDupPhone] = useState("");
+  const [selected, setSelected] = useState<Set<string>>(new Set());
 
   const { data: contacts, isLoading } = useQuery({
     queryKey: ["contacts"],
