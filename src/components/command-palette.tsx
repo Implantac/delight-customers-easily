@@ -6,10 +6,9 @@ import {
   CommandDialog, CommandEmpty, CommandGroup, CommandInput,
   CommandItem, CommandList, CommandSeparator, CommandShortcut,
 } from "@/components/ui/command";
-import { LayoutDashboard, KanbanSquare, Users, Building2, CheckSquare, Plus, Moon, Sun } from "lucide-react";
+import { LayoutDashboard, KanbanSquare, Users, Building2, CheckSquare, Plus, Moon, Sun, Search, Upload } from "lucide-react";
 import { useTheme } from "@/lib/theme";
 import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
 
 type SearchHit =
   | { kind: "contact"; id: string; label: string; sub?: string | null }
@@ -51,7 +50,7 @@ export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenCh
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onOpenChange]);
 
-  const { data: hits } = useQuery({
+  const { data: hits, isFetching } = useQuery({
     queryKey: ["palette-search", query],
     enabled: open && query.trim().length >= 2,
     queryFn: async (): Promise<SearchHit[]> => {
@@ -59,35 +58,45 @@ export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenCh
       const [contacts, companies, deals] = await Promise.all([
         supabase.from("contacts").select("id, name, email").ilike("name", q).limit(5),
         supabase.from("companies").select("id, name, industry").ilike("name", q).limit(5),
-        supabase.from("deals").select("id, title, value").ilike("title", q).limit(5),
+        supabase.from("deals").select("id, title, stage").ilike("title", q).limit(5),
       ]);
       return [
         ...(contacts.data ?? []).map((c) => ({ kind: "contact" as const, id: c.id, label: c.name, sub: c.email })),
         ...(companies.data ?? []).map((c) => ({ kind: "company" as const, id: c.id, label: c.name, sub: c.industry })),
-        ...(deals.data ?? []).map((d) => ({ kind: "deal" as const, id: d.id, label: d.title, sub: null })),
+        ...(deals.data ?? []).map((d) => ({ kind: "deal" as const, id: d.id, label: d.title, sub: d.stage })),
       ];
     },
   });
 
-  const go = (to: string) => { onOpenChange(false); setQuery(""); navigate({ to }); };
+  const close = () => { onOpenChange(false); setQuery(""); };
+  const goContact = (id: string) => { close(); navigate({ to: "/contacts/$id", params: { id } }); };
+  const goCompany = (id: string) => { close(); navigate({ to: "/companies/$id", params: { id } }); };
+  const goPath = (to: "/dashboard" | "/pipeline" | "/contacts" | "/companies" | "/activities" | "/settings/organization" | "/settings/import") => { close(); navigate({ to }); };
 
   return (
     <CommandDialog open={open} onOpenChange={onOpenChange}>
       <CommandInput placeholder="Busque contatos, empresas, negócios ou execute um comando…" value={query} onValueChange={setQuery} />
       <CommandList>
-        <CommandEmpty>Nenhum resultado.</CommandEmpty>
+        <CommandEmpty>{isFetching ? "Buscando…" : "Nenhum resultado."}</CommandEmpty>
 
         {hits && hits.length > 0 && (
           <>
             <CommandGroup heading="Resultados">
               {hits.map((h) => {
                 const Icon = h.kind === "contact" ? Users : h.kind === "company" ? Building2 : KanbanSquare;
-                const to = h.kind === "contact" ? "/contacts" : h.kind === "company" ? "/companies" : "/pipeline";
                 return (
-                  <CommandItem key={`${h.kind}-${h.id}`} onSelect={() => go(to)}>
+                  <CommandItem
+                    key={`${h.kind}-${h.id}`}
+                    value={`${h.kind}-${h.label}-${h.id}`}
+                    onSelect={() => {
+                      if (h.kind === "contact") goContact(h.id);
+                      else if (h.kind === "company") goCompany(h.id);
+                      else goPath("/pipeline");
+                    }}
+                  >
                     <Icon className="mr-2 h-4 w-4" />
-                    <span>{h.label}</span>
-                    {h.sub && <span className="ml-2 text-xs text-muted-foreground">{h.sub}</span>}
+                    <span className="truncate">{h.label}</span>
+                    {h.sub && <span className="ml-2 truncate text-xs text-muted-foreground">{h.sub}</span>}
                   </CommandItem>
                 );
               })}
@@ -97,27 +106,28 @@ export function CommandPalette({ open, onOpenChange }: { open: boolean; onOpenCh
         )}
 
         <CommandGroup heading="Navegação">
-          <CommandItem onSelect={() => go("/dashboard")}><LayoutDashboard className="mr-2 h-4 w-4" />Dashboard<CommandShortcut>G D</CommandShortcut></CommandItem>
-          <CommandItem onSelect={() => go("/pipeline")}><KanbanSquare className="mr-2 h-4 w-4" />Pipeline<CommandShortcut>G P</CommandShortcut></CommandItem>
-          <CommandItem onSelect={() => go("/contacts")}><Users className="mr-2 h-4 w-4" />Contatos<CommandShortcut>G C</CommandShortcut></CommandItem>
-          <CommandItem onSelect={() => go("/companies")}><Building2 className="mr-2 h-4 w-4" />Empresas<CommandShortcut>G E</CommandShortcut></CommandItem>
-          <CommandItem onSelect={() => go("/activities")}><CheckSquare className="mr-2 h-4 w-4" />Atividades<CommandShortcut>G A</CommandShortcut></CommandItem>
+          <CommandItem onSelect={() => goPath("/dashboard")}><LayoutDashboard className="mr-2 h-4 w-4" />Dashboard<CommandShortcut>G D</CommandShortcut></CommandItem>
+          <CommandItem onSelect={() => goPath("/pipeline")}><KanbanSquare className="mr-2 h-4 w-4" />Pipeline<CommandShortcut>G P</CommandShortcut></CommandItem>
+          <CommandItem onSelect={() => goPath("/contacts")}><Users className="mr-2 h-4 w-4" />Contatos<CommandShortcut>G C</CommandShortcut></CommandItem>
+          <CommandItem onSelect={() => goPath("/companies")}><Building2 className="mr-2 h-4 w-4" />Empresas<CommandShortcut>G E</CommandShortcut></CommandItem>
+          <CommandItem onSelect={() => goPath("/activities")}><CheckSquare className="mr-2 h-4 w-4" />Atividades<CommandShortcut>G A</CommandShortcut></CommandItem>
         </CommandGroup>
 
         <CommandSeparator />
 
-        <CommandGroup heading="Ações rápidas">
-          <CommandItem onSelect={() => go("/contacts")}><Plus className="mr-2 h-4 w-4" />Novo contato</CommandItem>
-          <CommandItem onSelect={() => go("/companies")}><Plus className="mr-2 h-4 w-4" />Nova empresa</CommandItem>
-          <CommandItem onSelect={() => go("/pipeline")}><Plus className="mr-2 h-4 w-4" />Novo negócio</CommandItem>
-          <CommandItem onSelect={() => go("/activities")}><Plus className="mr-2 h-4 w-4" />Nova atividade</CommandItem>
+        <CommandGroup heading="Ações">
+          <CommandItem onSelect={() => goPath("/settings/import")}><Upload className="mr-2 h-4 w-4" />Importar CSV</CommandItem>
+          <CommandItem onSelect={() => goPath("/contacts")}><Plus className="mr-2 h-4 w-4" />Novo contato</CommandItem>
+          <CommandItem onSelect={() => goPath("/companies")}><Plus className="mr-2 h-4 w-4" />Nova empresa</CommandItem>
+          <CommandItem onSelect={() => goPath("/pipeline")}><Plus className="mr-2 h-4 w-4" />Novo negócio</CommandItem>
+          <CommandItem onSelect={() => goPath("/activities")}><Plus className="mr-2 h-4 w-4" />Nova atividade</CommandItem>
         </CommandGroup>
 
         <CommandSeparator />
 
         <CommandGroup heading="Tema">
-          <CommandItem onSelect={() => { setTheme("light"); onOpenChange(false); }}><Sun className="mr-2 h-4 w-4" />Tema claro</CommandItem>
-          <CommandItem onSelect={() => { setTheme("dark"); onOpenChange(false); }}><Moon className="mr-2 h-4 w-4" />Tema escuro</CommandItem>
+          <CommandItem onSelect={() => { setTheme("light"); close(); }}><Sun className="mr-2 h-4 w-4" />Tema claro</CommandItem>
+          <CommandItem onSelect={() => { setTheme("dark"); close(); }}><Moon className="mr-2 h-4 w-4" />Tema escuro</CommandItem>
         </CommandGroup>
       </CommandList>
     </CommandDialog>

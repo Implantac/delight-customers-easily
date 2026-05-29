@@ -18,6 +18,7 @@ import { Route as AppContactsRouteImport } from './routes/_app.contacts'
 import { Route as AppCompaniesRouteImport } from './routes/_app.companies'
 import { Route as AppActivitiesRouteImport } from './routes/_app.activities'
 import { Route as AppSettingsOrganizationRouteImport } from './routes/_app.settings.organization'
+import { Route as AppSettingsImportRouteImport } from './routes/_app.settings.import'
 import { Route as AppInviteTokenRouteImport } from './routes/_app.invite.$token'
 import { Route as AppContactsIdRouteImport } from './routes/_app.contacts.$id'
 import { Route as AppCompaniesIdRouteImport } from './routes/_app.companies.$id'
@@ -66,6 +67,11 @@ const AppSettingsOrganizationRoute = AppSettingsOrganizationRouteImport.update({
   path: '/settings/organization',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSettingsImportRoute = AppSettingsImportRouteImport.update({
+  id: '/settings/import',
+  path: '/settings/import',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppInviteTokenRoute = AppInviteTokenRouteImport.update({
   id: '/invite/$token',
   path: '/invite/$token',
@@ -93,6 +99,7 @@ export interface FileRoutesByFullPath {
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
   '/invite/$token': typeof AppInviteTokenRoute
+  '/settings/import': typeof AppSettingsImportRoute
   '/settings/organization': typeof AppSettingsOrganizationRoute
 }
 export interface FileRoutesByTo {
@@ -106,6 +113,7 @@ export interface FileRoutesByTo {
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
   '/invite/$token': typeof AppInviteTokenRoute
+  '/settings/import': typeof AppSettingsImportRoute
   '/settings/organization': typeof AppSettingsOrganizationRoute
 }
 export interface FileRoutesById {
@@ -121,6 +129,7 @@ export interface FileRoutesById {
   '/_app/companies/$id': typeof AppCompaniesIdRoute
   '/_app/contacts/$id': typeof AppContactsIdRoute
   '/_app/invite/$token': typeof AppInviteTokenRoute
+  '/_app/settings/import': typeof AppSettingsImportRoute
   '/_app/settings/organization': typeof AppSettingsOrganizationRoute
 }
 export interface FileRouteTypes {
@@ -136,6 +145,7 @@ export interface FileRouteTypes {
     | '/companies/$id'
     | '/contacts/$id'
     | '/invite/$token'
+    | '/settings/import'
     | '/settings/organization'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -149,6 +159,7 @@ export interface FileRouteTypes {
     | '/companies/$id'
     | '/contacts/$id'
     | '/invite/$token'
+    | '/settings/import'
     | '/settings/organization'
   id:
     | '__root__'
@@ -163,6 +174,7 @@ export interface FileRouteTypes {
     | '/_app/companies/$id'
     | '/_app/contacts/$id'
     | '/_app/invite/$token'
+    | '/_app/settings/import'
     | '/_app/settings/organization'
   fileRoutesById: FileRoutesById
 }
@@ -237,6 +249,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsOrganizationRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/settings/import': {
+      id: '/_app/settings/import'
+      path: '/settings/import'
+      fullPath: '/settings/import'
+      preLoaderRoute: typeof AppSettingsImportRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/invite/$token': {
       id: '/_app/invite/$token'
       path: '/invite/$token'
@@ -292,6 +311,7 @@ interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
   AppPipelineRoute: typeof AppPipelineRoute
   AppInviteTokenRoute: typeof AppInviteTokenRoute
+  AppSettingsImportRoute: typeof AppSettingsImportRoute
   AppSettingsOrganizationRoute: typeof AppSettingsOrganizationRoute
 }
 
@@ -302,6 +322,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
   AppPipelineRoute: AppPipelineRoute,
   AppInviteTokenRoute: AppInviteTokenRoute,
+  AppSettingsImportRoute: AppSettingsImportRoute,
   AppSettingsOrganizationRoute: AppSettingsOrganizationRoute,
 }
 
