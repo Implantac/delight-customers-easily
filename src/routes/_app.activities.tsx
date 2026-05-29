@@ -21,6 +21,7 @@ import { activitySchema, fromForm } from "@/lib/validation";
 import { downloadICS } from "@/lib/ics";
 import { useServerFn } from "@tanstack/react-start";
 import { triggerWebhooks } from "@/lib/webhooks.functions";
+import { SavedViews } from "@/components/saved-views";
 
 export const Route = createFileRoute("/_app/activities")({ component: ActivitiesPage });
 
@@ -164,6 +165,14 @@ function ActivitiesPage() {
             <CalendarDays className="h-3.5 w-3.5" />Agenda
           </button>
         </div>
+        <SavedViews
+          entity="activities"
+          currentFilters={{ filter, view }}
+          onApply={(f: Record<string, unknown>) => {
+            if (f.filter) setFilter(f.filter as typeof filter);
+            if (f.view) setView(f.view as typeof view);
+          }}
+        />
       </div>
 
       {view === "list" ? (

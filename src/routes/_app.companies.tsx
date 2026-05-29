@@ -14,11 +14,12 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { PageHeader } from "@/components/page-header";
 import { EmptyState } from "@/components/empty-state";
-import { Plus, Globe, Trash2, Building2, Download, X } from "lucide-react";
+import { Plus, Globe, Trash2, Building2, Download, X, Search } from "lucide-react";
 import { toast } from "sonner";
 import { companySchema, fromForm } from "@/lib/validation";
 import { CompanyDuplicateWarning } from "@/components/duplicate-warning";
 import { toCSV, downloadCSV } from "@/lib/csv-export";
+import { SavedViews } from "@/components/saved-views";
 
 export const Route = createFileRoute("/_app/companies")({ component: CompaniesPage });
 
@@ -31,6 +32,8 @@ function CompaniesPage() {
   const [dupName, setDupName] = useState("");
   const [dupSite, setDupSite] = useState("");
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [search, setSearch] = useState("");
+  const [industry, setIndustry] = useState("");
 
   const { data: companies, isLoading } = useQuery({
     queryKey: ["companies"],
@@ -106,8 +109,29 @@ function CompaniesPage() {
         }
       />
 
+      <div className="mt-6 mb-4 flex flex-wrap items-center gap-2">
+        <div className="relative flex-1 min-w-[200px] max-w-sm">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input placeholder="Buscar empresas…" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
+        </div>
+        <Input
+          placeholder="Indústria"
+          value={industry}
+          onChange={(e) => setIndustry(e.target.value)}
+          className="w-full sm:w-48"
+        />
+        <SavedViews
+          entity="companies"
+          currentFilters={{ search, industry }}
+          onApply={(f: Record<string, unknown>) => {
+            setSearch((f.search as string) ?? "");
+            setIndustry((f.industry as string) ?? "");
+          }}
+        />
+      </div>
+
       {selected.size > 0 && (
-        <div className="mt-6 mb-3 flex items-center justify-between gap-2 rounded-md border bg-accent/40 px-3 py-2 text-sm">
+        <div className="mb-3 flex items-center justify-between gap-2 rounded-md border bg-accent/40 px-3 py-2 text-sm">
           <span>{selected.size} selecionada{selected.size > 1 ? "s" : ""}</span>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" onClick={() => {
@@ -128,15 +152,20 @@ function CompaniesPage() {
         </div>
       )}
 
-      {isLoading ? (
+      {(() => {
+        const filtered = (companies ?? []).filter((c) =>
+          (!search || c.name.toLowerCase().includes(search.toLowerCase()) || (c.website ?? "").toLowerCase().includes(search.toLowerCase())) &&
+          (!industry || (c.industry ?? "").toLowerCase().includes(industry.toLowerCase()))
+        );
+        return isLoading ? (
         <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-32 w-full" />)}
         </div>
-      ) : (companies ?? []).length === 0 ? (
-        <div className="mt-6"><EmptyState icon={Building2} title="Nenhuma empresa" description="Cadastre sua primeira empresa para começar." /></div>
+      ) : filtered.length === 0 ? (
+        <div className="mt-6"><EmptyState icon={Building2} title="Nenhuma empresa" description={search || industry ? "Nenhum resultado para esses filtros." : "Cadastre sua primeira empresa para começar."} /></div>
       ) : (
         <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {companies?.map((c) => (
+          {filtered.map((c) => (
             <Card key={c.id} className={`p-5 transition hover:border-primary/40 ${selected.has(c.id) ? "ring-2 ring-primary/40" : ""}`}>
               <div className="flex items-start gap-3">
                 <Checkbox
@@ -170,7 +199,8 @@ function CompaniesPage() {
             </Card>
           ))}
         </div>
-      )}
+      );
+      })()}
     </div>
   );
 }

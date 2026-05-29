@@ -7,9 +7,10 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "@/components/page-header";
 import { Timeline, type TimelineItem } from "@/components/timeline";
-import { ArrowLeft, Globe, Trash2, Users, KanbanSquare, Clock } from "lucide-react";
+import { ArrowLeft, Globe, Trash2, Users, KanbanSquare, Clock, History as HistoryIcon } from "lucide-react";
 import { Attachments } from "@/components/attachments";
 import { TagPicker } from "@/components/tag-picker";
+import { AuditHistory } from "@/components/audit-history";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/companies/$id")({ component: CompanyDetail });
@@ -118,6 +119,11 @@ function CompanyDetail() {
                 })).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())}
               />
             </div>
+          </Card>
+
+          <Card className="p-5">
+            <h3 className="flex items-center gap-2 text-sm font-semibold mb-4"><HistoryIcon className="h-4 w-4" />Histórico de alterações</h3>
+            <AuditHistory entityType="companies" entityId={company.id} />
           </Card>
         </div>
       </div>
