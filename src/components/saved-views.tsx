@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useCurrentOrg } from "@/hooks/use-current-org";
+import { useCurrentOrg } from "@/lib/org";
+import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,7 +21,9 @@ interface Props {
 }
 
 export function SavedViews({ entity, currentFilters, onApply }: Props) {
-  const { organizationId, userId } = useCurrentOrg();
+  const { orgId: organizationId } = useCurrentOrg();
+  const { user } = useAuth();
+  const userId = user?.id ?? null;
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
   const [saveOpen, setSaveOpen] = useState(false);
@@ -51,7 +54,7 @@ export function SavedViews({ entity, currentFilters, onApply }: Props) {
         user_id: userId,
         entity,
         name: name.trim(),
-        filters: currentFilters,
+        filters: currentFilters as never,
         is_shared: shared,
       });
       if (error) throw error;
