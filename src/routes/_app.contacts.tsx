@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { useCurrentOrg } from "@/lib/org";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +19,7 @@ export const Route = createFileRoute("/_app/contacts")({ component: ContactsPage
 
 function ContactsPage() {
   const { user } = useAuth();
+  const { orgId } = useCurrentOrg();
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -50,8 +52,10 @@ function ContactsPage() {
 
   const create = useMutation({
     mutationFn: async (form: FormData) => {
+      if (!orgId) throw new Error("Nenhuma organização ativa");
       const payload = {
         user_id: user!.id,
+        organization_id: orgId,
         name: String(form.get("name") || "").trim(),
         email: String(form.get("email") || "").trim() || null,
         phone: String(form.get("phone") || "").trim() || null,

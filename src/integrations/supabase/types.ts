@@ -23,6 +23,7 @@ export type Database = {
           description: string | null
           due_date: string | null
           id: string
+          organization_id: string
           title: string
           type: Database["public"]["Enums"]["activity_type"]
           updated_at: string
@@ -36,6 +37,7 @@ export type Database = {
           description?: string | null
           due_date?: string | null
           id?: string
+          organization_id: string
           title: string
           type?: Database["public"]["Enums"]["activity_type"]
           updated_at?: string
@@ -49,6 +51,7 @@ export type Database = {
           description?: string | null
           due_date?: string | null
           id?: string
+          organization_id?: string
           title?: string
           type?: Database["public"]["Enums"]["activity_type"]
           updated_at?: string
@@ -69,6 +72,13 @@ export type Database = {
             referencedRelation: "deals"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "activities_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
         ]
       }
       companies: {
@@ -78,6 +88,7 @@ export type Database = {
           industry: string | null
           name: string
           notes: string | null
+          organization_id: string
           size: string | null
           updated_at: string
           user_id: string
@@ -89,6 +100,7 @@ export type Database = {
           industry?: string | null
           name: string
           notes?: string | null
+          organization_id: string
           size?: string | null
           updated_at?: string
           user_id: string
@@ -100,12 +112,21 @@ export type Database = {
           industry?: string | null
           name?: string
           notes?: string | null
+          organization_id?: string
           size?: string | null
           updated_at?: string
           user_id?: string
           website?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "companies_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       contacts: {
         Row: {
@@ -115,6 +136,7 @@ export type Database = {
           id: string
           name: string
           notes: string | null
+          organization_id: string
           phone: string | null
           position: string | null
           updated_at: string
@@ -127,6 +149,7 @@ export type Database = {
           id?: string
           name: string
           notes?: string | null
+          organization_id: string
           phone?: string | null
           position?: string | null
           updated_at?: string
@@ -139,6 +162,7 @@ export type Database = {
           id?: string
           name?: string
           notes?: string | null
+          organization_id?: string
           phone?: string | null
           position?: string | null
           updated_at?: string
@@ -152,6 +176,13 @@ export type Database = {
             referencedRelation: "companies"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "contacts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
         ]
       }
       deals: {
@@ -162,6 +193,7 @@ export type Database = {
           expected_close: string | null
           id: string
           notes: string | null
+          organization_id: string
           position: number
           stage: Database["public"]["Enums"]["deal_stage"]
           title: string
@@ -176,6 +208,7 @@ export type Database = {
           expected_close?: string | null
           id?: string
           notes?: string | null
+          organization_id: string
           position?: number
           stage?: Database["public"]["Enums"]["deal_stage"]
           title: string
@@ -190,6 +223,7 @@ export type Database = {
           expected_close?: string | null
           id?: string
           notes?: string | null
+          organization_id?: string
           position?: number
           stage?: Database["public"]["Enums"]["deal_stage"]
           title?: string
@@ -212,12 +246,79 @@ export type Database = {
             referencedRelation: "contacts"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "deals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
         ]
+      }
+      memberships: {
+        Row: {
+          created_at: string
+          id: string
+          organization_id: string
+          role: Database["public"]["Enums"]["org_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          organization_id: string
+          role?: Database["public"]["Enums"]["org_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          organization_id?: string
+          role?: Database["public"]["Enums"]["org_role"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "memberships_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organizations: {
+        Row: {
+          created_at: string
+          created_by: string
+          id: string
+          name: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          id?: string
+          name: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          id?: string
+          name?: string
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       profiles: {
         Row: {
           avatar_url: string | null
           created_at: string
+          current_organization_id: string | null
           full_name: string | null
           id: string
           updated_at: string
@@ -225,6 +326,7 @@ export type Database = {
         Insert: {
           avatar_url?: string | null
           created_at?: string
+          current_organization_id?: string | null
           full_name?: string | null
           id: string
           updated_at?: string
@@ -232,18 +334,35 @@ export type Database = {
         Update: {
           avatar_url?: string | null
           created_at?: string
+          current_organization_id?: string | null
           full_name?: string | null
           id?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_current_organization_id_fkey"
+            columns: ["current_organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_org_role: {
+        Args: {
+          _org: string
+          _roles: Database["public"]["Enums"]["org_role"][]
+          _user: string
+        }
+        Returns: boolean
+      }
+      is_org_member: { Args: { _org: string; _user: string }; Returns: boolean }
     }
     Enums: {
       activity_type: "call" | "email" | "meeting" | "task" | "note"
@@ -254,6 +373,7 @@ export type Database = {
         | "negotiation"
         | "won"
         | "lost"
+      org_role: "owner" | "admin" | "member"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -390,6 +510,7 @@ export const Constants = {
         "won",
         "lost",
       ],
+      org_role: ["owner", "admin", "member"],
     },
   },
 } as const
