@@ -8,6 +8,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "@/components/page-header";
 import { Timeline, type TimelineItem } from "@/components/timeline";
 import { ArrowLeft, Globe, Trash2, Users, KanbanSquare, Clock } from "lucide-react";
+import { Attachments } from "@/components/attachments";
+import { TagPicker } from "@/components/tag-picker";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/companies/$id")({ component: CompanyDetail });
