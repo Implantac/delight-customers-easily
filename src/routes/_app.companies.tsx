@@ -118,9 +118,11 @@ function CompaniesPage() {
               ] as any);
               downloadCSV(`empresas-selecionadas-${new Date().toISOString().slice(0,10)}.csv`, csv);
             }}><Download className="mr-2 h-4 w-4" />Exportar</Button>
-            <Button variant="destructive" size="sm" disabled={bulkDel.isPending} onClick={() => {
-              if (confirm(`Remover ${selected.size} empresa(s)?`)) bulkDel.mutate(Array.from(selected));
-            }}><Trash2 className="mr-2 h-4 w-4" />Remover</Button>
+            {canDelete && (
+              <Button variant="destructive" size="sm" disabled={bulkDel.isPending} onClick={() => {
+                if (confirm(`Remover ${selected.size} empresa(s)?`)) bulkDel.mutate(Array.from(selected));
+              }}><Trash2 className="mr-2 h-4 w-4" />Remover</Button>
+            )}
             <Button variant="ghost" size="sm" onClick={() => setSelected(new Set())}><X className="h-4 w-4" /></Button>
           </div>
         </div>
