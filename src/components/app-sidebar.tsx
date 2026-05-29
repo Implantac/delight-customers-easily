@@ -79,15 +79,19 @@ export function AppSidebar() {
             <DropdownMenuItem asChild>
               <Link to="/settings/organization"><Settings className="mr-2 h-4 w-4" />Configurações</Link>
             </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link to="/settings/fields"><Sliders className="mr-2 h-4 w-4" />Campos personalizados</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link to="/settings/import"><Upload className="mr-2 h-4 w-4" />Importar CSV</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link to="/settings/webhooks"><Webhook className="mr-2 h-4 w-4" />Webhooks</Link>
-            </DropdownMenuItem>
+            {canManage && (
+              <>
+                <DropdownMenuItem asChild>
+                  <Link to="/settings/fields"><Sliders className="mr-2 h-4 w-4" />Campos personalizados</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/settings/import"><Upload className="mr-2 h-4 w-4" />Importar CSV</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/settings/webhooks"><Webhook className="mr-2 h-4 w-4" />Webhooks</Link>
+                </DropdownMenuItem>
+              </>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarHeader>
