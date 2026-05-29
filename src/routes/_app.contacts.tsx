@@ -152,6 +152,7 @@ function ContactsPage() {
               ))}
             </tbody>
           </table>
+          </div>
         </Card>
       )}
     </div>
