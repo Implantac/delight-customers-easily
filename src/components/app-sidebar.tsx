@@ -15,12 +15,12 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { toast } from "sonner";
 
 const nav = [
-  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, shortcut: "G D" },
-  { to: "/pipeline", label: "Pipeline", icon: KanbanSquare, shortcut: "G P" },
-  { to: "/contacts", label: "Contatos", icon: Users, shortcut: "G C" },
-  { to: "/companies", label: "Empresas", icon: Building2, shortcut: "G E" },
-  { to: "/activities", label: "Atividades", icon: CheckSquare, shortcut: "G A" },
-  { to: "/reports", label: "Relatórios", icon: BarChart3, shortcut: "G R" },
+  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, shortcut: "G D", managerOnly: false },
+  { to: "/pipeline", label: "Pipeline", icon: KanbanSquare, shortcut: "G P", managerOnly: false },
+  { to: "/contacts", label: "Contatos", icon: Users, shortcut: "G C", managerOnly: false },
+  { to: "/companies", label: "Empresas", icon: Building2, shortcut: "G E", managerOnly: false },
+  { to: "/activities", label: "Atividades", icon: CheckSquare, shortcut: "G A", managerOnly: false },
+  { to: "/reports", label: "Relatórios", icon: BarChart3, shortcut: "G R", managerOnly: true },
 ] as const;
 
 export function AppSidebar() {
