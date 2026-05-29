@@ -60,6 +60,16 @@ function ContactsPage() {
     onError: (e: any) => toast.error(e.message),
   });
 
+  const bulkDel = useMutation({
+    mutationFn: async (ids: string[]) => {
+      const { error } = await supabase.from("contacts").delete().in("id", ids);
+      if (error) throw error;
+      return ids.length;
+    },
+    onSuccess: (n) => { qc.invalidateQueries({ queryKey: ["contacts"] }); setSelected(new Set()); toast.success(`${n} contatos removidos`); },
+    onError: (e: any) => toast.error(e.message),
+  });
+
   const create = useMutation({
     mutationFn: async (form: FormData) => {
       if (!orgId) throw new Error("Nenhuma organização ativa");
