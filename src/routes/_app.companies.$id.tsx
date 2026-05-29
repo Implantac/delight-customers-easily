@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "@/components/page-header";
+import { HealthScore } from "@/components/health-score";
 import { Timeline, type TimelineItem } from "@/components/timeline";
 import { ArrowLeft, Globe, Trash2, Users, KanbanSquare, Clock, History as HistoryIcon } from "lucide-react";
 import { Attachments } from "@/components/attachments";
@@ -80,6 +81,7 @@ function CompanyDetail() {
         </Card>
 
         <div className="space-y-6 md:col-span-2">
+          <HealthScore companyId={company.id} />
           <Attachments entityType="company" entityId={company.id} />
           <Card className="p-5">
             <h3 className="flex items-center gap-2 text-sm font-semibold"><Users className="h-4 w-4" />Contatos ({contacts?.length ?? 0})</h3>

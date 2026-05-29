@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "@/components/page-header";
+import { HealthScore } from "@/components/health-score";
 import { Timeline, type TimelineItem } from "@/components/timeline";
 import { ArrowLeft, Mail, Phone, Briefcase, Trash2, Building2, KanbanSquare, Clock, MessageCircle, History as HistoryIcon } from "lucide-react";
 import { AuditHistory } from "@/components/audit-history";
@@ -95,6 +96,7 @@ function ContactDetail() {
         </Card>
 
         <div className="space-y-6 md:col-span-2">
+          <HealthScore contactId={contact.id} />
           <Card className="p-5">
             <h3 className="flex items-center gap-2 text-sm font-semibold"><KanbanSquare className="h-4 w-4" />Negócios ({deals?.length ?? 0})</h3>
             <div className="mt-3 space-y-2">
