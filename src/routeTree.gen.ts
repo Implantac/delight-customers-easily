@@ -12,8 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppRetentionRouteImport } from './routes/_app.retention'
 import { Route as AppReportsRouteImport } from './routes/_app.reports'
 import { Route as AppPipelineRouteImport } from './routes/_app.pipeline'
+import { Route as AppOpportunityMapRouteImport } from './routes/_app.opportunity-map'
 import { Route as AppForecastRouteImport } from './routes/_app.forecast'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppContactsRouteImport } from './routes/_app.contacts'
@@ -47,6 +49,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppRetentionRoute = AppRetentionRouteImport.update({
+  id: '/retention',
+  path: '/retention',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppReportsRoute = AppReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
@@ -55,6 +62,11 @@ const AppReportsRoute = AppReportsRouteImport.update({
 const AppPipelineRoute = AppPipelineRouteImport.update({
   id: '/pipeline',
   path: '/pipeline',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppOpportunityMapRoute = AppOpportunityMapRouteImport.update({
+  id: '/opportunity-map',
+  path: '/opportunity-map',
   getParentRoute: () => AppRoute,
 } as any)
 const AppForecastRoute = AppForecastRouteImport.update({
@@ -160,8 +172,10 @@ export interface FileRoutesByFullPath {
   '/contacts': typeof AppContactsRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
   '/forecast': typeof AppForecastRoute
+  '/opportunity-map': typeof AppOpportunityMapRoute
   '/pipeline': typeof AppPipelineRoute
   '/reports': typeof AppReportsRoute
+  '/retention': typeof AppRetentionRoute
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
   '/invite/$token': typeof AppInviteTokenRoute
@@ -184,8 +198,10 @@ export interface FileRoutesByTo {
   '/contacts': typeof AppContactsRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
   '/forecast': typeof AppForecastRoute
+  '/opportunity-map': typeof AppOpportunityMapRoute
   '/pipeline': typeof AppPipelineRoute
   '/reports': typeof AppReportsRoute
+  '/retention': typeof AppRetentionRoute
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
   '/invite/$token': typeof AppInviteTokenRoute
@@ -210,8 +226,10 @@ export interface FileRoutesById {
   '/_app/contacts': typeof AppContactsRouteWithChildren
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/forecast': typeof AppForecastRoute
+  '/_app/opportunity-map': typeof AppOpportunityMapRoute
   '/_app/pipeline': typeof AppPipelineRoute
   '/_app/reports': typeof AppReportsRoute
+  '/_app/retention': typeof AppRetentionRoute
   '/_app/companies/$id': typeof AppCompaniesIdRoute
   '/_app/contacts/$id': typeof AppContactsIdRoute
   '/_app/invite/$token': typeof AppInviteTokenRoute
@@ -236,8 +254,10 @@ export interface FileRouteTypes {
     | '/contacts'
     | '/dashboard'
     | '/forecast'
+    | '/opportunity-map'
     | '/pipeline'
     | '/reports'
+    | '/retention'
     | '/companies/$id'
     | '/contacts/$id'
     | '/invite/$token'
@@ -260,8 +280,10 @@ export interface FileRouteTypes {
     | '/contacts'
     | '/dashboard'
     | '/forecast'
+    | '/opportunity-map'
     | '/pipeline'
     | '/reports'
+    | '/retention'
     | '/companies/$id'
     | '/contacts/$id'
     | '/invite/$token'
@@ -285,8 +307,10 @@ export interface FileRouteTypes {
     | '/_app/contacts'
     | '/_app/dashboard'
     | '/_app/forecast'
+    | '/_app/opportunity-map'
     | '/_app/pipeline'
     | '/_app/reports'
+    | '/_app/retention'
     | '/_app/companies/$id'
     | '/_app/contacts/$id'
     | '/_app/invite/$token'
@@ -332,6 +356,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/retention': {
+      id: '/_app/retention'
+      path: '/retention'
+      fullPath: '/retention'
+      preLoaderRoute: typeof AppRetentionRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/reports': {
       id: '/_app/reports'
       path: '/reports'
@@ -344,6 +375,13 @@ declare module '@tanstack/react-router' {
       path: '/pipeline'
       fullPath: '/pipeline'
       preLoaderRoute: typeof AppPipelineRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/opportunity-map': {
+      id: '/_app/opportunity-map'
+      path: '/opportunity-map'
+      fullPath: '/opportunity-map'
+      preLoaderRoute: typeof AppOpportunityMapRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/forecast': {
@@ -507,8 +545,10 @@ interface AppRouteChildren {
   AppContactsRoute: typeof AppContactsRouteWithChildren
   AppDashboardRoute: typeof AppDashboardRoute
   AppForecastRoute: typeof AppForecastRoute
+  AppOpportunityMapRoute: typeof AppOpportunityMapRoute
   AppPipelineRoute: typeof AppPipelineRoute
   AppReportsRoute: typeof AppReportsRoute
+  AppRetentionRoute: typeof AppRetentionRoute
   AppInviteTokenRoute: typeof AppInviteTokenRoute
   AppSettingsAutomationsRoute: typeof AppSettingsAutomationsRoute
   AppSettingsFieldsRoute: typeof AppSettingsFieldsRoute
@@ -525,8 +565,10 @@ const AppRouteChildren: AppRouteChildren = {
   AppContactsRoute: AppContactsRouteWithChildren,
   AppDashboardRoute: AppDashboardRoute,
   AppForecastRoute: AppForecastRoute,
+  AppOpportunityMapRoute: AppOpportunityMapRoute,
   AppPipelineRoute: AppPipelineRoute,
   AppReportsRoute: AppReportsRoute,
+  AppRetentionRoute: AppRetentionRoute,
   AppInviteTokenRoute: AppInviteTokenRoute,
   AppSettingsAutomationsRoute: AppSettingsAutomationsRoute,
   AppSettingsFieldsRoute: AppSettingsFieldsRoute,
@@ -548,3 +590,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
