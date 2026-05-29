@@ -148,53 +148,132 @@ function ActivitiesPage() {
         }
       />
 
-      <div className="mt-6 mb-4 flex gap-1 rounded-lg bg-muted p-1 w-fit">
-        {(["pending", "done", "all"] as const).map((f) => (
-          <button key={f} onClick={() => setFilter(f)} className={`rounded-md px-3 py-1.5 text-sm font-medium transition ${filter === f ? "bg-background shadow-sm" : "text-muted-foreground"}`}>
-            {f === "pending" ? "Pendentes" : f === "done" ? "Concluídas" : "Todas"}
+      <div className="mt-6 mb-4 flex flex-wrap items-center justify-between gap-2">
+        <div className="flex gap-1 rounded-lg bg-muted p-1 w-fit">
+          {(["pending", "done", "all"] as const).map((f) => (
+            <button key={f} onClick={() => setFilter(f)} className={`rounded-md px-3 py-1.5 text-sm font-medium transition ${filter === f ? "bg-background shadow-sm" : "text-muted-foreground"}`}>
+              {f === "pending" ? "Pendentes" : f === "done" ? "Concluídas" : "Todas"}
+            </button>
+          ))}
+        </div>
+        <div className="flex gap-1 rounded-lg bg-muted p-1 w-fit">
+          <button onClick={() => setView("list")} className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition ${view === "list" ? "bg-background shadow-sm" : "text-muted-foreground"}`}>
+            <List className="h-3.5 w-3.5" />Lista
           </button>
-        ))}
+          <button onClick={() => setView("agenda")} className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition ${view === "agenda" ? "bg-background shadow-sm" : "text-muted-foreground"}`}>
+            <CalendarDays className="h-3.5 w-3.5" />Agenda
+          </button>
+        </div>
       </div>
 
-      <div className="space-y-2">
-        {isLoading && Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-16 w-full" />)}
-        {!isLoading && filtered.length === 0 && (
-          <EmptyState
-            icon={CheckSquare}
-            title="Nenhuma atividade"
-            description={filter === "pending" ? "Tudo em dia. Crie uma nova tarefa quando precisar." : "Nada por aqui ainda."}
-          />
-        )}
-        {filtered.map((a) => {
-          const type = TYPES.find((t) => t.id === a.type)!;
-          const Icon = type.icon;
-          return (
-            <Card key={a.id} className="flex items-center gap-3 p-4">
-              <Checkbox checked={a.completed} onCheckedChange={(v) => toggle.mutate({ id: a.id, completed: !!v, activity: a })} />
-              <div className="flex h-8 w-8 items-center justify-center rounded-md bg-accent text-accent-foreground">
-                <Icon className="h-4 w-4" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className={`truncate text-sm font-medium ${a.completed ? "text-muted-foreground line-through" : ""}`}>{a.title}</p>
-                <p className="text-xs text-muted-foreground">
-                  {type.label}
-                  {a.due_date && ` · ${new Date(a.due_date).toLocaleString("pt-BR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}`}
-                  {(a.contacts as any)?.name && ` · ${(a.contacts as any).name}`}
-                  {(a.deals as any)?.title && ` · ${(a.deals as any).title}`}
-                </p>
-              </div>
-              {a.due_date && (
-                <Button variant="ghost" size="sm" title="Adicionar ao calendário" onClick={() => downloadICS({ uid: a.id, title: a.title, description: a.description ?? undefined, start: new Date(a.due_date as string), durationMinutes: a.type === "meeting" ? 60 : 30 })}>
-                  <CalendarPlus className="h-4 w-4" />
+      {view === "list" ? (
+        <div className="space-y-2">
+          {isLoading && Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-16 w-full" />)}
+          {!isLoading && filtered.length === 0 && (
+            <EmptyState
+              icon={CheckSquare}
+              title="Nenhuma atividade"
+              description={filter === "pending" ? "Tudo em dia. Crie uma nova tarefa quando precisar." : "Nada por aqui ainda."}
+            />
+          )}
+          {filtered.map((a) => {
+            const type = TYPES.find((t) => t.id === a.type)!;
+            const Icon = type.icon;
+            return (
+              <Card key={a.id} className="flex items-center gap-3 p-4">
+                <Checkbox checked={a.completed} onCheckedChange={(v) => toggle.mutate({ id: a.id, completed: !!v, activity: a })} />
+                <div className="flex h-8 w-8 items-center justify-center rounded-md bg-accent text-accent-foreground">
+                  <Icon className="h-4 w-4" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className={`truncate text-sm font-medium ${a.completed ? "text-muted-foreground line-through" : ""}`}>{a.title}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {type.label}
+                    {a.due_date && ` · ${new Date(a.due_date).toLocaleString("pt-BR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}`}
+                    {(a.contacts as any)?.name && ` · ${(a.contacts as any).name}`}
+                    {(a.deals as any)?.title && ` · ${(a.deals as any).title}`}
+                  </p>
+                </div>
+                {a.due_date && (
+                  <Button variant="ghost" size="sm" title="Adicionar ao calendário" onClick={() => downloadICS({ uid: a.id, title: a.title, description: a.description ?? undefined, start: new Date(a.due_date as string), durationMinutes: a.type === "meeting" ? 60 : 30 })}>
+                    <CalendarPlus className="h-4 w-4" />
+                  </Button>
+                )}
+                <Button variant="ghost" size="sm" onClick={() => { if (confirm("Remover?")) del.mutate(a.id); }}>
+                  <Trash2 className="h-4 w-4" />
                 </Button>
-              )}
-              <Button variant="ghost" size="sm" onClick={() => { if (confirm("Remover?")) del.mutate(a.id); }}>
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </Card>
-          );
-        })}
-      </div>
+              </Card>
+            );
+          })}
+        </div>
+      ) : (
+        <AgendaView
+          items={filtered.filter((a) => a.due_date) as any[]}
+          onToggle={(id, completed, a) => toggle.mutate({ id, completed, activity: a })}
+          onDelete={(id) => { if (confirm("Remover?")) del.mutate(id); }}
+        />
+      )}
+    </div>
+  );
+}
+
+function AgendaView({ items, onToggle, onDelete }: { items: any[]; onToggle: (id: string, completed: boolean, a: any) => void; onDelete: (id: string) => void }) {
+  // group by yyyy-mm-dd for next 14 days (or any with due date)
+  const groups = new Map<string, any[]>();
+  for (const a of items) {
+    const d = new Date(a.due_date);
+    const key = d.toISOString().slice(0, 10);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key)!.push(a);
+  }
+  const keys = Array.from(groups.keys()).sort();
+  if (keys.length === 0) {
+    return <EmptyState icon={CalendarDays} title="Sem atividades agendadas" description="Atividades com data de vencimento aparecem aqui." />;
+  }
+  const today = new Date().toISOString().slice(0, 10);
+  const tomorrow = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
+  return (
+    <div className="space-y-6">
+      {keys.map((k) => {
+        const d = new Date(k + "T00:00:00");
+        const label = k === today ? "Hoje" : k === tomorrow ? "Amanhã" : d.toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long" });
+        const isPast = k < today;
+        return (
+          <div key={k}>
+            <div className="mb-2 flex items-baseline gap-2">
+              <h3 className={`text-sm font-semibold capitalize ${isPast ? "text-destructive" : ""}`}>{label}</h3>
+              <span className="text-xs text-muted-foreground">{groups.get(k)!.length} item{groups.get(k)!.length > 1 ? "s" : ""}</span>
+            </div>
+            <div className="space-y-1.5">
+              {groups.get(k)!.sort((x, y) => new Date(x.due_date).getTime() - new Date(y.due_date).getTime()).map((a) => {
+                const type = TYPES.find((t) => t.id === a.type)!;
+                const Icon = type.icon;
+                const time = new Date(a.due_date).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+                return (
+                  <Card key={a.id} className="flex items-center gap-3 p-3">
+                    <Checkbox checked={a.completed} onCheckedChange={(v) => onToggle(a.id, !!v, a)} />
+                    <span className="w-12 text-xs font-medium text-muted-foreground tabular-nums">{time}</span>
+                    <div className="flex h-7 w-7 items-center justify-center rounded-md bg-accent text-accent-foreground">
+                      <Icon className="h-3.5 w-3.5" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className={`truncate text-sm font-medium ${a.completed ? "text-muted-foreground line-through" : ""}`}>{a.title}</p>
+                      {((a.contacts as any)?.name || (a.deals as any)?.title) && (
+                        <p className="text-xs text-muted-foreground truncate">
+                          {(a.contacts as any)?.name ?? (a.deals as any)?.title}
+                        </p>
+                      )}
+                    </div>
+                    <Button variant="ghost" size="sm" onClick={() => onDelete(a.id)}>
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }
