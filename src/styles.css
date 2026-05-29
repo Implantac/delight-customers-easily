@@ -131,6 +131,13 @@
   --chart-3: oklch(0.78 0.16 75);
   --chart-4: oklch(0.72 0.18 300);
   --chart-5: oklch(0.68 0.20 25);
+
+  --primary-glow: oklch(0.78 0.15 275);
+  --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-glow));
+  --gradient-subtle: linear-gradient(180deg, color-mix(in oklab, var(--primary) 10%, transparent), transparent);
+  --shadow-sm: 0 1px 2px 0 color-mix(in oklab, #000 40%, transparent);
+  --shadow-md: 0 4px 16px -4px color-mix(in oklab, #000 50%, transparent);
+  --shadow-glow: 0 8px 32px -8px color-mix(in oklab, var(--primary) 40%, transparent);
 }
 
 @layer base {
