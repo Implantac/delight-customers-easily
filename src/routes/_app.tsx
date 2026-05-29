@@ -6,6 +6,7 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { CommandPaletteTrigger } from "@/components/command-palette";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { NotificationsBell } from "@/components/notifications-bell";
+import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 import { useGoToShortcuts } from "@/hooks/use-shortcuts";
 
 export const Route = createFileRoute("/_app")({ component: AppLayout });
@@ -36,9 +37,10 @@ function AppLayout() {
             <NotificationsBell />
             <ThemeToggle />
           </header>
-          <main className="flex-1 overflow-auto">
+          <main className="flex-1 overflow-auto pb-16 md:pb-0">
             <Outlet />
           </main>
+          <MobileBottomNav />
         </div>
       </div>
     </SidebarProvider>
