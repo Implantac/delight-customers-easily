@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Plus, Pencil, Trash2, History } from "lucide-react";
+import { Plus, Pencil, Trash2, History as HistoryIcon } from "lucide-react";
 
 interface Props {
   entityType: "contacts" | "companies" | "activities" | "deals";
@@ -56,7 +56,7 @@ export function AuditHistory({ entityType, entityId }: Props) {
   if (!data || data.length === 0) {
     return (
       <Card className="p-6 text-center text-sm text-muted-foreground">
-        <History className="h-8 w-8 mx-auto mb-2 opacity-40" />
+        <HistoryIcon className="h-8 w-8 mx-auto mb-2 opacity-40" />
         Nenhuma alteração registrada ainda.
       </Card>
     );
