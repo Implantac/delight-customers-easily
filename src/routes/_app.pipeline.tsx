@@ -24,6 +24,7 @@ import { TagPicker } from "@/components/tag-picker";
 import { DealHistory } from "@/components/deal-history";
 import { useServerFn } from "@tanstack/react-start";
 import { triggerWebhooks } from "@/lib/webhooks.functions";
+import { runAutomations } from "@/lib/automations.functions";
 
 export const Route = createFileRoute("/_app/pipeline")({ component: PipelinePage });
 
