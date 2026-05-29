@@ -25,7 +25,7 @@ function CompaniesPage() {
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
 
-  const { data: companies } = useQuery({
+  const { data: companies, isLoading } = useQuery({
     queryKey: ["companies"],
     queryFn: async () => {
       const { data, error } = await supabase.from("companies").select("*").order("name");
@@ -37,17 +37,8 @@ function CompaniesPage() {
   const create = useMutation({
     mutationFn: async (form: FormData) => {
       if (!orgId) throw new Error("Nenhuma organização ativa");
-      const payload = {
-        user_id: user!.id,
-        organization_id: orgId,
-        name: String(form.get("name") || "").trim(),
-        website: String(form.get("website") || "").trim() || null,
-        industry: String(form.get("industry") || "").trim() || null,
-        size: String(form.get("size") || "").trim() || null,
-        notes: String(form.get("notes") || "").trim() || null,
-      };
-      if (!payload.name) throw new Error("Nome é obrigatório");
-      const { error } = await supabase.from("companies").insert(payload);
+      const v = fromForm(companySchema, form);
+      const { error } = await supabase.from("companies").insert({ ...v, user_id: user!.id, organization_id: orgId });
       if (error) throw error;
     },
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["companies"] }); setOpen(false); toast.success("Empresa criada"); },
