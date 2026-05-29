@@ -18,6 +18,7 @@ import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppContactsRouteImport } from './routes/_app.contacts'
 import { Route as AppCompaniesRouteImport } from './routes/_app.companies'
 import { Route as AppActivitiesRouteImport } from './routes/_app.activities'
+import { Route as ApiPublicInboundEmailRouteImport } from './routes/api/public/inbound-email'
 import { Route as AppSettingsWebhooksRouteImport } from './routes/_app.settings.webhooks'
 import { Route as AppSettingsOrganizationRouteImport } from './routes/_app.settings.organization'
 import { Route as AppSettingsImportRouteImport } from './routes/_app.settings.import'
@@ -70,6 +71,11 @@ const AppActivitiesRoute = AppActivitiesRouteImport.update({
   id: '/activities',
   path: '/activities',
   getParentRoute: () => AppRoute,
+} as any)
+const ApiPublicInboundEmailRoute = ApiPublicInboundEmailRouteImport.update({
+  id: '/api/public/inbound-email',
+  path: '/api/public/inbound-email',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AppSettingsWebhooksRoute = AppSettingsWebhooksRouteImport.update({
   id: '/settings/webhooks',
@@ -129,6 +135,7 @@ export interface FileRoutesByFullPath {
   '/settings/import': typeof AppSettingsImportRoute
   '/settings/organization': typeof AppSettingsOrganizationRoute
   '/settings/webhooks': typeof AppSettingsWebhooksRoute
+  '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
 }
 export interface FileRoutesByTo {
@@ -147,6 +154,7 @@ export interface FileRoutesByTo {
   '/settings/import': typeof AppSettingsImportRoute
   '/settings/organization': typeof AppSettingsOrganizationRoute
   '/settings/webhooks': typeof AppSettingsWebhooksRoute
+  '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
 }
 export interface FileRoutesById {
@@ -167,6 +175,7 @@ export interface FileRoutesById {
   '/_app/settings/import': typeof AppSettingsImportRoute
   '/_app/settings/organization': typeof AppSettingsOrganizationRoute
   '/_app/settings/webhooks': typeof AppSettingsWebhooksRoute
+  '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
 }
 export interface FileRouteTypes {
@@ -187,6 +196,7 @@ export interface FileRouteTypes {
     | '/settings/import'
     | '/settings/organization'
     | '/settings/webhooks'
+    | '/api/public/inbound-email'
     | '/api/public/hooks/activity-reminders'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -205,6 +215,7 @@ export interface FileRouteTypes {
     | '/settings/import'
     | '/settings/organization'
     | '/settings/webhooks'
+    | '/api/public/inbound-email'
     | '/api/public/hooks/activity-reminders'
   id:
     | '__root__'
@@ -224,6 +235,7 @@ export interface FileRouteTypes {
     | '/_app/settings/import'
     | '/_app/settings/organization'
     | '/_app/settings/webhooks'
+    | '/api/public/inbound-email'
     | '/api/public/hooks/activity-reminders'
   fileRoutesById: FileRoutesById
 }
@@ -231,6 +243,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   LoginRoute: typeof LoginRoute
+  ApiPublicInboundEmailRoute: typeof ApiPublicInboundEmailRoute
   ApiPublicHooksActivityRemindersRoute: typeof ApiPublicHooksActivityRemindersRoute
 }
 
@@ -298,6 +311,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/activities'
       preLoaderRoute: typeof AppActivitiesRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/api/public/inbound-email': {
+      id: '/api/public/inbound-email'
+      path: '/api/public/inbound-email'
+      fullPath: '/api/public/inbound-email'
+      preLoaderRoute: typeof ApiPublicInboundEmailRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_app/settings/webhooks': {
       id: '/_app/settings/webhooks'
@@ -416,6 +436,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   LoginRoute: LoginRoute,
+  ApiPublicInboundEmailRoute: ApiPublicInboundEmailRoute,
   ApiPublicHooksActivityRemindersRoute: ApiPublicHooksActivityRemindersRoute,
 }
 export const routeTree = rootRouteImport
