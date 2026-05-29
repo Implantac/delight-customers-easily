@@ -24,7 +24,8 @@ export const Route = createFileRoute("/_app/companies")({ component: CompaniesPa
 
 function CompaniesPage() {
   const { user } = useAuth();
-  const { orgId } = useCurrentOrg();
+  const { orgId, role } = useCurrentOrg();
+  const canDelete = role === "owner" || role === "admin";
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
   const [dupName, setDupName] = useState("");
