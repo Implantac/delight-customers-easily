@@ -199,7 +199,11 @@ function CompaniesPage() {
             </Card>
           ))}
         </div>
-      )}
+      );
+      })()}
+    </div>
+  );
+}
     </div>
   );
 }
