@@ -23,6 +23,7 @@ import { Route as AppSettingsWebhooksRouteImport } from './routes/_app.settings.
 import { Route as AppSettingsOrganizationRouteImport } from './routes/_app.settings.organization'
 import { Route as AppSettingsImportRouteImport } from './routes/_app.settings.import'
 import { Route as AppSettingsFieldsRouteImport } from './routes/_app.settings.fields'
+import { Route as AppSettingsAutomationsRouteImport } from './routes/_app.settings.automations'
 import { Route as AppInviteTokenRouteImport } from './routes/_app.invite.$token'
 import { Route as AppContactsIdRouteImport } from './routes/_app.contacts.$id'
 import { Route as AppCompaniesIdRouteImport } from './routes/_app.companies.$id'
@@ -97,6 +98,11 @@ const AppSettingsFieldsRoute = AppSettingsFieldsRouteImport.update({
   path: '/settings/fields',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSettingsAutomationsRoute = AppSettingsAutomationsRouteImport.update({
+  id: '/settings/automations',
+  path: '/settings/automations',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppInviteTokenRoute = AppInviteTokenRouteImport.update({
   id: '/invite/$token',
   path: '/invite/$token',
@@ -131,6 +137,7 @@ export interface FileRoutesByFullPath {
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
   '/invite/$token': typeof AppInviteTokenRoute
+  '/settings/automations': typeof AppSettingsAutomationsRoute
   '/settings/fields': typeof AppSettingsFieldsRoute
   '/settings/import': typeof AppSettingsImportRoute
   '/settings/organization': typeof AppSettingsOrganizationRoute
@@ -150,6 +157,7 @@ export interface FileRoutesByTo {
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
   '/invite/$token': typeof AppInviteTokenRoute
+  '/settings/automations': typeof AppSettingsAutomationsRoute
   '/settings/fields': typeof AppSettingsFieldsRoute
   '/settings/import': typeof AppSettingsImportRoute
   '/settings/organization': typeof AppSettingsOrganizationRoute
@@ -171,6 +179,7 @@ export interface FileRoutesById {
   '/_app/companies/$id': typeof AppCompaniesIdRoute
   '/_app/contacts/$id': typeof AppContactsIdRoute
   '/_app/invite/$token': typeof AppInviteTokenRoute
+  '/_app/settings/automations': typeof AppSettingsAutomationsRoute
   '/_app/settings/fields': typeof AppSettingsFieldsRoute
   '/_app/settings/import': typeof AppSettingsImportRoute
   '/_app/settings/organization': typeof AppSettingsOrganizationRoute
@@ -192,6 +201,7 @@ export interface FileRouteTypes {
     | '/companies/$id'
     | '/contacts/$id'
     | '/invite/$token'
+    | '/settings/automations'
     | '/settings/fields'
     | '/settings/import'
     | '/settings/organization'
@@ -211,6 +221,7 @@ export interface FileRouteTypes {
     | '/companies/$id'
     | '/contacts/$id'
     | '/invite/$token'
+    | '/settings/automations'
     | '/settings/fields'
     | '/settings/import'
     | '/settings/organization'
@@ -231,6 +242,7 @@ export interface FileRouteTypes {
     | '/_app/companies/$id'
     | '/_app/contacts/$id'
     | '/_app/invite/$token'
+    | '/_app/settings/automations'
     | '/_app/settings/fields'
     | '/_app/settings/import'
     | '/_app/settings/organization'
@@ -347,6 +359,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsFieldsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/settings/automations': {
+      id: '/_app/settings/automations'
+      path: '/settings/automations'
+      fullPath: '/settings/automations'
+      preLoaderRoute: typeof AppSettingsAutomationsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/invite/$token': {
       id: '/_app/invite/$token'
       path: '/invite/$token'
@@ -410,6 +429,7 @@ interface AppRouteChildren {
   AppPipelineRoute: typeof AppPipelineRoute
   AppReportsRoute: typeof AppReportsRoute
   AppInviteTokenRoute: typeof AppInviteTokenRoute
+  AppSettingsAutomationsRoute: typeof AppSettingsAutomationsRoute
   AppSettingsFieldsRoute: typeof AppSettingsFieldsRoute
   AppSettingsImportRoute: typeof AppSettingsImportRoute
   AppSettingsOrganizationRoute: typeof AppSettingsOrganizationRoute
@@ -424,6 +444,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppPipelineRoute: AppPipelineRoute,
   AppReportsRoute: AppReportsRoute,
   AppInviteTokenRoute: AppInviteTokenRoute,
+  AppSettingsAutomationsRoute: AppSettingsAutomationsRoute,
   AppSettingsFieldsRoute: AppSettingsFieldsRoute,
   AppSettingsImportRoute: AppSettingsImportRoute,
   AppSettingsOrganizationRoute: AppSettingsOrganizationRoute,
