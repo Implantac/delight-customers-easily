@@ -14,6 +14,7 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRetentionRouteImport } from './routes/_app.retention'
 import { Route as AppReportsRouteImport } from './routes/_app.reports'
+import { Route as AppProductsRouteImport } from './routes/_app.products'
 import { Route as AppPipelineRouteImport } from './routes/_app.pipeline'
 import { Route as AppOpportunityMapRouteImport } from './routes/_app.opportunity-map'
 import { Route as AppForecastRouteImport } from './routes/_app.forecast'
@@ -58,6 +59,11 @@ const AppRetentionRoute = AppRetentionRouteImport.update({
 const AppReportsRoute = AppReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProductsRoute = AppProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
   getParentRoute: () => AppRoute,
 } as any)
 const AppPipelineRoute = AppPipelineRouteImport.update({
@@ -181,6 +187,7 @@ export interface FileRoutesByFullPath {
   '/forecast': typeof AppForecastRoute
   '/opportunity-map': typeof AppOpportunityMapRoute
   '/pipeline': typeof AppPipelineRoute
+  '/products': typeof AppProductsRoute
   '/reports': typeof AppReportsRoute
   '/retention': typeof AppRetentionRoute
   '/companies/$id': typeof AppCompaniesIdRoute
@@ -208,6 +215,7 @@ export interface FileRoutesByTo {
   '/forecast': typeof AppForecastRoute
   '/opportunity-map': typeof AppOpportunityMapRoute
   '/pipeline': typeof AppPipelineRoute
+  '/products': typeof AppProductsRoute
   '/reports': typeof AppReportsRoute
   '/retention': typeof AppRetentionRoute
   '/companies/$id': typeof AppCompaniesIdRoute
@@ -237,6 +245,7 @@ export interface FileRoutesById {
   '/_app/forecast': typeof AppForecastRoute
   '/_app/opportunity-map': typeof AppOpportunityMapRoute
   '/_app/pipeline': typeof AppPipelineRoute
+  '/_app/products': typeof AppProductsRoute
   '/_app/reports': typeof AppReportsRoute
   '/_app/retention': typeof AppRetentionRoute
   '/_app/companies/$id': typeof AppCompaniesIdRoute
@@ -266,6 +275,7 @@ export interface FileRouteTypes {
     | '/forecast'
     | '/opportunity-map'
     | '/pipeline'
+    | '/products'
     | '/reports'
     | '/retention'
     | '/companies/$id'
@@ -293,6 +303,7 @@ export interface FileRouteTypes {
     | '/forecast'
     | '/opportunity-map'
     | '/pipeline'
+    | '/products'
     | '/reports'
     | '/retention'
     | '/companies/$id'
@@ -321,6 +332,7 @@ export interface FileRouteTypes {
     | '/_app/forecast'
     | '/_app/opportunity-map'
     | '/_app/pipeline'
+    | '/_app/products'
     | '/_app/reports'
     | '/_app/retention'
     | '/_app/companies/$id'
@@ -380,6 +392,13 @@ declare module '@tanstack/react-router' {
       path: '/reports'
       fullPath: '/reports'
       preLoaderRoute: typeof AppReportsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/products': {
+      id: '/_app/products'
+      path: '/products'
+      fullPath: '/products'
+      preLoaderRoute: typeof AppProductsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/pipeline': {
@@ -567,6 +586,7 @@ interface AppRouteChildren {
   AppForecastRoute: typeof AppForecastRoute
   AppOpportunityMapRoute: typeof AppOpportunityMapRoute
   AppPipelineRoute: typeof AppPipelineRoute
+  AppProductsRoute: typeof AppProductsRoute
   AppReportsRoute: typeof AppReportsRoute
   AppRetentionRoute: typeof AppRetentionRoute
   AppInviteTokenRoute: typeof AppInviteTokenRoute
@@ -588,6 +608,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppForecastRoute: AppForecastRoute,
   AppOpportunityMapRoute: AppOpportunityMapRoute,
   AppPipelineRoute: AppPipelineRoute,
+  AppProductsRoute: AppProductsRoute,
   AppReportsRoute: AppReportsRoute,
   AppRetentionRoute: AppRetentionRoute,
   AppInviteTokenRoute: AppInviteTokenRoute,
