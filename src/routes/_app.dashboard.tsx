@@ -57,7 +57,8 @@ function DashboardPage() {
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">{s.label}</span>
               <s.icon className={`h-4 w-4 ${s.accent}`} />
-            </div>
+      </div>
+      )}
             <p className="mt-3 text-2xl font-semibold tracking-tight">{s.value}</p>
             <p className="mt-1 text-xs text-muted-foreground">{s.sub}</p>
           </Card>
