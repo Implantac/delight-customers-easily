@@ -13,8 +13,11 @@ import { PageHeader } from "@/components/page-header";
 import { Upload, FileSpreadsheet } from "lucide-react";
 import { toast } from "sonner";
 import { csvToObjects } from "@/lib/csv";
+import { RequireManager } from "@/components/require-manager";
 
-export const Route = createFileRoute("/_app/settings/import")({ component: ImportPage });
+export const Route = createFileRoute("/_app/settings/import")({
+  component: () => <RequireManager><ImportPage /></RequireManager>,
+});
 
 type Kind = "contacts" | "companies";
 
