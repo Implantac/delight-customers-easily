@@ -10,6 +10,8 @@ import { Timeline, type TimelineItem } from "@/components/timeline";
 import { ArrowLeft, Mail, Phone, Briefcase, Trash2, Building2, KanbanSquare, Clock, MessageCircle } from "lucide-react";
 import { SendEmailDialog } from "@/components/send-email-dialog";
 import { AIInsights } from "@/components/ai-insights";
+import { Attachments } from "@/components/attachments";
+import { TagPicker } from "@/components/tag-picker";
 import { whatsappLink } from "@/lib/wa";
 import { toast } from "sonner";
 
