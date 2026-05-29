@@ -13,10 +13,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { PageHeader } from "@/components/page-header";
 import { EmptyState } from "@/components/empty-state";
-import { Plus, Globe, Trash2, Building2 } from "lucide-react";
+import { Plus, Globe, Trash2, Building2, Download } from "lucide-react";
 import { toast } from "sonner";
 import { companySchema, fromForm } from "@/lib/validation";
 import { CompanyDuplicateWarning } from "@/components/duplicate-warning";
+import { toCSV, downloadCSV } from "@/lib/csv-export";
 
 export const Route = createFileRoute("/_app/companies")({ component: CompaniesPage });
 
@@ -63,6 +64,14 @@ function CompaniesPage() {
         title="Empresas"
         subtitle={`${companies?.length ?? 0} empresas cadastradas`}
         action={
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" disabled={!companies?.length} onClick={() => {
+              const csv = toCSV(companies ?? [], [
+                { key: "name", label: "Nome" }, { key: "website", label: "Website" },
+                { key: "industry", label: "Indústria" }, { key: "size", label: "Tamanho" }, { key: "notes", label: "Notas" },
+              ] as any);
+              downloadCSV(`empresas-${new Date().toISOString().slice(0,10)}.csv`, csv);
+            }}><Download className="mr-2 h-4 w-4" />Exportar</Button>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild><Button><Plus className="mr-2 h-4 w-4" />Nova empresa</Button></DialogTrigger>
             <DialogContent>
@@ -80,6 +89,7 @@ function CompaniesPage() {
               </form>
             </DialogContent>
           </Dialog>
+          </div>
         }
       />
 

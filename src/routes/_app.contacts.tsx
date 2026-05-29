@@ -14,10 +14,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PageHeader } from "@/components/page-header";
 import { EmptyState } from "@/components/empty-state";
-import { Plus, Mail, Phone, Trash2, Search, Users } from "lucide-react";
+import { Plus, Mail, Phone, Trash2, Search, Users, Download } from "lucide-react";
 import { toast } from "sonner";
 import { contactSchema, fromForm } from "@/lib/validation";
 import { ContactDuplicateWarning } from "@/components/duplicate-warning";
+import { toCSV, downloadCSV } from "@/lib/csv-export";
 
 export const Route = createFileRoute("/_app/contacts")({ component: ContactsPage });
 
@@ -80,6 +81,14 @@ function ContactsPage() {
         title="Contatos"
         subtitle={`${contacts?.length ?? 0} contatos`}
         action={
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" disabled={!contacts?.length} onClick={() => {
+              const csv = toCSV(contacts ?? [], [
+                { key: "name", label: "Nome" }, { key: "email", label: "Email" }, { key: "phone", label: "Telefone" },
+                { key: "position", label: "Cargo" }, { key: "notes", label: "Notas" },
+              ] as any);
+              downloadCSV(`contatos-${new Date().toISOString().slice(0,10)}.csv`, csv);
+            }}><Download className="mr-2 h-4 w-4" />Exportar</Button>
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild><Button><Plus className="mr-2 h-4 w-4" />Novo contato</Button></DialogTrigger>
             <DialogContent>
@@ -104,6 +113,7 @@ function ContactsPage() {
               </form>
             </DialogContent>
           </Dialog>
+          </div>
         }
       />
 
