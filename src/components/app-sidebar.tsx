@@ -15,6 +15,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { toast } from "sonner";
 
 const nav = [
+  { to: "/command", label: "Comando", icon: Sparkles, shortcut: "G H", managerOnly: false },
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, shortcut: "G D", managerOnly: false },
   { to: "/pipeline", label: "Pipeline", icon: KanbanSquare, shortcut: "G P", managerOnly: false },
   { to: "/contacts", label: "Contatos", icon: Users, shortcut: "G C", managerOnly: false },
