@@ -7,9 +7,10 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "@/components/page-header";
 import { Timeline, type TimelineItem } from "@/components/timeline";
-import { ArrowLeft, Mail, Phone, Briefcase, Trash2, Building2, KanbanSquare, Clock } from "lucide-react";
+import { ArrowLeft, Mail, Phone, Briefcase, Trash2, Building2, KanbanSquare, Clock, MessageCircle } from "lucide-react";
 import { SendEmailDialog } from "@/components/send-email-dialog";
 import { AIInsights } from "@/components/ai-insights";
+import { whatsappLink } from "@/lib/wa";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/contacts/$id")({ component: ContactDetail });
@@ -58,7 +59,12 @@ function ContactDetail() {
         title={contact.name}
         subtitle={contact.position ?? undefined}
         action={
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
+            {contact.phone && whatsappLink(contact.phone) && (
+              <Button variant="outline" size="sm" asChild>
+                <a href={whatsappLink(contact.phone)!} target="_blank" rel="noreferrer"><MessageCircle className="mr-1 h-4 w-4" />WhatsApp</a>
+              </Button>
+            )}
             {contact.email && <SendEmailDialog to={contact.email} contactId={contact.id} />}
             <Button variant="outline" size="sm" onClick={() => { if (confirm("Remover contato?")) del.mutate(); }}><Trash2 className="mr-1 h-4 w-4" />Remover</Button>
           </div>

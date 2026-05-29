@@ -19,6 +19,8 @@ import { Plus, Trash2, Target } from "lucide-react";
 import { toast } from "sonner";
 import { dealSchema, fromForm } from "@/lib/validation";
 import { AIInsights } from "@/components/ai-insights";
+import { useServerFn } from "@tanstack/react-start";
+import { triggerWebhooks } from "@/lib/webhooks.functions";
 
 export const Route = createFileRoute("/_app/pipeline")({ component: PipelinePage });
 
@@ -79,10 +81,20 @@ function PipelinePage() {
     onError: (e: any) => toast.error(e.message),
   });
 
+  const fire = useServerFn(triggerWebhooks);
+
   const move = useMutation({
-    mutationFn: async ({ id, stage }: { id: string; stage: Stage }) => {
+    mutationFn: async ({ id, stage, prevStage, deal }: { id: string; stage: Stage; prevStage: Stage; deal: any }) => {
       const { error } = await supabase.from("deals").update({ stage }).eq("id", id);
       if (error) throw error;
+      if (prevStage !== stage && orgId) {
+        const events = ["deal.stage_changed"];
+        if (stage === "won") events.push("deal.won");
+        if (stage === "lost") events.push("deal.lost");
+        for (const ev of events) {
+          fire({ data: { organization_id: orgId, event: ev, payload: { id, from: prevStage, to: stage, deal } } }).catch(() => {});
+        }
+      }
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["deals"] }),
     onError: (e: any) => toast.error(e.message),
@@ -162,7 +174,12 @@ function PipelinePage() {
               <div
                 key={stage.id}
                 onDragOver={(e) => e.preventDefault()}
-                onDrop={() => { if (dragId) { move.mutate({ id: dragId, stage: stage.id }); setDragId(null); } }}
+                onDrop={() => {
+                  if (!dragId) return;
+                  const d = (deals ?? []).find((x) => x.id === dragId);
+                  if (d && d.stage !== stage.id) move.mutate({ id: dragId, stage: stage.id, prevStage: d.stage as Stage, deal: { title: d.title, value: d.value } });
+                  setDragId(null);
+                }}
                 className="flex flex-col rounded-lg bg-muted/40 p-2"
               >
                 <div className="px-2 py-2">
