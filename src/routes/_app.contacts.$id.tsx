@@ -7,7 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "@/components/page-header";
 import { Timeline, type TimelineItem } from "@/components/timeline";
-import { ArrowLeft, Mail, Phone, Briefcase, Trash2, Building2, KanbanSquare, Clock, MessageCircle } from "lucide-react";
+import { ArrowLeft, Mail, Phone, Briefcase, Trash2, Building2, KanbanSquare, Clock, MessageCircle, History as HistoryIcon } from "lucide-react";
+import { AuditHistory } from "@/components/audit-history";
 import { SendEmailDialog } from "@/components/send-email-dialog";
 import { AIInsights } from "@/components/ai-insights";
 import { Attachments } from "@/components/attachments";
@@ -128,7 +129,7 @@ function ContactDetail() {
           </Card>
 
           <Card className="p-5">
-            <h3 className="flex items-center gap-2 text-sm font-semibold mb-4"><History className="h-4 w-4" />Histórico de alterações</h3>
+            <h3 className="flex items-center gap-2 text-sm font-semibold mb-4"><HistoryIcon className="h-4 w-4" />Histórico de alterações</h3>
             <AuditHistory entityType="contacts" entityId={contact.id} />
           </Card>
         </div>
