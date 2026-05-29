@@ -18,6 +18,7 @@ import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppContactsRouteImport } from './routes/_app.contacts'
 import { Route as AppCompaniesRouteImport } from './routes/_app.companies'
 import { Route as AppCommandRouteImport } from './routes/_app.command'
+import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
 import { Route as AppActivitiesRouteImport } from './routes/_app.activities'
 import { Route as ApiPublicInboundEmailRouteImport } from './routes/api/public/inbound-email'
 import { Route as AppSettingsWebhooksRouteImport } from './routes/_app.settings.webhooks'
@@ -28,6 +29,7 @@ import { Route as AppSettingsAutomationsRouteImport } from './routes/_app.settin
 import { Route as AppInviteTokenRouteImport } from './routes/_app.invite.$token'
 import { Route as AppContactsIdRouteImport } from './routes/_app.contacts.$id'
 import { Route as AppCompaniesIdRouteImport } from './routes/_app.companies.$id'
+import { Route as ApiPublicHooksGenerateAlertsRouteImport } from './routes/api/public/hooks/generate-alerts'
 import { Route as ApiPublicHooksActivityRemindersRouteImport } from './routes/api/public/hooks/activity-reminders'
 
 const LoginRoute = LoginRouteImport.update({
@@ -72,6 +74,11 @@ const AppCompaniesRoute = AppCompaniesRouteImport.update({
 const AppCommandRoute = AppCommandRouteImport.update({
   id: '/command',
   path: '/command',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAlertsRoute = AppAlertsRouteImport.update({
+  id: '/alerts',
+  path: '/alerts',
   getParentRoute: () => AppRoute,
 } as any)
 const AppActivitiesRoute = AppActivitiesRouteImport.update({
@@ -124,6 +131,12 @@ const AppCompaniesIdRoute = AppCompaniesIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AppCompaniesRoute,
 } as any)
+const ApiPublicHooksGenerateAlertsRoute =
+  ApiPublicHooksGenerateAlertsRouteImport.update({
+    id: '/api/public/hooks/generate-alerts',
+    path: '/api/public/hooks/generate-alerts',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHooksActivityRemindersRoute =
   ApiPublicHooksActivityRemindersRouteImport.update({
     id: '/api/public/hooks/activity-reminders',
@@ -135,6 +148,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/activities': typeof AppActivitiesRoute
+  '/alerts': typeof AppAlertsRoute
   '/command': typeof AppCommandRoute
   '/companies': typeof AppCompaniesRouteWithChildren
   '/contacts': typeof AppContactsRouteWithChildren
@@ -151,11 +165,13 @@ export interface FileRoutesByFullPath {
   '/settings/webhooks': typeof AppSettingsWebhooksRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
+  '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/activities': typeof AppActivitiesRoute
+  '/alerts': typeof AppAlertsRoute
   '/command': typeof AppCommandRoute
   '/companies': typeof AppCompaniesRouteWithChildren
   '/contacts': typeof AppContactsRouteWithChildren
@@ -172,6 +188,7 @@ export interface FileRoutesByTo {
   '/settings/webhooks': typeof AppSettingsWebhooksRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
+  '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -179,6 +196,7 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/_app/activities': typeof AppActivitiesRoute
+  '/_app/alerts': typeof AppAlertsRoute
   '/_app/command': typeof AppCommandRoute
   '/_app/companies': typeof AppCompaniesRouteWithChildren
   '/_app/contacts': typeof AppContactsRouteWithChildren
@@ -195,6 +213,7 @@ export interface FileRoutesById {
   '/_app/settings/webhooks': typeof AppSettingsWebhooksRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
+  '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -202,6 +221,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/activities'
+    | '/alerts'
     | '/command'
     | '/companies'
     | '/contacts'
@@ -218,11 +238,13 @@ export interface FileRouteTypes {
     | '/settings/webhooks'
     | '/api/public/inbound-email'
     | '/api/public/hooks/activity-reminders'
+    | '/api/public/hooks/generate-alerts'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
     | '/activities'
+    | '/alerts'
     | '/command'
     | '/companies'
     | '/contacts'
@@ -239,12 +261,14 @@ export interface FileRouteTypes {
     | '/settings/webhooks'
     | '/api/public/inbound-email'
     | '/api/public/hooks/activity-reminders'
+    | '/api/public/hooks/generate-alerts'
   id:
     | '__root__'
     | '/'
     | '/_app'
     | '/login'
     | '/_app/activities'
+    | '/_app/alerts'
     | '/_app/command'
     | '/_app/companies'
     | '/_app/contacts'
@@ -261,6 +285,7 @@ export interface FileRouteTypes {
     | '/_app/settings/webhooks'
     | '/api/public/inbound-email'
     | '/api/public/hooks/activity-reminders'
+    | '/api/public/hooks/generate-alerts'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -269,6 +294,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   ApiPublicInboundEmailRoute: typeof ApiPublicInboundEmailRoute
   ApiPublicHooksActivityRemindersRoute: typeof ApiPublicHooksActivityRemindersRoute
+  ApiPublicHooksGenerateAlertsRoute: typeof ApiPublicHooksGenerateAlertsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -334,6 +360,13 @@ declare module '@tanstack/react-router' {
       path: '/command'
       fullPath: '/command'
       preLoaderRoute: typeof AppCommandRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/alerts': {
+      id: '/_app/alerts'
+      path: '/alerts'
+      fullPath: '/alerts'
+      preLoaderRoute: typeof AppAlertsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/activities': {
@@ -406,6 +439,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCompaniesIdRouteImport
       parentRoute: typeof AppCompaniesRoute
     }
+    '/api/public/hooks/generate-alerts': {
+      id: '/api/public/hooks/generate-alerts'
+      path: '/api/public/hooks/generate-alerts'
+      fullPath: '/api/public/hooks/generate-alerts'
+      preLoaderRoute: typeof ApiPublicHooksGenerateAlertsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/activity-reminders': {
       id: '/api/public/hooks/activity-reminders'
       path: '/api/public/hooks/activity-reminders'
@@ -442,6 +482,7 @@ const AppContactsRouteWithChildren = AppContactsRoute._addFileChildren(
 
 interface AppRouteChildren {
   AppActivitiesRoute: typeof AppActivitiesRoute
+  AppAlertsRoute: typeof AppAlertsRoute
   AppCommandRoute: typeof AppCommandRoute
   AppCompaniesRoute: typeof AppCompaniesRouteWithChildren
   AppContactsRoute: typeof AppContactsRouteWithChildren
@@ -458,6 +499,7 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppActivitiesRoute: AppActivitiesRoute,
+  AppAlertsRoute: AppAlertsRoute,
   AppCommandRoute: AppCommandRoute,
   AppCompaniesRoute: AppCompaniesRouteWithChildren,
   AppContactsRoute: AppContactsRouteWithChildren,
@@ -480,6 +522,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   ApiPublicInboundEmailRoute: ApiPublicInboundEmailRoute,
   ApiPublicHooksActivityRemindersRoute: ApiPublicHooksActivityRemindersRoute,
+  ApiPublicHooksGenerateAlertsRoute: ApiPublicHooksGenerateAlertsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

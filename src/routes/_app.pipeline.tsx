@@ -25,6 +25,7 @@ import { DealHistory } from "@/components/deal-history";
 import { useServerFn } from "@tanstack/react-start";
 import { triggerWebhooks } from "@/lib/webhooks.functions";
 import { runAutomations } from "@/lib/automations.functions";
+import { scoreDeal, HEAT_STYLES } from "@/lib/deal-score";
 
 export const Route = createFileRoute("/_app/pipeline")({ component: PipelinePage });
 
@@ -175,7 +176,10 @@ function PipelinePage() {
       ) : (
         <div className="mt-6 flex gap-3 overflow-x-auto pb-2 md:grid md:grid-cols-3 md:overflow-visible lg:grid-cols-6">
           {STAGES.map((stage) => {
-            const items = (deals ?? []).filter((d) => d.stage === stage.id);
+            const items = (deals ?? [])
+              .filter((d) => d.stage === stage.id)
+              .map((d) => ({ ...d, _score: scoreDeal(d as any) }))
+              .sort((a, b) => b._score.probability - a._score.probability);
             const sum = items.reduce((s, d) => s + Number(d.value), 0);
             return (
               <div
@@ -197,23 +201,37 @@ function PipelinePage() {
                   <p className="mt-0.5 text-xs text-muted-foreground">{fmtBRL(sum)}</p>
                 </div>
                 <div className="flex-1 space-y-2">
-                  {items.map((d) => (
-                    <Card
-                      key={d.id}
-                      draggable
-                      onDragStart={() => setDragId(d.id)}
-                      onClick={() => setSelectedId(d.id)}
-                      className={`cursor-grab border-l-4 p-3 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)] active:cursor-grabbing ${stage.color}`}
-                    >
-                      <h4 className="text-sm font-medium leading-tight">{d.title}</h4>
-                      <p className="mt-1 text-sm font-semibold text-primary">{fmtBRL(Number(d.value))}</p>
-                      {((d.contacts as any)?.name || (d.companies as any)?.name) && (
-                        <p className="mt-1 truncate text-xs text-muted-foreground">
-                          {(d.contacts as any)?.name}{(d.contacts as any)?.name && (d.companies as any)?.name ? " · " : ""}{(d.companies as any)?.name}
-                        </p>
-                      )}
-                    </Card>
-                  ))}
+                  {items.map((d) => {
+                    const heat = HEAT_STYLES[d._score.heat];
+                    return (
+                      <Card
+                        key={d.id}
+                        draggable
+                        onDragStart={() => setDragId(d.id)}
+                        onClick={() => setSelectedId(d.id)}
+                        className={`group cursor-grab border-l-4 p-3 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)] active:cursor-grabbing ${stage.color}`}
+                        title={d._score.reasons.join(" · ")}
+                      >
+                        <div className="flex items-start justify-between gap-2">
+                          <h4 className="flex-1 text-sm font-medium leading-tight">{d.title}</h4>
+                          <span className={`flex h-2 w-2 shrink-0 rounded-full ${heat.dot} ring-2 ${heat.ring}`} />
+                        </div>
+                        <div className="mt-1 flex items-baseline justify-between gap-2">
+                          <p className="text-sm font-semibold text-primary">{fmtBRL(Number(d.value))}</p>
+                          {d.stage !== "won" && d.stage !== "lost" && (
+                            <span className="text-[10px] font-medium text-muted-foreground">
+                              {d._score.probability}%
+                            </span>
+                          )}
+                        </div>
+                        {((d.contacts as any)?.name || (d.companies as any)?.name) && (
+                          <p className="mt-1 truncate text-xs text-muted-foreground">
+                            {(d.contacts as any)?.name}{(d.contacts as any)?.name && (d.companies as any)?.name ? " · " : ""}{(d.companies as any)?.name}
+                          </p>
+                        )}
+                      </Card>
+                    );
+                  })}
                 </div>
               </div>
             );
