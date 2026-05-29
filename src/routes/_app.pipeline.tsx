@@ -18,6 +18,7 @@ import { EmptyState } from "@/components/empty-state";
 import { Plus, Trash2, Target } from "lucide-react";
 import { toast } from "sonner";
 import { dealSchema, fromForm } from "@/lib/validation";
+import { AIInsights } from "@/components/ai-insights";
 
 export const Route = createFileRoute("/_app/pipeline")({ component: PipelinePage });
 
@@ -320,6 +321,10 @@ function DealDrawer({
                 </ul>
               )}
             </div>
+
+            <AIInsights dealId={deal.id} actions={["score_deal"]} />
+
+
 
             <SheetFooter className="gap-2 sm:gap-2">
               <Button variant="destructive" size="sm" onClick={() => onDelete(deal.id)}>

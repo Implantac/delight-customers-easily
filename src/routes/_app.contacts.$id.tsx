@@ -9,6 +9,7 @@ import { PageHeader } from "@/components/page-header";
 import { Timeline, type TimelineItem } from "@/components/timeline";
 import { ArrowLeft, Mail, Phone, Briefcase, Trash2, Building2, KanbanSquare, Clock } from "lucide-react";
 import { SendEmailDialog } from "@/components/send-email-dialog";
+import { AIInsights } from "@/components/ai-insights";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/contacts/$id")({ component: ContactDetail });
@@ -93,6 +94,8 @@ function ContactDetail() {
               ))}
             </div>
           </Card>
+
+          <AIInsights contactId={contact.id} actions={["summarize_contact", "next_action"]} />
 
           <Card className="p-5">
             <h3 className="flex items-center gap-2 text-sm font-semibold"><Clock className="h-4 w-4" />Timeline</h3>
