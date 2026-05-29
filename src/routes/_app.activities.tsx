@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { useCurrentOrg } from "@/lib/org";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -53,10 +54,13 @@ function ActivitiesPage() {
     queryFn: async () => (await supabase.from("deals").select("id, title").order("title")).data ?? [],
   });
 
+  const { orgId } = useCurrentOrg();
   const create = useMutation({
     mutationFn: async (form: FormData) => {
+      if (!orgId) throw new Error("Nenhuma organização ativa");
       const payload = {
         user_id: user!.id,
+        organization_id: orgId,
         type: (form.get("type") as any) || "task",
         title: String(form.get("title") || "").trim(),
         description: String(form.get("description") || "").trim() || null,
