@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "@/components/page-header";
-import { ArrowLeft, Mail, Phone, Briefcase, Trash2, Building2, KanbanSquare, CheckSquare } from "lucide-react";
+import { Timeline, type TimelineItem } from "@/components/timeline";
+import { ArrowLeft, Mail, Phone, Briefcase, Trash2, Building2, KanbanSquare, Clock } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/contacts/$id")({ component: ContactDetail });
@@ -88,15 +89,18 @@ function ContactDetail() {
           </Card>
 
           <Card className="p-5">
-            <h3 className="flex items-center gap-2 text-sm font-semibold"><CheckSquare className="h-4 w-4" />Atividades ({activities?.length ?? 0})</h3>
-            <div className="mt-3 space-y-2">
-              {(activities ?? []).length === 0 && <p className="text-sm text-muted-foreground">Sem atividades.</p>}
-              {activities?.map((a) => (
-                <div key={a.id} className="flex items-center justify-between rounded-md border p-3 text-sm">
-                  <span className={a.completed ? "text-muted-foreground line-through" : "font-medium"}>{a.title}</span>
-                  <span className="text-xs text-muted-foreground">{a.type}{a.due_date ? ` · ${new Date(a.due_date).toLocaleDateString("pt-BR")}` : ""}</span>
-                </div>
-              ))}
+            <h3 className="flex items-center gap-2 text-sm font-semibold"><Clock className="h-4 w-4" />Timeline</h3>
+            <div className="mt-4">
+              <Timeline
+                emptyLabel="Sem atividades por aqui ainda."
+                items={[
+                  ...(activities ?? []).map<TimelineItem>((a) => ({
+                    id: a.id, kind: "activity", type: a.type, title: a.title, completed: a.completed,
+                    date: a.due_date ?? new Date().toISOString(),
+                    meta: a.type + (a.due_date ? ` · ${new Date(a.due_date).toLocaleString("pt-BR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}` : ""),
+                  })),
+                ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())}
+              />
             </div>
           </Card>
         </div>
