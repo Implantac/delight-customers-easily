@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,11 +9,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PageHeader } from "@/components/page-header";
-import { Plus, Mail, Phone, Trash2, Search } from "lucide-react";
+import { EmptyState } from "@/components/empty-state";
+import { Plus, Mail, Phone, Trash2, Search, Users } from "lucide-react";
 import { toast } from "sonner";
+import { contactSchema, fromForm } from "@/lib/validation";
 
 export const Route = createFileRoute("/_app/contacts")({ component: ContactsPage });
 
@@ -24,7 +27,7 @@ function ContactsPage() {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
 
-  const { data: contacts } = useQuery({
+  const { data: contacts, isLoading } = useQuery({
     queryKey: ["contacts"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -53,18 +56,10 @@ function ContactsPage() {
   const create = useMutation({
     mutationFn: async (form: FormData) => {
       if (!orgId) throw new Error("Nenhuma organização ativa");
-      const payload = {
-        user_id: user!.id,
-        organization_id: orgId,
-        name: String(form.get("name") || "").trim(),
-        email: String(form.get("email") || "").trim() || null,
-        phone: String(form.get("phone") || "").trim() || null,
-        position: String(form.get("position") || "").trim() || null,
-        company_id: (form.get("company_id") as string) || null,
-        notes: String(form.get("notes") || "").trim() || null,
-      };
-      if (!payload.name) throw new Error("Nome é obrigatório");
-      const { error } = await supabase.from("contacts").insert(payload);
+      const v = fromForm(contactSchema, form);
+      const { error } = await supabase.from("contacts").insert({
+        ...v, user_id: user!.id, organization_id: orgId,
+      });
       if (error) throw error;
     },
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["contacts"] }); setOpen(false); toast.success("Contato criado"); },
@@ -112,42 +107,47 @@ function ContactsPage() {
         <Input placeholder="Buscar contatos…" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
       </div>
 
-      <Card className="overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-muted/50 text-xs uppercase tracking-wider text-muted-foreground">
-            <tr>
-              <th className="px-4 py-3 text-left">Nome</th>
-              <th className="px-4 py-3 text-left">Empresa</th>
-              <th className="px-4 py-3 text-left">Cargo</th>
-              <th className="px-4 py-3 text-left">Contato</th>
-              <th className="px-4 py-3"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.length === 0 && (
-              <tr><td colSpan={5} className="px-4 py-12 text-center text-muted-foreground">Nenhum contato encontrado.</td></tr>
-            )}
-            {filtered.map((c) => (
-              <tr key={c.id} className="border-t hover:bg-muted/30">
-                <td className="px-4 py-3 font-medium">{c.name}</td>
-                <td className="px-4 py-3 text-muted-foreground">{(c.companies as any)?.name ?? "—"}</td>
-                <td className="px-4 py-3 text-muted-foreground">{c.position ?? "—"}</td>
-                <td className="px-4 py-3 text-muted-foreground">
-                  <div className="flex flex-col gap-0.5">
-                    {c.email && <span className="flex items-center gap-1.5"><Mail className="h-3 w-3" />{c.email}</span>}
-                    {c.phone && <span className="flex items-center gap-1.5"><Phone className="h-3 w-3" />{c.phone}</span>}
-                  </div>
-                </td>
-                <td className="px-4 py-3 text-right">
-                  <Button variant="ghost" size="sm" onClick={() => { if (confirm("Remover contato?")) del.mutate(c.id); }}>
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </td>
+      {isLoading ? (
+        <div className="space-y-2">{Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-14 w-full" />)}</div>
+      ) : filtered.length === 0 ? (
+        <EmptyState icon={Users} title="Nenhum contato" description={search ? "Tente outra busca." : "Comece criando seu primeiro contato."} />
+      ) : (
+        <Card className="overflow-hidden">
+          <table className="w-full text-sm">
+            <thead className="bg-muted/50 text-xs uppercase tracking-wider text-muted-foreground">
+              <tr>
+                <th className="px-4 py-3 text-left">Nome</th>
+                <th className="px-4 py-3 text-left">Empresa</th>
+                <th className="px-4 py-3 text-left">Cargo</th>
+                <th className="px-4 py-3 text-left">Contato</th>
+                <th className="px-4 py-3"></th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </Card>
+            </thead>
+            <tbody>
+              {filtered.map((c) => (
+                <tr key={c.id} className="border-t hover:bg-muted/30">
+                  <td className="px-4 py-3 font-medium">
+                    <Link to="/contacts/$id" params={{ id: c.id }} className="hover:underline">{c.name}</Link>
+                  </td>
+                  <td className="px-4 py-3 text-muted-foreground">{(c.companies as any)?.name ?? "—"}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{c.position ?? "—"}</td>
+                  <td className="px-4 py-3 text-muted-foreground">
+                    <div className="flex flex-col gap-0.5">
+                      {c.email && <span className="flex items-center gap-1.5"><Mail className="h-3 w-3" />{c.email}</span>}
+                      {c.phone && <span className="flex items-center gap-1.5"><Phone className="h-3 w-3" />{c.phone}</span>}
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    <Button variant="ghost" size="sm" onClick={() => { if (confirm("Remover contato?")) del.mutate(c.id); }}>
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </Card>
+      )}
     </div>
   );
 }

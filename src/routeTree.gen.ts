@@ -18,6 +18,9 @@ import { Route as AppContactsRouteImport } from './routes/_app.contacts'
 import { Route as AppCompaniesRouteImport } from './routes/_app.companies'
 import { Route as AppActivitiesRouteImport } from './routes/_app.activities'
 import { Route as AppSettingsOrganizationRouteImport } from './routes/_app.settings.organization'
+import { Route as AppInviteTokenRouteImport } from './routes/_app.invite.$token'
+import { Route as AppContactsIdRouteImport } from './routes/_app.contacts.$id'
+import { Route as AppCompaniesIdRouteImport } from './routes/_app.companies.$id'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -63,25 +66,46 @@ const AppSettingsOrganizationRoute = AppSettingsOrganizationRouteImport.update({
   path: '/settings/organization',
   getParentRoute: () => AppRoute,
 } as any)
+const AppInviteTokenRoute = AppInviteTokenRouteImport.update({
+  id: '/invite/$token',
+  path: '/invite/$token',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppContactsIdRoute = AppContactsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppContactsRoute,
+} as any)
+const AppCompaniesIdRoute = AppCompaniesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppCompaniesRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/activities': typeof AppActivitiesRoute
-  '/companies': typeof AppCompaniesRoute
-  '/contacts': typeof AppContactsRoute
+  '/companies': typeof AppCompaniesRouteWithChildren
+  '/contacts': typeof AppContactsRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
   '/pipeline': typeof AppPipelineRoute
+  '/companies/$id': typeof AppCompaniesIdRoute
+  '/contacts/$id': typeof AppContactsIdRoute
+  '/invite/$token': typeof AppInviteTokenRoute
   '/settings/organization': typeof AppSettingsOrganizationRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/activities': typeof AppActivitiesRoute
-  '/companies': typeof AppCompaniesRoute
-  '/contacts': typeof AppContactsRoute
+  '/companies': typeof AppCompaniesRouteWithChildren
+  '/contacts': typeof AppContactsRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
   '/pipeline': typeof AppPipelineRoute
+  '/companies/$id': typeof AppCompaniesIdRoute
+  '/contacts/$id': typeof AppContactsIdRoute
+  '/invite/$token': typeof AppInviteTokenRoute
   '/settings/organization': typeof AppSettingsOrganizationRoute
 }
 export interface FileRoutesById {
@@ -90,10 +114,13 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/_app/activities': typeof AppActivitiesRoute
-  '/_app/companies': typeof AppCompaniesRoute
-  '/_app/contacts': typeof AppContactsRoute
+  '/_app/companies': typeof AppCompaniesRouteWithChildren
+  '/_app/contacts': typeof AppContactsRouteWithChildren
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/pipeline': typeof AppPipelineRoute
+  '/_app/companies/$id': typeof AppCompaniesIdRoute
+  '/_app/contacts/$id': typeof AppContactsIdRoute
+  '/_app/invite/$token': typeof AppInviteTokenRoute
   '/_app/settings/organization': typeof AppSettingsOrganizationRoute
 }
 export interface FileRouteTypes {
@@ -106,6 +133,9 @@ export interface FileRouteTypes {
     | '/contacts'
     | '/dashboard'
     | '/pipeline'
+    | '/companies/$id'
+    | '/contacts/$id'
+    | '/invite/$token'
     | '/settings/organization'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -116,6 +146,9 @@ export interface FileRouteTypes {
     | '/contacts'
     | '/dashboard'
     | '/pipeline'
+    | '/companies/$id'
+    | '/contacts/$id'
+    | '/invite/$token'
     | '/settings/organization'
   id:
     | '__root__'
@@ -127,6 +160,9 @@ export interface FileRouteTypes {
     | '/_app/contacts'
     | '/_app/dashboard'
     | '/_app/pipeline'
+    | '/_app/companies/$id'
+    | '/_app/contacts/$id'
+    | '/_app/invite/$token'
     | '/_app/settings/organization'
   fileRoutesById: FileRoutesById
 }
@@ -201,24 +237,71 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsOrganizationRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/invite/$token': {
+      id: '/_app/invite/$token'
+      path: '/invite/$token'
+      fullPath: '/invite/$token'
+      preLoaderRoute: typeof AppInviteTokenRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/contacts/$id': {
+      id: '/_app/contacts/$id'
+      path: '/$id'
+      fullPath: '/contacts/$id'
+      preLoaderRoute: typeof AppContactsIdRouteImport
+      parentRoute: typeof AppContactsRoute
+    }
+    '/_app/companies/$id': {
+      id: '/_app/companies/$id'
+      path: '/$id'
+      fullPath: '/companies/$id'
+      preLoaderRoute: typeof AppCompaniesIdRouteImport
+      parentRoute: typeof AppCompaniesRoute
+    }
   }
 }
 
+interface AppCompaniesRouteChildren {
+  AppCompaniesIdRoute: typeof AppCompaniesIdRoute
+}
+
+const AppCompaniesRouteChildren: AppCompaniesRouteChildren = {
+  AppCompaniesIdRoute: AppCompaniesIdRoute,
+}
+
+const AppCompaniesRouteWithChildren = AppCompaniesRoute._addFileChildren(
+  AppCompaniesRouteChildren,
+)
+
+interface AppContactsRouteChildren {
+  AppContactsIdRoute: typeof AppContactsIdRoute
+}
+
+const AppContactsRouteChildren: AppContactsRouteChildren = {
+  AppContactsIdRoute: AppContactsIdRoute,
+}
+
+const AppContactsRouteWithChildren = AppContactsRoute._addFileChildren(
+  AppContactsRouteChildren,
+)
+
 interface AppRouteChildren {
   AppActivitiesRoute: typeof AppActivitiesRoute
-  AppCompaniesRoute: typeof AppCompaniesRoute
-  AppContactsRoute: typeof AppContactsRoute
+  AppCompaniesRoute: typeof AppCompaniesRouteWithChildren
+  AppContactsRoute: typeof AppContactsRouteWithChildren
   AppDashboardRoute: typeof AppDashboardRoute
   AppPipelineRoute: typeof AppPipelineRoute
+  AppInviteTokenRoute: typeof AppInviteTokenRoute
   AppSettingsOrganizationRoute: typeof AppSettingsOrganizationRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppActivitiesRoute: AppActivitiesRoute,
-  AppCompaniesRoute: AppCompaniesRoute,
-  AppContactsRoute: AppContactsRoute,
+  AppCompaniesRoute: AppCompaniesRouteWithChildren,
+  AppContactsRoute: AppContactsRouteWithChildren,
   AppDashboardRoute: AppDashboardRoute,
   AppPipelineRoute: AppPipelineRoute,
+  AppInviteTokenRoute: AppInviteTokenRoute,
   AppSettingsOrganizationRoute: AppSettingsOrganizationRoute,
 }
 
