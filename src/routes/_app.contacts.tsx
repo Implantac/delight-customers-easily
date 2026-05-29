@@ -56,18 +56,10 @@ function ContactsPage() {
   const create = useMutation({
     mutationFn: async (form: FormData) => {
       if (!orgId) throw new Error("Nenhuma organização ativa");
-      const payload = {
-        user_id: user!.id,
-        organization_id: orgId,
-        name: String(form.get("name") || "").trim(),
-        email: String(form.get("email") || "").trim() || null,
-        phone: String(form.get("phone") || "").trim() || null,
-        position: String(form.get("position") || "").trim() || null,
-        company_id: (form.get("company_id") as string) || null,
-        notes: String(form.get("notes") || "").trim() || null,
-      };
-      if (!payload.name) throw new Error("Nome é obrigatório");
-      const { error } = await supabase.from("contacts").insert(payload);
+      const v = fromForm(contactSchema, form);
+      const { error } = await supabase.from("contacts").insert({
+        ...v, user_id: user!.id, organization_id: orgId,
+      });
       if (error) throw error;
     },
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["contacts"] }); setOpen(false); toast.success("Contato criado"); },
