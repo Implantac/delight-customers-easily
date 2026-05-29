@@ -12,9 +12,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "@/components/page-header";
+import { EmptyState } from "@/components/empty-state";
 import { Plus, Trash2, Phone, Mail, Users, FileText, CheckSquare } from "lucide-react";
 import { toast } from "sonner";
+import { activitySchema, fromForm } from "@/lib/validation";
 
 export const Route = createFileRoute("/_app/activities")({ component: ActivitiesPage });
 
@@ -28,11 +31,12 @@ const TYPES = [
 
 function ActivitiesPage() {
   const { user } = useAuth();
+  const { orgId } = useCurrentOrg();
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
   const [filter, setFilter] = useState<"all" | "pending" | "done">("pending");
 
-  const { data: activities } = useQuery({
+  const { data: activities, isLoading } = useQuery({
     queryKey: ["activities"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -54,22 +58,15 @@ function ActivitiesPage() {
     queryFn: async () => (await supabase.from("deals").select("id, title").order("title")).data ?? [],
   });
 
-  const { orgId } = useCurrentOrg();
   const create = useMutation({
     mutationFn: async (form: FormData) => {
       if (!orgId) throw new Error("Nenhuma organização ativa");
-      const payload = {
+      const parsed = fromForm(activitySchema, form);
+      const { error } = await supabase.from("activities").insert({
         user_id: user!.id,
         organization_id: orgId,
-        type: (form.get("type") as any) || "task",
-        title: String(form.get("title") || "").trim(),
-        description: String(form.get("description") || "").trim() || null,
-        due_date: (form.get("due_date") as string) || null,
-        contact_id: (form.get("contact_id") as string) || null,
-        deal_id: (form.get("deal_id") as string) || null,
-      };
-      if (!payload.title) throw new Error("Título é obrigatório");
-      const { error } = await supabase.from("activities").insert(payload);
+        ...parsed,
+      });
       if (error) throw error;
     },
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["activities"] }); setOpen(false); toast.success("Atividade criada"); },
@@ -151,8 +148,13 @@ function ActivitiesPage() {
       </div>
 
       <div className="space-y-2">
-        {filtered.length === 0 && (
-          <Card className="p-12 text-center text-muted-foreground">Nenhuma atividade.</Card>
+        {isLoading && Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-16 w-full" />)}
+        {!isLoading && filtered.length === 0 && (
+          <EmptyState
+            icon={CheckSquare}
+            title="Nenhuma atividade"
+            description={filter === "pending" ? "Tudo em dia. Crie uma nova tarefa quando precisar." : "Nada por aqui ainda."}
+          />
         )}
         {filtered.map((a) => {
           const type = TYPES.find((t) => t.id === a.type)!;
