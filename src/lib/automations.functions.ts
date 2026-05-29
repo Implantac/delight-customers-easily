@@ -49,7 +49,7 @@ export const runAutomations = createServerFn({ method: "POST" })
           await supabase.from("activities").insert({
             organization_id: data.organization_id,
             user_id: userId,
-            type: (cfg.type as string) ?? "task",
+            type: ((cfg.type as "call" | "email" | "meeting" | "note" | "task" | undefined) ?? "task"),
             title: String(cfg.title ?? "Tarefa automática"),
             description: cfg.description ? String(cfg.description) : null,
             contact_id: (data.payload.contact_id as string | undefined) ?? null,
