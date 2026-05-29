@@ -17,6 +17,7 @@ import { EmptyState } from "@/components/empty-state";
 import { Plus, Mail, Phone, Trash2, Search, Users } from "lucide-react";
 import { toast } from "sonner";
 import { contactSchema, fromForm } from "@/lib/validation";
+import { ContactDuplicateWarning } from "@/components/duplicate-warning";
 
 export const Route = createFileRoute("/_app/contacts")({ component: ContactsPage });
 
@@ -26,6 +27,9 @@ function ContactsPage() {
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
+  const [dupName, setDupName] = useState("");
+  const [dupEmail, setDupEmail] = useState("");
+  const [dupPhone, setDupPhone] = useState("");
 
   const { data: contacts, isLoading } = useQuery({
     queryKey: ["contacts"],
@@ -81,11 +85,12 @@ function ContactsPage() {
             <DialogContent>
               <DialogHeader><DialogTitle>Novo contato</DialogTitle></DialogHeader>
               <form onSubmit={(e) => { e.preventDefault(); create.mutate(new FormData(e.currentTarget)); }} className="space-y-3">
-                <div className="space-y-1.5"><Label>Nome *</Label><Input name="name" required maxLength={150} /></div>
+                <div className="space-y-1.5"><Label>Nome *</Label><Input name="name" required maxLength={150} onChange={(e) => setDupName(e.target.value)} /></div>
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1.5"><Label>Email</Label><Input name="email" type="email" maxLength={255} /></div>
-                  <div className="space-y-1.5"><Label>Telefone</Label><Input name="phone" maxLength={30} /></div>
+                  <div className="space-y-1.5"><Label>Email</Label><Input name="email" type="email" maxLength={255} onChange={(e) => setDupEmail(e.target.value)} /></div>
+                  <div className="space-y-1.5"><Label>Telefone</Label><Input name="phone" maxLength={30} onChange={(e) => setDupPhone(e.target.value)} /></div>
                 </div>
+                <ContactDuplicateWarning name={dupName} email={dupEmail} phone={dupPhone} />
                 <div className="space-y-1.5"><Label>Cargo</Label><Input name="position" maxLength={120} /></div>
                 <div className="space-y-1.5">
                   <Label>Empresa</Label>
