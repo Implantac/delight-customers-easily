@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Users, Building2, KanbanSquare, CheckSquare, Briefcase, Check, ChevronsUpDown, LogOut, Settings, Upload } from "lucide-react";
+import { LayoutDashboard, Users, Building2, KanbanSquare, CheckSquare, Briefcase, Check, ChevronsUpDown, LogOut, Settings, Upload, BarChart3, Sliders } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useCurrentOrg, switchOrganization } from "@/lib/org";
 import { useQueryClient } from "@tanstack/react-query";
@@ -19,6 +19,7 @@ const nav = [
   { to: "/contacts", label: "Contatos", icon: Users, shortcut: "G C" },
   { to: "/companies", label: "Empresas", icon: Building2, shortcut: "G E" },
   { to: "/activities", label: "Atividades", icon: CheckSquare, shortcut: "G A" },
+  { to: "/reports", label: "Relatórios", icon: BarChart3, shortcut: "G R" },
 ] as const;
 
 export function AppSidebar() {
@@ -75,6 +76,9 @@ export function AppSidebar() {
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
               <Link to="/settings/organization"><Settings className="mr-2 h-4 w-4" />Configurações</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/settings/fields"><Sliders className="mr-2 h-4 w-4" />Campos personalizados</Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link to="/settings/import"><Upload className="mr-2 h-4 w-4" />Importar CSV</Link>

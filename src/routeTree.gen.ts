@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppReportsRouteImport } from './routes/_app.reports'
 import { Route as AppPipelineRouteImport } from './routes/_app.pipeline'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppContactsRouteImport } from './routes/_app.contacts'
@@ -19,9 +20,11 @@ import { Route as AppCompaniesRouteImport } from './routes/_app.companies'
 import { Route as AppActivitiesRouteImport } from './routes/_app.activities'
 import { Route as AppSettingsOrganizationRouteImport } from './routes/_app.settings.organization'
 import { Route as AppSettingsImportRouteImport } from './routes/_app.settings.import'
+import { Route as AppSettingsFieldsRouteImport } from './routes/_app.settings.fields'
 import { Route as AppInviteTokenRouteImport } from './routes/_app.invite.$token'
 import { Route as AppContactsIdRouteImport } from './routes/_app.contacts.$id'
 import { Route as AppCompaniesIdRouteImport } from './routes/_app.companies.$id'
+import { Route as ApiPublicHooksActivityRemindersRouteImport } from './routes/api/public/hooks/activity-reminders'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -36,6 +39,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppReportsRoute = AppReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppPipelineRoute = AppPipelineRouteImport.update({
   id: '/pipeline',
@@ -72,6 +80,11 @@ const AppSettingsImportRoute = AppSettingsImportRouteImport.update({
   path: '/settings/import',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSettingsFieldsRoute = AppSettingsFieldsRouteImport.update({
+  id: '/settings/fields',
+  path: '/settings/fields',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppInviteTokenRoute = AppInviteTokenRouteImport.update({
   id: '/invite/$token',
   path: '/invite/$token',
@@ -87,6 +100,12 @@ const AppCompaniesIdRoute = AppCompaniesIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AppCompaniesRoute,
 } as any)
+const ApiPublicHooksActivityRemindersRoute =
+  ApiPublicHooksActivityRemindersRouteImport.update({
+    id: '/api/public/hooks/activity-reminders',
+    path: '/api/public/hooks/activity-reminders',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -96,11 +115,14 @@ export interface FileRoutesByFullPath {
   '/contacts': typeof AppContactsRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
   '/pipeline': typeof AppPipelineRoute
+  '/reports': typeof AppReportsRoute
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
   '/invite/$token': typeof AppInviteTokenRoute
+  '/settings/fields': typeof AppSettingsFieldsRoute
   '/settings/import': typeof AppSettingsImportRoute
   '/settings/organization': typeof AppSettingsOrganizationRoute
+  '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -110,11 +132,14 @@ export interface FileRoutesByTo {
   '/contacts': typeof AppContactsRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
   '/pipeline': typeof AppPipelineRoute
+  '/reports': typeof AppReportsRoute
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
   '/invite/$token': typeof AppInviteTokenRoute
+  '/settings/fields': typeof AppSettingsFieldsRoute
   '/settings/import': typeof AppSettingsImportRoute
   '/settings/organization': typeof AppSettingsOrganizationRoute
+  '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -126,11 +151,14 @@ export interface FileRoutesById {
   '/_app/contacts': typeof AppContactsRouteWithChildren
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/pipeline': typeof AppPipelineRoute
+  '/_app/reports': typeof AppReportsRoute
   '/_app/companies/$id': typeof AppCompaniesIdRoute
   '/_app/contacts/$id': typeof AppContactsIdRoute
   '/_app/invite/$token': typeof AppInviteTokenRoute
+  '/_app/settings/fields': typeof AppSettingsFieldsRoute
   '/_app/settings/import': typeof AppSettingsImportRoute
   '/_app/settings/organization': typeof AppSettingsOrganizationRoute
+  '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -142,11 +170,14 @@ export interface FileRouteTypes {
     | '/contacts'
     | '/dashboard'
     | '/pipeline'
+    | '/reports'
     | '/companies/$id'
     | '/contacts/$id'
     | '/invite/$token'
+    | '/settings/fields'
     | '/settings/import'
     | '/settings/organization'
+    | '/api/public/hooks/activity-reminders'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -156,11 +187,14 @@ export interface FileRouteTypes {
     | '/contacts'
     | '/dashboard'
     | '/pipeline'
+    | '/reports'
     | '/companies/$id'
     | '/contacts/$id'
     | '/invite/$token'
+    | '/settings/fields'
     | '/settings/import'
     | '/settings/organization'
+    | '/api/public/hooks/activity-reminders'
   id:
     | '__root__'
     | '/'
@@ -171,17 +205,21 @@ export interface FileRouteTypes {
     | '/_app/contacts'
     | '/_app/dashboard'
     | '/_app/pipeline'
+    | '/_app/reports'
     | '/_app/companies/$id'
     | '/_app/contacts/$id'
     | '/_app/invite/$token'
+    | '/_app/settings/fields'
     | '/_app/settings/import'
     | '/_app/settings/organization'
+    | '/api/public/hooks/activity-reminders'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   LoginRoute: typeof LoginRoute
+  ApiPublicHooksActivityRemindersRoute: typeof ApiPublicHooksActivityRemindersRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -206,6 +244,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_app/reports': {
+      id: '/_app/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof AppReportsRouteImport
+      parentRoute: typeof AppRoute
     }
     '/_app/pipeline': {
       id: '/_app/pipeline'
@@ -256,6 +301,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsImportRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/settings/fields': {
+      id: '/_app/settings/fields'
+      path: '/settings/fields'
+      fullPath: '/settings/fields'
+      preLoaderRoute: typeof AppSettingsFieldsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/invite/$token': {
       id: '/_app/invite/$token'
       path: '/invite/$token'
@@ -276,6 +328,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/companies/$id'
       preLoaderRoute: typeof AppCompaniesIdRouteImport
       parentRoute: typeof AppCompaniesRoute
+    }
+    '/api/public/hooks/activity-reminders': {
+      id: '/api/public/hooks/activity-reminders'
+      path: '/api/public/hooks/activity-reminders'
+      fullPath: '/api/public/hooks/activity-reminders'
+      preLoaderRoute: typeof ApiPublicHooksActivityRemindersRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -310,7 +369,9 @@ interface AppRouteChildren {
   AppContactsRoute: typeof AppContactsRouteWithChildren
   AppDashboardRoute: typeof AppDashboardRoute
   AppPipelineRoute: typeof AppPipelineRoute
+  AppReportsRoute: typeof AppReportsRoute
   AppInviteTokenRoute: typeof AppInviteTokenRoute
+  AppSettingsFieldsRoute: typeof AppSettingsFieldsRoute
   AppSettingsImportRoute: typeof AppSettingsImportRoute
   AppSettingsOrganizationRoute: typeof AppSettingsOrganizationRoute
 }
@@ -321,7 +382,9 @@ const AppRouteChildren: AppRouteChildren = {
   AppContactsRoute: AppContactsRouteWithChildren,
   AppDashboardRoute: AppDashboardRoute,
   AppPipelineRoute: AppPipelineRoute,
+  AppReportsRoute: AppReportsRoute,
   AppInviteTokenRoute: AppInviteTokenRoute,
+  AppSettingsFieldsRoute: AppSettingsFieldsRoute,
   AppSettingsImportRoute: AppSettingsImportRoute,
   AppSettingsOrganizationRoute: AppSettingsOrganizationRoute,
 }
@@ -332,6 +395,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   LoginRoute: LoginRoute,
+  ApiPublicHooksActivityRemindersRoute: ApiPublicHooksActivityRemindersRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

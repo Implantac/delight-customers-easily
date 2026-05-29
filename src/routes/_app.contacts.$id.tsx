@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "@/components/page-header";
 import { Timeline, type TimelineItem } from "@/components/timeline";
 import { ArrowLeft, Mail, Phone, Briefcase, Trash2, Building2, KanbanSquare, Clock } from "lucide-react";
+import { SendEmailDialog } from "@/components/send-email-dialog";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/contacts/$id")({ component: ContactDetail });
@@ -55,7 +56,12 @@ function ContactDetail() {
       <PageHeader
         title={contact.name}
         subtitle={contact.position ?? undefined}
-        action={<Button variant="outline" size="sm" onClick={() => { if (confirm("Remover contato?")) del.mutate(); }}><Trash2 className="mr-1 h-4 w-4" />Remover</Button>}
+        action={
+          <div className="flex gap-2">
+            {contact.email && <SendEmailDialog to={contact.email} contactId={contact.id} />}
+            <Button variant="outline" size="sm" onClick={() => { if (confirm("Remover contato?")) del.mutate(); }}><Trash2 className="mr-1 h-4 w-4" />Remover</Button>
+          </div>
+        }
       />
 
       <div className="mt-6 grid gap-6 md:grid-cols-3">

@@ -84,6 +84,7 @@ export type Database = {
       companies: {
         Row: {
           created_at: string
+          custom_values: Json
           id: string
           industry: string | null
           name: string
@@ -96,6 +97,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          custom_values?: Json
           id?: string
           industry?: string | null
           name: string
@@ -108,6 +110,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          custom_values?: Json
           id?: string
           industry?: string | null
           name?: string
@@ -132,6 +135,7 @@ export type Database = {
         Row: {
           company_id: string | null
           created_at: string
+          custom_values: Json
           email: string | null
           id: string
           name: string
@@ -145,6 +149,7 @@ export type Database = {
         Insert: {
           company_id?: string | null
           created_at?: string
+          custom_values?: Json
           email?: string | null
           id?: string
           name: string
@@ -158,6 +163,7 @@ export type Database = {
         Update: {
           company_id?: string | null
           created_at?: string
+          custom_values?: Json
           email?: string | null
           id?: string
           name?: string
@@ -185,11 +191,51 @@ export type Database = {
           },
         ]
       }
+      custom_field_defs: {
+        Row: {
+          created_at: string
+          entity: Database["public"]["Enums"]["custom_field_entity"]
+          id: string
+          key: string
+          kind: Database["public"]["Enums"]["custom_field_kind"]
+          label: string
+          options: Json
+          organization_id: string
+          position: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          entity: Database["public"]["Enums"]["custom_field_entity"]
+          id?: string
+          key: string
+          kind?: Database["public"]["Enums"]["custom_field_kind"]
+          label: string
+          options?: Json
+          organization_id: string
+          position?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          entity?: Database["public"]["Enums"]["custom_field_entity"]
+          id?: string
+          key?: string
+          kind?: Database["public"]["Enums"]["custom_field_kind"]
+          label?: string
+          options?: Json
+          organization_id?: string
+          position?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       deals: {
         Row: {
           company_id: string | null
           contact_id: string | null
           created_at: string
+          custom_values: Json
           expected_close: string | null
           id: string
           notes: string | null
@@ -205,6 +251,7 @@ export type Database = {
           company_id?: string | null
           contact_id?: string | null
           created_at?: string
+          custom_values?: Json
           expected_close?: string | null
           id?: string
           notes?: string | null
@@ -220,6 +267,7 @@ export type Database = {
           company_id?: string | null
           contact_id?: string | null
           created_at?: string
+          custom_values?: Json
           expected_close?: string | null
           id?: string
           notes?: string | null
@@ -286,6 +334,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          link: string | null
+          organization_id: string
+          read_at: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          link?: string | null
+          organization_id: string
+          read_at?: string | null
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          link?: string | null
+          organization_id?: string
+          read_at?: string | null
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       org_invites: {
         Row: {
@@ -403,6 +487,8 @@ export type Database = {
     }
     Enums: {
       activity_type: "call" | "email" | "meeting" | "task" | "note"
+      custom_field_entity: "contact" | "company" | "deal"
+      custom_field_kind: "text" | "number" | "date" | "select" | "boolean"
       deal_stage:
         | "lead"
         | "qualified"
@@ -539,6 +625,8 @@ export const Constants = {
   public: {
     Enums: {
       activity_type: ["call", "email", "meeting", "task", "note"],
+      custom_field_entity: ["contact", "company", "deal"],
+      custom_field_kind: ["text", "number", "date", "select", "boolean"],
       deal_stage: [
         "lead",
         "qualified",
