@@ -15,9 +15,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "@/components/page-header";
 import { EmptyState } from "@/components/empty-state";
-import { Plus, Trash2, Phone, Mail, Users, FileText, CheckSquare } from "lucide-react";
+import { Plus, Trash2, Phone, Mail, Users, FileText, CheckSquare, CalendarPlus } from "lucide-react";
 import { toast } from "sonner";
 import { activitySchema, fromForm } from "@/lib/validation";
+import { downloadICS } from "@/lib/ics";
+import { useServerFn } from "@tanstack/react-start";
+import { triggerWebhooks } from "@/lib/webhooks.functions";
 
 export const Route = createFileRoute("/_app/activities")({ component: ActivitiesPage });
 
@@ -73,10 +76,15 @@ function ActivitiesPage() {
     onError: (e: any) => toast.error(e.message),
   });
 
+  const fire = useServerFn(triggerWebhooks);
+
   const toggle = useMutation({
-    mutationFn: async ({ id, completed }: { id: string; completed: boolean }) => {
+    mutationFn: async ({ id, completed, activity }: { id: string; completed: boolean; activity: any }) => {
       const { error } = await supabase.from("activities").update({ completed }).eq("id", id);
       if (error) throw error;
+      if (completed && orgId) {
+        fire({ data: { organization_id: orgId, event: "activity.completed", payload: { id, title: activity.title, type: activity.type } } }).catch(() => {});
+      }
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["activities"] }),
   });
@@ -161,7 +169,7 @@ function ActivitiesPage() {
           const Icon = type.icon;
           return (
             <Card key={a.id} className="flex items-center gap-3 p-4">
-              <Checkbox checked={a.completed} onCheckedChange={(v) => toggle.mutate({ id: a.id, completed: !!v })} />
+              <Checkbox checked={a.completed} onCheckedChange={(v) => toggle.mutate({ id: a.id, completed: !!v, activity: a })} />
               <div className="flex h-8 w-8 items-center justify-center rounded-md bg-accent text-accent-foreground">
                 <Icon className="h-4 w-4" />
               </div>
@@ -174,6 +182,11 @@ function ActivitiesPage() {
                   {(a.deals as any)?.title && ` · ${(a.deals as any).title}`}
                 </p>
               </div>
+              {a.due_date && (
+                <Button variant="ghost" size="sm" title="Adicionar ao calendário" onClick={() => downloadICS({ uid: a.id, title: a.title, description: a.description ?? undefined, start: new Date(a.due_date as string), durationMinutes: a.type === "meeting" ? 60 : 30 })}>
+                  <CalendarPlus className="h-4 w-4" />
+                </Button>
+              )}
               <Button variant="ghost" size="sm" onClick={() => { if (confirm("Remover?")) del.mutate(a.id); }}>
                 <Trash2 className="h-4 w-4" />
               </Button>
