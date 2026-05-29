@@ -7,9 +7,10 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "@/components/page-header";
 import { Timeline, type TimelineItem } from "@/components/timeline";
-import { ArrowLeft, Globe, Trash2, Users, KanbanSquare, Clock } from "lucide-react";
+import { ArrowLeft, Globe, Trash2, Users, KanbanSquare, Clock, History as HistoryIcon } from "lucide-react";
 import { Attachments } from "@/components/attachments";
 import { TagPicker } from "@/components/tag-picker";
+import { AuditHistory } from "@/components/audit-history";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/companies/$id")({ component: CompanyDetail });
