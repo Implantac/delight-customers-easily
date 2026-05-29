@@ -79,33 +79,38 @@ function CompaniesPage() {
         }
       />
 
-      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {(companies ?? []).length === 0 && (
-          <Card className="col-span-full p-12 text-center text-muted-foreground">Nenhuma empresa cadastrada ainda.</Card>
-        )}
-        {companies?.map((c) => (
-          <Card key={c.id} className="p-5">
-            <div className="flex items-start gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent text-accent-foreground">
-                <Building2 className="h-5 w-5" />
+      {isLoading ? (
+        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-32 w-full" />)}
+        </div>
+      ) : (companies ?? []).length === 0 ? (
+        <div className="mt-6"><EmptyState icon={Building2} title="Nenhuma empresa" description="Cadastre sua primeira empresa para começar." /></div>
+      ) : (
+        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {companies?.map((c) => (
+            <Card key={c.id} className="p-5 transition hover:border-primary/40">
+              <div className="flex items-start gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent text-accent-foreground">
+                  <Building2 className="h-5 w-5" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <Link to="/companies/$id" params={{ id: c.id }} className="block truncate font-semibold hover:underline">{c.name}</Link>
+                  {c.industry && <p className="text-xs text-muted-foreground">{c.industry}{c.size ? ` · ${c.size}` : ""}</p>}
+                </div>
+                <Button variant="ghost" size="sm" onClick={() => { if (confirm("Remover empresa?")) del.mutate(c.id); }}>
+                  <Trash2 className="h-4 w-4" />
+                </Button>
               </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="truncate font-semibold">{c.name}</h3>
-                {c.industry && <p className="text-xs text-muted-foreground">{c.industry}{c.size ? ` · ${c.size}` : ""}</p>}
-              </div>
-              <Button variant="ghost" size="sm" onClick={() => { if (confirm("Remover empresa?")) del.mutate(c.id); }}>
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </div>
-            {c.website && (
-              <a href={c.website} target="_blank" rel="noreferrer" className="mt-3 flex items-center gap-1.5 text-xs text-primary hover:underline">
-                <Globe className="h-3 w-3" />{c.website}
-              </a>
-            )}
-            {c.notes && <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">{c.notes}</p>}
-          </Card>
-        ))}
-      </div>
+              {c.website && (
+                <a href={c.website} target="_blank" rel="noreferrer" className="mt-3 flex items-center gap-1.5 text-xs text-primary hover:underline">
+                  <Globe className="h-3 w-3" />{c.website}
+                </a>
+              )}
+              {c.notes && <p className="mt-3 line-clamp-2 text-sm text-muted-foreground">{c.notes}</p>}
+            </Card>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
