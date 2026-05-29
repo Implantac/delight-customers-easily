@@ -86,6 +86,10 @@ function ContactDetail() {
               </div>
             )}
           </dl>
+          <div className="mt-4">
+            <p className="mb-1.5 text-xs font-medium text-muted-foreground">Etiquetas</p>
+            <TagPicker entityType="contact" entityId={contact.id} />
+          </div>
           {contact.notes && <><h3 className="mt-5 text-sm font-semibold">Notas</h3><p className="mt-2 whitespace-pre-wrap text-sm text-muted-foreground">{contact.notes}</p></>}
         </Card>
 
