@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.log_entity_change() FROM PUBLIC, authenticated, anon;
