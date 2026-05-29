@@ -20,7 +20,7 @@ export function useGoToShortcuts() {
       const k = e.key.toLowerCase();
       const now = Date.now();
       if (buffer.current && now - buffer.current.at < 1000 && buffer.current.key === "g") {
-        const map: Record<string, string> = { d: "/dashboard", p: "/pipeline", c: "/contacts", e: "/companies", a: "/activities" };
+        const map: Record<string, string> = { d: "/dashboard", p: "/pipeline", c: "/contacts", e: "/companies", a: "/activities", r: "/reports" };
         const to = map[k];
         if (to) { e.preventDefault(); navigate({ to }); }
         buffer.current = null;
