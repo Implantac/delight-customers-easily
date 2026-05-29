@@ -134,3 +134,7 @@
     font-feature-settings: "cv11", "ss01";
   }
 }
+
+#lovable-badge {
+  display: none !important;
+}
