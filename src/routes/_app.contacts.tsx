@@ -27,7 +27,7 @@ function ContactsPage() {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
 
-  const { data: contacts } = useQuery({
+  const { data: contacts, isLoading } = useQuery({
     queryKey: ["contacts"],
     queryFn: async () => {
       const { data, error } = await supabase
