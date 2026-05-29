@@ -9,38 +9,137 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppPipelineRouteImport } from './routes/_app.pipeline'
+import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
+import { Route as AppContactsRouteImport } from './routes/_app.contacts'
+import { Route as AppCompaniesRouteImport } from './routes/_app.companies'
+import { Route as AppActivitiesRouteImport } from './routes/_app.activities'
 
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppPipelineRoute = AppPipelineRouteImport.update({
+  id: '/pipeline',
+  path: '/pipeline',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppContactsRoute = AppContactsRouteImport.update({
+  id: '/contacts',
+  path: '/contacts',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCompaniesRoute = AppCompaniesRouteImport.update({
+  id: '/companies',
+  path: '/companies',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppActivitiesRoute = AppActivitiesRouteImport.update({
+  id: '/activities',
+  path: '/activities',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/activities': typeof AppActivitiesRoute
+  '/companies': typeof AppCompaniesRoute
+  '/contacts': typeof AppContactsRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/pipeline': typeof AppPipelineRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/activities': typeof AppActivitiesRoute
+  '/companies': typeof AppCompaniesRoute
+  '/contacts': typeof AppContactsRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/pipeline': typeof AppPipelineRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_app': typeof AppRouteWithChildren
+  '/login': typeof LoginRoute
+  '/_app/activities': typeof AppActivitiesRoute
+  '/_app/companies': typeof AppCompaniesRoute
+  '/_app/contacts': typeof AppContactsRoute
+  '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/pipeline': typeof AppPipelineRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/activities'
+    | '/companies'
+    | '/contacts'
+    | '/dashboard'
+    | '/pipeline'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/login'
+    | '/activities'
+    | '/companies'
+    | '/contacts'
+    | '/dashboard'
+    | '/pipeline'
+  id:
+    | '__root__'
+    | '/'
+    | '/_app'
+    | '/login'
+    | '/_app/activities'
+    | '/_app/companies'
+    | '/_app/contacts'
+    | '/_app/dashboard'
+    | '/_app/pipeline'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  LoginRoute: typeof LoginRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,22 +147,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/pipeline': {
+      id: '/_app/pipeline'
+      path: '/pipeline'
+      fullPath: '/pipeline'
+      preLoaderRoute: typeof AppPipelineRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/dashboard': {
+      id: '/_app/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/contacts': {
+      id: '/_app/contacts'
+      path: '/contacts'
+      fullPath: '/contacts'
+      preLoaderRoute: typeof AppContactsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/companies': {
+      id: '/_app/companies'
+      path: '/companies'
+      fullPath: '/companies'
+      preLoaderRoute: typeof AppCompaniesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/activities': {
+      id: '/_app/activities'
+      path: '/activities'
+      fullPath: '/activities'
+      preLoaderRoute: typeof AppActivitiesRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppActivitiesRoute: typeof AppActivitiesRoute
+  AppCompaniesRoute: typeof AppCompaniesRoute
+  AppContactsRoute: typeof AppContactsRoute
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppPipelineRoute: typeof AppPipelineRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppActivitiesRoute: AppActivitiesRoute,
+  AppCompaniesRoute: AppCompaniesRoute,
+  AppContactsRoute: AppContactsRoute,
+  AppDashboardRoute: AppDashboardRoute,
+  AppPipelineRoute: AppPipelineRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
+  LoginRoute: LoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
