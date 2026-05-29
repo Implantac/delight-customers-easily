@@ -101,7 +101,7 @@ export function AppSidebar() {
           <SidebarGroupLabel>Navegação</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {nav.map(({ to, label, icon: Icon }) => {
+              {nav.filter((n) => !n.managerOnly || canManage).map(({ to, label, icon: Icon }) => {
                 const active = path === to || (to !== "/dashboard" && path.startsWith(to));
                 return (
                   <SidebarMenuItem key={to}>
