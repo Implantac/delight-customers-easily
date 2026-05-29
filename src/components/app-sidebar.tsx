@@ -2,6 +2,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { LayoutDashboard, Users, Building2, KanbanSquare, CheckSquare, Briefcase, Check, ChevronsUpDown, LogOut, Settings, Upload, BarChart3, Sliders, Webhook } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useCurrentOrg, switchOrganization } from "@/lib/org";
+import { useCanManage } from "@/lib/permissions";
 import { useQueryClient } from "@tanstack/react-query";
 import {
   Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
@@ -14,12 +15,12 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { toast } from "sonner";
 
 const nav = [
-  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, shortcut: "G D" },
-  { to: "/pipeline", label: "Pipeline", icon: KanbanSquare, shortcut: "G P" },
-  { to: "/contacts", label: "Contatos", icon: Users, shortcut: "G C" },
-  { to: "/companies", label: "Empresas", icon: Building2, shortcut: "G E" },
-  { to: "/activities", label: "Atividades", icon: CheckSquare, shortcut: "G A" },
-  { to: "/reports", label: "Relatórios", icon: BarChart3, shortcut: "G R" },
+  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, shortcut: "G D", managerOnly: false },
+  { to: "/pipeline", label: "Pipeline", icon: KanbanSquare, shortcut: "G P", managerOnly: false },
+  { to: "/contacts", label: "Contatos", icon: Users, shortcut: "G C", managerOnly: false },
+  { to: "/companies", label: "Empresas", icon: Building2, shortcut: "G E", managerOnly: false },
+  { to: "/activities", label: "Atividades", icon: CheckSquare, shortcut: "G A", managerOnly: false },
+  { to: "/reports", label: "Relatórios", icon: BarChart3, shortcut: "G R", managerOnly: true },
 ] as const;
 
 export function AppSidebar() {
@@ -28,6 +29,7 @@ export function AppSidebar() {
   const collapsed = state === "collapsed";
   const path = useRouterState({ select: (s) => s.location.pathname });
   const { org, memberships, orgId } = useCurrentOrg();
+  const canManage = useCanManage();
   const qc = useQueryClient();
 
   const initials = (user?.user_metadata?.full_name ?? user?.email ?? "?")
@@ -77,15 +79,19 @@ export function AppSidebar() {
             <DropdownMenuItem asChild>
               <Link to="/settings/organization"><Settings className="mr-2 h-4 w-4" />Configurações</Link>
             </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link to="/settings/fields"><Sliders className="mr-2 h-4 w-4" />Campos personalizados</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link to="/settings/import"><Upload className="mr-2 h-4 w-4" />Importar CSV</Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link to="/settings/webhooks"><Webhook className="mr-2 h-4 w-4" />Webhooks</Link>
-            </DropdownMenuItem>
+            {canManage && (
+              <>
+                <DropdownMenuItem asChild>
+                  <Link to="/settings/fields"><Sliders className="mr-2 h-4 w-4" />Campos personalizados</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/settings/import"><Upload className="mr-2 h-4 w-4" />Importar CSV</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/settings/webhooks"><Webhook className="mr-2 h-4 w-4" />Webhooks</Link>
+                </DropdownMenuItem>
+              </>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarHeader>
@@ -95,7 +101,7 @@ export function AppSidebar() {
           <SidebarGroupLabel>Navegação</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {nav.map(({ to, label, icon: Icon }) => {
+              {nav.filter((n) => !n.managerOnly || canManage).map(({ to, label, icon: Icon }) => {
                 const active = path === to || (to !== "/dashboard" && path.startsWith(to));
                 return (
                   <SidebarMenuItem key={to}>

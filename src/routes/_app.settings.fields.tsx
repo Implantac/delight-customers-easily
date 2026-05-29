@@ -15,8 +15,11 @@ import { EmptyState } from "@/components/empty-state";
 import { Plus, Trash2, Sliders } from "lucide-react";
 import { toast } from "sonner";
 import type { CustomFieldEntity, CustomFieldKind } from "@/lib/custom-fields";
+import { RequireManager } from "@/components/require-manager";
 
-export const Route = createFileRoute("/_app/settings/fields")({ component: FieldsSettings });
+export const Route = createFileRoute("/_app/settings/fields")({
+  component: () => <RequireManager><FieldsSettings /></RequireManager>,
+});
 
 const ENTITIES: { value: CustomFieldEntity; label: string }[] = [
   { value: "contact", label: "Contatos" },

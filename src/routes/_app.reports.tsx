@@ -8,8 +8,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "@/components/page-header";
 import { Download, TrendingUp, Target, Trophy } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, Cell, FunnelChart, Funnel, LabelList } from "recharts";
+import { RequireManager } from "@/components/require-manager";
 
-export const Route = createFileRoute("/_app/reports")({ component: ReportsPage });
+export const Route = createFileRoute("/_app/reports")({
+  component: () => <RequireManager><ReportsPage /></RequireManager>,
+});
 
 const STAGES = [
   { id: "lead", label: "Lead", color: "var(--chart-1)" },

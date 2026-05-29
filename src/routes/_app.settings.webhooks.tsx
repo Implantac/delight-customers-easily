@@ -15,8 +15,11 @@ import { PageHeader } from "@/components/page-header";
 import { EmptyState } from "@/components/empty-state";
 import { Plus, Trash2, Webhook, Copy, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
+import { RequireManager } from "@/components/require-manager";
 
-export const Route = createFileRoute("/_app/settings/webhooks")({ component: WebhooksPage });
+export const Route = createFileRoute("/_app/settings/webhooks")({
+  component: () => <RequireManager><WebhooksPage /></RequireManager>,
+});
 
 const EVENTS = [
   { id: "deal.created", label: "Negócio criado" },
