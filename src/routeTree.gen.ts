@@ -19,6 +19,7 @@ import { Route as AppPipelineRouteImport } from './routes/_app.pipeline'
 import { Route as AppOpportunityMapRouteImport } from './routes/_app.opportunity-map'
 import { Route as AppForecastRouteImport } from './routes/_app.forecast'
 import { Route as AppFinanceRouteImport } from './routes/_app.finance'
+import { Route as AppDataQualityRouteImport } from './routes/_app.data-quality'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppContactsRouteImport } from './routes/_app.contacts'
 import { Route as AppCompaniesRouteImport } from './routes/_app.companies'
@@ -85,6 +86,11 @@ const AppForecastRoute = AppForecastRouteImport.update({
 const AppFinanceRoute = AppFinanceRouteImport.update({
   id: '/finance',
   path: '/finance',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDataQualityRoute = AppDataQualityRouteImport.update({
+  id: '/data-quality',
+  path: '/data-quality',
   getParentRoute: () => AppRoute,
 } as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
@@ -190,6 +196,7 @@ export interface FileRoutesByFullPath {
   '/companies': typeof AppCompaniesRouteWithChildren
   '/contacts': typeof AppContactsRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
+  '/data-quality': typeof AppDataQualityRoute
   '/finance': typeof AppFinanceRoute
   '/forecast': typeof AppForecastRoute
   '/opportunity-map': typeof AppOpportunityMapRoute
@@ -219,6 +226,7 @@ export interface FileRoutesByTo {
   '/companies': typeof AppCompaniesRouteWithChildren
   '/contacts': typeof AppContactsRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
+  '/data-quality': typeof AppDataQualityRoute
   '/finance': typeof AppFinanceRoute
   '/forecast': typeof AppForecastRoute
   '/opportunity-map': typeof AppOpportunityMapRoute
@@ -250,6 +258,7 @@ export interface FileRoutesById {
   '/_app/companies': typeof AppCompaniesRouteWithChildren
   '/_app/contacts': typeof AppContactsRouteWithChildren
   '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/data-quality': typeof AppDataQualityRoute
   '/_app/finance': typeof AppFinanceRoute
   '/_app/forecast': typeof AppForecastRoute
   '/_app/opportunity-map': typeof AppOpportunityMapRoute
@@ -281,6 +290,7 @@ export interface FileRouteTypes {
     | '/companies'
     | '/contacts'
     | '/dashboard'
+    | '/data-quality'
     | '/finance'
     | '/forecast'
     | '/opportunity-map'
@@ -310,6 +320,7 @@ export interface FileRouteTypes {
     | '/companies'
     | '/contacts'
     | '/dashboard'
+    | '/data-quality'
     | '/finance'
     | '/forecast'
     | '/opportunity-map'
@@ -340,6 +351,7 @@ export interface FileRouteTypes {
     | '/_app/companies'
     | '/_app/contacts'
     | '/_app/dashboard'
+    | '/_app/data-quality'
     | '/_app/finance'
     | '/_app/forecast'
     | '/_app/opportunity-map'
@@ -439,6 +451,13 @@ declare module '@tanstack/react-router' {
       path: '/finance'
       fullPath: '/finance'
       preLoaderRoute: typeof AppFinanceRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/data-quality': {
+      id: '/_app/data-quality'
+      path: '/data-quality'
+      fullPath: '/data-quality'
+      preLoaderRoute: typeof AppDataQualityRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/dashboard': {
@@ -602,6 +621,7 @@ interface AppRouteChildren {
   AppCompaniesRoute: typeof AppCompaniesRouteWithChildren
   AppContactsRoute: typeof AppContactsRouteWithChildren
   AppDashboardRoute: typeof AppDashboardRoute
+  AppDataQualityRoute: typeof AppDataQualityRoute
   AppFinanceRoute: typeof AppFinanceRoute
   AppForecastRoute: typeof AppForecastRoute
   AppOpportunityMapRoute: typeof AppOpportunityMapRoute
@@ -625,6 +645,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppCompaniesRoute: AppCompaniesRouteWithChildren,
   AppContactsRoute: AppContactsRouteWithChildren,
   AppDashboardRoute: AppDashboardRoute,
+  AppDataQualityRoute: AppDataQualityRoute,
   AppFinanceRoute: AppFinanceRoute,
   AppForecastRoute: AppForecastRoute,
   AppOpportunityMapRoute: AppOpportunityMapRoute,
@@ -653,13 +674,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

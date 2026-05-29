@@ -24,7 +24,7 @@ function DataQualityPage() {
 
   return (
     <div className="space-y-6 p-6">
-      <PageHeader title="Data Quality Center" description="Detecte duplicados, dados inválidos e oportunidades de limpeza na sua base." />
+      <PageHeader title="Data Quality Center" subtitle="Detecte duplicados, dados inválidos e oportunidades de limpeza na sua base." />
 
       {isLoading || !data ? (
         <div className="grid gap-4 md:grid-cols-4">
