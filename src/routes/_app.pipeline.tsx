@@ -22,6 +22,7 @@ import { AIInsights } from "@/components/ai-insights";
 import { Attachments } from "@/components/attachments";
 import { TagPicker } from "@/components/tag-picker";
 import { DealHistory } from "@/components/deal-history";
+import { DealPlaybook } from "@/components/deal-playbook";
 import { useServerFn } from "@tanstack/react-start";
 import { triggerWebhooks } from "@/lib/webhooks.functions";
 import { runAutomations } from "@/lib/automations.functions";
