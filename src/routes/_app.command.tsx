@@ -34,6 +34,9 @@ function CommandCenter() {
   const { user } = useAuth();
   const { orgId } = useCurrentOrg();
   const run = useServerFn(computeCommandCenter);
+  const runForecast = useServerFn(getForecast);
+  const runFinance = useServerFn(getFinanceOverview);
+  const runRetention = useServerFn(getRetentionInsights);
 
   const { data, isLoading } = useQuery({
     queryKey: ["command-center", orgId],
@@ -41,8 +44,27 @@ function CommandCenter() {
     queryFn: () => run({ data: { organization_id: orgId! } }),
     refetchOnWindowFocus: false,
   });
+  const { data: forecast } = useQuery({
+    queryKey: ["cc-forecast", orgId],
+    enabled: !!orgId,
+    queryFn: () => runForecast({ data: { organization_id: orgId! } }),
+    refetchOnWindowFocus: false,
+  });
+  const { data: finance } = useQuery({
+    queryKey: ["cc-finance", orgId],
+    enabled: !!orgId,
+    queryFn: () => runFinance({ data: { organization_id: orgId! } }),
+    refetchOnWindowFocus: false,
+  });
+  const { data: retention } = useQuery({
+    queryKey: ["cc-retention", orgId],
+    enabled: !!orgId,
+    queryFn: () => runRetention({ data: { organization_id: orgId! } }),
+    refetchOnWindowFocus: false,
+  });
 
   const firstName = (user?.user_metadata?.full_name ?? user?.email ?? "").toString().split(" ")[0] ?? "";
+
 
   return (
     <div className="p-4 md:p-8 space-y-6 max-w-7xl mx-auto">
