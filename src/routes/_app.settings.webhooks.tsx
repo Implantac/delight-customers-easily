@@ -159,11 +159,43 @@ function WebhooksPage() {
       </div>
 
       <Card className="mt-6 p-5 text-sm">
-        <h3 className="font-semibold">Como funciona</h3>
+        <h3 className="font-semibold">Como funciona (saída)</h3>
         <ul className="mt-2 list-disc space-y-1 pl-5 text-muted-foreground">
           <li>Cada evento gera um <code className="rounded bg-muted px-1">POST</code> JSON para a URL configurada.</li>
           <li>O cabeçalho <code className="rounded bg-muted px-1">X-Lovable-Signature</code> contém um HMAC-SHA256 do corpo, assinado com o segredo do webhook.</li>
           <li>Verifique a assinatura no seu endpoint antes de processar.</li>
+        </ul>
+      </Card>
+
+      <Card className="mt-4 p-5 text-sm">
+        <h3 className="font-semibold">Email de entrada</h3>
+        <p className="mt-1 text-muted-foreground">
+          Configure seu provedor (Postmark, SendGrid, Mailgun) para encaminhar emails recebidos para a URL abaixo.
+          Quando o remetente bate com um contato cadastrado, uma atividade do tipo <em>email</em> é criada automaticamente.
+        </p>
+        <div className="mt-3 space-y-2">
+          <Label className="text-xs">Endpoint</Label>
+          <div className="flex items-center gap-2">
+            <code className="flex-1 truncate rounded bg-muted px-2 py-1.5 text-xs">
+              {typeof window !== "undefined" ? `${window.location.origin}/api/public/inbound-email` : "/api/public/inbound-email"}
+            </code>
+            <Button
+              variant="outline"
+              size="sm"
+              type="button"
+              onClick={() => {
+                navigator.clipboard.writeText(`${window.location.origin}/api/public/inbound-email`);
+                toast.success("URL copiada");
+              }}
+            >
+              <Copy className="h-3.5 w-3.5" />
+            </Button>
+          </div>
+        </div>
+        <ul className="mt-3 list-disc space-y-1 pl-5 text-muted-foreground">
+          <li>Método: <code className="rounded bg-muted px-1">POST</code> com corpo JSON contendo <code>from</code>, <code>subject</code>, <code>text</code> e/ou <code>html</code>.</li>
+          <li>Inclua o cabeçalho <code className="rounded bg-muted px-1">x-webhook-secret</code> com o valor do segredo configurado (<code>INBOUND_EMAIL_SECRET</code>).</li>
+          <li>Emails de remetentes sem contato cadastrado são silenciosamente ignorados.</li>
         </ul>
       </Card>
     </div>
