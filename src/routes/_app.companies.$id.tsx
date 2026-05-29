@@ -120,6 +120,11 @@ function CompanyDetail() {
               />
             </div>
           </Card>
+
+          <Card className="p-5">
+            <h3 className="flex items-center gap-2 text-sm font-semibold mb-4"><HistoryIcon className="h-4 w-4" />Histórico de alterações</h3>
+            <AuditHistory entityType="companies" entityId={company.id} />
+          </Card>
         </div>
       </div>
     </div>
