@@ -166,7 +166,7 @@ function PipelinePage() {
           <EmptyState icon={Target} title="Sem negócios" description="Crie seu primeiro negócio para começar a acompanhar o funil." />
         </div>
       ) : (
-        <div className="mt-6 grid grid-cols-1 gap-3 md:grid-cols-3 lg:grid-cols-6">
+        <div className="mt-6 flex gap-3 overflow-x-auto pb-2 md:grid md:grid-cols-3 md:overflow-visible lg:grid-cols-6">
           {STAGES.map((stage) => {
             const items = (deals ?? []).filter((d) => d.stage === stage.id);
             const sum = items.reduce((s, d) => s + Number(d.value), 0);
@@ -180,7 +180,7 @@ function PipelinePage() {
                   if (d && d.stage !== stage.id) move.mutate({ id: dragId, stage: stage.id, prevStage: d.stage as Stage, deal: { title: d.title, value: d.value } });
                   setDragId(null);
                 }}
-                className="flex flex-col rounded-lg bg-muted/40 p-2"
+                className="flex w-[80vw] shrink-0 flex-col rounded-lg bg-muted/40 p-2 md:w-auto md:shrink"
               >
                 <div className="px-2 py-2">
                   <div className="flex items-center justify-between">
