@@ -111,20 +111,27 @@ function ReportsPage() {
       } />
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="p-4">
-          <div className="flex items-center justify-between"><p className="text-sm text-muted-foreground">Forecast 90d</p><Target className="h-4 w-4 text-muted-foreground" /></div>
-          <p className="text-2xl font-bold mt-2">{fmt(stats.forecast)}</p>
-        </Card>
-        <Card className="p-4">
-          <div className="flex items-center justify-between"><p className="text-sm text-muted-foreground">Receita ganha</p><TrendingUp className="h-4 w-4 text-muted-foreground" /></div>
-          <p className="text-2xl font-bold mt-2">{fmt(stats.wonValue)}</p>
-          <p className="text-xs text-muted-foreground">{stats.wonCount} oportunidades</p>
-        </Card>
-        <Card className="p-4">
-          <div className="flex items-center justify-between"><p className="text-sm text-muted-foreground">Taxa de vitória</p><Trophy className="h-4 w-4 text-muted-foreground" /></div>
-          <p className="text-2xl font-bold mt-2">{stats.winRate.toFixed(1)}%</p>
-        </Card>
+        {[
+          { label: "Forecast 90d", value: fmt(stats.forecast), icon: Target, hint: null as string | null },
+          { label: "Receita ganha", value: fmt(stats.wonValue), icon: TrendingUp, hint: `${stats.wonCount} oportunidades` },
+          { label: "Taxa de vitória", value: `${stats.winRate.toFixed(1)}%`, icon: Trophy, hint: null },
+        ].map((s, i) => (
+          <Card
+            key={s.label}
+            className="relative overflow-hidden p-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)] animate-in fade-in slide-in-from-bottom-2"
+            style={{ animationDelay: `${i * 60}ms` }}
+          >
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-[var(--gradient-subtle)] opacity-0 transition-opacity duration-200 hover:opacity-100" />
+            <div className="relative flex items-center justify-between">
+              <p className="text-sm text-muted-foreground">{s.label}</p>
+              <div className="flex h-7 w-7 items-center justify-center rounded-md bg-accent/60"><s.icon className="h-4 w-4 text-muted-foreground" /></div>
+            </div>
+            <p className="relative text-2xl font-bold mt-2 tracking-tight">{s.value}</p>
+            {s.hint && <p className="relative text-xs text-muted-foreground">{s.hint}</p>}
+          </Card>
+        ))}
       </div>
+
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <Card className="p-4">
