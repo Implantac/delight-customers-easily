@@ -86,6 +86,7 @@ function PipelinePage() {
   });
 
   const fire = useServerFn(triggerWebhooks);
+  const runRules = useServerFn(runAutomations);
 
   const move = useMutation({
     mutationFn: async ({ id, stage, prevStage, deal }: { id: string; stage: Stage; prevStage: Stage; deal: any }) => {
@@ -95,8 +96,10 @@ function PipelinePage() {
         const events = ["deal.stage_changed"];
         if (stage === "won") events.push("deal.won");
         if (stage === "lost") events.push("deal.lost");
+        const payload = { deal_id: id, from_stage: prevStage, to_stage: stage, deal };
         for (const ev of events) {
-          fire({ data: { organization_id: orgId, event: ev, payload: { id, from: prevStage, to: stage, deal } } }).catch(() => {});
+          fire({ data: { organization_id: orgId, event: ev, payload } }).catch(() => {});
+          runRules({ data: { organization_id: orgId, event: ev, payload } }).catch(() => {});
         }
       }
     },
