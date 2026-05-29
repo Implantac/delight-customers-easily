@@ -25,7 +25,8 @@ export const Route = createFileRoute("/_app/contacts")({ component: ContactsPage
 
 function ContactsPage() {
   const { user } = useAuth();
-  const { orgId } = useCurrentOrg();
+  const { orgId, role } = useCurrentOrg();
+  const canDelete = role === "owner" || role === "admin";
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
