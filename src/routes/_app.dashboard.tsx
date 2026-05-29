@@ -88,14 +88,21 @@ function DashboardPage() {
         </div>
       ) : (
         <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {stats.map((s) => (
-            <Card key={s.label} className="p-5">
-              <div className="flex items-center justify-between">
+          {stats.map((s, i) => (
+            <Card
+              key={s.label}
+              className="group relative overflow-hidden p-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)] animate-in fade-in slide-in-from-bottom-2"
+              style={{ animationDelay: `${i * 60}ms`, animationFillMode: "backwards" }}
+            >
+              <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-[var(--gradient-subtle)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              <div className="relative flex items-center justify-between">
                 <span className="text-sm text-muted-foreground">{s.label}</span>
-                <s.icon className={`h-4 w-4 ${s.accent}`} />
+                <span className={`flex h-8 w-8 items-center justify-center rounded-md bg-accent/60 ${s.accent}`}>
+                  <s.icon className="h-4 w-4" />
+                </span>
               </div>
-              <p className="mt-3 text-2xl font-semibold tracking-tight">{s.value}</p>
-              <p className="mt-1 text-xs text-muted-foreground">{s.sub}</p>
+              <p className="relative mt-3 text-2xl font-semibold tracking-tight">{s.value}</p>
+              <p className="relative mt-1 text-xs text-muted-foreground">{s.sub}</p>
             </Card>
           ))}
         </div>
