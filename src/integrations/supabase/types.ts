@@ -456,6 +456,60 @@ export type Database = {
           },
         ]
       }
+      invoices: {
+        Row: {
+          amount: number
+          company_id: string | null
+          contact_id: string | null
+          created_at: string
+          deal_id: string | null
+          due_date: string
+          id: string
+          issued_at: string
+          notes: string | null
+          number: string | null
+          organization_id: string
+          paid_at: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          company_id?: string | null
+          contact_id?: string | null
+          created_at?: string
+          deal_id?: string | null
+          due_date: string
+          id?: string
+          issued_at?: string
+          notes?: string | null
+          number?: string | null
+          organization_id: string
+          paid_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          company_id?: string | null
+          contact_id?: string | null
+          created_at?: string
+          deal_id?: string | null
+          due_date?: string
+          id?: string
+          issued_at?: string
+          notes?: string | null
+          number?: string | null
+          organization_id?: string
+          paid_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       memberships: {
         Row: {
           created_at: string

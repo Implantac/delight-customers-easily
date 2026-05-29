@@ -22,6 +22,7 @@ import { AIInsights } from "@/components/ai-insights";
 import { Attachments } from "@/components/attachments";
 import { TagPicker } from "@/components/tag-picker";
 import { DealHistory } from "@/components/deal-history";
+import { DealPlaybook } from "@/components/deal-playbook";
 import { useServerFn } from "@tanstack/react-start";
 import { triggerWebhooks } from "@/lib/webhooks.functions";
 import { runAutomations } from "@/lib/automations.functions";
@@ -365,6 +366,15 @@ function DealDrawer({
             </div>
 
             <AIInsights dealId={deal.id} actions={["score_deal"]} />
+
+            <DealPlaybook
+              stage={form.stage ?? deal.stage}
+              vars={{
+                first_name: contacts.find((c) => c.id === deal.contact_id)?.name?.split(" ")[0],
+                company: companies.find((c) => c.id === deal.company_id)?.name,
+                deadline: deal.expected_close ?? undefined,
+              }}
+            />
 
             <div className="border-t pt-4">
               <p className="mb-1.5 text-xs font-medium text-muted-foreground">Etiquetas</p>
