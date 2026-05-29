@@ -107,42 +107,44 @@ function ContactsPage() {
         <Input placeholder="Buscar contatos…" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
       </div>
 
-      <Card className="overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-muted/50 text-xs uppercase tracking-wider text-muted-foreground">
-            <tr>
-              <th className="px-4 py-3 text-left">Nome</th>
-              <th className="px-4 py-3 text-left">Empresa</th>
-              <th className="px-4 py-3 text-left">Cargo</th>
-              <th className="px-4 py-3 text-left">Contato</th>
-              <th className="px-4 py-3"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.length === 0 && (
-              <tr><td colSpan={5} className="px-4 py-12 text-center text-muted-foreground">Nenhum contato encontrado.</td></tr>
-            )}
-            {filtered.map((c) => (
-              <tr key={c.id} className="border-t hover:bg-muted/30">
-                <td className="px-4 py-3 font-medium">{c.name}</td>
-                <td className="px-4 py-3 text-muted-foreground">{(c.companies as any)?.name ?? "—"}</td>
-                <td className="px-4 py-3 text-muted-foreground">{c.position ?? "—"}</td>
-                <td className="px-4 py-3 text-muted-foreground">
-                  <div className="flex flex-col gap-0.5">
-                    {c.email && <span className="flex items-center gap-1.5"><Mail className="h-3 w-3" />{c.email}</span>}
-                    {c.phone && <span className="flex items-center gap-1.5"><Phone className="h-3 w-3" />{c.phone}</span>}
-                  </div>
-                </td>
-                <td className="px-4 py-3 text-right">
-                  <Button variant="ghost" size="sm" onClick={() => { if (confirm("Remover contato?")) del.mutate(c.id); }}>
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </td>
+      {isLoading ? (
+        <div className="space-y-2">{Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-14 w-full" />)}</div>
+      ) : filtered.length === 0 ? (
+        <EmptyState icon={Users} title="Nenhum contato" description={search ? "Tente outra busca." : "Comece criando seu primeiro contato."} />
+      ) : (
+        <Card className="overflow-hidden">
+          <table className="w-full text-sm">
+            <thead className="bg-muted/50 text-xs uppercase tracking-wider text-muted-foreground">
+              <tr>
+                <th className="px-4 py-3 text-left">Nome</th>
+                <th className="px-4 py-3 text-left">Empresa</th>
+                <th className="px-4 py-3 text-left">Cargo</th>
+                <th className="px-4 py-3 text-left">Contato</th>
+                <th className="px-4 py-3"></th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </Card>
-    </div>
-  );
-}
+            </thead>
+            <tbody>
+              {filtered.map((c) => (
+                <tr key={c.id} className="border-t hover:bg-muted/30">
+                  <td className="px-4 py-3 font-medium">
+                    <Link to="/contacts/$id" params={{ id: c.id }} className="hover:underline">{c.name}</Link>
+                  </td>
+                  <td className="px-4 py-3 text-muted-foreground">{(c.companies as any)?.name ?? "—"}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{c.position ?? "—"}</td>
+                  <td className="px-4 py-3 text-muted-foreground">
+                    <div className="flex flex-col gap-0.5">
+                      {c.email && <span className="flex items-center gap-1.5"><Mail className="h-3 w-3" />{c.email}</span>}
+                      {c.phone && <span className="flex items-center gap-1.5"><Phone className="h-3 w-3" />{c.phone}</span>}
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    <Button variant="ghost" size="sm" onClick={() => { if (confirm("Remover contato?")) del.mutate(c.id); }}>
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </Card>
+      )}
