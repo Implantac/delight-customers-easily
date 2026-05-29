@@ -4,15 +4,19 @@ import { useServerFn } from "@tanstack/react-start";
 import { useCurrentOrg } from "@/lib/org";
 import { useAuth } from "@/lib/auth";
 import { computeCommandCenter } from "@/lib/intelligence.functions";
+import { getForecast } from "@/lib/forecast.functions";
+import { getFinanceOverview } from "@/lib/finance.functions";
+import { getRetentionInsights } from "@/lib/churn.functions";
 import { PageHeader } from "@/components/page-header";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CopilotDrawer } from "@/components/copilot-drawer";
 import {
   AlertTriangle, TrendingUp, Target, Clock, Users, ArrowRight,
-  Sparkles, Flame, Calendar, DollarSign,
+  Sparkles, Flame, Calendar, DollarSign, HeartPulse, Receipt, Gauge,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/command")({ component: CommandCenter });
