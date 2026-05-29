@@ -118,7 +118,8 @@ function ContactsPage() {
         <EmptyState icon={Users} title="Nenhum contato" description={search ? "Tente outra busca." : "Comece criando seu primeiro contato."} />
       ) : (
         <Card className="overflow-hidden">
-          <table className="w-full text-sm">
+          <div className="overflow-x-auto">
+          <table className="w-full text-sm min-w-[640px]">
             <thead className="bg-muted/50 text-xs uppercase tracking-wider text-muted-foreground">
               <tr>
                 <th className="px-4 py-3 text-left">Nome</th>
