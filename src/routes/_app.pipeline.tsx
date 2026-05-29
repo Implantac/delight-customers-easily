@@ -367,6 +367,15 @@ function DealDrawer({
 
             <AIInsights dealId={deal.id} actions={["score_deal"]} />
 
+            <DealPlaybook
+              stage={form.stage ?? deal.stage}
+              vars={{
+                first_name: contacts.find((c) => c.id === deal.contact_id)?.name?.split(" ")[0],
+                company: companies.find((c) => c.id === deal.company_id)?.name,
+                deadline: deal.expected_close ?? undefined,
+              }}
+            />
+
             <div className="border-t pt-4">
               <p className="mb-1.5 text-xs font-medium text-muted-foreground">Etiquetas</p>
               <TagPicker entityType="deal" entityId={deal.id} />
