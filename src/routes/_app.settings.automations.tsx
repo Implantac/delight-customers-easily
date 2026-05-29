@@ -227,9 +227,9 @@ function AutomationDialog({
         created_by: userId,
         name: name.trim(),
         trigger_event: trigger,
-        conditions,
+        conditions: conditions as never,
         action_type: actionType,
-        action_config,
+        action_config: action_config as never,
         enabled: true,
       });
       if (error) throw error;
