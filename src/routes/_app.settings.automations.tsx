@@ -101,8 +101,8 @@ function AutomationsPage() {
     <div className="p-6 space-y-6 max-w-5xl mx-auto">
       <PageHeader
         title="Automações"
-        description="Regras que executam ações automaticamente quando eventos acontecem no CRM."
-        actions={
+        subtitle="Regras que executam ações automaticamente quando eventos acontecem no CRM."
+        action={
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <Button><Plus className="h-4 w-4 mr-2" />Nova automação</Button>
