@@ -108,7 +108,7 @@ function Importer({ kind }: { kind: Kind }) {
       const chunkSize = 200;
       for (let i = 0; i < payload.length; i += chunkSize) {
         const slice = payload.slice(i, i + chunkSize);
-        const { error } = await supabase.from(kind).insert(slice);
+        const { error } = await (supabase.from(kind) as any).insert(slice);
         if (error) throw error;
       }
       return payload.length;
