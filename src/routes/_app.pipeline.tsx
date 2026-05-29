@@ -111,7 +111,7 @@ function PipelinePage() {
   const selected = (deals ?? []).find((d) => d.id === selectedId) ?? null;
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <PageHeader
         title="Pipeline"
         subtitle={`${deals?.length ?? 0} negócios · ${fmtBRL((deals ?? []).reduce((s, d) => s + Number(d.value), 0))} total`}
