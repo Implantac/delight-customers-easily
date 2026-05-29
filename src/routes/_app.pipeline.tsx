@@ -344,6 +344,15 @@ function DealDrawer({
 
             <AIInsights dealId={deal.id} actions={["score_deal"]} />
 
+            <div className="border-t pt-4">
+              <p className="mb-1.5 text-xs font-medium text-muted-foreground">Etiquetas</p>
+              <TagPicker entityType="deal" entityId={deal.id} />
+            </div>
+
+            <Attachments entityType="deal" entityId={deal.id} />
+
+            <DealHistory dealId={deal.id} />
+
 
 
             <SheetFooter className="gap-2 sm:gap-2">
