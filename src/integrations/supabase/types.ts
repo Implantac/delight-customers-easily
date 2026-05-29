@@ -81,6 +81,45 @@ export type Database = {
           },
         ]
       }
+      attachments: {
+        Row: {
+          created_at: string
+          entity_id: string
+          entity_type: string
+          file_name: string
+          id: string
+          mime_type: string | null
+          organization_id: string
+          size_bytes: number | null
+          storage_path: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          entity_id: string
+          entity_type: string
+          file_name: string
+          id?: string
+          mime_type?: string | null
+          organization_id: string
+          size_bytes?: number | null
+          storage_path: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          entity_id?: string
+          entity_type?: string
+          file_name?: string
+          id?: string
+          mime_type?: string | null
+          organization_id?: string
+          size_bytes?: number | null
+          storage_path?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       companies: {
         Row: {
           created_at: string
@@ -227,6 +266,39 @@ export type Database = {
           organization_id?: string
           position?: number
           updated_at?: string
+        }
+        Relationships: []
+      }
+      deal_events: {
+        Row: {
+          created_at: string
+          deal_id: string
+          event_type: string
+          from_value: Json | null
+          id: string
+          organization_id: string
+          to_value: Json | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          deal_id: string
+          event_type: string
+          from_value?: Json | null
+          id?: string
+          organization_id: string
+          to_value?: Json | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          deal_id?: string
+          event_type?: string
+          from_value?: Json | null
+          id?: string
+          organization_id?: string
+          to_value?: Json | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -468,6 +540,65 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      taggings: {
+        Row: {
+          created_at: string
+          entity_id: string
+          entity_type: string
+          id: string
+          organization_id: string
+          tag_id: string
+        }
+        Insert: {
+          created_at?: string
+          entity_id: string
+          entity_type: string
+          id?: string
+          organization_id: string
+          tag_id: string
+        }
+        Update: {
+          created_at?: string
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          organization_id?: string
+          tag_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "taggings_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tags: {
+        Row: {
+          color: string
+          created_at: string
+          id: string
+          name: string
+          organization_id: string
+        }
+        Insert: {
+          color?: string
+          created_at?: string
+          id?: string
+          name: string
+          organization_id: string
+        }
+        Update: {
+          color?: string
+          created_at?: string
+          id?: string
+          name?: string
+          organization_id?: string
+        }
+        Relationships: []
       }
       webhooks: {
         Row: {
