@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "@/components/page-header";
-import { ArrowLeft, Globe, Trash2, Users, KanbanSquare } from "lucide-react";
+import { Timeline, type TimelineItem } from "@/components/timeline";
+import { ArrowLeft, Globe, Trash2, Users, KanbanSquare, Clock } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/companies/$id")({ component: CompanyDetail });
@@ -27,6 +28,16 @@ function CompanyDetail() {
   const { data: deals } = useQuery({
     queryKey: ["company-deals", id],
     queryFn: async () => (await supabase.from("deals").select("id, title, value, stage").eq("company_id", id)).data ?? [],
+  });
+  const { data: activities } = useQuery({
+    queryKey: ["company-activities", id],
+    queryFn: async () => {
+      const { data: ds } = await supabase.from("deals").select("id").eq("company_id", id);
+      const dealIds = (ds ?? []).map((d) => d.id);
+      if (dealIds.length === 0) return [];
+      const { data } = await supabase.from("activities").select("id, title, type, due_date, completed").in("deal_id", dealIds).order("due_date", { ascending: false, nullsFirst: false });
+      return data ?? [];
+    },
   });
 
   const del = useMutation({
@@ -85,6 +96,20 @@ function CompanyDetail() {
                   <div className="flex items-center gap-2"><Badge variant="secondary">{d.stage}</Badge><span className="text-muted-foreground">{Number(d.value).toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 })}</span></div>
                 </div>
               ))}
+            </div>
+          </Card>
+
+          <Card className="p-5">
+            <h3 className="flex items-center gap-2 text-sm font-semibold"><Clock className="h-4 w-4" />Timeline</h3>
+            <div className="mt-4">
+              <Timeline
+                emptyLabel="Sem atividades vinculadas aos negócios."
+                items={(activities ?? []).map<TimelineItem>((a) => ({
+                  id: a.id, kind: "activity", type: a.type, title: a.title, completed: a.completed,
+                  date: a.due_date ?? new Date().toISOString(),
+                  meta: a.type + (a.due_date ? ` · ${new Date(a.due_date).toLocaleString("pt-BR", { day: "2-digit", month: "short" })}` : ""),
+                })).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())}
+              />
             </div>
           </Card>
         </div>
