@@ -134,6 +134,26 @@ function ContactsPage() {
         <Input placeholder="Buscar contatos…" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
       </div>
 
+      {selected.size > 0 && (
+        <div className="mb-3 flex items-center justify-between gap-2 rounded-md border bg-accent/40 px-3 py-2 text-sm">
+          <span>{selected.size} selecionado{selected.size > 1 ? "s" : ""}</span>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={() => {
+              const rows = (contacts ?? []).filter((c) => selected.has(c.id));
+              const csv = toCSV(rows as any, [
+                { key: "name", label: "Nome" }, { key: "email", label: "Email" }, { key: "phone", label: "Telefone" },
+                { key: "position", label: "Cargo" }, { key: "notes", label: "Notas" },
+              ] as any);
+              downloadCSV(`contatos-selecionados-${new Date().toISOString().slice(0,10)}.csv`, csv);
+            }}><Download className="mr-2 h-4 w-4" />Exportar</Button>
+            <Button variant="destructive" size="sm" disabled={bulkDel.isPending} onClick={() => {
+              if (confirm(`Remover ${selected.size} contato(s)?`)) bulkDel.mutate(Array.from(selected));
+            }}><Trash2 className="mr-2 h-4 w-4" />Remover</Button>
+            <Button variant="ghost" size="sm" onClick={() => setSelected(new Set())}><X className="h-4 w-4" /></Button>
+          </div>
+        </div>
+      )}
+
       {isLoading ? (
         <div className="space-y-2">{Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-14 w-full" />)}</div>
       ) : filtered.length === 0 ? (
@@ -144,6 +164,15 @@ function ContactsPage() {
           <table className="w-full text-sm min-w-[640px]">
             <thead className="bg-muted/50 text-xs uppercase tracking-wider text-muted-foreground">
               <tr>
+                <th className="px-4 py-3 w-10">
+                  <Checkbox
+                    checked={filtered.length > 0 && filtered.every((c) => selected.has(c.id))}
+                    onCheckedChange={(v) => {
+                      if (v) setSelected(new Set(filtered.map((c) => c.id)));
+                      else setSelected(new Set());
+                    }}
+                  />
+                </th>
                 <th className="px-4 py-3 text-left">Nome</th>
                 <th className="px-4 py-3 text-left">Empresa</th>
                 <th className="px-4 py-3 text-left">Cargo</th>
@@ -154,6 +183,16 @@ function ContactsPage() {
             <tbody>
               {filtered.map((c) => (
                 <tr key={c.id} className="border-t hover:bg-muted/30">
+                  <td className="px-4 py-3">
+                    <Checkbox
+                      checked={selected.has(c.id)}
+                      onCheckedChange={(v) => {
+                        const next = new Set(selected);
+                        if (v) next.add(c.id); else next.delete(c.id);
+                        setSelected(next);
+                      }}
+                    />
+                  </td>
                   <td className="px-4 py-3 font-medium">
                     <Link to="/contacts/$id" params={{ id: c.id }} className="hover:underline">{c.name}</Link>
                   </td>
