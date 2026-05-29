@@ -27,6 +27,7 @@ const nav = [
   { to: "/finance", label: "Financeiro", icon: DollarSign, shortcut: "", managerOnly: false },
   { to: "/opportunity-map", label: "Mapa de Oportunidades", icon: Map, shortcut: "", managerOnly: false },
   { to: "/products", label: "Produtos", icon: Package, shortcut: "", managerOnly: false },
+  { to: "/chat", label: "Chat", icon: MessageSquare, shortcut: "", managerOnly: false },
   { to: "/reports", label: "Relatórios", icon: BarChart3, shortcut: "G R", managerOnly: true },
 ] as const;
 
