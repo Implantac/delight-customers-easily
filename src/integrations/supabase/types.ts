@@ -578,6 +578,80 @@ export type Database = {
         }
         Relationships: []
       }
+      order_items: {
+        Row: {
+          company_id: string | null
+          created_at: string
+          created_by: string | null
+          deal_id: string | null
+          id: string
+          occurred_at: string
+          organization_id: string
+          product_id: string | null
+          quantity: number
+          unit_cost: number
+          unit_price: number
+          updated_at: string
+        }
+        Insert: {
+          company_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          deal_id?: string | null
+          id?: string
+          occurred_at?: string
+          organization_id: string
+          product_id?: string | null
+          quantity?: number
+          unit_cost?: number
+          unit_price?: number
+          updated_at?: string
+        }
+        Update: {
+          company_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          deal_id?: string | null
+          id?: string
+          occurred_at?: string
+          organization_id?: string
+          product_id?: string | null
+          quantity?: number
+          unit_cost?: number
+          unit_price?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "order_items_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       org_invites: {
         Row: {
           accepted_at: string | null
@@ -640,6 +714,59 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      products: {
+        Row: {
+          active: boolean
+          category: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          name: string
+          organization_id: string
+          sku: string | null
+          stock_qty: number
+          unit_cost: number
+          unit_price: number
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          category?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name: string
+          organization_id: string
+          sku?: string | null
+          stock_qty?: number
+          unit_cost?: number
+          unit_price?: number
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          category?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name?: string
+          organization_id?: string
+          sku?: string | null
+          stock_qty?: number
+          unit_cost?: number
+          unit_price?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
