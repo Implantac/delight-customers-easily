@@ -18,6 +18,7 @@ import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppContactsRouteImport } from './routes/_app.contacts'
 import { Route as AppCompaniesRouteImport } from './routes/_app.companies'
 import { Route as AppActivitiesRouteImport } from './routes/_app.activities'
+import { Route as AppSettingsWebhooksRouteImport } from './routes/_app.settings.webhooks'
 import { Route as AppSettingsOrganizationRouteImport } from './routes/_app.settings.organization'
 import { Route as AppSettingsImportRouteImport } from './routes/_app.settings.import'
 import { Route as AppSettingsFieldsRouteImport } from './routes/_app.settings.fields'
@@ -68,6 +69,11 @@ const AppCompaniesRoute = AppCompaniesRouteImport.update({
 const AppActivitiesRoute = AppActivitiesRouteImport.update({
   id: '/activities',
   path: '/activities',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsWebhooksRoute = AppSettingsWebhooksRouteImport.update({
+  id: '/settings/webhooks',
+  path: '/settings/webhooks',
   getParentRoute: () => AppRoute,
 } as any)
 const AppSettingsOrganizationRoute = AppSettingsOrganizationRouteImport.update({
@@ -122,6 +128,7 @@ export interface FileRoutesByFullPath {
   '/settings/fields': typeof AppSettingsFieldsRoute
   '/settings/import': typeof AppSettingsImportRoute
   '/settings/organization': typeof AppSettingsOrganizationRoute
+  '/settings/webhooks': typeof AppSettingsWebhooksRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
 }
 export interface FileRoutesByTo {
@@ -139,6 +146,7 @@ export interface FileRoutesByTo {
   '/settings/fields': typeof AppSettingsFieldsRoute
   '/settings/import': typeof AppSettingsImportRoute
   '/settings/organization': typeof AppSettingsOrganizationRoute
+  '/settings/webhooks': typeof AppSettingsWebhooksRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
 }
 export interface FileRoutesById {
@@ -158,6 +166,7 @@ export interface FileRoutesById {
   '/_app/settings/fields': typeof AppSettingsFieldsRoute
   '/_app/settings/import': typeof AppSettingsImportRoute
   '/_app/settings/organization': typeof AppSettingsOrganizationRoute
+  '/_app/settings/webhooks': typeof AppSettingsWebhooksRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
 }
 export interface FileRouteTypes {
@@ -177,6 +186,7 @@ export interface FileRouteTypes {
     | '/settings/fields'
     | '/settings/import'
     | '/settings/organization'
+    | '/settings/webhooks'
     | '/api/public/hooks/activity-reminders'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -194,6 +204,7 @@ export interface FileRouteTypes {
     | '/settings/fields'
     | '/settings/import'
     | '/settings/organization'
+    | '/settings/webhooks'
     | '/api/public/hooks/activity-reminders'
   id:
     | '__root__'
@@ -212,6 +223,7 @@ export interface FileRouteTypes {
     | '/_app/settings/fields'
     | '/_app/settings/import'
     | '/_app/settings/organization'
+    | '/_app/settings/webhooks'
     | '/api/public/hooks/activity-reminders'
   fileRoutesById: FileRoutesById
 }
@@ -285,6 +297,13 @@ declare module '@tanstack/react-router' {
       path: '/activities'
       fullPath: '/activities'
       preLoaderRoute: typeof AppActivitiesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings/webhooks': {
+      id: '/_app/settings/webhooks'
+      path: '/settings/webhooks'
+      fullPath: '/settings/webhooks'
+      preLoaderRoute: typeof AppSettingsWebhooksRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/settings/organization': {
@@ -374,6 +393,7 @@ interface AppRouteChildren {
   AppSettingsFieldsRoute: typeof AppSettingsFieldsRoute
   AppSettingsImportRoute: typeof AppSettingsImportRoute
   AppSettingsOrganizationRoute: typeof AppSettingsOrganizationRoute
+  AppSettingsWebhooksRoute: typeof AppSettingsWebhooksRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -387,6 +407,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSettingsFieldsRoute: AppSettingsFieldsRoute,
   AppSettingsImportRoute: AppSettingsImportRoute,
   AppSettingsOrganizationRoute: AppSettingsOrganizationRoute,
+  AppSettingsWebhooksRoute: AppSettingsWebhooksRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
@@ -400,3 +421,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
