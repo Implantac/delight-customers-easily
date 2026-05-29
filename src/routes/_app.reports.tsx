@@ -12,11 +12,11 @@ import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, Cell, Funnel
 export const Route = createFileRoute("/_app/reports")({ component: ReportsPage });
 
 const STAGES = [
-  { id: "lead", label: "Lead", color: "hsl(var(--chart-1))" },
-  { id: "qualified", label: "Qualificado", color: "hsl(var(--chart-2))" },
-  { id: "proposal", label: "Proposta", color: "hsl(var(--chart-3))" },
-  { id: "negotiation", label: "Negociação", color: "hsl(var(--chart-4))" },
-  { id: "won", label: "Ganho", color: "hsl(var(--chart-5))" },
+  { id: "lead", label: "Lead", color: "var(--chart-1)" },
+  { id: "qualified", label: "Qualificado", color: "var(--chart-2)" },
+  { id: "proposal", label: "Proposta", color: "var(--chart-3)" },
+  { id: "negotiation", label: "Negociação", color: "var(--chart-4)" },
+  { id: "won", label: "Ganho", color: "var(--chart-5)" },
 ];
 
 function ReportsPage() {
@@ -131,7 +131,7 @@ function ReportsPage() {
               <FunnelChart>
                 <Tooltip />
                 <Funnel dataKey="value" data={stats.funnel} isAnimationActive>
-                  <LabelList position="right" fill="hsl(var(--foreground))" dataKey="name" />
+                  <LabelList position="right" fill="var(--foreground)" dataKey="name" />
                 </Funnel>
               </FunnelChart>
             </ResponsiveContainer>
@@ -149,7 +149,7 @@ function ReportsPage() {
                   <XAxis type="number" tickFormatter={(v) => fmt(Number(v))} tick={{ fontSize: 11 }} />
                   <YAxis type="category" dataKey="name" tick={{ fontSize: 11 }} width={80} />
                   <Tooltip formatter={(v) => fmt(Number(v))} />
-                  <Bar dataKey="won" fill="hsl(var(--chart-2))" radius={[0, 4, 4, 0]}>
+                  <Bar dataKey="won" fill="var(--chart-2)" radius={[0, 4, 4, 0]}>
                     {stats.perUser.map((_, i) => <Cell key={i} />)}
                   </Bar>
                 </BarChart>
