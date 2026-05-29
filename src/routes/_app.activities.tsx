@@ -38,6 +38,7 @@ function ActivitiesPage() {
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
   const [filter, setFilter] = useState<"all" | "pending" | "done">("pending");
+  const [view, setView] = useState<"list" | "agenda">("list");
 
   const { data: activities, isLoading } = useQuery({
     queryKey: ["activities"],
