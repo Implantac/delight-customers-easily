@@ -107,6 +107,8 @@ function ContactDetail() {
             </div>
           </Card>
 
+          <Attachments entityType="contact" entityId={contact.id} />
+
           <AIInsights contactId={contact.id} actions={["summarize_contact", "next_action"]} />
 
           <Card className="p-5">
