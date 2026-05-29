@@ -98,6 +98,20 @@ function CompanyDetail() {
               ))}
             </div>
           </Card>
+
+          <Card className="p-5">
+            <h3 className="flex items-center gap-2 text-sm font-semibold"><Clock className="h-4 w-4" />Timeline</h3>
+            <div className="mt-4">
+              <Timeline
+                emptyLabel="Sem atividades vinculadas aos negócios."
+                items={(activities ?? []).map<TimelineItem>((a) => ({
+                  id: a.id, kind: "activity", type: a.type, title: a.title, completed: a.completed,
+                  date: a.due_date ?? new Date().toISOString(),
+                  meta: a.type + (a.due_date ? ` · ${new Date(a.due_date).toLocaleString("pt-BR", { day: "2-digit", month: "short" })}` : ""),
+                })).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())}
+              />
+            </div>
+          </Card>
         </div>
       </div>
     </div>
