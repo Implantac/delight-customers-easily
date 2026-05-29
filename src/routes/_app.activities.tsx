@@ -21,6 +21,7 @@ import { activitySchema, fromForm } from "@/lib/validation";
 import { downloadICS } from "@/lib/ics";
 import { useServerFn } from "@tanstack/react-start";
 import { triggerWebhooks } from "@/lib/webhooks.functions";
+import { SavedViews } from "@/components/saved-views";
 
 export const Route = createFileRoute("/_app/activities")({ component: ActivitiesPage });
 
