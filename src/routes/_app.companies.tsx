@@ -109,8 +109,29 @@ function CompaniesPage() {
         }
       />
 
+      <div className="mt-6 mb-4 flex flex-wrap items-center gap-2">
+        <div className="relative flex-1 min-w-[200px] max-w-sm">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input placeholder="Buscar empresas…" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
+        </div>
+        <Input
+          placeholder="Indústria"
+          value={industry}
+          onChange={(e) => setIndustry(e.target.value)}
+          className="w-full sm:w-48"
+        />
+        <SavedViews
+          entity="companies"
+          currentFilters={{ search, industry }}
+          onApply={(f: Record<string, unknown>) => {
+            setSearch((f.search as string) ?? "");
+            setIndustry((f.industry as string) ?? "");
+          }}
+        />
+      </div>
+
       {selected.size > 0 && (
-        <div className="mt-6 mb-3 flex items-center justify-between gap-2 rounded-md border bg-accent/40 px-3 py-2 text-sm">
+        <div className="mb-3 flex items-center justify-between gap-2 rounded-md border bg-accent/40 px-3 py-2 text-sm">
           <span>{selected.size} selecionada{selected.size > 1 ? "s" : ""}</span>
           <div className="flex gap-2">
             <Button variant="outline" size="sm" onClick={() => {
