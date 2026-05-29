@@ -57,7 +57,7 @@ function FieldsSettings() {
 
   return (
     <div className="p-6 space-y-6 max-w-4xl">
-      <PageHeader title="Campos personalizados" description="Adicione campos extras aos seus registros" />
+      <PageHeader title="Campos personalizados" subtitle="Adicione campos extras aos seus registros" />
 
       <Tabs value={tab} onValueChange={(v) => setTab(v as CustomFieldEntity)}>
         <div className="flex items-center justify-between gap-3">

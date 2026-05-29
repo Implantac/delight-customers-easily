@@ -77,7 +77,7 @@ function ReportsPage() {
     });
     const perUser = Object.entries(byUser).map(([uid, v]) => ({
       uid,
-      name: members?.find((m) => m.id === uid)?.full_name ?? "—",
+      name: (members as any)?.find((m: any) => m.id === uid)?.full_name ?? "—",
       ...v,
     })).sort((a, b) => b.won - a.won);
 
@@ -103,7 +103,7 @@ function ReportsPage() {
 
   return (
     <div className="p-6 space-y-6">
-      <PageHeader title="Relatórios" description="Funil, forecast e desempenho do time" action={
+      <PageHeader title="Relatórios" subtitle="Funil, forecast e desempenho do time" action={
         <Button onClick={exportCSV} variant="outline"><Download className="h-4 w-4 mr-2" />Exportar CSV</Button>
       } />
 
