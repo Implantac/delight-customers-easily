@@ -165,6 +165,14 @@ function ActivitiesPage() {
             <CalendarDays className="h-3.5 w-3.5" />Agenda
           </button>
         </div>
+        <SavedViews
+          entity="activities"
+          currentFilters={{ filter, view }}
+          onApply={(f: Record<string, unknown>) => {
+            if (f.filter) setFilter(f.filter as typeof filter);
+            if (f.view) setView(f.view as typeof view);
+          }}
+        />
       </div>
 
       {view === "list" ? (
