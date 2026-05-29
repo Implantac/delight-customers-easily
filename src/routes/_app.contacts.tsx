@@ -10,11 +10,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PageHeader } from "@/components/page-header";
 import { EmptyState } from "@/components/empty-state";
-import { Plus, Mail, Phone, Trash2, Search, Users, Download } from "lucide-react";
+import { Plus, Mail, Phone, Trash2, Search, Users, Download, X } from "lucide-react";
 import { toast } from "sonner";
 import { contactSchema, fromForm } from "@/lib/validation";
 import { ContactDuplicateWarning } from "@/components/duplicate-warning";
@@ -31,6 +32,7 @@ function ContactsPage() {
   const [dupName, setDupName] = useState("");
   const [dupEmail, setDupEmail] = useState("");
   const [dupPhone, setDupPhone] = useState("");
+  const [selected, setSelected] = useState<Set<string>>(new Set());
 
   const { data: contacts, isLoading } = useQuery({
     queryKey: ["contacts"],
@@ -55,6 +57,16 @@ function ContactsPage() {
       if (error) throw error;
     },
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["contacts"] }); toast.success("Contato removido"); },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  const bulkDel = useMutation({
+    mutationFn: async (ids: string[]) => {
+      const { error } = await supabase.from("contacts").delete().in("id", ids);
+      if (error) throw error;
+      return ids.length;
+    },
+    onSuccess: (n) => { qc.invalidateQueries({ queryKey: ["contacts"] }); setSelected(new Set()); toast.success(`${n} contatos removidos`); },
     onError: (e: any) => toast.error(e.message),
   });
 
@@ -122,6 +134,26 @@ function ContactsPage() {
         <Input placeholder="Buscar contatos…" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
       </div>
 
+      {selected.size > 0 && (
+        <div className="mb-3 flex items-center justify-between gap-2 rounded-md border bg-accent/40 px-3 py-2 text-sm">
+          <span>{selected.size} selecionado{selected.size > 1 ? "s" : ""}</span>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={() => {
+              const rows = (contacts ?? []).filter((c) => selected.has(c.id));
+              const csv = toCSV(rows as any, [
+                { key: "name", label: "Nome" }, { key: "email", label: "Email" }, { key: "phone", label: "Telefone" },
+                { key: "position", label: "Cargo" }, { key: "notes", label: "Notas" },
+              ] as any);
+              downloadCSV(`contatos-selecionados-${new Date().toISOString().slice(0,10)}.csv`, csv);
+            }}><Download className="mr-2 h-4 w-4" />Exportar</Button>
+            <Button variant="destructive" size="sm" disabled={bulkDel.isPending} onClick={() => {
+              if (confirm(`Remover ${selected.size} contato(s)?`)) bulkDel.mutate(Array.from(selected));
+            }}><Trash2 className="mr-2 h-4 w-4" />Remover</Button>
+            <Button variant="ghost" size="sm" onClick={() => setSelected(new Set())}><X className="h-4 w-4" /></Button>
+          </div>
+        </div>
+      )}
+
       {isLoading ? (
         <div className="space-y-2">{Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-14 w-full" />)}</div>
       ) : filtered.length === 0 ? (
@@ -132,6 +164,15 @@ function ContactsPage() {
           <table className="w-full text-sm min-w-[640px]">
             <thead className="bg-muted/50 text-xs uppercase tracking-wider text-muted-foreground">
               <tr>
+                <th className="px-4 py-3 w-10">
+                  <Checkbox
+                    checked={filtered.length > 0 && filtered.every((c) => selected.has(c.id))}
+                    onCheckedChange={(v) => {
+                      if (v) setSelected(new Set(filtered.map((c) => c.id)));
+                      else setSelected(new Set());
+                    }}
+                  />
+                </th>
                 <th className="px-4 py-3 text-left">Nome</th>
                 <th className="px-4 py-3 text-left">Empresa</th>
                 <th className="px-4 py-3 text-left">Cargo</th>
@@ -142,6 +183,16 @@ function ContactsPage() {
             <tbody>
               {filtered.map((c) => (
                 <tr key={c.id} className="border-t hover:bg-muted/30">
+                  <td className="px-4 py-3">
+                    <Checkbox
+                      checked={selected.has(c.id)}
+                      onCheckedChange={(v) => {
+                        const next = new Set(selected);
+                        if (v) next.add(c.id); else next.delete(c.id);
+                        setSelected(next);
+                      }}
+                    />
+                  </td>
                   <td className="px-4 py-3 font-medium">
                     <Link to="/contacts/$id" params={{ id: c.id }} className="hover:underline">{c.name}</Link>
                   </td>
