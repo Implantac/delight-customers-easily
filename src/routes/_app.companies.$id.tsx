@@ -8,6 +8,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "@/components/page-header";
 import { Timeline, type TimelineItem } from "@/components/timeline";
 import { ArrowLeft, Globe, Trash2, Users, KanbanSquare, Clock } from "lucide-react";
+import { Attachments } from "@/components/attachments";
+import { TagPicker } from "@/components/tag-picker";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/companies/$id")({ component: CompanyDetail });
@@ -69,10 +71,15 @@ function CompanyDetail() {
             {company.industry && <div className="text-muted-foreground">Setor: <span className="text-foreground">{company.industry}</span></div>}
             {company.size && <div className="text-muted-foreground">Tamanho: <span className="text-foreground">{company.size}</span></div>}
           </dl>
+          <div className="mt-4">
+            <p className="mb-1.5 text-xs font-medium text-muted-foreground">Etiquetas</p>
+            <TagPicker entityType="company" entityId={company.id} />
+          </div>
           {company.notes && <><h3 className="mt-5 text-sm font-semibold">Notas</h3><p className="mt-2 whitespace-pre-wrap text-sm text-muted-foreground">{company.notes}</p></>}
         </Card>
 
         <div className="space-y-6 md:col-span-2">
+          <Attachments entityType="company" entityId={company.id} />
           <Card className="p-5">
             <h3 className="flex items-center gap-2 text-sm font-semibold"><Users className="h-4 w-4" />Contatos ({contacts?.length ?? 0})</h3>
             <div className="mt-3 space-y-2">

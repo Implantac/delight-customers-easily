@@ -19,6 +19,9 @@ import { Plus, Trash2, Target } from "lucide-react";
 import { toast } from "sonner";
 import { dealSchema, fromForm } from "@/lib/validation";
 import { AIInsights } from "@/components/ai-insights";
+import { Attachments } from "@/components/attachments";
+import { TagPicker } from "@/components/tag-picker";
+import { DealHistory } from "@/components/deal-history";
 import { useServerFn } from "@tanstack/react-start";
 import { triggerWebhooks } from "@/lib/webhooks.functions";
 
@@ -340,6 +343,15 @@ function DealDrawer({
             </div>
 
             <AIInsights dealId={deal.id} actions={["score_deal"]} />
+
+            <div className="border-t pt-4">
+              <p className="mb-1.5 text-xs font-medium text-muted-foreground">Etiquetas</p>
+              <TagPicker entityType="deal" entityId={deal.id} />
+            </div>
+
+            <Attachments entityType="deal" entityId={deal.id} />
+
+            <DealHistory dealId={deal.id} />
 
 
 

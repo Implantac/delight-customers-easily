@@ -10,10 +10,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { PageHeader } from "@/components/page-header";
 import { EmptyState } from "@/components/empty-state";
-import { Plus, Globe, Trash2, Building2, Download } from "lucide-react";
+import { Plus, Globe, Trash2, Building2, Download, X } from "lucide-react";
 import { toast } from "sonner";
 import { companySchema, fromForm } from "@/lib/validation";
 import { CompanyDuplicateWarning } from "@/components/duplicate-warning";
@@ -28,6 +29,7 @@ function CompaniesPage() {
   const [open, setOpen] = useState(false);
   const [dupName, setDupName] = useState("");
   const [dupSite, setDupSite] = useState("");
+  const [selected, setSelected] = useState<Set<string>>(new Set());
 
   const { data: companies, isLoading } = useQuery({
     queryKey: ["companies"],
@@ -55,6 +57,16 @@ function CompaniesPage() {
       if (error) throw error;
     },
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["companies"] }); toast.success("Empresa removida"); },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  const bulkDel = useMutation({
+    mutationFn: async (ids: string[]) => {
+      const { error } = await supabase.from("companies").delete().in("id", ids);
+      if (error) throw error;
+      return ids.length;
+    },
+    onSuccess: (n) => { qc.invalidateQueries({ queryKey: ["companies"] }); setSelected(new Set()); toast.success(`${n} empresas removidas`); },
     onError: (e: any) => toast.error(e.message),
   });
 
@@ -93,6 +105,26 @@ function CompaniesPage() {
         }
       />
 
+      {selected.size > 0 && (
+        <div className="mt-6 mb-3 flex items-center justify-between gap-2 rounded-md border bg-accent/40 px-3 py-2 text-sm">
+          <span>{selected.size} selecionada{selected.size > 1 ? "s" : ""}</span>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={() => {
+              const rows = (companies ?? []).filter((c) => selected.has(c.id));
+              const csv = toCSV(rows as any, [
+                { key: "name", label: "Nome" }, { key: "website", label: "Website" },
+                { key: "industry", label: "Indústria" }, { key: "size", label: "Tamanho" }, { key: "notes", label: "Notas" },
+              ] as any);
+              downloadCSV(`empresas-selecionadas-${new Date().toISOString().slice(0,10)}.csv`, csv);
+            }}><Download className="mr-2 h-4 w-4" />Exportar</Button>
+            <Button variant="destructive" size="sm" disabled={bulkDel.isPending} onClick={() => {
+              if (confirm(`Remover ${selected.size} empresa(s)?`)) bulkDel.mutate(Array.from(selected));
+            }}><Trash2 className="mr-2 h-4 w-4" />Remover</Button>
+            <Button variant="ghost" size="sm" onClick={() => setSelected(new Set())}><X className="h-4 w-4" /></Button>
+          </div>
+        </div>
+      )}
+
       {isLoading ? (
         <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-32 w-full" />)}
@@ -102,8 +134,17 @@ function CompaniesPage() {
       ) : (
         <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {companies?.map((c) => (
-            <Card key={c.id} className="p-5 transition hover:border-primary/40">
+            <Card key={c.id} className={`p-5 transition hover:border-primary/40 ${selected.has(c.id) ? "ring-2 ring-primary/40" : ""}`}>
               <div className="flex items-start gap-3">
+                <Checkbox
+                  className="mt-1"
+                  checked={selected.has(c.id)}
+                  onCheckedChange={(v) => {
+                    const next = new Set(selected);
+                    if (v) next.add(c.id); else next.delete(c.id);
+                    setSelected(next);
+                  }}
+                />
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent text-accent-foreground">
                   <Building2 className="h-5 w-5" />
                 </div>

@@ -10,6 +10,8 @@ import { Timeline, type TimelineItem } from "@/components/timeline";
 import { ArrowLeft, Mail, Phone, Briefcase, Trash2, Building2, KanbanSquare, Clock, MessageCircle } from "lucide-react";
 import { SendEmailDialog } from "@/components/send-email-dialog";
 import { AIInsights } from "@/components/ai-insights";
+import { Attachments } from "@/components/attachments";
+import { TagPicker } from "@/components/tag-picker";
 import { whatsappLink } from "@/lib/wa";
 import { toast } from "sonner";
 
@@ -84,6 +86,10 @@ function ContactDetail() {
               </div>
             )}
           </dl>
+          <div className="mt-4">
+            <p className="mb-1.5 text-xs font-medium text-muted-foreground">Etiquetas</p>
+            <TagPicker entityType="contact" entityId={contact.id} />
+          </div>
           {contact.notes && <><h3 className="mt-5 text-sm font-semibold">Notas</h3><p className="mt-2 whitespace-pre-wrap text-sm text-muted-foreground">{contact.notes}</p></>}
         </Card>
 
@@ -100,6 +106,8 @@ function ContactDetail() {
               ))}
             </div>
           </Card>
+
+          <Attachments entityType="contact" entityId={contact.id} />
 
           <AIInsights contactId={contact.id} actions={["summarize_contact", "next_action"]} />
 
