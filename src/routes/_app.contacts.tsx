@@ -148,3 +148,6 @@ function ContactsPage() {
           </table>
         </Card>
       )}
+    </div>
+  );
+}
