@@ -32,6 +32,8 @@ function CompaniesPage() {
   const [dupName, setDupName] = useState("");
   const [dupSite, setDupSite] = useState("");
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [search, setSearch] = useState("");
+  const [industry, setIndustry] = useState("");
 
   const { data: companies, isLoading } = useQuery({
     queryKey: ["companies"],
