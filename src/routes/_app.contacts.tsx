@@ -71,7 +71,7 @@ function ContactsPage() {
   );
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <PageHeader
         title="Contatos"
         subtitle={`${contacts?.length ?? 0} contatos`}
