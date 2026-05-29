@@ -24,7 +24,7 @@ function DashboardPage() {
         supabase.from("contacts").select("id", { count: "exact", head: true }),
         supabase.from("companies").select("id", { count: "exact", head: true }),
         supabase.from("deals").select("id, value, stage"),
-        supabase.from("activities").select("id, title, due_date, completed, type").eq("completed", false).order("due_date", { ascending: true, nullsFirst: false }).limit(5),
+        supabase.from("activities").select("id, title, due_date, completed, type").eq("completed", false).order("due_date", { ascending: true, nullsFirst: false }).limit(8),
         supabase.from("activities").select("created_at, completed").gte("created_at", sinceISO),
       ]);
       return {
