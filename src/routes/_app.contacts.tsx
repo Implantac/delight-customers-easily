@@ -208,9 +208,11 @@ function ContactsPage() {
                     </div>
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <Button variant="ghost" size="sm" onClick={() => { if (confirm("Remover contato?")) del.mutate(c.id); }}>
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    {canDelete && (
+                      <Button variant="ghost" size="sm" onClick={() => { if (confirm("Remover contato?")) del.mutate(c.id); }}>
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
                   </td>
                 </tr>
               ))}
