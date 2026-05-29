@@ -29,6 +29,7 @@ export function AppSidebar() {
   const collapsed = state === "collapsed";
   const path = useRouterState({ select: (s) => s.location.pathname });
   const { org, memberships, orgId } = useCurrentOrg();
+  const canManage = useCanManage();
   const qc = useQueryClient();
 
   const initials = (user?.user_metadata?.full_name ?? user?.email ?? "?")
