@@ -16,6 +16,7 @@ import { EmptyState } from "@/components/empty-state";
 import { Plus, Globe, Trash2, Building2 } from "lucide-react";
 import { toast } from "sonner";
 import { companySchema, fromForm } from "@/lib/validation";
+import { CompanyDuplicateWarning } from "@/components/duplicate-warning";
 
 export const Route = createFileRoute("/_app/companies")({ component: CompaniesPage });
 
@@ -24,6 +25,8 @@ function CompaniesPage() {
   const { orgId } = useCurrentOrg();
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
+  const [dupName, setDupName] = useState("");
+  const [dupSite, setDupSite] = useState("");
 
   const { data: companies, isLoading } = useQuery({
     queryKey: ["companies"],
@@ -65,8 +68,9 @@ function CompaniesPage() {
             <DialogContent>
               <DialogHeader><DialogTitle>Nova empresa</DialogTitle></DialogHeader>
               <form onSubmit={(e) => { e.preventDefault(); create.mutate(new FormData(e.currentTarget)); }} className="space-y-3">
-                <div className="space-y-1.5"><Label>Nome *</Label><Input name="name" required maxLength={150} /></div>
-                <div className="space-y-1.5"><Label>Website</Label><Input name="website" maxLength={255} placeholder="https://…" /></div>
+                <div className="space-y-1.5"><Label>Nome *</Label><Input name="name" required maxLength={150} onChange={(e) => setDupName(e.target.value)} /></div>
+                <div className="space-y-1.5"><Label>Website</Label><Input name="website" maxLength={255} placeholder="https://…" onChange={(e) => setDupSite(e.target.value)} /></div>
+                <CompanyDuplicateWarning name={dupName} website={dupSite} />
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1.5"><Label>Indústria</Label><Input name="industry" maxLength={120} /></div>
                   <div className="space-y-1.5"><Label>Tamanho</Label><Input name="size" maxLength={50} placeholder="1-10, 11-50…" /></div>

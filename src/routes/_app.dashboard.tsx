@@ -6,6 +6,7 @@ import { DollarSign, Users, Building2, TrendingUp, CheckCircle2 } from "lucide-r
 import { PageHeader } from "@/components/page-header";
 import { Skeleton } from "@/components/ui/skeleton";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
+import { OnboardingChecklist } from "@/components/onboarding-checklist";
 
 export const Route = createFileRoute("/_app/dashboard")({ component: DashboardPage });
 
@@ -80,6 +81,7 @@ function DashboardPage() {
   return (
     <div className="p-4 md:p-8">
       <PageHeader title="Dashboard" subtitle="Visão geral do seu CRM" />
+      <div className="mt-6"><OnboardingChecklist /></div>
       {isLoading ? (
         <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-28 w-full" />)}
