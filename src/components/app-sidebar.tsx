@@ -52,7 +52,7 @@ export function AppSidebar() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton size="lg" className="data-[state=open]:bg-sidebar-accent">
-              <div className="flex h-8 w-8 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground">
+              <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[var(--gradient-primary)] text-sidebar-primary-foreground shadow-[var(--shadow-glow)]">
                 <Briefcase className="h-4 w-4" />
               </div>
               {!collapsed && (
