@@ -187,14 +187,14 @@ function PipelinePage() {
                   if (d && d.stage !== stage.id) move.mutate({ id: dragId, stage: stage.id, prevStage: d.stage as Stage, deal: { title: d.title, value: d.value } });
                   setDragId(null);
                 }}
-                className="flex w-[80vw] shrink-0 flex-col rounded-lg bg-muted/40 p-2 md:w-auto md:shrink"
+                className="flex w-[80vw] shrink-0 flex-col rounded-xl border border-border/50 bg-muted/30 p-2 transition-colors md:w-auto md:shrink"
               >
                 <div className="px-2 py-2">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold">{stage.label}</span>
-                    <span className="text-xs text-muted-foreground">{items.length}</span>
+                    <span className="text-sm font-semibold tracking-tight">{stage.label}</span>
+                    <span className="rounded-full bg-background px-2 py-0.5 text-xs text-muted-foreground">{items.length}</span>
                   </div>
-                  <p className="text-xs text-muted-foreground">{fmtBRL(sum)}</p>
+                  <p className="mt-0.5 text-xs text-muted-foreground">{fmtBRL(sum)}</p>
                 </div>
                 <div className="flex-1 space-y-2">
                   {items.map((d) => (
@@ -203,7 +203,7 @@ function PipelinePage() {
                       draggable
                       onDragStart={() => setDragId(d.id)}
                       onClick={() => setSelectedId(d.id)}
-                      className={`cursor-grab border-l-4 p-3 transition hover:shadow-md active:cursor-grabbing ${stage.color}`}
+                      className={`cursor-grab border-l-4 p-3 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)] active:cursor-grabbing ${stage.color}`}
                     >
                       <h4 className="text-sm font-medium leading-tight">{d.title}</h4>
                       <p className="mt-1 text-sm font-semibold text-primary">{fmtBRL(Number(d.value))}</p>
