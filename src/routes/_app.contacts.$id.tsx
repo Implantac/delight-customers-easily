@@ -49,11 +49,11 @@ function ContactDetail() {
     onError: (e: any) => toast.error(e.message),
   });
 
-  if (isLoading) return <div className="p-8 space-y-4"><Skeleton className="h-8 w-64" /><Skeleton className="h-40 w-full max-w-2xl" /></div>;
+  if (isLoading) return <div className="p-4 md:p-8 space-y-4"><Skeleton className="h-8 w-64" /><Skeleton className="h-40 w-full max-w-2xl" /></div>;
   if (!contact) return <div className="p-4 md:p-8"><p className="text-muted-foreground">Contato não encontrado.</p></div>;
 
   return (
-    <div className="p-8 max-w-4xl">
+    <div className="p-4 md:p-8 max-w-4xl">
       <Button variant="ghost" size="sm" asChild className="mb-4"><Link to="/contacts"><ArrowLeft className="mr-1 h-4 w-4" />Contatos</Link></Button>
       <PageHeader
         title={contact.name}

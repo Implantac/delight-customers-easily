@@ -77,7 +77,7 @@ function WebhooksPage() {
   });
 
   return (
-    <div className="p-8 max-w-4xl">
+    <div className="p-4 md:p-8 max-w-4xl">
       <PageHeader
         title="Webhooks"
         subtitle="Receba notificações HTTP quando eventos acontecerem no CRM"
