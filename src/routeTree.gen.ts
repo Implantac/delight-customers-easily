@@ -14,6 +14,7 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppReportsRouteImport } from './routes/_app.reports'
 import { Route as AppPipelineRouteImport } from './routes/_app.pipeline'
+import { Route as AppForecastRouteImport } from './routes/_app.forecast'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppContactsRouteImport } from './routes/_app.contacts'
 import { Route as AppCompaniesRouteImport } from './routes/_app.companies'
@@ -54,6 +55,11 @@ const AppReportsRoute = AppReportsRouteImport.update({
 const AppPipelineRoute = AppPipelineRouteImport.update({
   id: '/pipeline',
   path: '/pipeline',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppForecastRoute = AppForecastRouteImport.update({
+  id: '/forecast',
+  path: '/forecast',
   getParentRoute: () => AppRoute,
 } as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
@@ -153,6 +159,7 @@ export interface FileRoutesByFullPath {
   '/companies': typeof AppCompaniesRouteWithChildren
   '/contacts': typeof AppContactsRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
+  '/forecast': typeof AppForecastRoute
   '/pipeline': typeof AppPipelineRoute
   '/reports': typeof AppReportsRoute
   '/companies/$id': typeof AppCompaniesIdRoute
@@ -176,6 +183,7 @@ export interface FileRoutesByTo {
   '/companies': typeof AppCompaniesRouteWithChildren
   '/contacts': typeof AppContactsRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
+  '/forecast': typeof AppForecastRoute
   '/pipeline': typeof AppPipelineRoute
   '/reports': typeof AppReportsRoute
   '/companies/$id': typeof AppCompaniesIdRoute
@@ -201,6 +209,7 @@ export interface FileRoutesById {
   '/_app/companies': typeof AppCompaniesRouteWithChildren
   '/_app/contacts': typeof AppContactsRouteWithChildren
   '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/forecast': typeof AppForecastRoute
   '/_app/pipeline': typeof AppPipelineRoute
   '/_app/reports': typeof AppReportsRoute
   '/_app/companies/$id': typeof AppCompaniesIdRoute
@@ -226,6 +235,7 @@ export interface FileRouteTypes {
     | '/companies'
     | '/contacts'
     | '/dashboard'
+    | '/forecast'
     | '/pipeline'
     | '/reports'
     | '/companies/$id'
@@ -249,6 +259,7 @@ export interface FileRouteTypes {
     | '/companies'
     | '/contacts'
     | '/dashboard'
+    | '/forecast'
     | '/pipeline'
     | '/reports'
     | '/companies/$id'
@@ -273,6 +284,7 @@ export interface FileRouteTypes {
     | '/_app/companies'
     | '/_app/contacts'
     | '/_app/dashboard'
+    | '/_app/forecast'
     | '/_app/pipeline'
     | '/_app/reports'
     | '/_app/companies/$id'
@@ -332,6 +344,13 @@ declare module '@tanstack/react-router' {
       path: '/pipeline'
       fullPath: '/pipeline'
       preLoaderRoute: typeof AppPipelineRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/forecast': {
+      id: '/_app/forecast'
+      path: '/forecast'
+      fullPath: '/forecast'
+      preLoaderRoute: typeof AppForecastRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/dashboard': {
@@ -487,6 +506,7 @@ interface AppRouteChildren {
   AppCompaniesRoute: typeof AppCompaniesRouteWithChildren
   AppContactsRoute: typeof AppContactsRouteWithChildren
   AppDashboardRoute: typeof AppDashboardRoute
+  AppForecastRoute: typeof AppForecastRoute
   AppPipelineRoute: typeof AppPipelineRoute
   AppReportsRoute: typeof AppReportsRoute
   AppInviteTokenRoute: typeof AppInviteTokenRoute
@@ -504,6 +524,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppCompaniesRoute: AppCompaniesRouteWithChildren,
   AppContactsRoute: AppContactsRouteWithChildren,
   AppDashboardRoute: AppDashboardRoute,
+  AppForecastRoute: AppForecastRoute,
   AppPipelineRoute: AppPipelineRoute,
   AppReportsRoute: AppReportsRoute,
   AppInviteTokenRoute: AppInviteTokenRoute,
