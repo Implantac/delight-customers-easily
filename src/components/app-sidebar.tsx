@@ -90,6 +90,9 @@ export function AppSidebar() {
                 <DropdownMenuItem asChild>
                   <Link to="/settings/webhooks"><Webhook className="mr-2 h-4 w-4" />Webhooks</Link>
                 </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/settings/automations"><Zap className="mr-2 h-4 w-4" />Automações</Link>
+                </DropdownMenuItem>
               </>
             )}
           </DropdownMenuContent>
