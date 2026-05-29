@@ -152,15 +152,20 @@ function CompaniesPage() {
         </div>
       )}
 
-      {isLoading ? (
+      {(() => {
+        const filtered = (companies ?? []).filter((c) =>
+          (!search || c.name.toLowerCase().includes(search.toLowerCase()) || (c.website ?? "").toLowerCase().includes(search.toLowerCase())) &&
+          (!industry || (c.industry ?? "").toLowerCase().includes(industry.toLowerCase()))
+        );
+        return isLoading ? (
         <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-32 w-full" />)}
         </div>
-      ) : (companies ?? []).length === 0 ? (
-        <div className="mt-6"><EmptyState icon={Building2} title="Nenhuma empresa" description="Cadastre sua primeira empresa para começar." /></div>
+      ) : filtered.length === 0 ? (
+        <div className="mt-6"><EmptyState icon={Building2} title="Nenhuma empresa" description={search || industry ? "Nenhum resultado para esses filtros." : "Cadastre sua primeira empresa para começar."} /></div>
       ) : (
         <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {companies?.map((c) => (
+          {filtered.map((c) => (
             <Card key={c.id} className={`p-5 transition hover:border-primary/40 ${selected.has(c.id) ? "ring-2 ring-primary/40" : ""}`}>
               <div className="flex items-start gap-3">
                 <Checkbox
