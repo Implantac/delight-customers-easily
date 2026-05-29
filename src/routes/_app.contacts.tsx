@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,11 +9,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PageHeader } from "@/components/page-header";
-import { Plus, Mail, Phone, Trash2, Search } from "lucide-react";
+import { EmptyState } from "@/components/empty-state";
+import { Plus, Mail, Phone, Trash2, Search, Users } from "lucide-react";
 import { toast } from "sonner";
+import { contactSchema, fromForm } from "@/lib/validation";
 
 export const Route = createFileRoute("/_app/contacts")({ component: ContactsPage });
 
