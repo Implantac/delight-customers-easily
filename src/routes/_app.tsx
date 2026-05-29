@@ -5,6 +5,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { CommandPaletteTrigger } from "@/components/command-palette";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { NotificationsBell } from "@/components/notifications-bell";
 import { useGoToShortcuts } from "@/hooks/use-shortcuts";
 
 export const Route = createFileRoute("/_app")({ component: AppLayout });
@@ -32,6 +33,7 @@ function AppLayout() {
             <div className="flex-1">
               <CommandPaletteTrigger />
             </div>
+            <NotificationsBell />
             <ThemeToggle />
           </header>
           <main className="flex-1 overflow-auto">
