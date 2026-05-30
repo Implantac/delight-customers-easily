@@ -33,6 +33,7 @@ import { Route as AppProductivityRouteImport } from './routes/_app.productivity'
 import { Route as AppPlaybooksRouteImport } from './routes/_app.playbooks'
 import { Route as AppPipelineRouteImport } from './routes/_app.pipeline'
 import { Route as AppOpportunityMapRouteImport } from './routes/_app.opportunity-map'
+import { Route as AppOnboardingRouteImport } from './routes/_app.onboarding'
 import { Route as AppNotificationsRouteImport } from './routes/_app.notifications'
 import { Route as AppMytasksRouteImport } from './routes/_app.mytasks'
 import { Route as AppLeadScoringRouteImport } from './routes/_app.lead-scoring'
@@ -193,6 +194,11 @@ const AppPipelineRoute = AppPipelineRouteImport.update({
 const AppOpportunityMapRoute = AppOpportunityMapRouteImport.update({
   id: '/opportunity-map',
   path: '/opportunity-map',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppOnboardingRoute = AppOnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
   getParentRoute: () => AppRoute,
 } as any)
 const AppNotificationsRoute = AppNotificationsRouteImport.update({
@@ -437,6 +443,7 @@ export interface FileRoutesByFullPath {
   '/lead-scoring': typeof AppLeadScoringRoute
   '/mytasks': typeof AppMytasksRoute
   '/notifications': typeof AppNotificationsRoute
+  '/onboarding': typeof AppOnboardingRoute
   '/opportunity-map': typeof AppOpportunityMapRoute
   '/pipeline': typeof AppPipelineRoute
   '/playbooks': typeof AppPlaybooksRoute
@@ -504,6 +511,7 @@ export interface FileRoutesByTo {
   '/lead-scoring': typeof AppLeadScoringRoute
   '/mytasks': typeof AppMytasksRoute
   '/notifications': typeof AppNotificationsRoute
+  '/onboarding': typeof AppOnboardingRoute
   '/opportunity-map': typeof AppOpportunityMapRoute
   '/pipeline': typeof AppPipelineRoute
   '/playbooks': typeof AppPlaybooksRoute
@@ -573,6 +581,7 @@ export interface FileRoutesById {
   '/_app/lead-scoring': typeof AppLeadScoringRoute
   '/_app/mytasks': typeof AppMytasksRoute
   '/_app/notifications': typeof AppNotificationsRoute
+  '/_app/onboarding': typeof AppOnboardingRoute
   '/_app/opportunity-map': typeof AppOpportunityMapRoute
   '/_app/pipeline': typeof AppPipelineRoute
   '/_app/playbooks': typeof AppPlaybooksRoute
@@ -642,6 +651,7 @@ export interface FileRouteTypes {
     | '/lead-scoring'
     | '/mytasks'
     | '/notifications'
+    | '/onboarding'
     | '/opportunity-map'
     | '/pipeline'
     | '/playbooks'
@@ -709,6 +719,7 @@ export interface FileRouteTypes {
     | '/lead-scoring'
     | '/mytasks'
     | '/notifications'
+    | '/onboarding'
     | '/opportunity-map'
     | '/pipeline'
     | '/playbooks'
@@ -777,6 +788,7 @@ export interface FileRouteTypes {
     | '/_app/lead-scoring'
     | '/_app/mytasks'
     | '/_app/notifications'
+    | '/_app/onboarding'
     | '/_app/opportunity-map'
     | '/_app/pipeline'
     | '/_app/playbooks'
@@ -994,6 +1006,13 @@ declare module '@tanstack/react-router' {
       path: '/opportunity-map'
       fullPath: '/opportunity-map'
       preLoaderRoute: typeof AppOpportunityMapRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/onboarding': {
+      id: '/_app/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof AppOnboardingRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/notifications': {
@@ -1390,6 +1409,7 @@ interface AppRouteChildren {
   AppLeadScoringRoute: typeof AppLeadScoringRoute
   AppMytasksRoute: typeof AppMytasksRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
+  AppOnboardingRoute: typeof AppOnboardingRoute
   AppOpportunityMapRoute: typeof AppOpportunityMapRoute
   AppPipelineRoute: typeof AppPipelineRoute
   AppPlaybooksRoute: typeof AppPlaybooksRoute
@@ -1446,6 +1466,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppLeadScoringRoute: AppLeadScoringRoute,
   AppMytasksRoute: AppMytasksRoute,
   AppNotificationsRoute: AppNotificationsRoute,
+  AppOnboardingRoute: AppOnboardingRoute,
   AppOpportunityMapRoute: AppOpportunityMapRoute,
   AppPipelineRoute: AppPipelineRoute,
   AppPlaybooksRoute: AppPlaybooksRoute,

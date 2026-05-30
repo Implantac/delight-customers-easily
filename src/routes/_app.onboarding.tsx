@@ -137,11 +137,14 @@ function OnboardingPage() {
   });
 
   const openNewTpl = () => { setTplDraft(emptyTpl()); setTplDlg(true); };
-  const openEditTpl = (t: any) => setTplDraft({
-    id: t.id, name: t.name, description: t.description ?? "",
-    duration_days: t.duration_days, is_active: t.is_active,
-    steps: (t.steps ?? []).length ? t.steps : [{ id: "0", title: "", description: "" }],
-  }) || setTplDlg(true);
+  const openEditTpl = (t: any) => {
+    setTplDraft({
+      id: t.id, name: t.name, description: t.description ?? "",
+      duration_days: t.duration_days, is_active: t.is_active,
+      steps: (t.steps ?? []).length ? t.steps : [{ id: "0", title: "", description: "" }],
+    });
+    setTplDlg(true);
+  };
 
   const totals = projsData?.totals ?? { not_started: 0, in_progress: 0, completed: 0, late: 0, avg_progress: 0 };
 
