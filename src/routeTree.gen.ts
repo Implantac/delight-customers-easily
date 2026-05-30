@@ -31,6 +31,7 @@ import { Route as AppContactsRouteImport } from './routes/_app.contacts'
 import { Route as AppCompaniesRouteImport } from './routes/_app.companies'
 import { Route as AppCommissionsRouteImport } from './routes/_app.commissions'
 import { Route as AppCommandRouteImport } from './routes/_app.command'
+import { Route as AppCohortsRouteImport } from './routes/_app.cohorts'
 import { Route as AppCoachingRouteImport } from './routes/_app.coaching'
 import { Route as AppChatRouteImport } from './routes/_app.chat'
 import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
@@ -157,6 +158,11 @@ const AppCommandRoute = AppCommandRouteImport.update({
   path: '/command',
   getParentRoute: () => AppRoute,
 } as any)
+const AppCohortsRoute = AppCohortsRouteImport.update({
+  id: '/cohorts',
+  path: '/cohorts',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppCoachingRoute = AppCoachingRouteImport.update({
   id: '/coaching',
   path: '/coaching',
@@ -247,6 +253,7 @@ export interface FileRoutesByFullPath {
   '/alerts': typeof AppAlertsRoute
   '/chat': typeof AppChatRoute
   '/coaching': typeof AppCoachingRoute
+  '/cohorts': typeof AppCohortsRoute
   '/command': typeof AppCommandRoute
   '/commissions': typeof AppCommissionsRoute
   '/companies': typeof AppCompaniesRouteWithChildren
@@ -286,6 +293,7 @@ export interface FileRoutesByTo {
   '/alerts': typeof AppAlertsRoute
   '/chat': typeof AppChatRoute
   '/coaching': typeof AppCoachingRoute
+  '/cohorts': typeof AppCohortsRoute
   '/command': typeof AppCommandRoute
   '/commissions': typeof AppCommissionsRoute
   '/companies': typeof AppCompaniesRouteWithChildren
@@ -327,6 +335,7 @@ export interface FileRoutesById {
   '/_app/alerts': typeof AppAlertsRoute
   '/_app/chat': typeof AppChatRoute
   '/_app/coaching': typeof AppCoachingRoute
+  '/_app/cohorts': typeof AppCohortsRoute
   '/_app/command': typeof AppCommandRoute
   '/_app/commissions': typeof AppCommissionsRoute
   '/_app/companies': typeof AppCompaniesRouteWithChildren
@@ -368,6 +377,7 @@ export interface FileRouteTypes {
     | '/alerts'
     | '/chat'
     | '/coaching'
+    | '/cohorts'
     | '/command'
     | '/commissions'
     | '/companies'
@@ -407,6 +417,7 @@ export interface FileRouteTypes {
     | '/alerts'
     | '/chat'
     | '/coaching'
+    | '/cohorts'
     | '/command'
     | '/commissions'
     | '/companies'
@@ -447,6 +458,7 @@ export interface FileRouteTypes {
     | '/_app/alerts'
     | '/_app/chat'
     | '/_app/coaching'
+    | '/_app/cohorts'
     | '/_app/command'
     | '/_app/commissions'
     | '/_app/companies'
@@ -645,6 +657,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCommandRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/cohorts': {
+      id: '/_app/cohorts'
+      path: '/cohorts'
+      fullPath: '/cohorts'
+      preLoaderRoute: typeof AppCohortsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/coaching': {
       id: '/_app/coaching'
       path: '/coaching'
@@ -801,6 +820,7 @@ interface AppRouteChildren {
   AppAlertsRoute: typeof AppAlertsRoute
   AppChatRoute: typeof AppChatRoute
   AppCoachingRoute: typeof AppCoachingRoute
+  AppCohortsRoute: typeof AppCohortsRoute
   AppCommandRoute: typeof AppCommandRoute
   AppCommissionsRoute: typeof AppCommissionsRoute
   AppCompaniesRoute: typeof AppCompaniesRouteWithChildren
@@ -833,6 +853,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAlertsRoute: AppAlertsRoute,
   AppChatRoute: AppChatRoute,
   AppCoachingRoute: AppCoachingRoute,
+  AppCohortsRoute: AppCohortsRoute,
   AppCommandRoute: AppCommandRoute,
   AppCommissionsRoute: AppCommissionsRoute,
   AppCompaniesRoute: AppCompaniesRouteWithChildren,
@@ -873,3 +894,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
