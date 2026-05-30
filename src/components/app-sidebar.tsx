@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Users, Building2, KanbanSquare, CheckSquare, Briefcase, Check, ChevronsUpDown, LogOut, Settings, Upload, BarChart3, Sliders, Webhook, Zap, Sparkles, AlertTriangle, Target, HeartPulse, DollarSign, Map, Package, MessageSquare, ShieldCheck, Trophy, Coins, Flame, Activity, Compass, PieChart, FileText, FileSignature, Grid3x3, History } from "lucide-react";
+import { LayoutDashboard, Users, Building2, KanbanSquare, CheckSquare, Briefcase, Check, ChevronsUpDown, LogOut, Settings, Upload, BarChart3, Sliders, Webhook, Zap, Sparkles, AlertTriangle, Target, HeartPulse, DollarSign, Map, Package, MessageSquare, ShieldCheck, Trophy, Coins, Flame, Activity, Compass, PieChart, FileText, FileSignature, Grid3x3, History, Medal } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useCurrentOrg, switchOrganization } from "@/lib/org";
 import { useCanManage } from "@/lib/permissions";
@@ -27,6 +27,7 @@ const nav = [
   { to: "/forecast", label: "Previsão", icon: Target, shortcut: "G F", managerOnly: false },
   { to: "/win-loss", label: "Win/Loss", icon: Trophy, shortcut: "", managerOnly: false },
   { to: "/commissions", label: "Comissões", icon: Coins, shortcut: "", managerOnly: false },
+  { to: "/goals", label: "Metas & Ranking", icon: Medal, shortcut: "", managerOnly: false },
   { to: "/retention", label: "Retenção", icon: HeartPulse, shortcut: "", managerOnly: false },
   { to: "/segments", label: "Segmentação RFM", icon: PieChart, shortcut: "", managerOnly: false },
   { to: "/cohorts", label: "Cohorts", icon: Grid3x3, shortcut: "", managerOnly: true },

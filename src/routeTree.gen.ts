@@ -23,6 +23,7 @@ import { Route as AppProductivityRouteImport } from './routes/_app.productivity'
 import { Route as AppPipelineRouteImport } from './routes/_app.pipeline'
 import { Route as AppOpportunityMapRouteImport } from './routes/_app.opportunity-map'
 import { Route as AppLeadScoringRouteImport } from './routes/_app.lead-scoring'
+import { Route as AppGoalsRouteImport } from './routes/_app.goals'
 import { Route as AppForecastRouteImport } from './routes/_app.forecast'
 import { Route as AppFinanceRouteImport } from './routes/_app.finance'
 import { Route as AppDataQualityRouteImport } from './routes/_app.data-quality'
@@ -117,6 +118,11 @@ const AppOpportunityMapRoute = AppOpportunityMapRouteImport.update({
 const AppLeadScoringRoute = AppLeadScoringRouteImport.update({
   id: '/lead-scoring',
   path: '/lead-scoring',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppGoalsRoute = AppGoalsRouteImport.update({
+  id: '/goals',
+  path: '/goals',
   getParentRoute: () => AppRoute,
 } as any)
 const AppForecastRoute = AppForecastRouteImport.update({
@@ -269,6 +275,7 @@ export interface FileRoutesByFullPath {
   '/data-quality': typeof AppDataQualityRoute
   '/finance': typeof AppFinanceRoute
   '/forecast': typeof AppForecastRoute
+  '/goals': typeof AppGoalsRoute
   '/lead-scoring': typeof AppLeadScoringRoute
   '/opportunity-map': typeof AppOpportunityMapRoute
   '/pipeline': typeof AppPipelineRoute
@@ -310,6 +317,7 @@ export interface FileRoutesByTo {
   '/data-quality': typeof AppDataQualityRoute
   '/finance': typeof AppFinanceRoute
   '/forecast': typeof AppForecastRoute
+  '/goals': typeof AppGoalsRoute
   '/lead-scoring': typeof AppLeadScoringRoute
   '/opportunity-map': typeof AppOpportunityMapRoute
   '/pipeline': typeof AppPipelineRoute
@@ -353,6 +361,7 @@ export interface FileRoutesById {
   '/_app/data-quality': typeof AppDataQualityRoute
   '/_app/finance': typeof AppFinanceRoute
   '/_app/forecast': typeof AppForecastRoute
+  '/_app/goals': typeof AppGoalsRoute
   '/_app/lead-scoring': typeof AppLeadScoringRoute
   '/_app/opportunity-map': typeof AppOpportunityMapRoute
   '/_app/pipeline': typeof AppPipelineRoute
@@ -396,6 +405,7 @@ export interface FileRouteTypes {
     | '/data-quality'
     | '/finance'
     | '/forecast'
+    | '/goals'
     | '/lead-scoring'
     | '/opportunity-map'
     | '/pipeline'
@@ -437,6 +447,7 @@ export interface FileRouteTypes {
     | '/data-quality'
     | '/finance'
     | '/forecast'
+    | '/goals'
     | '/lead-scoring'
     | '/opportunity-map'
     | '/pipeline'
@@ -479,6 +490,7 @@ export interface FileRouteTypes {
     | '/_app/data-quality'
     | '/_app/finance'
     | '/_app/forecast'
+    | '/_app/goals'
     | '/_app/lead-scoring'
     | '/_app/opportunity-map'
     | '/_app/pipeline'
@@ -611,6 +623,13 @@ declare module '@tanstack/react-router' {
       path: '/lead-scoring'
       fullPath: '/lead-scoring'
       preLoaderRoute: typeof AppLeadScoringRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/goals': {
+      id: '/_app/goals'
+      path: '/goals'
+      fullPath: '/goals'
+      preLoaderRoute: typeof AppGoalsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/forecast': {
@@ -849,6 +868,7 @@ interface AppRouteChildren {
   AppDataQualityRoute: typeof AppDataQualityRoute
   AppFinanceRoute: typeof AppFinanceRoute
   AppForecastRoute: typeof AppForecastRoute
+  AppGoalsRoute: typeof AppGoalsRoute
   AppLeadScoringRoute: typeof AppLeadScoringRoute
   AppOpportunityMapRoute: typeof AppOpportunityMapRoute
   AppPipelineRoute: typeof AppPipelineRoute
@@ -883,6 +903,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppDataQualityRoute: AppDataQualityRoute,
   AppFinanceRoute: AppFinanceRoute,
   AppForecastRoute: AppForecastRoute,
+  AppGoalsRoute: AppGoalsRoute,
   AppLeadScoringRoute: AppLeadScoringRoute,
   AppOpportunityMapRoute: AppOpportunityMapRoute,
   AppPipelineRoute: AppPipelineRoute,
