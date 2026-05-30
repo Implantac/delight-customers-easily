@@ -17,6 +17,7 @@ import { Route as AppViewsRouteImport } from './routes/_app.views'
 import { Route as AppTicketsRouteImport } from './routes/_app.tickets'
 import { Route as AppTemplatesRouteImport } from './routes/_app.templates'
 import { Route as AppTagsRouteImport } from './routes/_app.tags'
+import { Route as AppSequencesRouteImport } from './routes/_app.sequences'
 import { Route as AppSegmentsRouteImport } from './routes/_app.segments'
 import { Route as AppRetentionRouteImport } from './routes/_app.retention'
 import { Route as AppReportsRouteImport } from './routes/_app.reports'
@@ -52,6 +53,7 @@ import { Route as AppSettingsOrganizationRouteImport } from './routes/_app.setti
 import { Route as AppSettingsImportRouteImport } from './routes/_app.settings.import'
 import { Route as AppSettingsFieldsRouteImport } from './routes/_app.settings.fields'
 import { Route as AppSettingsAutomationsRouteImport } from './routes/_app.settings.automations'
+import { Route as AppSequencesIdRouteImport } from './routes/_app.sequences.$id'
 import { Route as AppProposalsIdRouteImport } from './routes/_app.proposals.$id'
 import { Route as AppKbIdRouteImport } from './routes/_app.kb.$id'
 import { Route as AppInviteTokenRouteImport } from './routes/_app.invite.$token'
@@ -97,6 +99,11 @@ const AppTemplatesRoute = AppTemplatesRouteImport.update({
 const AppTagsRoute = AppTagsRouteImport.update({
   id: '/tags',
   path: '/tags',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSequencesRoute = AppSequencesRouteImport.update({
+  id: '/sequences',
+  path: '/sequences',
   getParentRoute: () => AppRoute,
 } as any)
 const AppSegmentsRoute = AppSegmentsRouteImport.update({
@@ -274,6 +281,11 @@ const AppSettingsAutomationsRoute = AppSettingsAutomationsRouteImport.update({
   path: '/settings/automations',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSequencesIdRoute = AppSequencesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppSequencesRoute,
+} as any)
 const AppProposalsIdRoute = AppProposalsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -343,6 +355,7 @@ export interface FileRoutesByFullPath {
   '/reports': typeof AppReportsRoute
   '/retention': typeof AppRetentionRoute
   '/segments': typeof AppSegmentsRoute
+  '/sequences': typeof AppSequencesRouteWithChildren
   '/tags': typeof AppTagsRoute
   '/templates': typeof AppTemplatesRoute
   '/tickets': typeof AppTicketsRouteWithChildren
@@ -353,6 +366,7 @@ export interface FileRoutesByFullPath {
   '/invite/$token': typeof AppInviteTokenRoute
   '/kb/$id': typeof AppKbIdRoute
   '/proposals/$id': typeof AppProposalsIdRoute
+  '/sequences/$id': typeof AppSequencesIdRoute
   '/settings/automations': typeof AppSettingsAutomationsRoute
   '/settings/fields': typeof AppSettingsFieldsRoute
   '/settings/import': typeof AppSettingsImportRoute
@@ -394,6 +408,7 @@ export interface FileRoutesByTo {
   '/reports': typeof AppReportsRoute
   '/retention': typeof AppRetentionRoute
   '/segments': typeof AppSegmentsRoute
+  '/sequences': typeof AppSequencesRouteWithChildren
   '/tags': typeof AppTagsRoute
   '/templates': typeof AppTemplatesRoute
   '/tickets': typeof AppTicketsRouteWithChildren
@@ -404,6 +419,7 @@ export interface FileRoutesByTo {
   '/invite/$token': typeof AppInviteTokenRoute
   '/kb/$id': typeof AppKbIdRoute
   '/proposals/$id': typeof AppProposalsIdRoute
+  '/sequences/$id': typeof AppSequencesIdRoute
   '/settings/automations': typeof AppSettingsAutomationsRoute
   '/settings/fields': typeof AppSettingsFieldsRoute
   '/settings/import': typeof AppSettingsImportRoute
@@ -447,6 +463,7 @@ export interface FileRoutesById {
   '/_app/reports': typeof AppReportsRoute
   '/_app/retention': typeof AppRetentionRoute
   '/_app/segments': typeof AppSegmentsRoute
+  '/_app/sequences': typeof AppSequencesRouteWithChildren
   '/_app/tags': typeof AppTagsRoute
   '/_app/templates': typeof AppTemplatesRoute
   '/_app/tickets': typeof AppTicketsRouteWithChildren
@@ -457,6 +474,7 @@ export interface FileRoutesById {
   '/_app/invite/$token': typeof AppInviteTokenRoute
   '/_app/kb/$id': typeof AppKbIdRoute
   '/_app/proposals/$id': typeof AppProposalsIdRoute
+  '/_app/sequences/$id': typeof AppSequencesIdRoute
   '/_app/settings/automations': typeof AppSettingsAutomationsRoute
   '/_app/settings/fields': typeof AppSettingsFieldsRoute
   '/_app/settings/import': typeof AppSettingsImportRoute
@@ -500,6 +518,7 @@ export interface FileRouteTypes {
     | '/reports'
     | '/retention'
     | '/segments'
+    | '/sequences'
     | '/tags'
     | '/templates'
     | '/tickets'
@@ -510,6 +529,7 @@ export interface FileRouteTypes {
     | '/invite/$token'
     | '/kb/$id'
     | '/proposals/$id'
+    | '/sequences/$id'
     | '/settings/automations'
     | '/settings/fields'
     | '/settings/import'
@@ -551,6 +571,7 @@ export interface FileRouteTypes {
     | '/reports'
     | '/retention'
     | '/segments'
+    | '/sequences'
     | '/tags'
     | '/templates'
     | '/tickets'
@@ -561,6 +582,7 @@ export interface FileRouteTypes {
     | '/invite/$token'
     | '/kb/$id'
     | '/proposals/$id'
+    | '/sequences/$id'
     | '/settings/automations'
     | '/settings/fields'
     | '/settings/import'
@@ -603,6 +625,7 @@ export interface FileRouteTypes {
     | '/_app/reports'
     | '/_app/retention'
     | '/_app/segments'
+    | '/_app/sequences'
     | '/_app/tags'
     | '/_app/templates'
     | '/_app/tickets'
@@ -613,6 +636,7 @@ export interface FileRouteTypes {
     | '/_app/invite/$token'
     | '/_app/kb/$id'
     | '/_app/proposals/$id'
+    | '/_app/sequences/$id'
     | '/_app/settings/automations'
     | '/_app/settings/fields'
     | '/_app/settings/import'
@@ -689,6 +713,13 @@ declare module '@tanstack/react-router' {
       path: '/tags'
       fullPath: '/tags'
       preLoaderRoute: typeof AppTagsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/sequences': {
+      id: '/_app/sequences'
+      path: '/sequences'
+      fullPath: '/sequences'
+      preLoaderRoute: typeof AppSequencesRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/segments': {
@@ -936,6 +967,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsAutomationsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/sequences/$id': {
+      id: '/_app/sequences/$id'
+      path: '/$id'
+      fullPath: '/sequences/$id'
+      preLoaderRoute: typeof AppSequencesIdRouteImport
+      parentRoute: typeof AppSequencesRoute
+    }
     '/_app/proposals/$id': {
       id: '/_app/proposals/$id'
       path: '/$id'
@@ -1034,6 +1072,18 @@ const AppProposalsRouteWithChildren = AppProposalsRoute._addFileChildren(
   AppProposalsRouteChildren,
 )
 
+interface AppSequencesRouteChildren {
+  AppSequencesIdRoute: typeof AppSequencesIdRoute
+}
+
+const AppSequencesRouteChildren: AppSequencesRouteChildren = {
+  AppSequencesIdRoute: AppSequencesIdRoute,
+}
+
+const AppSequencesRouteWithChildren = AppSequencesRoute._addFileChildren(
+  AppSequencesRouteChildren,
+)
+
 interface AppTicketsRouteChildren {
   AppTicketsIdRoute: typeof AppTicketsIdRoute
 }
@@ -1075,6 +1125,7 @@ interface AppRouteChildren {
   AppReportsRoute: typeof AppReportsRoute
   AppRetentionRoute: typeof AppRetentionRoute
   AppSegmentsRoute: typeof AppSegmentsRoute
+  AppSequencesRoute: typeof AppSequencesRouteWithChildren
   AppTagsRoute: typeof AppTagsRoute
   AppTemplatesRoute: typeof AppTemplatesRoute
   AppTicketsRoute: typeof AppTicketsRouteWithChildren
@@ -1117,6 +1168,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppReportsRoute: AppReportsRoute,
   AppRetentionRoute: AppRetentionRoute,
   AppSegmentsRoute: AppSegmentsRoute,
+  AppSequencesRoute: AppSequencesRouteWithChildren,
   AppTagsRoute: AppTagsRoute,
   AppTemplatesRoute: AppTemplatesRoute,
   AppTicketsRoute: AppTicketsRouteWithChildren,
@@ -1143,3 +1195,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
