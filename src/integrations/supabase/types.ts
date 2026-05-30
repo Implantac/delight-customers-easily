@@ -3118,6 +3118,69 @@ export type Database = {
         }
         Relationships: []
       }
+      time_entries: {
+        Row: {
+          amount: number
+          billable: boolean
+          billed: boolean
+          billed_at: string | null
+          company_id: string | null
+          contact_id: string | null
+          created_at: string
+          deal_id: string | null
+          description: string | null
+          duration_minutes: number
+          entry_date: string
+          hourly_rate: number | null
+          id: string
+          organization_id: string
+          tags: string[]
+          ticket_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          billable?: boolean
+          billed?: boolean
+          billed_at?: string | null
+          company_id?: string | null
+          contact_id?: string | null
+          created_at?: string
+          deal_id?: string | null
+          description?: string | null
+          duration_minutes?: number
+          entry_date?: string
+          hourly_rate?: number | null
+          id?: string
+          organization_id: string
+          tags?: string[]
+          ticket_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          billable?: boolean
+          billed?: boolean
+          billed_at?: string | null
+          company_id?: string | null
+          contact_id?: string | null
+          created_at?: string
+          deal_id?: string | null
+          description?: string | null
+          duration_minutes?: number
+          entry_date?: string
+          hourly_rate?: number | null
+          id?: string
+          organization_id?: string
+          tags?: string[]
+          ticket_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       webhooks: {
         Row: {
           created_at: string
