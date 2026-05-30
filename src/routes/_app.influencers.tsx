@@ -21,9 +21,10 @@ import {
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { Sparkles, Plus, Trash2, Copy } from "lucide-react";
+import { Sparkles, Plus, Trash2, Copy, Download } from "lucide-react";
 import { toast } from "sonner";
 import { InfluencerMetricsPanel } from "@/components/influencer-metrics-panel";
+import { toCSV, downloadCSV } from "@/lib/csv-export";
 
 export const Route = createFileRoute("/_app/influencers")({ component: InfluencersPage });
 
@@ -71,22 +72,60 @@ function InfluencersPage() {
         subtitle="Acompanhe o ROI de cada parceiro com link e cupom exclusivos."
         icon={Sparkles}
         action={
-          <Sheet open={open} onOpenChange={(v) => { setOpen(v); if (!v) setEditing(null); }}>
-            <SheetTrigger asChild>
-              <Button className="gap-2"><Plus className="h-4 w-4" /> Novo influenciador</Button>
-            </SheetTrigger>
-            <SheetContent className="w-full sm:max-w-md overflow-y-auto">
-              <SheetHeader>
-                <SheetTitle>{editing ? "Editar" : "Novo"} influenciador</SheetTitle>
-              </SheetHeader>
-              <InfluencerForm
-                key={editing?.id ?? "new"}
-                initial={editing}
-                onSubmit={(v) => save.mutate({ ...v, organization_id: orgId, id: editing?.id })}
-                pending={save.isPending}
-              />
-            </SheetContent>
-          </Sheet>
+          <div className="flex items-center gap-2">
+            {(data?.rows.length ?? 0) > 0 && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  const csv = toCSV(
+                    data!.rows.map((r) => ({
+                      nome: r.name,
+                      handle: r.handle ?? "",
+                      plataforma: r.platform ?? "",
+                      slug: r.slug,
+                      cupom: r.coupon_code ?? "",
+                      comissao_pct: r.commission_pct,
+                      ativo: r.is_active ? "sim" : "nao",
+                      leads_30d: r.leads_30d,
+                      convertidos_30d: r.converted_30d,
+                    })),
+                    [
+                      { key: "nome", label: "Nome" },
+                      { key: "handle", label: "Handle" },
+                      { key: "plataforma", label: "Plataforma" },
+                      { key: "slug", label: "Slug" },
+                      { key: "cupom", label: "Cupom" },
+                      { key: "comissao_pct", label: "Comissão %" },
+                      { key: "ativo", label: "Ativo" },
+                      { key: "leads_30d", label: "Leads 30d" },
+                      { key: "convertidos_30d", label: "Convertidos 30d" },
+                    ],
+                  );
+                  const date = new Date().toISOString().slice(0, 10);
+                  downloadCSV(`influenciadores-${date}.csv`, csv);
+                }}
+              >
+                <Download className="h-4 w-4 mr-2" /> CSV
+              </Button>
+            )}
+            <Sheet open={open} onOpenChange={(v) => { setOpen(v); if (!v) setEditing(null); }}>
+              <SheetTrigger asChild>
+                <Button className="gap-2"><Plus className="h-4 w-4" /> Novo influenciador</Button>
+              </SheetTrigger>
+              <SheetContent className="w-full sm:max-w-md overflow-y-auto">
+                <SheetHeader>
+                  <SheetTitle>{editing ? "Editar" : "Novo"} influenciador</SheetTitle>
+                </SheetHeader>
+                <InfluencerForm
+                  key={editing?.id ?? "new"}
+                  initial={editing}
+                  onSubmit={(v) => save.mutate({ ...v, organization_id: orgId, id: editing?.id })}
+                  pending={save.isPending}
+                />
+              </SheetContent>
+            </Sheet>
+          </div>
         }
       />
 
