@@ -76,12 +76,17 @@ function PipelinePage() {
     mutationFn: async (form: FormData) => {
       if (!orgId) throw new Error("Nenhuma organização ativa");
       const parsed = fromForm(dealSchema, form);
-      const { error } = await supabase.from("deals").insert({
+      const { data: inserted, error } = await supabase.from("deals").insert({
         user_id: user!.id,
         organization_id: orgId,
         ...parsed,
-      });
+      }).select("id, title, stage, value").single();
       if (error) throw error;
+      if (orgId && inserted) {
+        const payload = { deal_id: inserted.id, deal: inserted, ...parsed };
+        fire({ data: { organization_id: orgId, event: "deal.created", payload } }).catch(() => {});
+        runRules({ data: { organization_id: orgId, event: "deal.created", payload } }).catch(() => {});
+      }
     },
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["deals"] }); setOpen(false); toast.success("Negócio criado"); },
     onError: (e: any) => toast.error(e.message),
