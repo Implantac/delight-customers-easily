@@ -75,6 +75,10 @@ function AlertsPage() {
         }
       />
 
+      <div className="mt-6">
+        <NextActionBlock surface="alerts" title="Ações priorizadas pela IA" />
+      </div>
+
       <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
         <KpiCard label="Total de alertas" value={counts.total} tone="default" />
         <KpiCard label="Críticos" value={counts.high} tone="rose" />
