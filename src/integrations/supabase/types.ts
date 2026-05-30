@@ -365,6 +365,122 @@ export type Database = {
         }
         Relationships: []
       }
+      bank_accounts: {
+        Row: {
+          account_number: string | null
+          bank_name: string | null
+          created_at: string
+          currency: string
+          id: string
+          is_active: boolean
+          name: string
+          notes: string | null
+          opening_balance: number
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          account_number?: string | null
+          bank_name?: string | null
+          created_at?: string
+          currency?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          notes?: string | null
+          opening_balance?: number
+          organization_id: string
+          updated_at?: string
+        }
+        Update: {
+          account_number?: string | null
+          bank_name?: string | null
+          created_at?: string
+          currency?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          notes?: string | null
+          opening_balance?: number
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bank_accounts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      bank_transactions: {
+        Row: {
+          account_id: string
+          amount: number
+          category: string | null
+          counterparty: string | null
+          created_at: string
+          description: string
+          expense_id: string | null
+          id: string
+          invoice_id: string | null
+          notes: string | null
+          occurred_at: string
+          organization_id: string
+          reconciled: boolean
+          updated_at: string
+        }
+        Insert: {
+          account_id: string
+          amount: number
+          category?: string | null
+          counterparty?: string | null
+          created_at?: string
+          description: string
+          expense_id?: string | null
+          id?: string
+          invoice_id?: string | null
+          notes?: string | null
+          occurred_at: string
+          organization_id: string
+          reconciled?: boolean
+          updated_at?: string
+        }
+        Update: {
+          account_id?: string
+          amount?: number
+          category?: string | null
+          counterparty?: string | null
+          created_at?: string
+          description?: string
+          expense_id?: string | null
+          id?: string
+          invoice_id?: string | null
+          notes?: string | null
+          occurred_at?: string
+          organization_id?: string
+          reconciled?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bank_transactions_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "bank_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bank_transactions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       commission_rules: {
         Row: {
           accelerator_percent: number
