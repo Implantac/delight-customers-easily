@@ -120,6 +120,7 @@ const navSections: NavSection[] = [
     label: "BI comercial",
     items: [
       { to: "/reports", label: "Relatórios", icon: BarChart3, shortcut: "G R", managerOnly: true },
+      { to: "/benchmark", label: "Benchmark do grupo", icon: GitBranch, managerOnly: true },
       { to: "/cohorts", label: "Cohorts", icon: PieChart, managerOnly: true },
       { to: "/productivity", label: "Produtividade", icon: Activity, managerOnly: true },
       { to: "/surveys", label: "Pesquisas (NPS)", icon: Smile },
