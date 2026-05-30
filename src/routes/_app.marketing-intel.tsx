@@ -72,6 +72,8 @@ function MarketingIntelPage() {
         <Kpi loading={isLoading} label="Visitas influencer" value={data?.summary.total_visits ?? 0} icon={Sparkles} />
       </div>
 
+      <ChannelInsight channels={data?.channels ?? []} loading={isLoading} />
+
       <Tabs defaultValue="canais" className="space-y-4">
         <TabsList>
           <TabsTrigger value="canais">Canais</TabsTrigger>
