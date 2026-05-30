@@ -16,6 +16,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
 import { Package, Plus, Pencil, Trash2, AlertTriangle, TrendingUp, Boxes } from "lucide-react";
 import { toast } from "sonner";
+import { ErpReadOnlyBanner } from "@/components/erp-readonly-banner";
 
 export const Route = createFileRoute("/_app/products")({ component: ProductsPage });
 
@@ -77,6 +78,7 @@ function ProductsPage() {
 
   return (
     <div className="p-4 md:p-8 space-y-6 max-w-7xl mx-auto">
+      <ErpReadOnlyBanner entity="Produtos" />
       <PageHeader
         title="Produtos"
         subtitle="Inteligência ABC/XYZ — onde está sua receita e o que precisa de ação."

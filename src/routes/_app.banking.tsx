@@ -16,6 +16,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
 import { Landmark, Plus, ArrowUpRight, ArrowDownRight, CheckCircle2, Circle, Trash2 } from "lucide-react";
+import { ErpReadOnlyBanner } from "@/components/erp-readonly-banner";
 
 export const Route = createFileRoute("/_app/banking")({ component: BankingPage });
 
@@ -76,6 +77,7 @@ function BankingPage() {
 
   return (
     <div className="p-6 space-y-6">
+      <ErpReadOnlyBanner entity="Contas e movimentos bancários" />
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">

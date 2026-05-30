@@ -24,6 +24,7 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { ErpReadOnlyBanner } from "@/components/erp-readonly-banner";
 
 export const Route = createFileRoute("/_app/subscriptions")({ component: SubsPage });
 
@@ -157,6 +158,7 @@ function SubsPage() {
 
   return (
     <div className="space-y-6">
+      <ErpReadOnlyBanner entity="Assinaturas recorrentes" />
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">

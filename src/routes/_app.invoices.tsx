@@ -18,6 +18,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { ErpReadOnlyBanner } from "@/components/erp-readonly-banner";
 
 export const Route = createFileRoute("/_app/invoices")({ component: InvoicesPage });
 
@@ -140,6 +141,7 @@ function InvoicesPage() {
 
   return (
     <div className="space-y-6">
+      <ErpReadOnlyBanner entity="Faturas" />
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
