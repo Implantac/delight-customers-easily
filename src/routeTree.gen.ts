@@ -37,6 +37,7 @@ import { Route as AppOpportunityMapRouteImport } from './routes/_app.opportunity
 import { Route as AppOnboardingRouteImport } from './routes/_app.onboarding'
 import { Route as AppNotificationsRouteImport } from './routes/_app.notifications'
 import { Route as AppMytasksRouteImport } from './routes/_app.mytasks'
+import { Route as AppLoyaltyRouteImport } from './routes/_app.loyalty'
 import { Route as AppLeadScoringRouteImport } from './routes/_app.lead-scoring'
 import { Route as AppLeadFormsRouteImport } from './routes/_app.lead-forms'
 import { Route as AppKbRouteImport } from './routes/_app.kb'
@@ -216,6 +217,11 @@ const AppNotificationsRoute = AppNotificationsRouteImport.update({
 const AppMytasksRoute = AppMytasksRouteImport.update({
   id: '/mytasks',
   path: '/mytasks',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLoyaltyRoute = AppLoyaltyRouteImport.update({
+  id: '/loyalty',
+  path: '/loyalty',
   getParentRoute: () => AppRoute,
 } as any)
 const AppLeadScoringRoute = AppLeadScoringRouteImport.update({
@@ -454,6 +460,7 @@ export interface FileRoutesByFullPath {
   '/kb': typeof AppKbRouteWithChildren
   '/lead-forms': typeof AppLeadFormsRoute
   '/lead-scoring': typeof AppLeadScoringRoute
+  '/loyalty': typeof AppLoyaltyRoute
   '/mytasks': typeof AppMytasksRoute
   '/notifications': typeof AppNotificationsRoute
   '/onboarding': typeof AppOnboardingRoute
@@ -524,6 +531,7 @@ export interface FileRoutesByTo {
   '/kb': typeof AppKbRouteWithChildren
   '/lead-forms': typeof AppLeadFormsRoute
   '/lead-scoring': typeof AppLeadScoringRoute
+  '/loyalty': typeof AppLoyaltyRoute
   '/mytasks': typeof AppMytasksRoute
   '/notifications': typeof AppNotificationsRoute
   '/onboarding': typeof AppOnboardingRoute
@@ -596,6 +604,7 @@ export interface FileRoutesById {
   '/_app/kb': typeof AppKbRouteWithChildren
   '/_app/lead-forms': typeof AppLeadFormsRoute
   '/_app/lead-scoring': typeof AppLeadScoringRoute
+  '/_app/loyalty': typeof AppLoyaltyRoute
   '/_app/mytasks': typeof AppMytasksRoute
   '/_app/notifications': typeof AppNotificationsRoute
   '/_app/onboarding': typeof AppOnboardingRoute
@@ -668,6 +677,7 @@ export interface FileRouteTypes {
     | '/kb'
     | '/lead-forms'
     | '/lead-scoring'
+    | '/loyalty'
     | '/mytasks'
     | '/notifications'
     | '/onboarding'
@@ -738,6 +748,7 @@ export interface FileRouteTypes {
     | '/kb'
     | '/lead-forms'
     | '/lead-scoring'
+    | '/loyalty'
     | '/mytasks'
     | '/notifications'
     | '/onboarding'
@@ -809,6 +820,7 @@ export interface FileRouteTypes {
     | '/_app/kb'
     | '/_app/lead-forms'
     | '/_app/lead-scoring'
+    | '/_app/loyalty'
     | '/_app/mytasks'
     | '/_app/notifications'
     | '/_app/onboarding'
@@ -1058,6 +1070,13 @@ declare module '@tanstack/react-router' {
       path: '/mytasks'
       fullPath: '/mytasks'
       preLoaderRoute: typeof AppMytasksRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/loyalty': {
+      id: '/_app/loyalty'
+      path: '/loyalty'
+      fullPath: '/loyalty'
+      preLoaderRoute: typeof AppLoyaltyRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/lead-scoring': {
@@ -1446,6 +1465,7 @@ interface AppRouteChildren {
   AppKbRoute: typeof AppKbRouteWithChildren
   AppLeadFormsRoute: typeof AppLeadFormsRoute
   AppLeadScoringRoute: typeof AppLeadScoringRoute
+  AppLoyaltyRoute: typeof AppLoyaltyRoute
   AppMytasksRoute: typeof AppMytasksRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppOnboardingRoute: typeof AppOnboardingRoute
@@ -1505,6 +1525,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppKbRoute: AppKbRouteWithChildren,
   AppLeadFormsRoute: AppLeadFormsRoute,
   AppLeadScoringRoute: AppLeadScoringRoute,
+  AppLoyaltyRoute: AppLoyaltyRoute,
   AppMytasksRoute: AppMytasksRoute,
   AppNotificationsRoute: AppNotificationsRoute,
   AppOnboardingRoute: AppOnboardingRoute,
