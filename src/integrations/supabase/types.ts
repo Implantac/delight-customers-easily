@@ -762,6 +762,149 @@ export type Database = {
           },
         ]
       }
+      email_campaign_recipients: {
+        Row: {
+          bounced_at: string | null
+          campaign_id: string
+          clicked_at: string | null
+          contact_id: string | null
+          created_at: string
+          email: string
+          error: string | null
+          id: string
+          name: string | null
+          opened_at: string | null
+          organization_id: string
+          sent_at: string | null
+          status: string
+          unsubscribed_at: string | null
+        }
+        Insert: {
+          bounced_at?: string | null
+          campaign_id: string
+          clicked_at?: string | null
+          contact_id?: string | null
+          created_at?: string
+          email: string
+          error?: string | null
+          id?: string
+          name?: string | null
+          opened_at?: string | null
+          organization_id: string
+          sent_at?: string | null
+          status?: string
+          unsubscribed_at?: string | null
+        }
+        Update: {
+          bounced_at?: string | null
+          campaign_id?: string
+          clicked_at?: string | null
+          contact_id?: string | null
+          created_at?: string
+          email?: string
+          error?: string | null
+          id?: string
+          name?: string | null
+          opened_at?: string | null
+          organization_id?: string
+          sent_at?: string | null
+          status?: string
+          unsubscribed_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "email_campaign_recipients_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "email_campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      email_campaigns: {
+        Row: {
+          body_html: string
+          body_text: string | null
+          created_at: string
+          created_by: string | null
+          from_email: string
+          from_name: string
+          id: string
+          name: string
+          organization_id: string
+          preheader: string | null
+          reply_to: string | null
+          scheduled_at: string | null
+          segment_id: string | null
+          sent_at: string | null
+          status: string
+          subject: string
+          tags: string[]
+          total_bounced: number
+          total_clicked: number
+          total_delivered: number
+          total_opened: number
+          total_recipients: number
+          total_sent: number
+          total_unsubscribed: number
+          updated_at: string
+        }
+        Insert: {
+          body_html?: string
+          body_text?: string | null
+          created_at?: string
+          created_by?: string | null
+          from_email: string
+          from_name?: string
+          id?: string
+          name: string
+          organization_id: string
+          preheader?: string | null
+          reply_to?: string | null
+          scheduled_at?: string | null
+          segment_id?: string | null
+          sent_at?: string | null
+          status?: string
+          subject: string
+          tags?: string[]
+          total_bounced?: number
+          total_clicked?: number
+          total_delivered?: number
+          total_opened?: number
+          total_recipients?: number
+          total_sent?: number
+          total_unsubscribed?: number
+          updated_at?: string
+        }
+        Update: {
+          body_html?: string
+          body_text?: string | null
+          created_at?: string
+          created_by?: string | null
+          from_email?: string
+          from_name?: string
+          id?: string
+          name?: string
+          organization_id?: string
+          preheader?: string | null
+          reply_to?: string | null
+          scheduled_at?: string | null
+          segment_id?: string | null
+          sent_at?: string | null
+          status?: string
+          subject?: string
+          tags?: string[]
+          total_bounced?: number
+          total_clicked?: number
+          total_delivered?: number
+          total_opened?: number
+          total_recipients?: number
+          total_sent?: number
+          total_unsubscribed?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       expenses: {
         Row: {
           amount: number
