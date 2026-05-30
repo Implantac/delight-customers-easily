@@ -939,6 +939,125 @@ export type Database = {
         }
         Relationships: []
       }
+      lead_form_submissions: {
+        Row: {
+          contact_id: string | null
+          created_at: string
+          deal_id: string | null
+          email: string | null
+          form_id: string
+          id: string
+          ip_address: string | null
+          name: string | null
+          organization_id: string
+          payload: Json
+          phone: string | null
+          source_url: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          contact_id?: string | null
+          created_at?: string
+          deal_id?: string | null
+          email?: string | null
+          form_id: string
+          id?: string
+          ip_address?: string | null
+          name?: string | null
+          organization_id: string
+          payload: Json
+          phone?: string | null
+          source_url?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          contact_id?: string | null
+          created_at?: string
+          deal_id?: string | null
+          email?: string | null
+          form_id?: string
+          id?: string
+          ip_address?: string | null
+          name?: string | null
+          organization_id?: string
+          payload?: Json
+          phone?: string | null
+          source_url?: string | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_form_submissions_form_id_fkey"
+            columns: ["form_id"]
+            isOneToOne: false
+            referencedRelation: "lead_forms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lead_forms: {
+        Row: {
+          active: boolean
+          create_contact: boolean
+          create_deal: boolean
+          created_at: string
+          created_by: string
+          default_owner_id: string | null
+          default_source: string | null
+          description: string | null
+          fields: Json
+          id: string
+          name: string
+          notify_emails: string[] | null
+          organization_id: string
+          redirect_url: string | null
+          slug: string
+          submissions_count: number
+          success_message: string | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          create_contact?: boolean
+          create_deal?: boolean
+          created_at?: string
+          created_by?: string
+          default_owner_id?: string | null
+          default_source?: string | null
+          description?: string | null
+          fields?: Json
+          id?: string
+          name: string
+          notify_emails?: string[] | null
+          organization_id: string
+          redirect_url?: string | null
+          slug: string
+          submissions_count?: number
+          success_message?: string | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          create_contact?: boolean
+          create_deal?: boolean
+          created_at?: string
+          created_by?: string
+          default_owner_id?: string | null
+          default_source?: string | null
+          description?: string | null
+          fields?: Json
+          id?: string
+          name?: string
+          notify_emails?: string[] | null
+          organization_id?: string
+          redirect_url?: string | null
+          slug?: string
+          submissions_count?: number
+          success_message?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       lead_routing_assignees: {
         Row: {
           created_at: string

@@ -35,6 +35,7 @@ import { Route as AppOpportunityMapRouteImport } from './routes/_app.opportunity
 import { Route as AppNotificationsRouteImport } from './routes/_app.notifications'
 import { Route as AppMytasksRouteImport } from './routes/_app.mytasks'
 import { Route as AppLeadScoringRouteImport } from './routes/_app.lead-scoring'
+import { Route as AppLeadFormsRouteImport } from './routes/_app.lead-forms'
 import { Route as AppKbRouteImport } from './routes/_app.kb'
 import { Route as AppInvoicesRouteImport } from './routes/_app.invoices'
 import { Route as AppGoalsRouteImport } from './routes/_app.goals'
@@ -56,6 +57,7 @@ import { Route as AppAuditRouteImport } from './routes/_app.audit'
 import { Route as AppApprovalsRouteImport } from './routes/_app.approvals'
 import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
 import { Route as AppActivitiesRouteImport } from './routes/_app.activities'
+import { Route as ApiPublicLeadFormRouteImport } from './routes/api/public/lead-form'
 import { Route as ApiPublicInboundEmailRouteImport } from './routes/api/public/inbound-email'
 import { Route as AppTicketsIdRouteImport } from './routes/_app.tickets.$id'
 import { Route as AppSettingsWebhooksRouteImport } from './routes/_app.settings.webhooks'
@@ -201,6 +203,11 @@ const AppLeadScoringRoute = AppLeadScoringRouteImport.update({
   path: '/lead-scoring',
   getParentRoute: () => AppRoute,
 } as any)
+const AppLeadFormsRoute = AppLeadFormsRouteImport.update({
+  id: '/lead-forms',
+  path: '/lead-forms',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppKbRoute = AppKbRouteImport.update({
   id: '/kb',
   path: '/kb',
@@ -306,6 +313,11 @@ const AppActivitiesRoute = AppActivitiesRouteImport.update({
   path: '/activities',
   getParentRoute: () => AppRoute,
 } as any)
+const ApiPublicLeadFormRoute = ApiPublicLeadFormRouteImport.update({
+  id: '/api/public/lead-form',
+  path: '/api/public/lead-form',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicInboundEmailRoute = ApiPublicInboundEmailRouteImport.update({
   id: '/api/public/inbound-email',
   path: '/api/public/inbound-email',
@@ -408,6 +420,7 @@ export interface FileRoutesByFullPath {
   '/goals': typeof AppGoalsRoute
   '/invoices': typeof AppInvoicesRoute
   '/kb': typeof AppKbRouteWithChildren
+  '/lead-forms': typeof AppLeadFormsRoute
   '/lead-scoring': typeof AppLeadScoringRoute
   '/mytasks': typeof AppMytasksRoute
   '/notifications': typeof AppNotificationsRoute
@@ -444,6 +457,7 @@ export interface FileRoutesByFullPath {
   '/settings/webhooks': typeof AppSettingsWebhooksRoute
   '/tickets/$id': typeof AppTicketsIdRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
+  '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
 }
@@ -471,6 +485,7 @@ export interface FileRoutesByTo {
   '/goals': typeof AppGoalsRoute
   '/invoices': typeof AppInvoicesRoute
   '/kb': typeof AppKbRouteWithChildren
+  '/lead-forms': typeof AppLeadFormsRoute
   '/lead-scoring': typeof AppLeadScoringRoute
   '/mytasks': typeof AppMytasksRoute
   '/notifications': typeof AppNotificationsRoute
@@ -507,6 +522,7 @@ export interface FileRoutesByTo {
   '/settings/webhooks': typeof AppSettingsWebhooksRoute
   '/tickets/$id': typeof AppTicketsIdRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
+  '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
 }
@@ -536,6 +552,7 @@ export interface FileRoutesById {
   '/_app/goals': typeof AppGoalsRoute
   '/_app/invoices': typeof AppInvoicesRoute
   '/_app/kb': typeof AppKbRouteWithChildren
+  '/_app/lead-forms': typeof AppLeadFormsRoute
   '/_app/lead-scoring': typeof AppLeadScoringRoute
   '/_app/mytasks': typeof AppMytasksRoute
   '/_app/notifications': typeof AppNotificationsRoute
@@ -572,6 +589,7 @@ export interface FileRoutesById {
   '/_app/settings/webhooks': typeof AppSettingsWebhooksRoute
   '/_app/tickets/$id': typeof AppTicketsIdRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
+  '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
 }
@@ -601,6 +619,7 @@ export interface FileRouteTypes {
     | '/goals'
     | '/invoices'
     | '/kb'
+    | '/lead-forms'
     | '/lead-scoring'
     | '/mytasks'
     | '/notifications'
@@ -637,6 +656,7 @@ export interface FileRouteTypes {
     | '/settings/webhooks'
     | '/tickets/$id'
     | '/api/public/inbound-email'
+    | '/api/public/lead-form'
     | '/api/public/hooks/activity-reminders'
     | '/api/public/hooks/generate-alerts'
   fileRoutesByTo: FileRoutesByTo
@@ -664,6 +684,7 @@ export interface FileRouteTypes {
     | '/goals'
     | '/invoices'
     | '/kb'
+    | '/lead-forms'
     | '/lead-scoring'
     | '/mytasks'
     | '/notifications'
@@ -700,6 +721,7 @@ export interface FileRouteTypes {
     | '/settings/webhooks'
     | '/tickets/$id'
     | '/api/public/inbound-email'
+    | '/api/public/lead-form'
     | '/api/public/hooks/activity-reminders'
     | '/api/public/hooks/generate-alerts'
   id:
@@ -728,6 +750,7 @@ export interface FileRouteTypes {
     | '/_app/goals'
     | '/_app/invoices'
     | '/_app/kb'
+    | '/_app/lead-forms'
     | '/_app/lead-scoring'
     | '/_app/mytasks'
     | '/_app/notifications'
@@ -764,6 +787,7 @@ export interface FileRouteTypes {
     | '/_app/settings/webhooks'
     | '/_app/tickets/$id'
     | '/api/public/inbound-email'
+    | '/api/public/lead-form'
     | '/api/public/hooks/activity-reminders'
     | '/api/public/hooks/generate-alerts'
   fileRoutesById: FileRoutesById
@@ -773,6 +797,7 @@ export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   LoginRoute: typeof LoginRoute
   ApiPublicInboundEmailRoute: typeof ApiPublicInboundEmailRoute
+  ApiPublicLeadFormRoute: typeof ApiPublicLeadFormRoute
   ApiPublicHooksActivityRemindersRoute: typeof ApiPublicHooksActivityRemindersRoute
   ApiPublicHooksGenerateAlertsRoute: typeof ApiPublicHooksGenerateAlertsRoute
 }
@@ -961,6 +986,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppLeadScoringRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/lead-forms': {
+      id: '/_app/lead-forms'
+      path: '/lead-forms'
+      fullPath: '/lead-forms'
+      preLoaderRoute: typeof AppLeadFormsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/kb': {
       id: '/_app/kb'
       path: '/kb'
@@ -1107,6 +1139,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/activities'
       preLoaderRoute: typeof AppActivitiesRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/api/public/lead-form': {
+      id: '/api/public/lead-form'
+      path: '/api/public/lead-form'
+      fullPath: '/api/public/lead-form'
+      preLoaderRoute: typeof ApiPublicLeadFormRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/public/inbound-email': {
       id: '/api/public/inbound-email'
@@ -1308,6 +1347,7 @@ interface AppRouteChildren {
   AppGoalsRoute: typeof AppGoalsRoute
   AppInvoicesRoute: typeof AppInvoicesRoute
   AppKbRoute: typeof AppKbRouteWithChildren
+  AppLeadFormsRoute: typeof AppLeadFormsRoute
   AppLeadScoringRoute: typeof AppLeadScoringRoute
   AppMytasksRoute: typeof AppMytasksRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
@@ -1361,6 +1401,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppGoalsRoute: AppGoalsRoute,
   AppInvoicesRoute: AppInvoicesRoute,
   AppKbRoute: AppKbRouteWithChildren,
+  AppLeadFormsRoute: AppLeadFormsRoute,
   AppLeadScoringRoute: AppLeadScoringRoute,
   AppMytasksRoute: AppMytasksRoute,
   AppNotificationsRoute: AppNotificationsRoute,
@@ -1399,6 +1440,7 @@ const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   LoginRoute: LoginRoute,
   ApiPublicInboundEmailRoute: ApiPublicInboundEmailRoute,
+  ApiPublicLeadFormRoute: ApiPublicLeadFormRoute,
   ApiPublicHooksActivityRemindersRoute: ApiPublicHooksActivityRemindersRoute,
   ApiPublicHooksGenerateAlertsRoute: ApiPublicHooksGenerateAlertsRoute,
 }
