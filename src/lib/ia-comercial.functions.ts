@@ -213,6 +213,11 @@ export const getSalesAgents = createServerFn({ method: "POST" })
         };
       });
 
+    const upsellPotentialTotal = [...wonByCompany.entries()]
+      .filter(([cid]) => !openByCompany.has(cid))
+      .reduce((s, [, v]) => s + v.total, 0);
+    const atRiskRevenueTotal = [...overdueByCompany.values()].reduce((s, v) => s + v, 0);
+
     return {
       followup,
       opportunities,
@@ -220,8 +225,8 @@ export const getSalesAgents = createServerFn({ method: "POST" })
       reps: repDetections,
       stats: {
         followupOverdue: followup.length,
-        upsellPotential: opportunities.reduce((s, o) => s + Number((o.metric ?? "0").replace(/\D/g, "")) / 100, 0),
-        atRiskRevenue: riskFromOverdue.reduce((s, r) => s + Number((r.metric ?? "0").replace(/\D/g, "")) / 100, 0),
+        upsellPotential: upsellPotentialTotal,
+        atRiskRevenue: atRiskRevenueTotal,
         activeReps: reps.size,
       },
     };
