@@ -4,7 +4,9 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useCurrentOrg } from "@/lib/org";
 import { getSalesAgents, aiAgentBrief } from "@/lib/ia-comercial.functions";
+import { generateAIRecommendations } from "@/lib/ai-recommendations.functions";
 import { PageHeader } from "@/components/page-header";
+import { NextActionBlock } from "@/components/next-action-block";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -72,6 +74,12 @@ function IAComercialPage() {
         subtitle="Quatro agentes olhando seus dados sob lentes diferentes. Tudo o que aparece aqui é acionável."
         icon={Sparkles}
       />
+
+      <NextActionBlock surface="dashboard" title="Ações geradas pela IA Comercial" showRegenerate />
+
+      <AIRecommendationsButton />
+
+
 
       {/* Stats hero */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
