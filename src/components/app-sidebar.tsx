@@ -32,6 +32,7 @@ const nav = [
   { to: "/products", label: "Produtos", icon: Package, shortcut: "", managerOnly: false },
   { to: "/chat", label: "Chat", icon: MessageSquare, shortcut: "", managerOnly: false },
   { to: "/data-quality", label: "Data Quality", icon: ShieldCheck, shortcut: "", managerOnly: true },
+  { to: "/productivity", label: "Produtividade", icon: Activity, shortcut: "", managerOnly: true },
   { to: "/reports", label: "Relatórios", icon: BarChart3, shortcut: "G R", managerOnly: true },
 ] as const;
 
