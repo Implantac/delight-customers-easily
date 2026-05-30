@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useCurrentOrg } from "@/lib/org";
@@ -16,7 +16,9 @@ import {
 } from "@/components/ui/select";
 import {
   Megaphone, TrendingUp, Users, Flame, Sparkles, ArrowRight, Mail, Eye, MousePointerClick,
+  Trophy, Download,
 } from "lucide-react";
+import { toCSV, downloadCSV } from "@/lib/csv-export";
 
 export const Route = createFileRoute("/_app/marketing-intel")({
   component: MarketingIntelPage,
@@ -70,6 +72,8 @@ function MarketingIntelPage() {
         <Kpi loading={isLoading} label="Visitas influencer" value={data?.summary.total_visits ?? 0} icon={Sparkles} />
       </div>
 
+      <ChannelInsight channels={data?.channels ?? []} loading={isLoading} />
+
       <Tabs defaultValue="canais" className="space-y-4">
         <TabsList>
           <TabsTrigger value="canais">Canais</TabsTrigger>
@@ -78,6 +82,40 @@ function MarketingIntelPage() {
         </TabsList>
 
         <TabsContent value="canais">
+          {(data?.channels?.length ?? 0) > 0 && (
+            <div className="flex justify-end mb-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  const csv = toCSV(
+                    data!.channels.map((c) => ({
+                      canal: c.channel,
+                      leads: c.leads,
+                      convertidos: c.converted,
+                      taxa_pct: c.conversion_rate.toFixed(2),
+                      pipeline_aberto: c.open_pipeline,
+                      receita_ganha: c.won_revenue,
+                      receita_por_lead: c.leads > 0 ? (c.won_revenue / c.leads).toFixed(2) : "0",
+                    })),
+                    [
+                      { key: "canal", label: "Canal" },
+                      { key: "leads", label: "Leads" },
+                      { key: "convertidos", label: "Convertidos" },
+                      { key: "taxa_pct", label: "Conversão %" },
+                      { key: "pipeline_aberto", label: "Pipeline (BRL)" },
+                      { key: "receita_ganha", label: "Receita (BRL)" },
+                      { key: "receita_por_lead", label: "Receita por lead (BRL)" },
+                    ],
+                  );
+                  const date = new Date().toISOString().slice(0, 10);
+                  downloadCSV(`marketing-canais-${windowDays}d-${date}.csv`, csv);
+                }}
+              >
+                <Download className="h-4 w-4 mr-2" /> Exportar CSV
+              </Button>
+            </div>
+          )}
           {isLoading ? <Skeleton className="h-60 w-full" /> : (
             <Card className="overflow-hidden">
               <table className="w-full text-sm">
@@ -227,5 +265,48 @@ function Kpi({
       </div>
       {loading ? <Skeleton className="h-6 w-16 mt-1" /> : <div className={`text-xl font-semibold mt-1 ${color}`}>{value}</div>}
     </Card>
+  );
+}
+
+type ChannelRow = { channel: string; leads: number; converted: number; conversion_rate: number; open_pipeline: number; won_revenue: number };
+
+function ChannelInsight({ channels, loading }: { channels: ChannelRow[]; loading: boolean }) {
+  const insight = useMemo(() => {
+    if (!channels.length) return null;
+    const withRPL = channels.map((c) => ({ ...c, rpl: c.leads > 0 ? c.won_revenue / c.leads : 0 }));
+    const topRevenue = [...withRPL].sort((a, b) => b.won_revenue - a.won_revenue)[0];
+    const topCVR = [...withRPL].filter((c) => c.leads >= 3).sort((a, b) => b.conversion_rate - a.conversion_rate)[0] ?? topRevenue;
+    const topRPL = [...withRPL].filter((c) => c.leads >= 3).sort((a, b) => b.rpl - a.rpl)[0] ?? topRevenue;
+    return { topRevenue, topCVR, topRPL };
+  }, [channels]);
+
+  if (loading) return <Skeleton className="h-24 w-full" />;
+  if (!insight) return null;
+
+  return (
+    <Card className="p-4 border-primary/30 bg-gradient-to-br from-primary/5 to-transparent">
+      <div className="flex items-center gap-2 mb-3">
+        <Sparkles className="h-4 w-4 text-primary" />
+        <h3 className="text-sm font-semibold">Onde focar agora</h3>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+        <InsightCell icon={Trophy} label="Mais receita" channel={insight.topRevenue.channel} value={fmt(insight.topRevenue.won_revenue)} hint="canal que mais converteu em R$" />
+        <InsightCell icon={Flame} label="Maior taxa" channel={insight.topCVR.channel} value={pct(insight.topCVR.conversion_rate)} hint="melhor eficiência de funil" />
+        <InsightCell icon={TrendingUp} label="Melhor R$/lead" channel={insight.topRPL.channel} value={fmt(insight.topRPL.rpl)} hint="onde cada lead vale mais" />
+      </div>
+    </Card>
+  );
+}
+
+function InsightCell({ icon: Icon, label, channel, value, hint }: { icon: typeof Trophy; label: string; channel: string; value: string; hint: string }) {
+  return (
+    <div className="rounded-md border bg-card/70 p-3">
+      <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-wide text-muted-foreground">
+        <Icon className="h-3 w-3" /> {label}
+      </div>
+      <div className="font-medium capitalize mt-1">{channel}</div>
+      <div className="text-primary font-mono text-sm">{value}</div>
+      <div className="text-[11px] text-muted-foreground mt-0.5">{hint}</div>
+    </div>
   );
 }
