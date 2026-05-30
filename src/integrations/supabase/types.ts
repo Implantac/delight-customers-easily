@@ -201,6 +201,53 @@ export type Database = {
         }
         Relationships: []
       }
+      commission_rules: {
+        Row: {
+          accelerator_percent: number
+          active: boolean
+          base_percent: number
+          created_at: string
+          created_by: string | null
+          id: string
+          name: string
+          organization_id: string
+          quota_bonus: number
+          updated_at: string
+        }
+        Insert: {
+          accelerator_percent?: number
+          active?: boolean
+          base_percent?: number
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name: string
+          organization_id: string
+          quota_bonus?: number
+          updated_at?: string
+        }
+        Update: {
+          accelerator_percent?: number
+          active?: boolean
+          base_percent?: number
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name?: string
+          organization_id?: string
+          quota_bonus?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commission_rules_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       companies: {
         Row: {
           created_at: string

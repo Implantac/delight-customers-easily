@@ -24,6 +24,7 @@ import { Route as AppDataQualityRouteImport } from './routes/_app.data-quality'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppContactsRouteImport } from './routes/_app.contacts'
 import { Route as AppCompaniesRouteImport } from './routes/_app.companies'
+import { Route as AppCommissionsRouteImport } from './routes/_app.commissions'
 import { Route as AppCommandRouteImport } from './routes/_app.command'
 import { Route as AppChatRouteImport } from './routes/_app.chat'
 import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
@@ -114,6 +115,11 @@ const AppCompaniesRoute = AppCompaniesRouteImport.update({
   path: '/companies',
   getParentRoute: () => AppRoute,
 } as any)
+const AppCommissionsRoute = AppCommissionsRouteImport.update({
+  id: '/commissions',
+  path: '/commissions',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppCommandRoute = AppCommandRouteImport.update({
   id: '/command',
   path: '/command',
@@ -199,6 +205,7 @@ export interface FileRoutesByFullPath {
   '/alerts': typeof AppAlertsRoute
   '/chat': typeof AppChatRoute
   '/command': typeof AppCommandRoute
+  '/commissions': typeof AppCommissionsRoute
   '/companies': typeof AppCompaniesRouteWithChildren
   '/contacts': typeof AppContactsRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
@@ -230,6 +237,7 @@ export interface FileRoutesByTo {
   '/alerts': typeof AppAlertsRoute
   '/chat': typeof AppChatRoute
   '/command': typeof AppCommandRoute
+  '/commissions': typeof AppCommissionsRoute
   '/companies': typeof AppCompaniesRouteWithChildren
   '/contacts': typeof AppContactsRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
@@ -263,6 +271,7 @@ export interface FileRoutesById {
   '/_app/alerts': typeof AppAlertsRoute
   '/_app/chat': typeof AppChatRoute
   '/_app/command': typeof AppCommandRoute
+  '/_app/commissions': typeof AppCommissionsRoute
   '/_app/companies': typeof AppCompaniesRouteWithChildren
   '/_app/contacts': typeof AppContactsRouteWithChildren
   '/_app/dashboard': typeof AppDashboardRoute
@@ -296,6 +305,7 @@ export interface FileRouteTypes {
     | '/alerts'
     | '/chat'
     | '/command'
+    | '/commissions'
     | '/companies'
     | '/contacts'
     | '/dashboard'
@@ -327,6 +337,7 @@ export interface FileRouteTypes {
     | '/alerts'
     | '/chat'
     | '/command'
+    | '/commissions'
     | '/companies'
     | '/contacts'
     | '/dashboard'
@@ -359,6 +370,7 @@ export interface FileRouteTypes {
     | '/_app/alerts'
     | '/_app/chat'
     | '/_app/command'
+    | '/_app/commissions'
     | '/_app/companies'
     | '/_app/contacts'
     | '/_app/dashboard'
@@ -500,6 +512,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCompaniesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/commissions': {
+      id: '/_app/commissions'
+      path: '/commissions'
+      fullPath: '/commissions'
+      preLoaderRoute: typeof AppCommissionsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/command': {
       id: '/_app/command'
       path: '/command'
@@ -637,6 +656,7 @@ interface AppRouteChildren {
   AppAlertsRoute: typeof AppAlertsRoute
   AppChatRoute: typeof AppChatRoute
   AppCommandRoute: typeof AppCommandRoute
+  AppCommissionsRoute: typeof AppCommissionsRoute
   AppCompaniesRoute: typeof AppCompaniesRouteWithChildren
   AppContactsRoute: typeof AppContactsRouteWithChildren
   AppDashboardRoute: typeof AppDashboardRoute
@@ -662,6 +682,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAlertsRoute: AppAlertsRoute,
   AppChatRoute: AppChatRoute,
   AppCommandRoute: AppCommandRoute,
+  AppCommissionsRoute: AppCommissionsRoute,
   AppCompaniesRoute: AppCompaniesRouteWithChildren,
   AppContactsRoute: AppContactsRouteWithChildren,
   AppDashboardRoute: AppDashboardRoute,
