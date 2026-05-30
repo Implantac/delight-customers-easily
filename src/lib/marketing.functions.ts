@@ -184,6 +184,12 @@ export const upsertInfluencer = createServerFn({ method: "POST" })
       coupon_code: z.string().max(60).optional().nullable(),
       commission_pct: z.number().min(0).max(100).default(0),
       is_active: z.boolean().default(true),
+      headline: z.string().max(200).optional().nullable(),
+      bio: z.string().max(2000).optional().nullable(),
+      hero_image_url: z.string().max(2000).optional().nullable(),
+      cta_text: z.string().max(80).optional().nullable(),
+      cta_url: z.string().max(2000).optional().nullable(),
+      lp_enabled: z.boolean().default(false),
     }).parse(i)
   )
   .handler(async ({ data, context }) => {
@@ -198,6 +204,12 @@ export const upsertInfluencer = createServerFn({ method: "POST" })
       coupon_code: data.coupon_code ?? null,
       commission_pct: data.commission_pct,
       is_active: data.is_active,
+      headline: data.headline ?? null,
+      bio: data.bio ?? null,
+      hero_image_url: data.hero_image_url ?? null,
+      cta_text: data.cta_text ?? null,
+      cta_url: data.cta_url ?? null,
+      lp_enabled: data.lp_enabled,
     };
     if (data.id) {
       const { error } = await context.supabase.from("influencers").update(payload).eq("id", data.id);
@@ -209,6 +221,7 @@ export const upsertInfluencer = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { id: r.id };
   });
+
 
 export const deleteInfluencer = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
