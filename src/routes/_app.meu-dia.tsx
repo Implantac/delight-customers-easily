@@ -67,7 +67,7 @@ function MyDayPage() {
         .from("deals")
         .select("id, title, value, stage, expected_close, companies(name)")
         .eq("organization_id", orgId!)
-        .eq("owner_id", user!.id)
+        .eq("user_id", user!.id)
         .not("stage", "in", "(won,lost)")
         .order("value", { ascending: false })
         .limit(8);
@@ -80,13 +80,14 @@ function MyDayPage() {
     enabled: !!orgId && !!user?.id,
     queryFn: async () => {
       const { data } = await supabase
-        .from("calendar_events")
-        .select("id, title, starts_at, ends_at, location")
+        .from("activities")
+        .select("id, title, due_date, type")
         .eq("organization_id", orgId!)
         .eq("user_id", user!.id)
-        .gte("starts_at", startOfDay().toISOString())
-        .lte("starts_at", endOfDay().toISOString())
-        .order("starts_at");
+        .eq("completed", false)
+        .gte("due_date", startOfDay().toISOString())
+        .lte("due_date", endOfDay().toISOString())
+        .order("due_date");
       return (data ?? []) as any[];
     },
   });
