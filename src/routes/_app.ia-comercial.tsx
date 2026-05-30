@@ -69,7 +69,7 @@ function IAComercialPage() {
     <div className="space-y-6">
       <PageHeader
         title="IA Comercial"
-        description="Quatro agentes olhando seus dados sob lentes diferentes. Tudo o que aparece aqui é acionável."
+        subtitle="Quatro agentes olhando seus dados sob lentes diferentes. Tudo o que aparece aqui é acionável."
         icon={Sparkles}
       />
 

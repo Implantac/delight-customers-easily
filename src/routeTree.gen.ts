@@ -47,6 +47,7 @@ import { Route as AppLeadFormsRouteImport } from './routes/_app.lead-forms'
 import { Route as AppKbRouteImport } from './routes/_app.kb'
 import { Route as AppInvoicesRouteImport } from './routes/_app.invoices'
 import { Route as AppIntegrationsRouteImport } from './routes/_app.integrations'
+import { Route as AppIaComercialRouteImport } from './routes/_app.ia-comercial'
 import { Route as AppGoalsRouteImport } from './routes/_app.goals'
 import { Route as AppForecastRouteImport } from './routes/_app.forecast'
 import { Route as AppFinanceRouteImport } from './routes/_app.finance'
@@ -276,6 +277,11 @@ const AppIntegrationsRoute = AppIntegrationsRouteImport.update({
   path: '/integrations',
   getParentRoute: () => AppRoute,
 } as any)
+const AppIaComercialRoute = AppIaComercialRouteImport.update({
+  id: '/ia-comercial',
+  path: '/ia-comercial',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppGoalsRoute = AppGoalsRouteImport.update({
   id: '/goals',
   path: '/goals',
@@ -500,6 +506,7 @@ export interface FileRoutesByFullPath {
   '/finance': typeof AppFinanceRoute
   '/forecast': typeof AppForecastRoute
   '/goals': typeof AppGoalsRoute
+  '/ia-comercial': typeof AppIaComercialRoute
   '/integrations': typeof AppIntegrationsRoute
   '/invoices': typeof AppInvoicesRoute
   '/kb': typeof AppKbRouteWithChildren
@@ -578,6 +585,7 @@ export interface FileRoutesByTo {
   '/finance': typeof AppFinanceRoute
   '/forecast': typeof AppForecastRoute
   '/goals': typeof AppGoalsRoute
+  '/ia-comercial': typeof AppIaComercialRoute
   '/integrations': typeof AppIntegrationsRoute
   '/invoices': typeof AppInvoicesRoute
   '/kb': typeof AppKbRouteWithChildren
@@ -658,6 +666,7 @@ export interface FileRoutesById {
   '/_app/finance': typeof AppFinanceRoute
   '/_app/forecast': typeof AppForecastRoute
   '/_app/goals': typeof AppGoalsRoute
+  '/_app/ia-comercial': typeof AppIaComercialRoute
   '/_app/integrations': typeof AppIntegrationsRoute
   '/_app/invoices': typeof AppInvoicesRoute
   '/_app/kb': typeof AppKbRouteWithChildren
@@ -738,6 +747,7 @@ export interface FileRouteTypes {
     | '/finance'
     | '/forecast'
     | '/goals'
+    | '/ia-comercial'
     | '/integrations'
     | '/invoices'
     | '/kb'
@@ -816,6 +826,7 @@ export interface FileRouteTypes {
     | '/finance'
     | '/forecast'
     | '/goals'
+    | '/ia-comercial'
     | '/integrations'
     | '/invoices'
     | '/kb'
@@ -895,6 +906,7 @@ export interface FileRouteTypes {
     | '/_app/finance'
     | '/_app/forecast'
     | '/_app/goals'
+    | '/_app/ia-comercial'
     | '/_app/integrations'
     | '/_app/invoices'
     | '/_app/kb'
@@ -1224,6 +1236,13 @@ declare module '@tanstack/react-router' {
       path: '/integrations'
       fullPath: '/integrations'
       preLoaderRoute: typeof AppIntegrationsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/ia-comercial': {
+      id: '/_app/ia-comercial'
+      path: '/ia-comercial'
+      fullPath: '/ia-comercial'
+      preLoaderRoute: typeof AppIaComercialRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/goals': {
@@ -1596,6 +1615,7 @@ interface AppRouteChildren {
   AppFinanceRoute: typeof AppFinanceRoute
   AppForecastRoute: typeof AppForecastRoute
   AppGoalsRoute: typeof AppGoalsRoute
+  AppIaComercialRoute: typeof AppIaComercialRoute
   AppIntegrationsRoute: typeof AppIntegrationsRoute
   AppInvoicesRoute: typeof AppInvoicesRoute
   AppKbRoute: typeof AppKbRouteWithChildren
@@ -1663,6 +1683,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppFinanceRoute: AppFinanceRoute,
   AppForecastRoute: AppForecastRoute,
   AppGoalsRoute: AppGoalsRoute,
+  AppIaComercialRoute: AppIaComercialRoute,
   AppIntegrationsRoute: AppIntegrationsRoute,
   AppInvoicesRoute: AppInvoicesRoute,
   AppKbRoute: AppKbRouteWithChildren,
