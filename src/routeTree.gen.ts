@@ -24,6 +24,7 @@ import { Route as AppProductsRouteImport } from './routes/_app.products'
 import { Route as AppProductivityRouteImport } from './routes/_app.productivity'
 import { Route as AppPipelineRouteImport } from './routes/_app.pipeline'
 import { Route as AppOpportunityMapRouteImport } from './routes/_app.opportunity-map'
+import { Route as AppNotificationsRouteImport } from './routes/_app.notifications'
 import { Route as AppLeadScoringRouteImport } from './routes/_app.lead-scoring'
 import { Route as AppGoalsRouteImport } from './routes/_app.goals'
 import { Route as AppForecastRouteImport } from './routes/_app.forecast'
@@ -125,6 +126,11 @@ const AppPipelineRoute = AppPipelineRouteImport.update({
 const AppOpportunityMapRoute = AppOpportunityMapRouteImport.update({
   id: '/opportunity-map',
   path: '/opportunity-map',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppNotificationsRoute = AppNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => AppRoute,
 } as any)
 const AppLeadScoringRoute = AppLeadScoringRouteImport.update({
@@ -289,6 +295,7 @@ export interface FileRoutesByFullPath {
   '/forecast': typeof AppForecastRoute
   '/goals': typeof AppGoalsRoute
   '/lead-scoring': typeof AppLeadScoringRoute
+  '/notifications': typeof AppNotificationsRoute
   '/opportunity-map': typeof AppOpportunityMapRoute
   '/pipeline': typeof AppPipelineRoute
   '/productivity': typeof AppProductivityRoute
@@ -333,6 +340,7 @@ export interface FileRoutesByTo {
   '/forecast': typeof AppForecastRoute
   '/goals': typeof AppGoalsRoute
   '/lead-scoring': typeof AppLeadScoringRoute
+  '/notifications': typeof AppNotificationsRoute
   '/opportunity-map': typeof AppOpportunityMapRoute
   '/pipeline': typeof AppPipelineRoute
   '/productivity': typeof AppProductivityRoute
@@ -379,6 +387,7 @@ export interface FileRoutesById {
   '/_app/forecast': typeof AppForecastRoute
   '/_app/goals': typeof AppGoalsRoute
   '/_app/lead-scoring': typeof AppLeadScoringRoute
+  '/_app/notifications': typeof AppNotificationsRoute
   '/_app/opportunity-map': typeof AppOpportunityMapRoute
   '/_app/pipeline': typeof AppPipelineRoute
   '/_app/productivity': typeof AppProductivityRoute
@@ -425,6 +434,7 @@ export interface FileRouteTypes {
     | '/forecast'
     | '/goals'
     | '/lead-scoring'
+    | '/notifications'
     | '/opportunity-map'
     | '/pipeline'
     | '/productivity'
@@ -469,6 +479,7 @@ export interface FileRouteTypes {
     | '/forecast'
     | '/goals'
     | '/lead-scoring'
+    | '/notifications'
     | '/opportunity-map'
     | '/pipeline'
     | '/productivity'
@@ -514,6 +525,7 @@ export interface FileRouteTypes {
     | '/_app/forecast'
     | '/_app/goals'
     | '/_app/lead-scoring'
+    | '/_app/notifications'
     | '/_app/opportunity-map'
     | '/_app/pipeline'
     | '/_app/productivity'
@@ -654,6 +666,13 @@ declare module '@tanstack/react-router' {
       path: '/opportunity-map'
       fullPath: '/opportunity-map'
       preLoaderRoute: typeof AppOpportunityMapRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/notifications': {
+      id: '/_app/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof AppNotificationsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/lead-scoring': {
@@ -908,6 +927,7 @@ interface AppRouteChildren {
   AppForecastRoute: typeof AppForecastRoute
   AppGoalsRoute: typeof AppGoalsRoute
   AppLeadScoringRoute: typeof AppLeadScoringRoute
+  AppNotificationsRoute: typeof AppNotificationsRoute
   AppOpportunityMapRoute: typeof AppOpportunityMapRoute
   AppPipelineRoute: typeof AppPipelineRoute
   AppProductivityRoute: typeof AppProductivityRoute
@@ -945,6 +965,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppForecastRoute: AppForecastRoute,
   AppGoalsRoute: AppGoalsRoute,
   AppLeadScoringRoute: AppLeadScoringRoute,
+  AppNotificationsRoute: AppNotificationsRoute,
   AppOpportunityMapRoute: AppOpportunityMapRoute,
   AppPipelineRoute: AppPipelineRoute,
   AppProductivityRoute: AppProductivityRoute,
