@@ -1742,6 +1742,107 @@ export type Database = {
         }
         Relationships: []
       }
+      survey_responses: {
+        Row: {
+          comment: string | null
+          company_id: string | null
+          contact_id: string | null
+          created_at: string
+          deal_id: string | null
+          id: string
+          organization_id: string
+          responded_at: string
+          respondent_email: string | null
+          respondent_name: string | null
+          score: number
+          source: string | null
+          survey_id: string
+        }
+        Insert: {
+          comment?: string | null
+          company_id?: string | null
+          contact_id?: string | null
+          created_at?: string
+          deal_id?: string | null
+          id?: string
+          organization_id: string
+          responded_at?: string
+          respondent_email?: string | null
+          respondent_name?: string | null
+          score: number
+          source?: string | null
+          survey_id: string
+        }
+        Update: {
+          comment?: string | null
+          company_id?: string | null
+          contact_id?: string | null
+          created_at?: string
+          deal_id?: string | null
+          id?: string
+          organization_id?: string
+          responded_at?: string
+          respondent_email?: string | null
+          respondent_name?: string | null
+          score?: number
+          source?: string | null
+          survey_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "survey_responses_survey_id_fkey"
+            columns: ["survey_id"]
+            isOneToOne: false
+            referencedRelation: "surveys"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      surveys: {
+        Row: {
+          active: boolean
+          created_at: string
+          created_by: string
+          description: string | null
+          id: string
+          name: string
+          organization_id: string
+          question: string
+          scale_max: number
+          scale_min: number
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          created_by: string
+          description?: string | null
+          id?: string
+          name: string
+          organization_id: string
+          question?: string
+          scale_max?: number
+          scale_min?: number
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          id?: string
+          name?: string
+          organization_id?: string
+          question?: string
+          scale_max?: number
+          scale_min?: number
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       taggings: {
         Row: {
           created_at: string
