@@ -48,6 +48,36 @@ function ContactDetail() {
     queryFn: async () => (await supabase.from("activities").select("id, title, type, due_date, completed").eq("contact_id", id).order("due_date", { ascending: false, nullsFirst: false })).data ?? [],
   });
 
+  // Omnichannel: WhatsApp + Email (campanhas) + submissões de formulário
+  const { data: omni } = useQuery({
+    queryKey: ["contact-omni", id],
+    queryFn: async () => {
+      const [waConvs, emailRcpts, formSubs] = await Promise.all([
+        supabase.from("whatsapp_conversations").select("id").eq("contact_id", id),
+        supabase.from("email_campaign_recipients")
+          .select("id, status, sent_at, opened_at, clicked_at, email_campaigns(name)")
+          .eq("contact_id", id).order("sent_at", { ascending: false }).limit(50),
+        supabase.from("lead_form_submissions")
+          .select("id, created_at, lead_forms(name)")
+          .eq("contact_id", id).order("created_at", { ascending: false }).limit(20),
+      ]);
+      const convIds = (waConvs.data ?? []).map((c: any) => c.id);
+      let waMsgs: any[] = [];
+      if (convIds.length) {
+        const { data } = await supabase.from("whatsapp_messages")
+          .select("id, direction, body, status, created_at")
+          .in("conversation_id", convIds)
+          .order("created_at", { ascending: false }).limit(50);
+        waMsgs = data ?? [];
+      }
+      return {
+        whatsapp: waMsgs,
+        emails: emailRcpts.data ?? [],
+        forms: formSubs.data ?? [],
+      };
+    },
+  });
+
   const del = useMutation({
     mutationFn: async () => {
       const { error } = await supabase.from("contacts").delete().eq("id", id);
@@ -156,6 +186,28 @@ function ContactDetail() {
                         id: a.id, kind: "activity", type: a.type, title: a.title, completed: a.completed,
                         date: a.due_date ?? new Date().toISOString(),
                         meta: a.type + (a.due_date ? ` · ${new Date(a.due_date).toLocaleString("pt-BR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}` : ""),
+                      })),
+                      ...(omni?.whatsapp ?? []).map<TimelineItem>((m: any) => ({
+                        id: m.id, kind: "whatsapp",
+                        title: (m.direction === "outbound" ? "→ " : "← ") + (m.body ?? "").slice(0, 80),
+                        date: m.created_at,
+                        meta: m.direction === "outbound" ? `Você · ${m.status ?? ""}` : "Cliente",
+                      })),
+                      ...(omni?.emails ?? []).map<TimelineItem>((e: any) => ({
+                        id: e.id, kind: "email",
+                        title: `Email: ${e.email_campaigns?.name ?? "campanha"}`,
+                        date: e.sent_at ?? new Date().toISOString(),
+                        meta: [
+                          e.status,
+                          e.opened_at && "aberto",
+                          e.clicked_at && "clicou",
+                        ].filter(Boolean).join(" · "),
+                      })),
+                      ...(omni?.forms ?? []).map<TimelineItem>((f: any) => ({
+                        id: f.id, kind: "form",
+                        title: `Form: ${f.lead_forms?.name ?? "submissão"}`,
+                        date: f.created_at,
+                        meta: "Lead capturado",
                       })),
                     ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())}
                   />
