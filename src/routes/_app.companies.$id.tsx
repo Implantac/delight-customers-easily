@@ -428,30 +428,67 @@ function CompanyDetail() {
             </Card>
           )}
 
-          {/* Zona 3 — Timeline unificada */}
+          {/* Zona 3 — Timeline omnichannel */}
           <Card className="p-5">
-            <h3 className="flex items-center gap-2 text-sm font-semibold"><Clock className="h-4 w-4" />Timeline</h3>
+            <h3 className="flex items-center gap-2 text-sm font-semibold"><Clock className="h-4 w-4" />Timeline omnichannel</h3>
             <div className="mt-4">
               <Timeline
-                emptyLabel="Sem atividades vinculadas a este cliente."
-                items={(activities ?? [])
-                  .map<TimelineItem>((a) => ({
+                emptyLabel="Sem eventos vinculados a este cliente."
+                items={[
+                  ...(activities ?? []).map<TimelineItem>((a) => ({
                     id: a.id,
                     kind: "activity",
                     type: a.type,
                     title: a.title,
                     completed: a.completed,
                     date: a.due_date ?? new Date().toISOString(),
-                    meta:
-                      a.type +
-                      (a.due_date
-                        ? ` · ${new Date(a.due_date).toLocaleString("pt-BR", { day: "2-digit", month: "short" })}`
-                        : ""),
-                  }))
-                  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())}
+                    meta: a.type,
+                  })),
+                  ...(deals ?? [])
+                    .filter((d) => d.stage === "won" && d.closed_at)
+                    .map<TimelineItem>((d) => ({
+                      id: `won-${d.id}`,
+                      kind: "won",
+                      title: `Ganhou: ${d.title}`,
+                      date: d.closed_at!,
+                      meta: BRL(Number(d.value || 0)),
+                    })),
+                  ...(deals ?? [])
+                    .filter((d) => d.stage === "lost" && d.closed_at)
+                    .map<TimelineItem>((d) => ({
+                      id: `lost-${d.id}`,
+                      kind: "lost",
+                      title: `Perdeu: ${d.title}`,
+                      date: d.closed_at!,
+                      meta: BRL(Number(d.value || 0)),
+                    })),
+                  ...(invoices ?? []).map<TimelineItem>((inv) => {
+                    const overdue = inv.status !== "paid" && new Date(inv.due_date) < new Date();
+                    const isPaid = inv.status === "paid" && inv.paid_at;
+                    return {
+                      id: `inv-${inv.id}`,
+                      kind: "invoice",
+                      title: isPaid
+                        ? `Fatura paga ${inv.number ? `#${inv.number}` : ""}`
+                        : overdue
+                        ? `Fatura em atraso ${inv.number ? `#${inv.number}` : ""}`
+                        : `Fatura emitida ${inv.number ? `#${inv.number}` : ""}`,
+                      date: isPaid ? inv.paid_at! : (inv.issued_at ?? inv.due_date),
+                      meta: BRL(Number(inv.amount || 0)),
+                    };
+                  }),
+                  ...(waMessages ?? []).map<TimelineItem>((m) => ({
+                    id: `wa-${m.id}`,
+                    kind: "whatsapp",
+                    title: `${m.direction === "outbound" ? "Você → cliente" : "Cliente → você"}: ${m.body.slice(0, 80)}${m.body.length > 80 ? "…" : ""}`,
+                    date: m.created_at,
+                    meta: "WhatsApp",
+                  })),
+                ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 60)}
               />
             </div>
           </Card>
+
 
           <Card className="p-5">
             <h3 className="flex items-center gap-2 text-sm font-semibold mb-4">
