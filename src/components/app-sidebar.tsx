@@ -39,6 +39,7 @@ const nav = [
   { to: "/templates", label: "Templates", icon: FileText, shortcut: "", managerOnly: false },
   { to: "/tags", label: "Tags", icon: Tag, shortcut: "", managerOnly: false },
   { to: "/views", label: "Visualizações", icon: Bookmark, shortcut: "", managerOnly: false },
+  { to: "/notifications", label: "Notificações", icon: Bell, shortcut: "", managerOnly: false },
   { to: "/data-quality", label: "Data Quality", icon: ShieldCheck, shortcut: "", managerOnly: true },
   { to: "/audit", label: "Auditoria", icon: History, shortcut: "", managerOnly: true },
   { to: "/productivity", label: "Produtividade", icon: Activity, shortcut: "", managerOnly: true },
