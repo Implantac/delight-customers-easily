@@ -92,6 +92,8 @@ function GeoPage() {
         icon={MapPin}
       />
 
+      <NextActionBlock surface="geo" title="Onde a IA recomenda visitar" />
+
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <KPI loading={isLoading} label="Clientes" value={data?.summary.total ?? 0} icon={Building} />
         <KPI loading={isLoading} label="Com localização" value={data?.summary.with_location ?? 0} icon={MapPin} />
