@@ -66,6 +66,7 @@ import { Route as AppChatRouteImport } from './routes/_app.chat'
 import { Route as AppCarteiraRouteImport } from './routes/_app.carteira'
 import { Route as AppCampaignsRouteImport } from './routes/_app.campaigns'
 import { Route as AppCalendarRouteImport } from './routes/_app.calendar'
+import { Route as AppBenchmarkRouteImport } from './routes/_app.benchmark'
 import { Route as AppBankingRouteImport } from './routes/_app.banking'
 import { Route as AppAuditRouteImport } from './routes/_app.audit'
 import { Route as AppAssetsRouteImport } from './routes/_app.assets'
@@ -373,6 +374,11 @@ const AppCalendarRoute = AppCalendarRouteImport.update({
   path: '/calendar',
   getParentRoute: () => AppRoute,
 } as any)
+const AppBenchmarkRoute = AppBenchmarkRouteImport.update({
+  id: '/benchmark',
+  path: '/benchmark',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppBankingRoute = AppBankingRouteImport.update({
   id: '/banking',
   path: '/banking',
@@ -495,6 +501,7 @@ export interface FileRoutesByFullPath {
   '/assets': typeof AppAssetsRoute
   '/audit': typeof AppAuditRoute
   '/banking': typeof AppBankingRoute
+  '/benchmark': typeof AppBenchmarkRoute
   '/calendar': typeof AppCalendarRoute
   '/campaigns': typeof AppCampaignsRoute
   '/carteira': typeof AppCarteiraRoute
@@ -575,6 +582,7 @@ export interface FileRoutesByTo {
   '/assets': typeof AppAssetsRoute
   '/audit': typeof AppAuditRoute
   '/banking': typeof AppBankingRoute
+  '/benchmark': typeof AppBenchmarkRoute
   '/calendar': typeof AppCalendarRoute
   '/campaigns': typeof AppCampaignsRoute
   '/carteira': typeof AppCarteiraRoute
@@ -657,6 +665,7 @@ export interface FileRoutesById {
   '/_app/assets': typeof AppAssetsRoute
   '/_app/audit': typeof AppAuditRoute
   '/_app/banking': typeof AppBankingRoute
+  '/_app/benchmark': typeof AppBenchmarkRoute
   '/_app/calendar': typeof AppCalendarRoute
   '/_app/campaigns': typeof AppCampaignsRoute
   '/_app/carteira': typeof AppCarteiraRoute
@@ -739,6 +748,7 @@ export interface FileRouteTypes {
     | '/assets'
     | '/audit'
     | '/banking'
+    | '/benchmark'
     | '/calendar'
     | '/campaigns'
     | '/carteira'
@@ -819,6 +829,7 @@ export interface FileRouteTypes {
     | '/assets'
     | '/audit'
     | '/banking'
+    | '/benchmark'
     | '/calendar'
     | '/campaigns'
     | '/carteira'
@@ -900,6 +911,7 @@ export interface FileRouteTypes {
     | '/_app/assets'
     | '/_app/audit'
     | '/_app/banking'
+    | '/_app/benchmark'
     | '/_app/calendar'
     | '/_app/campaigns'
     | '/_app/carteira'
@@ -1383,6 +1395,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCalendarRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/benchmark': {
+      id: '/_app/benchmark'
+      path: '/benchmark'
+      fullPath: '/benchmark'
+      preLoaderRoute: typeof AppBenchmarkRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/banking': {
       id: '/_app/banking'
       path: '/banking'
@@ -1617,6 +1636,7 @@ interface AppRouteChildren {
   AppAssetsRoute: typeof AppAssetsRoute
   AppAuditRoute: typeof AppAuditRoute
   AppBankingRoute: typeof AppBankingRoute
+  AppBenchmarkRoute: typeof AppBenchmarkRoute
   AppCalendarRoute: typeof AppCalendarRoute
   AppCampaignsRoute: typeof AppCampaignsRoute
   AppCarteiraRoute: typeof AppCarteiraRoute
@@ -1686,6 +1706,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAssetsRoute: AppAssetsRoute,
   AppAuditRoute: AppAuditRoute,
   AppBankingRoute: AppBankingRoute,
+  AppBenchmarkRoute: AppBenchmarkRoute,
   AppCalendarRoute: AppCalendarRoute,
   AppCampaignsRoute: AppCampaignsRoute,
   AppCarteiraRoute: AppCarteiraRoute,
