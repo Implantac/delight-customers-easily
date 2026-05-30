@@ -14,13 +14,21 @@ import appCss from "../styles.css?url";
 
 function NotFoundComponent() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold">Página não encontrada</h2>
-        <p className="mt-2 text-sm text-muted-foreground">A página que você procura não existe.</p>
-        <Link to="/" className="mt-6 inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
-          Ir para início
+    <div className="relative flex min-h-screen items-center justify-center bg-background px-4">
+      <div className="pointer-events-none absolute inset-0 bg-[var(--gradient-mesh)]" />
+      <div className="relative max-w-md text-center animate-in-page">
+        <div className="mx-auto mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-[var(--gradient-primary)] text-primary-foreground shadow-[var(--shadow-glow)]">
+          <span className="text-2xl font-bold">404</span>
+        </div>
+        <h1 className="text-2xl font-semibold tracking-tight">Página não encontrada</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          A página que você procura não existe ou foi movida.
+        </p>
+        <Link
+          to="/"
+          className="mt-8 inline-flex items-center justify-center rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground shadow-[var(--shadow-sm)] transition-all hover:bg-primary/90 hover:shadow-[var(--shadow-md)]"
+        >
+          Voltar para o início
         </Link>
       </div>
     </div>
@@ -30,11 +38,18 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold">Algo deu errado</h1>
-        <p className="mt-2 text-sm text-muted-foreground">{error.message}</p>
-        <button onClick={reset} className="mt-6 inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
+    <div className="relative flex min-h-screen items-center justify-center bg-background px-4">
+      <div className="pointer-events-none absolute inset-0 bg-[var(--gradient-mesh)] opacity-50" />
+      <div className="relative max-w-md text-center animate-in-page">
+        <div className="mx-auto mb-6 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-destructive/10 text-destructive">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <h1 className="text-xl font-semibold tracking-tight">Algo deu errado</h1>
+        <p className="mt-2 text-sm text-muted-foreground break-words">{error.message}</p>
+        <button
+          onClick={reset}
+          className="mt-8 inline-flex items-center justify-center rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground shadow-[var(--shadow-sm)] transition-all hover:bg-primary/90 hover:shadow-[var(--shadow-md)]"
+        >
           Tentar novamente
         </button>
       </div>

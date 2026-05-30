@@ -22,7 +22,12 @@ function AppLayout() {
   }, [user, loading, navigate]);
 
   if (loading || !user) {
-    return <div className="flex min-h-screen items-center justify-center text-muted-foreground">Carregando…</div>;
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center gap-3 bg-background text-muted-foreground">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-muted border-t-primary" />
+        <p className="text-sm">Carregando…</p>
+      </div>
+    );
   }
 
   return (
@@ -30,16 +35,19 @@ function AppLayout() {
       <div className="flex min-h-screen w-full bg-background">
         <AppSidebar />
         <div className="flex flex-1 flex-col min-w-0">
-          <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b bg-background/80 px-4 backdrop-blur">
-            <SidebarTrigger />
-            <div className="flex-1">
+          <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-b border-border/60 bg-background/75 px-3 backdrop-blur-md supports-[backdrop-filter]:bg-background/60 md:gap-3 md:px-4">
+            <SidebarTrigger className="shrink-0" />
+            <div className="h-5 w-px bg-border/80 hidden md:block" />
+            <div className="flex-1 min-w-0">
               <CommandPaletteTrigger />
             </div>
             <NotificationsBell />
             <ThemeToggle />
           </header>
-          <main className="flex-1 overflow-auto pb-16 md:pb-0">
-            <Outlet />
+          <main className="flex-1 overflow-auto pb-20 md:pb-0">
+            <div className="animate-in-page">
+              <Outlet />
+            </div>
           </main>
           <MobileBottomNav />
           <ShortcutsHelp />
