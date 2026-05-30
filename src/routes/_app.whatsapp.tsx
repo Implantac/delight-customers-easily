@@ -201,8 +201,8 @@ function WhatsAppPage() {
     <div className="flex flex-col h-[calc(100vh-3.5rem)]">
       <PageHeader
         title="WhatsApp"
-        description="Inbox unificada multi-atendimento, com SLA, atribuição e templates."
-        actions={
+        subtitle="Inbox unificada multi-atendimento, com SLA, atribuição e templates."
+        action={
           <NewConversationDialog
             open={openNew}
             setOpen={setOpenNew}
