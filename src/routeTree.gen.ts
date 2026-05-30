@@ -35,6 +35,7 @@ import { Route as AppOpportunityMapRouteImport } from './routes/_app.opportunity
 import { Route as AppNotificationsRouteImport } from './routes/_app.notifications'
 import { Route as AppMytasksRouteImport } from './routes/_app.mytasks'
 import { Route as AppLeadScoringRouteImport } from './routes/_app.lead-scoring'
+import { Route as AppLeadFormsRouteImport } from './routes/_app.lead-forms'
 import { Route as AppKbRouteImport } from './routes/_app.kb'
 import { Route as AppInvoicesRouteImport } from './routes/_app.invoices'
 import { Route as AppGoalsRouteImport } from './routes/_app.goals'
@@ -200,6 +201,11 @@ const AppMytasksRoute = AppMytasksRouteImport.update({
 const AppLeadScoringRoute = AppLeadScoringRouteImport.update({
   id: '/lead-scoring',
   path: '/lead-scoring',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLeadFormsRoute = AppLeadFormsRouteImport.update({
+  id: '/lead-forms',
+  path: '/lead-forms',
   getParentRoute: () => AppRoute,
 } as any)
 const AppKbRoute = AppKbRouteImport.update({
@@ -414,6 +420,7 @@ export interface FileRoutesByFullPath {
   '/goals': typeof AppGoalsRoute
   '/invoices': typeof AppInvoicesRoute
   '/kb': typeof AppKbRouteWithChildren
+  '/lead-forms': typeof AppLeadFormsRoute
   '/lead-scoring': typeof AppLeadScoringRoute
   '/mytasks': typeof AppMytasksRoute
   '/notifications': typeof AppNotificationsRoute
@@ -478,6 +485,7 @@ export interface FileRoutesByTo {
   '/goals': typeof AppGoalsRoute
   '/invoices': typeof AppInvoicesRoute
   '/kb': typeof AppKbRouteWithChildren
+  '/lead-forms': typeof AppLeadFormsRoute
   '/lead-scoring': typeof AppLeadScoringRoute
   '/mytasks': typeof AppMytasksRoute
   '/notifications': typeof AppNotificationsRoute
@@ -544,6 +552,7 @@ export interface FileRoutesById {
   '/_app/goals': typeof AppGoalsRoute
   '/_app/invoices': typeof AppInvoicesRoute
   '/_app/kb': typeof AppKbRouteWithChildren
+  '/_app/lead-forms': typeof AppLeadFormsRoute
   '/_app/lead-scoring': typeof AppLeadScoringRoute
   '/_app/mytasks': typeof AppMytasksRoute
   '/_app/notifications': typeof AppNotificationsRoute
@@ -610,6 +619,7 @@ export interface FileRouteTypes {
     | '/goals'
     | '/invoices'
     | '/kb'
+    | '/lead-forms'
     | '/lead-scoring'
     | '/mytasks'
     | '/notifications'
@@ -674,6 +684,7 @@ export interface FileRouteTypes {
     | '/goals'
     | '/invoices'
     | '/kb'
+    | '/lead-forms'
     | '/lead-scoring'
     | '/mytasks'
     | '/notifications'
@@ -739,6 +750,7 @@ export interface FileRouteTypes {
     | '/_app/goals'
     | '/_app/invoices'
     | '/_app/kb'
+    | '/_app/lead-forms'
     | '/_app/lead-scoring'
     | '/_app/mytasks'
     | '/_app/notifications'
@@ -972,6 +984,13 @@ declare module '@tanstack/react-router' {
       path: '/lead-scoring'
       fullPath: '/lead-scoring'
       preLoaderRoute: typeof AppLeadScoringRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/lead-forms': {
+      id: '/_app/lead-forms'
+      path: '/lead-forms'
+      fullPath: '/lead-forms'
+      preLoaderRoute: typeof AppLeadFormsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/kb': {
@@ -1328,6 +1347,7 @@ interface AppRouteChildren {
   AppGoalsRoute: typeof AppGoalsRoute
   AppInvoicesRoute: typeof AppInvoicesRoute
   AppKbRoute: typeof AppKbRouteWithChildren
+  AppLeadFormsRoute: typeof AppLeadFormsRoute
   AppLeadScoringRoute: typeof AppLeadScoringRoute
   AppMytasksRoute: typeof AppMytasksRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
@@ -1381,6 +1401,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppGoalsRoute: AppGoalsRoute,
   AppInvoicesRoute: AppInvoicesRoute,
   AppKbRoute: AppKbRouteWithChildren,
+  AppLeadFormsRoute: AppLeadFormsRoute,
   AppLeadScoringRoute: AppLeadScoringRoute,
   AppMytasksRoute: AppMytasksRoute,
   AppNotificationsRoute: AppNotificationsRoute,
