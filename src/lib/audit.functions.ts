@@ -18,7 +18,7 @@ export type AuditEntry = {
   action: string;
   entity_type: string;
   entity_id: string;
-  changes: Record<string, unknown> | null;
+  changes: any;
 };
 
 export const getAuditLog = createServerFn({ method: "POST" })
