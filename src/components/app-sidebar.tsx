@@ -201,3 +201,18 @@ export function AppSidebar() {
     </Sidebar>
   );
 }
+
+type NavItemProps = { to: string; label: string; Icon: LucideIcon; active: boolean };
+const NavItem = memo(function NavItem({ to, label, Icon, active }: NavItemProps) {
+  return (
+    <SidebarMenuItem>
+      <SidebarMenuButton asChild isActive={active} tooltip={label}>
+        <Link to={to as any} preload="intent">
+          <Icon className="h-4 w-4" />
+          <span>{label}</span>
+        </Link>
+      </SidebarMenuButton>
+    </SidebarMenuItem>
+  );
+});
+
