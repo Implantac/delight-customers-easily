@@ -1,41 +1,20 @@
 import { createServerFn } from "@tanstack/react-start";
-import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-export type Survey = {
-  id: string;
-  organization_id: string;
-  name: string;
-  description: string | null;
-  type: "nps" | "csat" | "ces" | "custom";
-  question: string;
-  scale_min: number;
-  scale_max: number;
-  active: boolean;
-  created_by: string;
-  created_at: string;
-  updated_at: string;
-};
-
-export type SurveyResponse = {
-  id: string;
-  organization_id: string;
-  survey_id: string;
-  contact_id: string | null;
-  company_id: string | null;
-  deal_id: string | null;
-  score: number;
-  comment: string | null;
-  respondent_email: string | null;
-  respondent_name: string | null;
-  source: string | null;
-  responded_at: string;
-  created_at: string;
-};
+function npsMetrics(rows: any[]) {
+  const total = rows.length;
+  if (!total) return { total: 0, promoters: 0, passives: 0, detractors: 0, nps: 0, avg: 0 };
+  const promoters = rows.filter((r) => r.score >= 9).length;
+  const passives = rows.filter((r) => r.score >= 7 && r.score <= 8).length;
+  const detractors = rows.filter((r) => r.score <= 6).length;
+  const avg = rows.reduce((s, r) => s + Number(r.score || 0), 0) / total;
+  const nps = Math.round(((promoters - detractors) / total) * 100);
+  return { total, promoters, passives, detractors, nps, avg: Math.round(avg * 10) / 10 };
+}
 
 export const listSurveys = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((i) => z.object({ organization_id: z.string().uuid() }).parse(i))
+  .inputValidator((d: { organization_id: string }) => d)
   .handler(async ({ data, context }) => {
     const { supabase } = context;
     const { data: surveys, error } = await supabase
@@ -44,75 +23,56 @@ export const listSurveys = createServerFn({ method: "POST" })
       .eq("organization_id", data.organization_id)
       .order("created_at", { ascending: false });
     if (error) throw new Error(error.message);
-
-    const { data: responses, error: rErr } = await supabase
+    const { data: responses } = await supabase
       .from("survey_responses")
       .select("*")
       .eq("organization_id", data.organization_id)
       .order("responded_at", { ascending: false })
       .limit(1000);
-    if (rErr) throw new Error(rErr.message);
-
-    // Build per-survey stats
-    const stats: Record<string, { count: number; avg: number; nps: number | null; promoters: number; passives: number; detractors: number }> = {};
-    for (const s of (surveys ?? []) as Survey[]) {
-      const rs = (responses ?? []).filter((r) => r.survey_id === s.id);
-      const count = rs.length;
-      const sum = rs.reduce((a, r) => a + Number(r.score || 0), 0);
-      const avg = count ? sum / count : 0;
-      let promoters = 0, passives = 0, detractors = 0;
-      if (s.type === "nps") {
-        for (const r of rs) {
-          const v = Number(r.score);
-          if (v >= 9) promoters++;
-          else if (v >= 7) passives++;
-          else detractors++;
-        }
-      }
-      const nps = s.type === "nps" && count ? Math.round(((promoters - detractors) / count) * 100) : null;
-      stats[s.id] = { count, avg, nps, promoters, passives, detractors };
+    const rList = responses ?? [];
+    const overall = npsMetrics(rList);
+    const bySurvey: Record<string, any> = {};
+    for (const s of surveys ?? []) {
+      bySurvey[s.id] = npsMetrics(rList.filter((r: any) => r.survey_id === s.id));
     }
-
-    return {
-      surveys: (surveys ?? []) as Survey[],
-      responses: (responses ?? []) as SurveyResponse[],
-      stats,
-    };
+    return { surveys: surveys ?? [], responses: rList, overall, bySurvey };
   });
 
 export const upsertSurvey = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((i) =>
-    z
-      .object({
-        id: z.string().uuid().optional(),
-        organization_id: z.string().uuid(),
-        name: z.string().min(1).max(200),
-        description: z.string().max(2000).nullable().optional(),
-        type: z.enum(["nps", "csat", "ces", "custom"]),
-        question: z.string().min(1).max(500),
-        scale_min: z.number().int().min(0).max(10),
-        scale_max: z.number().int().min(1).max(10),
-        active: z.boolean(),
-      })
-      .parse(i),
-  )
+  .inputValidator((d: {
+    id?: string;
+    organization_id: string;
+    name: string;
+    description?: string | null;
+    type?: string;
+    question?: string;
+    active?: boolean;
+  }) => d)
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-    const payload: any = { ...data };
-    if (!payload.id) payload.created_by = userId;
-    const { data: row, error } = await supabase
-      .from("surveys")
-      .upsert(payload, { onConflict: "id" })
-      .select()
-      .single();
+    const payload: any = {
+      organization_id: data.organization_id,
+      name: data.name,
+      description: data.description ?? null,
+      type: data.type ?? "nps",
+      question: data.question ?? "O quanto você recomendaria nossa empresa?",
+      active: data.active ?? true,
+    };
+    if (data.id) {
+      const { data: row, error } = await supabase.from("surveys").update(payload).eq("id", data.id).select().single();
+      if (error) throw new Error(error.message);
+      return { survey: row };
+    }
+    payload.created_by = userId;
+    const { data: row, error } = await supabase.from("surveys").insert(payload).select().single();
     if (error) throw new Error(error.message);
-    return row;
+    return { survey: row };
   });
 
 export const deleteSurvey = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((i) => z.object({ id: z.string().uuid() }).parse(i))
+  .inputValidator((d: { id: string }) => d)
   .handler(async ({ data, context }) => {
     const { error } = await context.supabase.from("surveys").delete().eq("id", data.id);
     if (error) throw new Error(error.message);
@@ -121,35 +81,43 @@ export const deleteSurvey = createServerFn({ method: "POST" })
 
 export const recordResponse = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((i) =>
-    z
-      .object({
-        organization_id: z.string().uuid(),
-        survey_id: z.string().uuid(),
-        score: z.number().int().min(0).max(10),
-        comment: z.string().max(2000).nullable().optional(),
-        respondent_email: z.string().email().max(255).nullable().optional(),
-        respondent_name: z.string().max(200).nullable().optional(),
-        contact_id: z.string().uuid().nullable().optional(),
-        company_id: z.string().uuid().nullable().optional(),
-        deal_id: z.string().uuid().nullable().optional(),
-        source: z.string().max(100).nullable().optional(),
-      })
-      .parse(i),
-  )
+  .inputValidator((d: {
+    organization_id: string;
+    survey_id: string;
+    score: number;
+    comment?: string | null;
+    respondent_name?: string | null;
+    respondent_email?: string | null;
+    source?: string | null;
+    contact_id?: string | null;
+    company_id?: string | null;
+    deal_id?: string | null;
+  }) => d)
   .handler(async ({ data, context }) => {
+    if (data.score < 0 || data.score > 10) throw new Error("Score deve estar entre 0 e 10");
     const { data: row, error } = await context.supabase
       .from("survey_responses")
-      .insert(data)
+      .insert({
+        organization_id: data.organization_id,
+        survey_id: data.survey_id,
+        score: data.score,
+        comment: data.comment ?? null,
+        respondent_name: data.respondent_name ?? null,
+        respondent_email: data.respondent_email ?? null,
+        source: data.source ?? "manual",
+        contact_id: data.contact_id ?? null,
+        company_id: data.company_id ?? null,
+        deal_id: data.deal_id ?? null,
+      })
       .select()
       .single();
     if (error) throw new Error(error.message);
-    return row;
+    return { response: row };
   });
 
 export const deleteResponse = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((i) => z.object({ id: z.string().uuid() }).parse(i))
+  .inputValidator((d: { id: string }) => d)
   .handler(async ({ data, context }) => {
     const { error } = await context.supabase.from("survey_responses").delete().eq("id", data.id);
     if (error) throw new Error(error.message);
