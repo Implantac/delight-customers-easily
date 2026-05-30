@@ -36,6 +36,7 @@ function AlertsPage() {
   const generateFn = useServerFn(generateAlertNotifications);
   const [sevFilter, setSevFilter] = useState<"all" | "high" | "medium" | "low">("all");
   const [kindFilter, setKindFilter] = useState<string>("all");
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({});
 
   const { data, isLoading, refetch, isFetching } = useQuery({
     queryKey: ["alerts", orgId],
