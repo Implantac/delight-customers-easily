@@ -1370,6 +1370,60 @@ export type Database = {
         }
         Relationships: []
       }
+      subscriptions: {
+        Row: {
+          billing_cycle: string
+          company_id: string | null
+          contact_id: string | null
+          created_at: string
+          created_by: string
+          currency: string
+          id: string
+          mrr: number
+          notes: string | null
+          organization_id: string
+          plan_name: string
+          renewal_date: string
+          start_date: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          billing_cycle?: string
+          company_id?: string | null
+          contact_id?: string | null
+          created_at?: string
+          created_by: string
+          currency?: string
+          id?: string
+          mrr?: number
+          notes?: string | null
+          organization_id: string
+          plan_name: string
+          renewal_date: string
+          start_date?: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          billing_cycle?: string
+          company_id?: string | null
+          contact_id?: string | null
+          created_at?: string
+          created_by?: string
+          currency?: string
+          id?: string
+          mrr?: number
+          notes?: string | null
+          organization_id?: string
+          plan_name?: string
+          renewal_date?: string
+          start_date?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       taggings: {
         Row: {
           created_at: string
