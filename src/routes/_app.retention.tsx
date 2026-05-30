@@ -45,6 +45,9 @@ function RetentionPage() {
         subtitle="Quem corre risco de churn e onde estão as oportunidades de crescer dentro da base."
       />
 
+      <NextActionBlock surface="retention" title="Reter e expandir agora" showRegenerate />
+
+
       <div className="grid gap-3 md:grid-cols-4">
         <Kpi icon={Heart} label="Saudáveis" value={summary.saudaveis} tone="emerald" />
         <Kpi icon={AlertTriangle} label="Atenção" value={summary.atencao} tone="amber" />
