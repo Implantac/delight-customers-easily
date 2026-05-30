@@ -80,6 +80,7 @@ import { Route as ApiPublicLeadFormRouteImport } from './routes/api/public/lead-
 import { Route as ApiPublicInboundEmailRouteImport } from './routes/api/public/inbound-email'
 import { Route as AppTicketsIdRouteImport } from './routes/_app.tickets.$id'
 import { Route as AppSettingsWebhooksRouteImport } from './routes/_app.settings.webhooks'
+import { Route as AppSettingsSecurityRouteImport } from './routes/_app.settings.security'
 import { Route as AppSettingsOrganizationRouteImport } from './routes/_app.settings.organization'
 import { Route as AppSettingsImportRouteImport } from './routes/_app.settings.import'
 import { Route as AppSettingsFieldsRouteImport } from './routes/_app.settings.fields'
@@ -447,6 +448,11 @@ const AppSettingsWebhooksRoute = AppSettingsWebhooksRouteImport.update({
   path: '/settings/webhooks',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSettingsSecurityRoute = AppSettingsSecurityRouteImport.update({
+  id: '/settings/security',
+  path: '/settings/security',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppSettingsOrganizationRoute = AppSettingsOrganizationRouteImport.update({
   id: '/settings/organization',
   path: '/settings/organization',
@@ -587,6 +593,7 @@ export interface FileRoutesByFullPath {
   '/settings/fields': typeof AppSettingsFieldsRoute
   '/settings/import': typeof AppSettingsImportRoute
   '/settings/organization': typeof AppSettingsOrganizationRoute
+  '/settings/security': typeof AppSettingsSecurityRoute
   '/settings/webhooks': typeof AppSettingsWebhooksRoute
   '/tickets/$id': typeof AppTicketsIdRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
@@ -671,6 +678,7 @@ export interface FileRoutesByTo {
   '/settings/fields': typeof AppSettingsFieldsRoute
   '/settings/import': typeof AppSettingsImportRoute
   '/settings/organization': typeof AppSettingsOrganizationRoute
+  '/settings/security': typeof AppSettingsSecurityRoute
   '/settings/webhooks': typeof AppSettingsWebhooksRoute
   '/tickets/$id': typeof AppTicketsIdRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
@@ -757,6 +765,7 @@ export interface FileRoutesById {
   '/_app/settings/fields': typeof AppSettingsFieldsRoute
   '/_app/settings/import': typeof AppSettingsImportRoute
   '/_app/settings/organization': typeof AppSettingsOrganizationRoute
+  '/_app/settings/security': typeof AppSettingsSecurityRoute
   '/_app/settings/webhooks': typeof AppSettingsWebhooksRoute
   '/_app/tickets/$id': typeof AppTicketsIdRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
@@ -843,6 +852,7 @@ export interface FileRouteTypes {
     | '/settings/fields'
     | '/settings/import'
     | '/settings/organization'
+    | '/settings/security'
     | '/settings/webhooks'
     | '/tickets/$id'
     | '/api/public/inbound-email'
@@ -927,6 +937,7 @@ export interface FileRouteTypes {
     | '/settings/fields'
     | '/settings/import'
     | '/settings/organization'
+    | '/settings/security'
     | '/settings/webhooks'
     | '/tickets/$id'
     | '/api/public/inbound-email'
@@ -1012,6 +1023,7 @@ export interface FileRouteTypes {
     | '/_app/settings/fields'
     | '/_app/settings/import'
     | '/_app/settings/organization'
+    | '/_app/settings/security'
     | '/_app/settings/webhooks'
     | '/_app/tickets/$id'
     | '/api/public/inbound-email'
@@ -1529,6 +1541,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsWebhooksRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/settings/security': {
+      id: '/_app/settings/security'
+      path: '/settings/security'
+      fullPath: '/settings/security'
+      preLoaderRoute: typeof AppSettingsSecurityRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/settings/organization': {
       id: '/_app/settings/organization'
       path: '/settings/organization'
@@ -1756,6 +1775,7 @@ interface AppRouteChildren {
   AppSettingsFieldsRoute: typeof AppSettingsFieldsRoute
   AppSettingsImportRoute: typeof AppSettingsImportRoute
   AppSettingsOrganizationRoute: typeof AppSettingsOrganizationRoute
+  AppSettingsSecurityRoute: typeof AppSettingsSecurityRoute
   AppSettingsWebhooksRoute: typeof AppSettingsWebhooksRoute
 }
 
@@ -1829,6 +1849,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSettingsFieldsRoute: AppSettingsFieldsRoute,
   AppSettingsImportRoute: AppSettingsImportRoute,
   AppSettingsOrganizationRoute: AppSettingsOrganizationRoute,
+  AppSettingsSecurityRoute: AppSettingsSecurityRoute,
   AppSettingsWebhooksRoute: AppSettingsWebhooksRoute,
 }
 
