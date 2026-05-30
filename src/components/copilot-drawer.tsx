@@ -34,7 +34,7 @@ export function CopilotDrawer() {
       if (!orgId) throw new Error("Selecione uma organização.");
       return ask({ data: { organization_id: orgId, question } });
     },
-    onSuccess: (r) => setTurns((t) => [...t, { role: "assistant", content: r.answer }]),
+    onSuccess: (r) => setTurns((t) => [...t, { role: "assistant", content: r.answer, actions: r.actions }]),
     onError: (e: Error) => {
       toast.error(e.message);
       setTurns((t) => [...t, { role: "assistant", content: `_Erro: ${e.message}_` }]);
