@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Users, Building2, KanbanSquare, CheckSquare, Briefcase, Check, ChevronsUpDown, LogOut, Settings, Upload, BarChart3, Sliders, Webhook, Zap, Sparkles, AlertTriangle, Target, HeartPulse, DollarSign, Map, Package, MessageSquare, ShieldCheck, Trophy, Coins, Flame, Activity, Compass, PieChart, FileText, FileSignature, Grid3x3, History, Medal, Tag, Bookmark, Bell, Calendar as CalendarIcon } from "lucide-react";
+import { LayoutDashboard, Users, Building2, KanbanSquare, CheckSquare, Briefcase, Check, ChevronsUpDown, LogOut, Settings, Upload, BarChart3, Sliders, Webhook, Zap, Sparkles, AlertTriangle, Target, HeartPulse, DollarSign, Map, Package, MessageSquare, ShieldCheck, Trophy, Coins, Flame, Activity, Compass, PieChart, FileText, FileSignature, Grid3x3, History, Medal, Tag, Bookmark, Bell, Calendar as CalendarIcon, BookOpen } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useCurrentOrg, switchOrganization } from "@/lib/org";
 import { useCanManage } from "@/lib/permissions";
@@ -38,6 +38,7 @@ const nav = [
   { to: "/proposals", label: "Propostas", icon: FileSignature, shortcut: "", managerOnly: false },
   { to: "/chat", label: "Chat", icon: MessageSquare, shortcut: "", managerOnly: false },
   { to: "/templates", label: "Templates", icon: FileText, shortcut: "", managerOnly: false },
+  { to: "/kb", label: "Base de Conhecimento", icon: BookOpen, shortcut: "", managerOnly: false },
   { to: "/tags", label: "Tags", icon: Tag, shortcut: "", managerOnly: false },
   { to: "/views", label: "Visualizações", icon: Bookmark, shortcut: "", managerOnly: false },
   { to: "/notifications", label: "Notificações", icon: Bell, shortcut: "", managerOnly: false },

@@ -26,6 +26,7 @@ import { Route as AppPipelineRouteImport } from './routes/_app.pipeline'
 import { Route as AppOpportunityMapRouteImport } from './routes/_app.opportunity-map'
 import { Route as AppNotificationsRouteImport } from './routes/_app.notifications'
 import { Route as AppLeadScoringRouteImport } from './routes/_app.lead-scoring'
+import { Route as AppKbRouteImport } from './routes/_app.kb'
 import { Route as AppGoalsRouteImport } from './routes/_app.goals'
 import { Route as AppForecastRouteImport } from './routes/_app.forecast'
 import { Route as AppFinanceRouteImport } from './routes/_app.finance'
@@ -49,6 +50,7 @@ import { Route as AppSettingsImportRouteImport } from './routes/_app.settings.im
 import { Route as AppSettingsFieldsRouteImport } from './routes/_app.settings.fields'
 import { Route as AppSettingsAutomationsRouteImport } from './routes/_app.settings.automations'
 import { Route as AppProposalsIdRouteImport } from './routes/_app.proposals.$id'
+import { Route as AppKbIdRouteImport } from './routes/_app.kb.$id'
 import { Route as AppInviteTokenRouteImport } from './routes/_app.invite.$token'
 import { Route as AppContactsIdRouteImport } from './routes/_app.contacts.$id'
 import { Route as AppCompaniesIdRouteImport } from './routes/_app.companies.$id'
@@ -137,6 +139,11 @@ const AppNotificationsRoute = AppNotificationsRouteImport.update({
 const AppLeadScoringRoute = AppLeadScoringRouteImport.update({
   id: '/lead-scoring',
   path: '/lead-scoring',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppKbRoute = AppKbRouteImport.update({
+  id: '/kb',
+  path: '/kb',
   getParentRoute: () => AppRoute,
 } as any)
 const AppGoalsRoute = AppGoalsRouteImport.update({
@@ -254,6 +261,11 @@ const AppProposalsIdRoute = AppProposalsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AppProposalsRoute,
 } as any)
+const AppKbIdRoute = AppKbIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppKbRoute,
+} as any)
 const AppInviteTokenRoute = AppInviteTokenRouteImport.update({
   id: '/invite/$token',
   path: '/invite/$token',
@@ -301,6 +313,7 @@ export interface FileRoutesByFullPath {
   '/finance': typeof AppFinanceRoute
   '/forecast': typeof AppForecastRoute
   '/goals': typeof AppGoalsRoute
+  '/kb': typeof AppKbRouteWithChildren
   '/lead-scoring': typeof AppLeadScoringRoute
   '/notifications': typeof AppNotificationsRoute
   '/opportunity-map': typeof AppOpportunityMapRoute
@@ -318,6 +331,7 @@ export interface FileRoutesByFullPath {
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
   '/invite/$token': typeof AppInviteTokenRoute
+  '/kb/$id': typeof AppKbIdRoute
   '/proposals/$id': typeof AppProposalsIdRoute
   '/settings/automations': typeof AppSettingsAutomationsRoute
   '/settings/fields': typeof AppSettingsFieldsRoute
@@ -347,6 +361,7 @@ export interface FileRoutesByTo {
   '/finance': typeof AppFinanceRoute
   '/forecast': typeof AppForecastRoute
   '/goals': typeof AppGoalsRoute
+  '/kb': typeof AppKbRouteWithChildren
   '/lead-scoring': typeof AppLeadScoringRoute
   '/notifications': typeof AppNotificationsRoute
   '/opportunity-map': typeof AppOpportunityMapRoute
@@ -364,6 +379,7 @@ export interface FileRoutesByTo {
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
   '/invite/$token': typeof AppInviteTokenRoute
+  '/kb/$id': typeof AppKbIdRoute
   '/proposals/$id': typeof AppProposalsIdRoute
   '/settings/automations': typeof AppSettingsAutomationsRoute
   '/settings/fields': typeof AppSettingsFieldsRoute
@@ -395,6 +411,7 @@ export interface FileRoutesById {
   '/_app/finance': typeof AppFinanceRoute
   '/_app/forecast': typeof AppForecastRoute
   '/_app/goals': typeof AppGoalsRoute
+  '/_app/kb': typeof AppKbRouteWithChildren
   '/_app/lead-scoring': typeof AppLeadScoringRoute
   '/_app/notifications': typeof AppNotificationsRoute
   '/_app/opportunity-map': typeof AppOpportunityMapRoute
@@ -412,6 +429,7 @@ export interface FileRoutesById {
   '/_app/companies/$id': typeof AppCompaniesIdRoute
   '/_app/contacts/$id': typeof AppContactsIdRoute
   '/_app/invite/$token': typeof AppInviteTokenRoute
+  '/_app/kb/$id': typeof AppKbIdRoute
   '/_app/proposals/$id': typeof AppProposalsIdRoute
   '/_app/settings/automations': typeof AppSettingsAutomationsRoute
   '/_app/settings/fields': typeof AppSettingsFieldsRoute
@@ -443,6 +461,7 @@ export interface FileRouteTypes {
     | '/finance'
     | '/forecast'
     | '/goals'
+    | '/kb'
     | '/lead-scoring'
     | '/notifications'
     | '/opportunity-map'
@@ -460,6 +479,7 @@ export interface FileRouteTypes {
     | '/companies/$id'
     | '/contacts/$id'
     | '/invite/$token'
+    | '/kb/$id'
     | '/proposals/$id'
     | '/settings/automations'
     | '/settings/fields'
@@ -489,6 +509,7 @@ export interface FileRouteTypes {
     | '/finance'
     | '/forecast'
     | '/goals'
+    | '/kb'
     | '/lead-scoring'
     | '/notifications'
     | '/opportunity-map'
@@ -506,6 +527,7 @@ export interface FileRouteTypes {
     | '/companies/$id'
     | '/contacts/$id'
     | '/invite/$token'
+    | '/kb/$id'
     | '/proposals/$id'
     | '/settings/automations'
     | '/settings/fields'
@@ -536,6 +558,7 @@ export interface FileRouteTypes {
     | '/_app/finance'
     | '/_app/forecast'
     | '/_app/goals'
+    | '/_app/kb'
     | '/_app/lead-scoring'
     | '/_app/notifications'
     | '/_app/opportunity-map'
@@ -553,6 +576,7 @@ export interface FileRouteTypes {
     | '/_app/companies/$id'
     | '/_app/contacts/$id'
     | '/_app/invite/$token'
+    | '/_app/kb/$id'
     | '/_app/proposals/$id'
     | '/_app/settings/automations'
     | '/_app/settings/fields'
@@ -692,6 +716,13 @@ declare module '@tanstack/react-router' {
       path: '/lead-scoring'
       fullPath: '/lead-scoring'
       preLoaderRoute: typeof AppLeadScoringRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/kb': {
+      id: '/_app/kb'
+      path: '/kb'
+      fullPath: '/kb'
+      preLoaderRoute: typeof AppKbRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/goals': {
@@ -855,6 +886,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppProposalsIdRouteImport
       parentRoute: typeof AppProposalsRoute
     }
+    '/_app/kb/$id': {
+      id: '/_app/kb/$id'
+      path: '/$id'
+      fullPath: '/kb/$id'
+      preLoaderRoute: typeof AppKbIdRouteImport
+      parentRoute: typeof AppKbRoute
+    }
     '/_app/invite/$token': {
       id: '/_app/invite/$token'
       path: '/invite/$token'
@@ -917,6 +955,16 @@ const AppContactsRouteWithChildren = AppContactsRoute._addFileChildren(
   AppContactsRouteChildren,
 )
 
+interface AppKbRouteChildren {
+  AppKbIdRoute: typeof AppKbIdRoute
+}
+
+const AppKbRouteChildren: AppKbRouteChildren = {
+  AppKbIdRoute: AppKbIdRoute,
+}
+
+const AppKbRouteWithChildren = AppKbRoute._addFileChildren(AppKbRouteChildren)
+
 interface AppProposalsRouteChildren {
   AppProposalsIdRoute: typeof AppProposalsIdRoute
 }
@@ -946,6 +994,7 @@ interface AppRouteChildren {
   AppFinanceRoute: typeof AppFinanceRoute
   AppForecastRoute: typeof AppForecastRoute
   AppGoalsRoute: typeof AppGoalsRoute
+  AppKbRoute: typeof AppKbRouteWithChildren
   AppLeadScoringRoute: typeof AppLeadScoringRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppOpportunityMapRoute: typeof AppOpportunityMapRoute
@@ -985,6 +1034,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppFinanceRoute: AppFinanceRoute,
   AppForecastRoute: AppForecastRoute,
   AppGoalsRoute: AppGoalsRoute,
+  AppKbRoute: AppKbRouteWithChildren,
   AppLeadScoringRoute: AppLeadScoringRoute,
   AppNotificationsRoute: AppNotificationsRoute,
   AppOpportunityMapRoute: AppOpportunityMapRoute,
