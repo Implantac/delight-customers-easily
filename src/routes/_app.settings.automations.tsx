@@ -219,6 +219,39 @@ function AutomationsPage() {
         }
       />
 
+      <Card className="p-4">
+        <div className="flex items-center gap-2 mb-3">
+          <Sparkles className="h-4 w-4 text-primary" />
+          <h3 className="text-sm font-semibold">Templates prontos</h3>
+          <span className="text-xs text-muted-foreground">
+            Clique em um para ativar imediatamente — depois edite ou desligue se quiser.
+          </span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          {TEMPLATES.map((t) => {
+            const Icon = t.icon;
+            return (
+              <button
+                key={t.id}
+                type="button"
+                disabled={applyTemplate.isPending}
+                onClick={() => applyTemplate.mutate(t)}
+                className="text-left rounded-md border bg-card hover:bg-accent/40 transition p-3 disabled:opacity-50"
+              >
+                <div className="flex items-center gap-2 mb-1">
+                  <Icon className="h-4 w-4 text-primary shrink-0" />
+                  <span className="font-medium text-sm truncate">{t.name}</span>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">{t.description}</p>
+                <div className="mt-2 flex items-center gap-1 text-[11px] text-primary">
+                  <Plus className="h-3 w-3" /> Aplicar
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </Card>
+
       {isLoading ? (
         <Card className="p-8 text-sm text-muted-foreground">Carregando…</Card>
       ) : rules.length === 0 ? (
