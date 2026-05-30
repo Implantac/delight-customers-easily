@@ -13,6 +13,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppWinLossRouteImport } from './routes/_app.win-loss'
+import { Route as AppSegmentsRouteImport } from './routes/_app.segments'
 import { Route as AppRetentionRouteImport } from './routes/_app.retention'
 import { Route as AppReportsRouteImport } from './routes/_app.reports'
 import { Route as AppProductsRouteImport } from './routes/_app.products'
@@ -61,6 +62,11 @@ const IndexRoute = IndexRouteImport.update({
 const AppWinLossRoute = AppWinLossRouteImport.update({
   id: '/win-loss',
   path: '/win-loss',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSegmentsRoute = AppSegmentsRouteImport.update({
+  id: '/segments',
+  path: '/segments',
   getParentRoute: () => AppRoute,
 } as any)
 const AppRetentionRoute = AppRetentionRouteImport.update({
@@ -238,6 +244,7 @@ export interface FileRoutesByFullPath {
   '/products': typeof AppProductsRoute
   '/reports': typeof AppReportsRoute
   '/retention': typeof AppRetentionRoute
+  '/segments': typeof AppSegmentsRoute
   '/win-loss': typeof AppWinLossRoute
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
@@ -273,6 +280,7 @@ export interface FileRoutesByTo {
   '/products': typeof AppProductsRoute
   '/reports': typeof AppReportsRoute
   '/retention': typeof AppRetentionRoute
+  '/segments': typeof AppSegmentsRoute
   '/win-loss': typeof AppWinLossRoute
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
@@ -310,6 +318,7 @@ export interface FileRoutesById {
   '/_app/products': typeof AppProductsRoute
   '/_app/reports': typeof AppReportsRoute
   '/_app/retention': typeof AppRetentionRoute
+  '/_app/segments': typeof AppSegmentsRoute
   '/_app/win-loss': typeof AppWinLossRoute
   '/_app/companies/$id': typeof AppCompaniesIdRoute
   '/_app/contacts/$id': typeof AppContactsIdRoute
@@ -347,6 +356,7 @@ export interface FileRouteTypes {
     | '/products'
     | '/reports'
     | '/retention'
+    | '/segments'
     | '/win-loss'
     | '/companies/$id'
     | '/contacts/$id'
@@ -382,6 +392,7 @@ export interface FileRouteTypes {
     | '/products'
     | '/reports'
     | '/retention'
+    | '/segments'
     | '/win-loss'
     | '/companies/$id'
     | '/contacts/$id'
@@ -418,6 +429,7 @@ export interface FileRouteTypes {
     | '/_app/products'
     | '/_app/reports'
     | '/_app/retention'
+    | '/_app/segments'
     | '/_app/win-loss'
     | '/_app/companies/$id'
     | '/_app/contacts/$id'
@@ -469,6 +481,13 @@ declare module '@tanstack/react-router' {
       path: '/win-loss'
       fullPath: '/win-loss'
       preLoaderRoute: typeof AppWinLossRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/segments': {
+      id: '/_app/segments'
+      path: '/segments'
+      fullPath: '/segments'
+      preLoaderRoute: typeof AppSegmentsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/retention': {
@@ -728,6 +747,7 @@ interface AppRouteChildren {
   AppProductsRoute: typeof AppProductsRoute
   AppReportsRoute: typeof AppReportsRoute
   AppRetentionRoute: typeof AppRetentionRoute
+  AppSegmentsRoute: typeof AppSegmentsRoute
   AppWinLossRoute: typeof AppWinLossRoute
   AppInviteTokenRoute: typeof AppInviteTokenRoute
   AppSettingsAutomationsRoute: typeof AppSettingsAutomationsRoute
@@ -757,6 +777,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppProductsRoute: AppProductsRoute,
   AppReportsRoute: AppReportsRoute,
   AppRetentionRoute: AppRetentionRoute,
+  AppSegmentsRoute: AppSegmentsRoute,
   AppWinLossRoute: AppWinLossRoute,
   AppInviteTokenRoute: AppInviteTokenRoute,
   AppSettingsAutomationsRoute: AppSettingsAutomationsRoute,
@@ -779,3 +800,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
