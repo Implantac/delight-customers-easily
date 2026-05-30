@@ -90,6 +90,7 @@ import { Route as AppSettingsFieldsRouteImport } from './routes/_app.settings.fi
 import { Route as AppSettingsErpAgentRouteImport } from './routes/_app.settings.erp-agent'
 import { Route as AppSettingsAutomationsRouteImport } from './routes/_app.settings.automations'
 import { Route as AppSequencesIdRouteImport } from './routes/_app.sequences.$id'
+import { Route as AppReportsWeeklyRouteImport } from './routes/_app.reports.weekly'
 import { Route as AppProposalsIdRouteImport } from './routes/_app.proposals.$id'
 import { Route as AppKbIdRouteImport } from './routes/_app.kb.$id'
 import { Route as AppInviteTokenRouteImport } from './routes/_app.invite.$token'
@@ -506,6 +507,11 @@ const AppSequencesIdRoute = AppSequencesIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AppSequencesRoute,
 } as any)
+const AppReportsWeeklyRoute = AppReportsWeeklyRouteImport.update({
+  id: '/weekly',
+  path: '/weekly',
+  getParentRoute: () => AppReportsRoute,
+} as any)
 const AppProposalsIdRoute = AppProposalsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -611,7 +617,7 @@ export interface FileRoutesByFullPath {
   '/proposals': typeof AppProposalsRouteWithChildren
   '/quotes': typeof AppQuotesRoute
   '/referrals': typeof AppReferralsRoute
-  '/reports': typeof AppReportsRoute
+  '/reports': typeof AppReportsRouteWithChildren
   '/retention': typeof AppRetentionRoute
   '/routing': typeof AppRoutingRoute
   '/sales-orders': typeof AppSalesOrdersRoute
@@ -635,6 +641,7 @@ export interface FileRoutesByFullPath {
   '/invite/$token': typeof AppInviteTokenRoute
   '/kb/$id': typeof AppKbIdRoute
   '/proposals/$id': typeof AppProposalsIdRoute
+  '/reports/weekly': typeof AppReportsWeeklyRoute
   '/sequences/$id': typeof AppSequencesIdRoute
   '/settings/automations': typeof AppSettingsAutomationsRoute
   '/settings/erp-agent': typeof AppSettingsErpAgentRoute
@@ -703,7 +710,7 @@ export interface FileRoutesByTo {
   '/proposals': typeof AppProposalsRouteWithChildren
   '/quotes': typeof AppQuotesRoute
   '/referrals': typeof AppReferralsRoute
-  '/reports': typeof AppReportsRoute
+  '/reports': typeof AppReportsRouteWithChildren
   '/retention': typeof AppRetentionRoute
   '/routing': typeof AppRoutingRoute
   '/sales-orders': typeof AppSalesOrdersRoute
@@ -727,6 +734,7 @@ export interface FileRoutesByTo {
   '/invite/$token': typeof AppInviteTokenRoute
   '/kb/$id': typeof AppKbIdRoute
   '/proposals/$id': typeof AppProposalsIdRoute
+  '/reports/weekly': typeof AppReportsWeeklyRoute
   '/sequences/$id': typeof AppSequencesIdRoute
   '/settings/automations': typeof AppSettingsAutomationsRoute
   '/settings/erp-agent': typeof AppSettingsErpAgentRoute
@@ -797,7 +805,7 @@ export interface FileRoutesById {
   '/_app/proposals': typeof AppProposalsRouteWithChildren
   '/_app/quotes': typeof AppQuotesRoute
   '/_app/referrals': typeof AppReferralsRoute
-  '/_app/reports': typeof AppReportsRoute
+  '/_app/reports': typeof AppReportsRouteWithChildren
   '/_app/retention': typeof AppRetentionRoute
   '/_app/routing': typeof AppRoutingRoute
   '/_app/sales-orders': typeof AppSalesOrdersRoute
@@ -821,6 +829,7 @@ export interface FileRoutesById {
   '/_app/invite/$token': typeof AppInviteTokenRoute
   '/_app/kb/$id': typeof AppKbIdRoute
   '/_app/proposals/$id': typeof AppProposalsIdRoute
+  '/_app/reports/weekly': typeof AppReportsWeeklyRoute
   '/_app/sequences/$id': typeof AppSequencesIdRoute
   '/_app/settings/automations': typeof AppSettingsAutomationsRoute
   '/_app/settings/erp-agent': typeof AppSettingsErpAgentRoute
@@ -915,6 +924,7 @@ export interface FileRouteTypes {
     | '/invite/$token'
     | '/kb/$id'
     | '/proposals/$id'
+    | '/reports/weekly'
     | '/sequences/$id'
     | '/settings/automations'
     | '/settings/erp-agent'
@@ -1007,6 +1017,7 @@ export interface FileRouteTypes {
     | '/invite/$token'
     | '/kb/$id'
     | '/proposals/$id'
+    | '/reports/weekly'
     | '/sequences/$id'
     | '/settings/automations'
     | '/settings/erp-agent'
@@ -1100,6 +1111,7 @@ export interface FileRouteTypes {
     | '/_app/invite/$token'
     | '/_app/kb/$id'
     | '/_app/proposals/$id'
+    | '/_app/reports/weekly'
     | '/_app/sequences/$id'
     | '/_app/settings/automations'
     | '/_app/settings/erp-agent'
@@ -1704,6 +1716,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSequencesIdRouteImport
       parentRoute: typeof AppSequencesRoute
     }
+    '/_app/reports/weekly': {
+      id: '/_app/reports/weekly'
+      path: '/weekly'
+      fullPath: '/reports/weekly'
+      preLoaderRoute: typeof AppReportsWeeklyRouteImport
+      parentRoute: typeof AppReportsRoute
+    }
     '/_app/proposals/$id': {
       id: '/_app/proposals/$id'
       path: '/$id'
@@ -1823,6 +1842,18 @@ const AppProposalsRouteWithChildren = AppProposalsRoute._addFileChildren(
   AppProposalsRouteChildren,
 )
 
+interface AppReportsRouteChildren {
+  AppReportsWeeklyRoute: typeof AppReportsWeeklyRoute
+}
+
+const AppReportsRouteChildren: AppReportsRouteChildren = {
+  AppReportsWeeklyRoute: AppReportsWeeklyRoute,
+}
+
+const AppReportsRouteWithChildren = AppReportsRoute._addFileChildren(
+  AppReportsRouteChildren,
+)
+
 interface AppSequencesRouteChildren {
   AppSequencesIdRoute: typeof AppSequencesIdRoute
 }
@@ -1894,7 +1925,7 @@ interface AppRouteChildren {
   AppProposalsRoute: typeof AppProposalsRouteWithChildren
   AppQuotesRoute: typeof AppQuotesRoute
   AppReferralsRoute: typeof AppReferralsRoute
-  AppReportsRoute: typeof AppReportsRoute
+  AppReportsRoute: typeof AppReportsRouteWithChildren
   AppRetentionRoute: typeof AppRetentionRoute
   AppRoutingRoute: typeof AppRoutingRoute
   AppSalesOrdersRoute: typeof AppSalesOrdersRoute
@@ -1970,7 +2001,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppProposalsRoute: AppProposalsRouteWithChildren,
   AppQuotesRoute: AppQuotesRoute,
   AppReferralsRoute: AppReferralsRoute,
-  AppReportsRoute: AppReportsRoute,
+  AppReportsRoute: AppReportsRouteWithChildren,
   AppRetentionRoute: AppRetentionRoute,
   AppRoutingRoute: AppRoutingRoute,
   AppSalesOrdersRoute: AppSalesOrdersRoute,
@@ -2019,13 +2050,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

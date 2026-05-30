@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "@/components/page-header";
-import { Download, TrendingUp, Target, Trophy } from "lucide-react";
+import { Download, TrendingUp, Target, Trophy, FileText } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, Cell, FunnelChart, Funnel, LabelList } from "recharts";
 import { RequireManager } from "@/components/require-manager";
 
@@ -107,7 +107,10 @@ function ReportsPage() {
   return (
     <div className="p-6 space-y-6">
       <PageHeader title="Relatórios" subtitle="Funil, forecast e desempenho do time" action={
-        <Button onClick={exportCSV} variant="outline"><Download className="h-4 w-4 mr-2" />Exportar CSV</Button>
+        <div className="flex gap-2">
+          <Button asChild variant="default"><Link to="/reports/weekly"><FileText className="h-4 w-4 mr-2" />Executivo PDF</Link></Button>
+          <Button onClick={exportCSV} variant="outline"><Download className="h-4 w-4 mr-2" />Exportar CSV</Button>
+        </div>
       } />
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

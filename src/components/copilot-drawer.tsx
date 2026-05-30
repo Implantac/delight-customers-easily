@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Sparkles, Send, Loader2 } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { Sparkles, Send, Loader2, ArrowRight } from "lucide-react";
 import { copilotAsk } from "@/lib/copilot.functions";
 import { useCurrentOrg } from "@/lib/org";
 import { Button } from "@/components/ui/button";
@@ -19,7 +20,7 @@ const SUGGESTIONS = [
   "Quem são meus clientes mais valiosos sem contato recente?",
 ];
 
-type Turn = { role: "user" | "assistant"; content: string };
+type Turn = { role: "user" | "assistant"; content: string; actions?: Array<{ label: string; href: string }> };
 
 export function CopilotDrawer() {
   const { orgId } = useCurrentOrg();
@@ -33,7 +34,7 @@ export function CopilotDrawer() {
       if (!orgId) throw new Error("Selecione uma organização.");
       return ask({ data: { organization_id: orgId, question } });
     },
-    onSuccess: (r) => setTurns((t) => [...t, { role: "assistant", content: r.answer }]),
+    onSuccess: (r) => setTurns((t) => [...t, { role: "assistant", content: r.answer, actions: r.actions }]),
     onError: (e: Error) => {
       toast.error(e.message);
       setTurns((t) => [...t, { role: "assistant", content: `_Erro: ${e.message}_` }]);
@@ -88,15 +89,35 @@ export function CopilotDrawer() {
           )}
 
           {turns.map((t, i) => (
-            <div
-              key={i}
-              className={
-                t.role === "user"
-                  ? "ml-8 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm"
-                  : "mr-4 rounded-lg border bg-card px-3 py-2 text-sm whitespace-pre-wrap prose prose-sm dark:prose-invert max-w-none"
-              }
-            >
-              {renderMarkdown(t.content)}
+            <div key={i} className="space-y-2">
+              <div
+                className={
+                  t.role === "user"
+                    ? "ml-8 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm"
+                    : "mr-4 rounded-lg border bg-card px-3 py-2 text-sm whitespace-pre-wrap prose prose-sm dark:prose-invert max-w-none"
+                }
+              >
+                {renderMarkdown(t.content)}
+              </div>
+              {t.role === "assistant" && t.actions && t.actions.length > 0 && (
+                <div className="mr-4 flex flex-wrap gap-1.5">
+                  {t.actions.map((a, j) => (
+                    <Button
+                      key={j}
+                      asChild
+                      size="sm"
+                      variant="secondary"
+                      className="h-7 text-xs"
+                      onClick={() => setOpen(false)}
+                    >
+                      <Link to={a.href}>
+                        {a.label}
+                        <ArrowRight className="h-3 w-3 ml-1" />
+                      </Link>
+                    </Button>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
 
