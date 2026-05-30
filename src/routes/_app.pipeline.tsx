@@ -14,6 +14,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "@/components/page-header";
+import { NextActionBlock } from "@/components/next-action-block";
 import { EmptyState } from "@/components/empty-state";
 import { Plus, Trash2, Target } from "lucide-react";
 import { toast } from "sonner";

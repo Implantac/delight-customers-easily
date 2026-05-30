@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { DollarSign, Users, Building2, TrendingUp, CheckCircle2 } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
+import { NextActionBlock } from "@/components/next-action-block";
 import { Skeleton } from "@/components/ui/skeleton";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
 import { OnboardingChecklist } from "@/components/onboarding-checklist";
@@ -81,6 +82,7 @@ function DashboardPage() {
   return (
     <div className="p-4 md:p-8">
       <PageHeader title="Dashboard" subtitle="Visão geral do seu CRM" />
+      <div className="mt-6"><NextActionBlock surface="dashboard" showRegenerate /></div>
       <div className="mt-6"><OnboardingChecklist /></div>
       {isLoading ? (
         <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
