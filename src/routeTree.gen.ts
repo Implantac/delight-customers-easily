@@ -26,6 +26,7 @@ import { Route as AppReportsRouteImport } from './routes/_app.reports'
 import { Route as AppProposalsRouteImport } from './routes/_app.proposals'
 import { Route as AppProductsRouteImport } from './routes/_app.products'
 import { Route as AppProductivityRouteImport } from './routes/_app.productivity'
+import { Route as AppPlaybooksRouteImport } from './routes/_app.playbooks'
 import { Route as AppPipelineRouteImport } from './routes/_app.pipeline'
 import { Route as AppOpportunityMapRouteImport } from './routes/_app.opportunity-map'
 import { Route as AppNotificationsRouteImport } from './routes/_app.notifications'
@@ -149,6 +150,11 @@ const AppProductsRoute = AppProductsRouteImport.update({
 const AppProductivityRoute = AppProductivityRouteImport.update({
   id: '/productivity',
   path: '/productivity',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPlaybooksRoute = AppPlaybooksRouteImport.update({
+  id: '/playbooks',
+  path: '/playbooks',
   getParentRoute: () => AppRoute,
 } as any)
 const AppPipelineRoute = AppPipelineRouteImport.update({
@@ -382,6 +388,7 @@ export interface FileRoutesByFullPath {
   '/notifications': typeof AppNotificationsRoute
   '/opportunity-map': typeof AppOpportunityMapRoute
   '/pipeline': typeof AppPipelineRoute
+  '/playbooks': typeof AppPlaybooksRoute
   '/productivity': typeof AppProductivityRoute
   '/products': typeof AppProductsRoute
   '/proposals': typeof AppProposalsRouteWithChildren
@@ -440,6 +447,7 @@ export interface FileRoutesByTo {
   '/notifications': typeof AppNotificationsRoute
   '/opportunity-map': typeof AppOpportunityMapRoute
   '/pipeline': typeof AppPipelineRoute
+  '/playbooks': typeof AppPlaybooksRoute
   '/productivity': typeof AppProductivityRoute
   '/products': typeof AppProductsRoute
   '/proposals': typeof AppProposalsRouteWithChildren
@@ -500,6 +508,7 @@ export interface FileRoutesById {
   '/_app/notifications': typeof AppNotificationsRoute
   '/_app/opportunity-map': typeof AppOpportunityMapRoute
   '/_app/pipeline': typeof AppPipelineRoute
+  '/_app/playbooks': typeof AppPlaybooksRoute
   '/_app/productivity': typeof AppProductivityRoute
   '/_app/products': typeof AppProductsRoute
   '/_app/proposals': typeof AppProposalsRouteWithChildren
@@ -560,6 +569,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/opportunity-map'
     | '/pipeline'
+    | '/playbooks'
     | '/productivity'
     | '/products'
     | '/proposals'
@@ -618,6 +628,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/opportunity-map'
     | '/pipeline'
+    | '/playbooks'
     | '/productivity'
     | '/products'
     | '/proposals'
@@ -677,6 +688,7 @@ export interface FileRouteTypes {
     | '/_app/notifications'
     | '/_app/opportunity-map'
     | '/_app/pipeline'
+    | '/_app/playbooks'
     | '/_app/productivity'
     | '/_app/products'
     | '/_app/proposals'
@@ -836,6 +848,13 @@ declare module '@tanstack/react-router' {
       path: '/productivity'
       fullPath: '/productivity'
       preLoaderRoute: typeof AppProductivityRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/playbooks': {
+      id: '/_app/playbooks'
+      path: '/playbooks'
+      fullPath: '/playbooks'
+      preLoaderRoute: typeof AppPlaybooksRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/pipeline': {
@@ -1217,6 +1236,7 @@ interface AppRouteChildren {
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppOpportunityMapRoute: typeof AppOpportunityMapRoute
   AppPipelineRoute: typeof AppPipelineRoute
+  AppPlaybooksRoute: typeof AppPlaybooksRoute
   AppProductivityRoute: typeof AppProductivityRoute
   AppProductsRoute: typeof AppProductsRoute
   AppProposalsRoute: typeof AppProposalsRouteWithChildren
@@ -1265,6 +1285,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppNotificationsRoute: AppNotificationsRoute,
   AppOpportunityMapRoute: AppOpportunityMapRoute,
   AppPipelineRoute: AppPipelineRoute,
+  AppPlaybooksRoute: AppPlaybooksRoute,
   AppProductivityRoute: AppProductivityRoute,
   AppProductsRoute: AppProductsRoute,
   AppProposalsRoute: AppProposalsRouteWithChildren,
