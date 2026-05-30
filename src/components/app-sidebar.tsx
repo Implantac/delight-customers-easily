@@ -38,6 +38,7 @@ const nav = [
   { to: "/invoices", label: "Faturas", icon: Receipt, shortcut: "", managerOnly: false },
   { to: "/approvals", label: "Aprovações", icon: ShieldCheck, shortcut: "", managerOnly: false },
   { to: "/contracts", label: "Contratos", icon: FileSignature, shortcut: "", managerOnly: false },
+  { to: "/signatures", label: "Assinaturas", icon: PenLine, shortcut: "", managerOnly: false },
   { to: "/expenses", label: "Despesas", icon: Wallet, shortcut: "", managerOnly: false },
   { to: "/territories", label: "Territórios", icon: Map, shortcut: "", managerOnly: true },
   { to: "/opportunity-map", label: "Mapa de Oportunidades", icon: Map, shortcut: "", managerOnly: false },
