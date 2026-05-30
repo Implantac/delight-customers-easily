@@ -48,6 +48,80 @@ const ACTION_TYPES = [
 
 const ACTIVITY_TYPES = ["task", "call", "email", "meeting", "note"] as const;
 
+type Template = {
+  id: string;
+  icon: typeof Zap;
+  name: string;
+  description: string;
+  trigger_event: string;
+  conditions: Record<string, unknown>;
+  action_type: string;
+  action_config: Record<string, unknown>;
+};
+
+const TEMPLATES: Template[] = [
+  {
+    id: "onboarding-won",
+    icon: Trophy,
+    name: "Onboarding ao ganhar negócio",
+    description: "Quando um deal vai para 'won', cria tarefa de kick-off em 1 dia.",
+    trigger_event: "deal.stage_changed",
+    conditions: { to_stage: "won" },
+    action_type: "create_activity",
+    action_config: { type: "task", title: "Kick-off de onboarding", description: "Agendar primeira reunião com cliente novo.", due_in_days: 1 },
+  },
+  {
+    id: "recover-lost",
+    icon: Flame,
+    name: "Recuperar negócio perdido",
+    description: "Quando um deal vira 'lost', cria tarefa de reativação em 30 dias.",
+    trigger_event: "deal.stage_changed",
+    conditions: { to_stage: "lost" },
+    action_type: "create_activity",
+    action_config: { type: "call", title: "Reativar cliente perdido", description: "Ligar 30 dias depois para reabrir oportunidade.", due_in_days: 30 },
+  },
+  {
+    id: "welcome-contact",
+    icon: UserPlus,
+    name: "Boas-vindas a novo contato",
+    description: "Quando um contato é criado, agenda follow-up em 2 dias.",
+    trigger_event: "contact.created",
+    conditions: {},
+    action_type: "create_activity",
+    action_config: { type: "email", title: "E-mail de boas-vindas", description: "Apresentar a empresa e qualificar interesse.", due_in_days: 2 },
+  },
+  {
+    id: "notify-big-deal",
+    icon: Target,
+    name: "Avisar a equipe de deal grande",
+    description: "Quando um deal é criado, notifica o time (configure threshold depois).",
+    trigger_event: "deal.created",
+    conditions: {},
+    action_type: "create_notification",
+    action_config: { title: "Novo negócio criado", body: "Verifique se precisa de aprovação ou apoio." },
+  },
+  {
+    id: "followup-proposal",
+    icon: Clock,
+    name: "Follow-up de proposta enviada",
+    description: "Quando deal vai para 'proposal', cria follow-up em 3 dias.",
+    trigger_event: "deal.stage_changed",
+    conditions: { to_stage: "proposal" },
+    action_type: "create_activity",
+    action_config: { type: "call", title: "Follow-up de proposta", description: "Confirmar recebimento e tirar dúvidas.", due_in_days: 3 },
+  },
+  {
+    id: "recommend-on-win",
+    icon: Sparkles,
+    name: "Gerar recomendação no ganho",
+    description: "Ao ganhar deal, pede para a IA sugerir próximas ações naquela conta.",
+    trigger_event: "deal.won",
+    conditions: {},
+    action_type: "create_recommendation",
+    action_config: { surface: "customer-360" },
+  },
+];
+
 type AutomationRow = {
   id: string;
   name: string;
