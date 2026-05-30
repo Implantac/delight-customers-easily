@@ -32,6 +32,7 @@ const nav = [
   { to: "/finance", label: "Financeiro", icon: DollarSign, shortcut: "", managerOnly: false },
   { to: "/opportunity-map", label: "Mapa de Oportunidades", icon: Map, shortcut: "", managerOnly: false },
   { to: "/products", label: "Produtos", icon: Package, shortcut: "", managerOnly: false },
+  { to: "/proposals", label: "Propostas", icon: FileSignature, shortcut: "", managerOnly: false },
   { to: "/chat", label: "Chat", icon: MessageSquare, shortcut: "", managerOnly: false },
   { to: "/templates", label: "Templates", icon: FileText, shortcut: "", managerOnly: false },
   { to: "/data-quality", label: "Data Quality", icon: ShieldCheck, shortcut: "", managerOnly: true },
