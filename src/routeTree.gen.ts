@@ -17,6 +17,7 @@ import { Route as AppTemplatesRouteImport } from './routes/_app.templates'
 import { Route as AppSegmentsRouteImport } from './routes/_app.segments'
 import { Route as AppRetentionRouteImport } from './routes/_app.retention'
 import { Route as AppReportsRouteImport } from './routes/_app.reports'
+import { Route as AppProposalsRouteImport } from './routes/_app.proposals'
 import { Route as AppProductsRouteImport } from './routes/_app.products'
 import { Route as AppProductivityRouteImport } from './routes/_app.productivity'
 import { Route as AppPipelineRouteImport } from './routes/_app.pipeline'
@@ -40,6 +41,7 @@ import { Route as AppSettingsOrganizationRouteImport } from './routes/_app.setti
 import { Route as AppSettingsImportRouteImport } from './routes/_app.settings.import'
 import { Route as AppSettingsFieldsRouteImport } from './routes/_app.settings.fields'
 import { Route as AppSettingsAutomationsRouteImport } from './routes/_app.settings.automations'
+import { Route as AppProposalsIdRouteImport } from './routes/_app.proposals.$id'
 import { Route as AppInviteTokenRouteImport } from './routes/_app.invite.$token'
 import { Route as AppContactsIdRouteImport } from './routes/_app.contacts.$id'
 import { Route as AppCompaniesIdRouteImport } from './routes/_app.companies.$id'
@@ -83,6 +85,11 @@ const AppRetentionRoute = AppRetentionRouteImport.update({
 const AppReportsRoute = AppReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProposalsRoute = AppProposalsRouteImport.update({
+  id: '/proposals',
+  path: '/proposals',
   getParentRoute: () => AppRoute,
 } as any)
 const AppProductsRoute = AppProductsRouteImport.update({
@@ -200,6 +207,11 @@ const AppSettingsAutomationsRoute = AppSettingsAutomationsRouteImport.update({
   path: '/settings/automations',
   getParentRoute: () => AppRoute,
 } as any)
+const AppProposalsIdRoute = AppProposalsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppProposalsRoute,
+} as any)
 const AppInviteTokenRoute = AppInviteTokenRouteImport.update({
   id: '/invite/$token',
   path: '/invite/$token',
@@ -248,6 +260,7 @@ export interface FileRoutesByFullPath {
   '/pipeline': typeof AppPipelineRoute
   '/productivity': typeof AppProductivityRoute
   '/products': typeof AppProductsRoute
+  '/proposals': typeof AppProposalsRouteWithChildren
   '/reports': typeof AppReportsRoute
   '/retention': typeof AppRetentionRoute
   '/segments': typeof AppSegmentsRoute
@@ -256,6 +269,7 @@ export interface FileRoutesByFullPath {
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
   '/invite/$token': typeof AppInviteTokenRoute
+  '/proposals/$id': typeof AppProposalsIdRoute
   '/settings/automations': typeof AppSettingsAutomationsRoute
   '/settings/fields': typeof AppSettingsFieldsRoute
   '/settings/import': typeof AppSettingsImportRoute
@@ -285,6 +299,7 @@ export interface FileRoutesByTo {
   '/pipeline': typeof AppPipelineRoute
   '/productivity': typeof AppProductivityRoute
   '/products': typeof AppProductsRoute
+  '/proposals': typeof AppProposalsRouteWithChildren
   '/reports': typeof AppReportsRoute
   '/retention': typeof AppRetentionRoute
   '/segments': typeof AppSegmentsRoute
@@ -293,6 +308,7 @@ export interface FileRoutesByTo {
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
   '/invite/$token': typeof AppInviteTokenRoute
+  '/proposals/$id': typeof AppProposalsIdRoute
   '/settings/automations': typeof AppSettingsAutomationsRoute
   '/settings/fields': typeof AppSettingsFieldsRoute
   '/settings/import': typeof AppSettingsImportRoute
@@ -324,6 +340,7 @@ export interface FileRoutesById {
   '/_app/pipeline': typeof AppPipelineRoute
   '/_app/productivity': typeof AppProductivityRoute
   '/_app/products': typeof AppProductsRoute
+  '/_app/proposals': typeof AppProposalsRouteWithChildren
   '/_app/reports': typeof AppReportsRoute
   '/_app/retention': typeof AppRetentionRoute
   '/_app/segments': typeof AppSegmentsRoute
@@ -332,6 +349,7 @@ export interface FileRoutesById {
   '/_app/companies/$id': typeof AppCompaniesIdRoute
   '/_app/contacts/$id': typeof AppContactsIdRoute
   '/_app/invite/$token': typeof AppInviteTokenRoute
+  '/_app/proposals/$id': typeof AppProposalsIdRoute
   '/_app/settings/automations': typeof AppSettingsAutomationsRoute
   '/_app/settings/fields': typeof AppSettingsFieldsRoute
   '/_app/settings/import': typeof AppSettingsImportRoute
@@ -363,6 +381,7 @@ export interface FileRouteTypes {
     | '/pipeline'
     | '/productivity'
     | '/products'
+    | '/proposals'
     | '/reports'
     | '/retention'
     | '/segments'
@@ -371,6 +390,7 @@ export interface FileRouteTypes {
     | '/companies/$id'
     | '/contacts/$id'
     | '/invite/$token'
+    | '/proposals/$id'
     | '/settings/automations'
     | '/settings/fields'
     | '/settings/import'
@@ -400,6 +420,7 @@ export interface FileRouteTypes {
     | '/pipeline'
     | '/productivity'
     | '/products'
+    | '/proposals'
     | '/reports'
     | '/retention'
     | '/segments'
@@ -408,6 +429,7 @@ export interface FileRouteTypes {
     | '/companies/$id'
     | '/contacts/$id'
     | '/invite/$token'
+    | '/proposals/$id'
     | '/settings/automations'
     | '/settings/fields'
     | '/settings/import'
@@ -438,6 +460,7 @@ export interface FileRouteTypes {
     | '/_app/pipeline'
     | '/_app/productivity'
     | '/_app/products'
+    | '/_app/proposals'
     | '/_app/reports'
     | '/_app/retention'
     | '/_app/segments'
@@ -446,6 +469,7 @@ export interface FileRouteTypes {
     | '/_app/companies/$id'
     | '/_app/contacts/$id'
     | '/_app/invite/$token'
+    | '/_app/proposals/$id'
     | '/_app/settings/automations'
     | '/_app/settings/fields'
     | '/_app/settings/import'
@@ -521,6 +545,13 @@ declare module '@tanstack/react-router' {
       path: '/reports'
       fullPath: '/reports'
       preLoaderRoute: typeof AppReportsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/proposals': {
+      id: '/_app/proposals'
+      path: '/proposals'
+      fullPath: '/proposals'
+      preLoaderRoute: typeof AppProposalsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/products': {
@@ -684,6 +715,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsAutomationsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/proposals/$id': {
+      id: '/_app/proposals/$id'
+      path: '/$id'
+      fullPath: '/proposals/$id'
+      preLoaderRoute: typeof AppProposalsIdRouteImport
+      parentRoute: typeof AppProposalsRoute
+    }
     '/_app/invite/$token': {
       id: '/_app/invite/$token'
       path: '/invite/$token'
@@ -746,6 +784,18 @@ const AppContactsRouteWithChildren = AppContactsRoute._addFileChildren(
   AppContactsRouteChildren,
 )
 
+interface AppProposalsRouteChildren {
+  AppProposalsIdRoute: typeof AppProposalsIdRoute
+}
+
+const AppProposalsRouteChildren: AppProposalsRouteChildren = {
+  AppProposalsIdRoute: AppProposalsIdRoute,
+}
+
+const AppProposalsRouteWithChildren = AppProposalsRoute._addFileChildren(
+  AppProposalsRouteChildren,
+)
+
 interface AppRouteChildren {
   AppActivitiesRoute: typeof AppActivitiesRoute
   AppAlertsRoute: typeof AppAlertsRoute
@@ -764,6 +814,7 @@ interface AppRouteChildren {
   AppPipelineRoute: typeof AppPipelineRoute
   AppProductivityRoute: typeof AppProductivityRoute
   AppProductsRoute: typeof AppProductsRoute
+  AppProposalsRoute: typeof AppProposalsRouteWithChildren
   AppReportsRoute: typeof AppReportsRoute
   AppRetentionRoute: typeof AppRetentionRoute
   AppSegmentsRoute: typeof AppSegmentsRoute
@@ -795,6 +846,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppPipelineRoute: AppPipelineRoute,
   AppProductivityRoute: AppProductivityRoute,
   AppProductsRoute: AppProductsRoute,
+  AppProposalsRoute: AppProposalsRouteWithChildren,
   AppReportsRoute: AppReportsRoute,
   AppRetentionRoute: AppRetentionRoute,
   AppSegmentsRoute: AppSegmentsRoute,
