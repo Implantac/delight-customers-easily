@@ -5,6 +5,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useCurrentOrg } from "@/lib/org";
 import { getGroupBenchmark, type BenchmarkRow } from "@/lib/benchmark.functions";
 import { PageHeader } from "@/components/page-header";
+import { NextActionBlock } from "@/components/next-action-block";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -67,6 +68,8 @@ function BenchmarkPage() {
         subtitle="Compare unidades, identifique a melhor prática, replique no resto."
         icon={GitBranch}
       />
+
+      <NextActionBlock surface="benchmark" title="Ações para fechar o gap" />
 
       {!isLoading && data && !data.hasGroup && (
         <Card className="p-6 border-dashed">

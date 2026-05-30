@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useCurrentOrg } from "@/lib/org";
 import { listAlerts, generateAlertNotifications } from "@/lib/alerts.functions";
 import { PageHeader } from "@/components/page-header";
+import { NextActionBlock } from "@/components/next-action-block";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -73,6 +74,10 @@ function AlertsPage() {
           </div>
         }
       />
+
+      <div className="mt-6">
+        <NextActionBlock surface="alerts" title="Ações priorizadas pela IA" />
+      </div>
 
       <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
         <KpiCard label="Total de alertas" value={counts.total} tone="default" />

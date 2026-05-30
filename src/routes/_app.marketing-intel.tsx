@@ -5,6 +5,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useCurrentOrg } from "@/lib/org";
 import { getMarketingIntel } from "@/lib/marketing-intel.functions";
 import { PageHeader } from "@/components/page-header";
+import { NextActionBlock } from "@/components/next-action-block";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -43,6 +44,8 @@ function MarketingIntelPage() {
         subtitle="De campanha a receita: o que de fato traz cliente e quanto custa."
         icon={Megaphone}
       />
+
+      <NextActionBlock surface="marketing-intel" title="Ações sugeridas pela IA" />
 
       <div className="flex justify-between items-center">
         <div className="text-xs text-muted-foreground">

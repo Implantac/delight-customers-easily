@@ -6,6 +6,7 @@ import { useCurrentOrg } from "@/lib/org";
 import { getGeoOverview, suggestRoute } from "@/lib/geo-routes.functions";
 import { optimizeRouteWithAI } from "@/lib/geo-ai.functions";
 import { PageHeader } from "@/components/page-header";
+import { NextActionBlock } from "@/components/next-action-block";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -90,6 +91,8 @@ function GeoPage() {
         subtitle="Onde estão seus clientes, onde está o pipeline aberto e qual a melhor rota pra hoje."
         icon={MapPin}
       />
+
+      <NextActionBlock surface="geo" title="Onde a IA recomenda visitar" />
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <KPI loading={isLoading} label="Clientes" value={data?.summary.total ?? 0} icon={Building} />

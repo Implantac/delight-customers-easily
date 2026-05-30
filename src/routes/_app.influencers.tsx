@@ -7,6 +7,7 @@ import {
   listInfluencers, upsertInfluencer, deleteInfluencer, type InfluencerRow,
 } from "@/lib/marketing.functions";
 import { PageHeader } from "@/components/page-header";
+import { NextActionBlock } from "@/components/next-action-block";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -88,6 +89,8 @@ function InfluencersPage() {
           </Sheet>
         }
       />
+
+      <NextActionBlock surface="influencers" title="Ações com influenciadores" />
 
       <InfluencerMetricsPanel />
 
