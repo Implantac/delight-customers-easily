@@ -16,6 +16,7 @@ import { Route as AppWinLossRouteImport } from './routes/_app.win-loss'
 import { Route as AppRetentionRouteImport } from './routes/_app.retention'
 import { Route as AppReportsRouteImport } from './routes/_app.reports'
 import { Route as AppProductsRouteImport } from './routes/_app.products'
+import { Route as AppProductivityRouteImport } from './routes/_app.productivity'
 import { Route as AppPipelineRouteImport } from './routes/_app.pipeline'
 import { Route as AppOpportunityMapRouteImport } from './routes/_app.opportunity-map'
 import { Route as AppLeadScoringRouteImport } from './routes/_app.lead-scoring'
@@ -74,6 +75,11 @@ const AppReportsRoute = AppReportsRouteImport.update({
 const AppProductsRoute = AppProductsRouteImport.update({
   id: '/products',
   path: '/products',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProductivityRoute = AppProductivityRouteImport.update({
+  id: '/productivity',
+  path: '/productivity',
   getParentRoute: () => AppRoute,
 } as any)
 const AppPipelineRoute = AppPipelineRouteImport.update({
@@ -221,6 +227,7 @@ export interface FileRoutesByFullPath {
   '/lead-scoring': typeof AppLeadScoringRoute
   '/opportunity-map': typeof AppOpportunityMapRoute
   '/pipeline': typeof AppPipelineRoute
+  '/productivity': typeof AppProductivityRoute
   '/products': typeof AppProductsRoute
   '/reports': typeof AppReportsRoute
   '/retention': typeof AppRetentionRoute
@@ -254,6 +261,7 @@ export interface FileRoutesByTo {
   '/lead-scoring': typeof AppLeadScoringRoute
   '/opportunity-map': typeof AppOpportunityMapRoute
   '/pipeline': typeof AppPipelineRoute
+  '/productivity': typeof AppProductivityRoute
   '/products': typeof AppProductsRoute
   '/reports': typeof AppReportsRoute
   '/retention': typeof AppRetentionRoute
@@ -289,6 +297,7 @@ export interface FileRoutesById {
   '/_app/lead-scoring': typeof AppLeadScoringRoute
   '/_app/opportunity-map': typeof AppOpportunityMapRoute
   '/_app/pipeline': typeof AppPipelineRoute
+  '/_app/productivity': typeof AppProductivityRoute
   '/_app/products': typeof AppProductsRoute
   '/_app/reports': typeof AppReportsRoute
   '/_app/retention': typeof AppRetentionRoute
@@ -324,6 +333,7 @@ export interface FileRouteTypes {
     | '/lead-scoring'
     | '/opportunity-map'
     | '/pipeline'
+    | '/productivity'
     | '/products'
     | '/reports'
     | '/retention'
@@ -357,6 +367,7 @@ export interface FileRouteTypes {
     | '/lead-scoring'
     | '/opportunity-map'
     | '/pipeline'
+    | '/productivity'
     | '/products'
     | '/reports'
     | '/retention'
@@ -391,6 +402,7 @@ export interface FileRouteTypes {
     | '/_app/lead-scoring'
     | '/_app/opportunity-map'
     | '/_app/pipeline'
+    | '/_app/productivity'
     | '/_app/products'
     | '/_app/reports'
     | '/_app/retention'
@@ -466,6 +478,13 @@ declare module '@tanstack/react-router' {
       path: '/products'
       fullPath: '/products'
       preLoaderRoute: typeof AppProductsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/productivity': {
+      id: '/_app/productivity'
+      path: '/productivity'
+      fullPath: '/productivity'
+      preLoaderRoute: typeof AppProductivityRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/pipeline': {
@@ -685,6 +704,7 @@ interface AppRouteChildren {
   AppLeadScoringRoute: typeof AppLeadScoringRoute
   AppOpportunityMapRoute: typeof AppOpportunityMapRoute
   AppPipelineRoute: typeof AppPipelineRoute
+  AppProductivityRoute: typeof AppProductivityRoute
   AppProductsRoute: typeof AppProductsRoute
   AppReportsRoute: typeof AppReportsRoute
   AppRetentionRoute: typeof AppRetentionRoute
@@ -712,6 +732,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppLeadScoringRoute: AppLeadScoringRoute,
   AppOpportunityMapRoute: AppOpportunityMapRoute,
   AppPipelineRoute: AppPipelineRoute,
+  AppProductivityRoute: AppProductivityRoute,
   AppProductsRoute: AppProductsRoute,
   AppReportsRoute: AppReportsRoute,
   AppRetentionRoute: AppRetentionRoute,
