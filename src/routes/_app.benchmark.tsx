@@ -84,7 +84,80 @@ function BenchmarkPage() {
         </Card>
       )}
 
-      {/* Consolidado */}
+      <Tabs value={mode} onValueChange={(v) => setMode(v as Mode)}>
+        <TabsList>
+          <TabsTrigger value="individual"><Building2 className="h-4 w-4 mr-1" />Individual</TabsTrigger>
+          <TabsTrigger value="consolidado"><Layers className="h-4 w-4 mr-1" />Consolidado</TabsTrigger>
+          <TabsTrigger value="comparativo" disabled={!data?.hasGroup}><Scale className="h-4 w-4 mr-1" />Comparativo</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="individual" className="space-y-6 mt-4">
+          {currentRow ? (
+            <>
+              <div className="text-sm text-muted-foreground flex items-center gap-2">
+                Métricas da unidade atual: <span className="font-medium text-foreground">{currentRow.name}</span>
+              </div>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                <KPI loading={isLoading} label="Receita 30d" value={fmt(currentRow.wonRevenue30)} icon={TrendingUp} tone="ok" />
+                <KPI loading={isLoading} label="Receita 90d" value={fmt(currentRow.wonRevenue90)} icon={TrendingUp} />
+                <KPI loading={isLoading} label="Pipeline aberto" value={fmt(currentRow.openPipeline)} icon={Activity} />
+                <KPI loading={isLoading} label="Em atraso" value={fmt(currentRow.overdue)} icon={AlertTriangle} tone={currentRow.overdue > 0 ? "danger" : "ok"} />
+              </div>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                <KPI loading={isLoading} label="Conversão" value={pct(currentRow.conversion)} icon={Trophy} />
+                <KPI loading={isLoading} label="Ticket médio" value={fmt(currentRow.ticketAvg)} icon={TrendingUp} />
+                <KPI loading={isLoading} label="Clientes ativos" value={currentRow.activeCustomers.toString()} icon={Users} />
+                <KPI loading={isLoading} label="Atividades 30d" value={currentRow.activities30.toString()} icon={Activity} />
+              </div>
+            </>
+          ) : (
+            <Card className="p-6 text-sm text-muted-foreground">Carregando métricas da unidade…</Card>
+          )}
+        </TabsContent>
+
+        <TabsContent value="consolidado" className="space-y-6 mt-4">
+          <div className="text-sm text-muted-foreground">
+            Soma de {rows.length} {rows.length === 1 ? "unidade" : "unidades"} do grupo.
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <KPI loading={isLoading} label="Receita 90d (consolidado)" value={fmt(consolidated.wonRevenue90)} icon={TrendingUp} tone="ok" />
+            <KPI loading={isLoading} label="Pipeline aberto" value={fmt(consolidated.openPipeline)} icon={Activity} />
+            <KPI loading={isLoading} label="Clientes ativos" value={consolidated.activeCustomers.toString()} icon={Users} />
+            <KPI loading={isLoading} label="A receber em atraso" value={fmt(consolidated.overdue)} icon={AlertTriangle} tone="danger" />
+          </div>
+
+          {leaders && (
+            <Card className="p-4">
+              <div className="text-sm font-medium flex items-center gap-2 mb-3">
+                <Trophy className="h-4 w-4 text-amber-500" /> Líderes do grupo (replicar prática)
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 text-sm">
+                <LeaderCell label="Maior receita 90d" row={leaders.revenue} value={leaders.revenue ? fmt(leaders.revenue.wonRevenue90) : "—"} />
+                <LeaderCell label="Maior conversão" row={leaders.conversion} value={leaders.conversion ? pct(leaders.conversion.conversion) : "—"} />
+                <LeaderCell label="Maior ticket médio" row={leaders.ticket} value={leaders.ticket ? fmt(leaders.ticket.ticketAvg) : "—"} />
+                <LeaderCell label="Mais ativa (30d)" row={leaders.activity} value={leaders.activity ? `${leaders.activity.activities30} atividades` : "—"} />
+              </div>
+            </Card>
+          )}
+        </TabsContent>
+
+        <TabsContent value="comparativo" className="space-y-4 mt-4">
+          <div className="text-sm text-muted-foreground">
+            Sua unidade vs. média do grupo (excluindo a atual).
+          </div>
+          {currentRow && rows.length > 1 ? (
+            <ComparativeGrid current={currentRow} peers={rows.filter((r) => !r.isCurrent)} />
+          ) : (
+            <Card className="p-6 text-sm text-muted-foreground">
+              Adicione mais unidades ao grupo para visualizar comparativo.
+            </Card>
+          )}
+        </TabsContent>
+      </Tabs>
+
+      {/* Removido: bloco "Consolidado" antigo movido para a aba Consolidado acima. */}
+      <div className="hidden">{/* keep legacy markers for diff context */}</div>
+      {/* Tabela comparativa */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <KPI loading={isLoading} label="Receita 90d (consolidado)" value={fmt(consolidated.wonRevenue90)} icon={TrendingUp} tone="ok" />
         <KPI loading={isLoading} label="Pipeline aberto" value={fmt(consolidated.openPipeline)} icon={Activity} />
