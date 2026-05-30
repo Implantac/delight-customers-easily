@@ -124,7 +124,14 @@ Use APENAS os dados do snapshot fornecido — nunca invente clientes, valores ou
 Quando recomendar ação, seja específico: cite o nome do cliente/negócio e a razão.
 Formate em markdown com listas curtas. Máximo 6 itens por lista. Use negrito para destaque.
 Se a pergunta não puder ser respondida com os dados, diga isso claramente.
-Valores monetários sempre em BRL formatado (R$).`;
+Valores monetários sempre em BRL formatado (R$).
+
+AO FINAL da sua resposta, SEMPRE inclua um bloco JSON delimitado por <<<ACTIONS>>> e <<<END>>>
+com até 3 ações sugeridas que o usuário pode executar imediatamente, neste formato:
+<<<ACTIONS>>>
+[{"label":"Texto curto até 32 chars","href":"/pipeline|/carteira|/whatsapp|/mytasks|/forecast|/retention"}]
+<<<END>>>
+Se não houver ação clara, devolva um array vazio.`;
 
     const user = `PERGUNTA DO USUÁRIO:
 ${data.question}
@@ -132,6 +139,24 @@ ${data.question}
 SNAPSHOT DO CRM (JSON):
 ${JSON.stringify(snapshot)}`;
 
-    const answer = await callLovableAI(system, user);
-    return { answer };
+    const raw = await callLovableAI(system, user);
+    // Extrai bloco de ações
+    let actions: Array<{ label: string; href: string }> = [];
+    let answer = raw;
+    const m = raw.match(/<<<ACTIONS>>>([\s\S]*?)<<<END>>>/);
+    if (m) {
+      answer = raw.replace(m[0], "").trim();
+      try {
+        const parsed = JSON.parse(m[1].trim());
+        if (Array.isArray(parsed)) {
+          actions = parsed
+            .filter((x) => x && typeof x.label === "string" && typeof x.href === "string")
+            .slice(0, 3)
+            .map((x) => ({ label: String(x.label).slice(0, 32), href: String(x.href).slice(0, 200) }));
+        }
+      } catch {
+        /* noop */
+      }
+    }
+    return { answer, actions };
   });
