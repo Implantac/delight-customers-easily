@@ -15,66 +15,129 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { toast } from "sonner";
 
-const nav = [
-  { to: "/command", label: "Comando", icon: Sparkles, shortcut: "G H", managerOnly: false },
-  { to: "/coaching", label: "Coaching", icon: Compass, shortcut: "", managerOnly: false },
-  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, shortcut: "G D", managerOnly: false },
-  { to: "/pipeline", label: "Pipeline", icon: KanbanSquare, shortcut: "G P", managerOnly: false },
-  { to: "/contacts", label: "Contatos", icon: Users, shortcut: "G C", managerOnly: false },
-  { to: "/lead-scoring", label: "Lead Scoring", icon: Flame, shortcut: "", managerOnly: false },
-  { to: "/companies", label: "Empresas", icon: Building2, shortcut: "G E", managerOnly: false },
-  { to: "/activities", label: "Atividades", icon: CheckSquare, shortcut: "G A", managerOnly: false },
-  { to: "/mytasks", label: "Minhas Tarefas", icon: Inbox, shortcut: "G T", managerOnly: false },
-  { to: "/calendar", label: "Agenda", icon: CalendarIcon, shortcut: "", managerOnly: false },
-  { to: "/alerts", label: "Alertas", icon: AlertTriangle, shortcut: "G L", managerOnly: false },
-  { to: "/forecast", label: "Previsão", icon: Target, shortcut: "G F", managerOnly: false },
-  { to: "/win-loss", label: "Win/Loss", icon: Trophy, shortcut: "", managerOnly: false },
-  { to: "/commissions", label: "Comissões", icon: Coins, shortcut: "", managerOnly: false },
-  { to: "/goals", label: "Metas & Ranking", icon: Medal, shortcut: "", managerOnly: false },
-  { to: "/retention", label: "Retenção", icon: HeartPulse, shortcut: "", managerOnly: false },
-  { to: "/segments", label: "Segmentação RFM", icon: PieChart, shortcut: "", managerOnly: false },
-  { to: "/cohorts", label: "Cohorts", icon: Grid3x3, shortcut: "", managerOnly: true },
-  { to: "/finance", label: "Financeiro", icon: DollarSign, shortcut: "", managerOnly: false },
-  { to: "/subscriptions", label: "Assinaturas", icon: Repeat, shortcut: "", managerOnly: false },
-  { to: "/invoices", label: "Faturas", icon: Receipt, shortcut: "", managerOnly: false },
-  { to: "/banking", label: "Banco", icon: Landmark, shortcut: "", managerOnly: false },
-  { to: "/approvals", label: "Aprovações", icon: ShieldCheck, shortcut: "", managerOnly: false },
-  { to: "/contracts", label: "Contratos", icon: FileSignature, shortcut: "", managerOnly: false },
-  { to: "/signatures", label: "Assinaturas", icon: PenLine, shortcut: "", managerOnly: false },
-  { to: "/routing", label: "Roteamento", icon: RouteIcon, shortcut: "", managerOnly: true },
-  { to: "/lead-forms", label: "Formulários", icon: FormInput, shortcut: "", managerOnly: false },
-  { to: "/campaigns", label: "Campanhas", icon: Mail, shortcut: "", managerOnly: false },
-  { to: "/referrals", label: "Indicações", icon: Gift, shortcut: "", managerOnly: false },
-  { to: "/onboarding", label: "Onboarding", icon: Rocket, shortcut: "", managerOnly: false },
-  { to: "/documents", label: "Documentos", icon: Files, shortcut: "", managerOnly: false },
-  { to: "/time", label: "Horas", icon: Clock, shortcut: "", managerOnly: false },
-  { to: "/loyalty", label: "Fidelidade", icon: Award, shortcut: "", managerOnly: false },
-  { to: "/assets", label: "Ativos", icon: Boxes, shortcut: "", managerOnly: false },
-  { to: "/surveys", label: "Pesquisas", icon: Smile, shortcut: "", managerOnly: false },
-  { to: "/expenses", label: "Despesas", icon: Wallet, shortcut: "", managerOnly: false },
-  { to: "/territories", label: "Territórios", icon: Map, shortcut: "", managerOnly: true },
-  { to: "/opportunity-map", label: "Mapa de Oportunidades", icon: Map, shortcut: "", managerOnly: false },
-  { to: "/products", label: "Produtos", icon: Package, shortcut: "", managerOnly: false },
-  { to: "/proposals", label: "Propostas", icon: FileSignature, shortcut: "", managerOnly: false },
-  { to: "/quotes", label: "Orçamentos", icon: FileSignature, shortcut: "", managerOnly: false },
-  { to: "/sales-orders", label: "Pedidos", icon: Package, shortcut: "", managerOnly: false },
-  { to: "/stock", label: "Estoque", icon: Boxes, shortcut: "", managerOnly: false },
-  { to: "/suppliers", label: "Fornecedores", icon: Truck, shortcut: "", managerOnly: false },
-  { to: "/integrations", label: "Integrações ERP", icon: Plug, shortcut: "", managerOnly: true },
-  { to: "/chat", label: "Chat", icon: MessageSquare, shortcut: "", managerOnly: false },
-  { to: "/tickets", label: "Tickets", icon: LifeBuoy, shortcut: "", managerOnly: false },
-  { to: "/templates", label: "Templates", icon: FileText, shortcut: "", managerOnly: false },
-  { to: "/sequences", label: "Sequências", icon: Workflow, shortcut: "", managerOnly: false },
-  { to: "/playbooks", label: "Playbooks", icon: ClipboardList, shortcut: "", managerOnly: false },
-  { to: "/kb", label: "Base de Conhecimento", icon: BookOpen, shortcut: "", managerOnly: false },
-  { to: "/tags", label: "Tags", icon: Tag, shortcut: "", managerOnly: false },
-  { to: "/views", label: "Visualizações", icon: Bookmark, shortcut: "", managerOnly: false },
-  { to: "/notifications", label: "Notificações", icon: Bell, shortcut: "", managerOnly: false },
-  { to: "/data-quality", label: "Data Quality", icon: ShieldCheck, shortcut: "", managerOnly: true },
-  { to: "/audit", label: "Auditoria", icon: History, shortcut: "", managerOnly: true },
-  { to: "/productivity", label: "Produtividade", icon: Activity, shortcut: "", managerOnly: true },
-  { to: "/reports", label: "Relatórios", icon: BarChart3, shortcut: "G R", managerOnly: true },
-] as const;
+type NavEntry = {
+  to: string;
+  label: string;
+  icon: LucideIcon;
+  shortcut?: string;
+  managerOnly?: boolean;
+};
+type NavSection = { id: string; label: string; items: NavEntry[] };
+
+const navSections: NavSection[] = [
+  {
+    id: "focus",
+    label: "Visão & foco",
+    items: [
+      { to: "/command", label: "Comando", icon: Sparkles, shortcut: "G H" },
+      { to: "/coaching", label: "Coaching", icon: Compass },
+      { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, shortcut: "G D" },
+      { to: "/reports", label: "Relatórios", icon: BarChart3, shortcut: "G R", managerOnly: true },
+    ],
+  },
+  {
+    id: "crm",
+    label: "CRM",
+    items: [
+      { to: "/contacts", label: "Contatos", icon: Users, shortcut: "G C" },
+      { to: "/companies", label: "Empresas", icon: Building2, shortcut: "G E" },
+      { to: "/lead-scoring", label: "Lead scoring", icon: Flame },
+      { to: "/activities", label: "Atividades", icon: CheckSquare, shortcut: "G A" },
+      { to: "/mytasks", label: "Minhas tarefas", icon: Inbox, shortcut: "G T" },
+      { to: "/calendar", label: "Agenda", icon: CalendarIcon },
+      { to: "/alerts", label: "Alertas", icon: AlertTriangle, shortcut: "G L" },
+    ],
+  },
+  {
+    id: "pipeline",
+    label: "Pipeline & metas",
+    items: [
+      { to: "/pipeline", label: "Pipeline", icon: KanbanSquare, shortcut: "G P" },
+      { to: "/forecast", label: "Previsão", icon: Target, shortcut: "G F" },
+      { to: "/win-loss", label: "Win/Loss", icon: Trophy },
+      { to: "/goals", label: "Metas & ranking", icon: Medal },
+      { to: "/commissions", label: "Comissões", icon: Coins },
+      { to: "/opportunity-map", label: "Mapa de oportunidades", icon: Map },
+    ],
+  },
+  {
+    id: "sales",
+    label: "Vendas",
+    items: [
+      { to: "/products", label: "Produtos", icon: Package },
+      { to: "/proposals", label: "Propostas", icon: FileSignature },
+      { to: "/quotes", label: "Orçamentos", icon: FileSignature },
+      { to: "/sales-orders", label: "Pedidos", icon: Package },
+      { to: "/stock", label: "Estoque", icon: Boxes },
+      { to: "/suppliers", label: "Fornecedores", icon: Truck },
+    ],
+  },
+  {
+    id: "finance",
+    label: "Financeiro",
+    items: [
+      { to: "/finance", label: "Financeiro", icon: DollarSign },
+      { to: "/subscriptions", label: "Assinaturas", icon: Repeat },
+      { to: "/invoices", label: "Faturas", icon: Receipt },
+      { to: "/banking", label: "Banco", icon: Landmark },
+      { to: "/expenses", label: "Despesas", icon: Wallet },
+      { to: "/approvals", label: "Aprovações", icon: ShieldCheck },
+      { to: "/contracts", label: "Contratos", icon: FileSignature },
+      { to: "/signatures", label: "Assinaturas eletrônicas", icon: PenLine },
+    ],
+  },
+  {
+    id: "marketing",
+    label: "Marketing & engajamento",
+    items: [
+      { to: "/campaigns", label: "Campanhas", icon: Mail },
+      { to: "/lead-forms", label: "Formulários", icon: FormInput },
+      { to: "/referrals", label: "Indicações", icon: Gift },
+      { to: "/loyalty", label: "Fidelidade", icon: Award },
+      { to: "/segments", label: "Segmentação RFM", icon: PieChart },
+      { to: "/cohorts", label: "Cohorts", icon: Grid3x3, managerOnly: true },
+      { to: "/retention", label: "Retenção", icon: HeartPulse },
+      { to: "/surveys", label: "Pesquisas", icon: Smile },
+    ],
+  },
+  {
+    id: "support",
+    label: "Atendimento",
+    items: [
+      { to: "/chat", label: "Chat", icon: MessageSquare },
+      { to: "/tickets", label: "Tickets", icon: LifeBuoy },
+      { to: "/kb", label: "Base de conhecimento", icon: BookOpen },
+      { to: "/templates", label: "Templates", icon: FileText },
+      { to: "/sequences", label: "Sequências", icon: Workflow },
+      { to: "/playbooks", label: "Playbooks", icon: ClipboardList },
+      { to: "/routing", label: "Roteamento", icon: RouteIcon, managerOnly: true },
+    ],
+  },
+  {
+    id: "ops",
+    label: "Operação",
+    items: [
+      { to: "/onboarding", label: "Onboarding", icon: Rocket },
+      { to: "/documents", label: "Documentos", icon: Files },
+      { to: "/time", label: "Horas", icon: Clock },
+      { to: "/assets", label: "Ativos", icon: Boxes },
+      { to: "/territories", label: "Territórios", icon: Map, managerOnly: true },
+    ],
+  },
+  {
+    id: "system",
+    label: "Sistema",
+    items: [
+      { to: "/tags", label: "Tags", icon: Tag },
+      { to: "/views", label: "Visualizações", icon: Bookmark },
+      { to: "/notifications", label: "Notificações", icon: Bell },
+      { to: "/data-quality", label: "Data quality", icon: ShieldCheck, managerOnly: true },
+      { to: "/audit", label: "Auditoria", icon: History, managerOnly: true },
+      { to: "/productivity", label: "Produtividade", icon: Activity, managerOnly: true },
+      { to: "/integrations", label: "Integrações ERP", icon: Plug, managerOnly: true },
+    ],
+  },
+];
 
 export function AppSidebar() {
   const { user, signOut } = useAuth();
@@ -99,8 +162,14 @@ export function AppSidebar() {
     }
   };
 
-  const visibleNav = useMemo(
-    () => nav.filter((n) => !n.managerOnly || canManage),
+  const visibleSections = useMemo(
+    () =>
+      navSections
+        .map((section) => ({
+          ...section,
+          items: section.items.filter((n) => !n.managerOnly || canManage),
+        }))
+        .filter((section) => section.items.length > 0),
     [canManage],
   );
 
@@ -159,22 +228,26 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Navegação</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {visibleNav.map((item) => (
-                <NavItem
-                  key={item.to}
-                  to={item.to}
-                  label={item.label}
-                  Icon={item.icon}
-                  active={path === item.to || (item.to !== "/dashboard" && path.startsWith(item.to))}
-                />
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {visibleSections.map((section) => (
+          <SidebarGroup key={section.id}>
+            <SidebarGroupLabel className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">
+              {section.label}
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {section.items.map((item) => (
+                  <NavItem
+                    key={item.to}
+                    to={item.to}
+                    label={item.label}
+                    Icon={item.icon}
+                    active={path === item.to || (item.to !== "/dashboard" && path.startsWith(item.to + "/"))}
+                  />
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
       </SidebarContent>
 
       <SidebarFooter className="border-t">
