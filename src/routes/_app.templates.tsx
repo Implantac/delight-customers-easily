@@ -120,9 +120,8 @@ function TemplatesPage() {
       <PageHeader
         title="Templates de mensagens"
         subtitle="Biblioteca compartilhada de emails, WhatsApp e scripts. Use merge tags para personalizar em segundos."
-      >
-        <Button onClick={startNew}><Plus className="mr-2 h-4 w-4" />Novo template</Button>
-      </PageHeader>
+        action={<Button onClick={startNew}><Plus className="mr-2 h-4 w-4" />Novo template</Button>}
+      />
 
       <div className="flex flex-wrap items-center gap-2">
         <Button size="sm" variant={channelFilter === "all" ? "default" : "outline"} onClick={() => setChannelFilter("all")}>Todos</Button>
