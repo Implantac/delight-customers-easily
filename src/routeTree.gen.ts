@@ -77,6 +77,7 @@ import { Route as AppAssetsRouteImport } from './routes/_app.assets'
 import { Route as AppApprovalsRouteImport } from './routes/_app.approvals'
 import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
 import { Route as AppActivitiesRouteImport } from './routes/_app.activities'
+import { Route as IOrgSlugRouteImport } from './routes/i.$org.$slug'
 import { Route as ApiPublicLeadFormRouteImport } from './routes/api/public/lead-form'
 import { Route as ApiPublicInboundEmailRouteImport } from './routes/api/public/inbound-email'
 import { Route as AppTicketsIdRouteImport } from './routes/_app.tickets.$id'
@@ -93,6 +94,8 @@ import { Route as AppInviteTokenRouteImport } from './routes/_app.invite.$token'
 import { Route as AppContactsIdRouteImport } from './routes/_app.contacts.$id'
 import { Route as AppCompaniesIdRouteImport } from './routes/_app.companies.$id'
 import { Route as ApiPublicHooksGenerateAlertsRouteImport } from './routes/api/public/hooks/generate-alerts'
+import { Route as ApiPublicHooksErpAgentPushRouteImport } from './routes/api/public/hooks/erp-agent-push'
+import { Route as ApiPublicHooksDailyBriefingRouteImport } from './routes/api/public/hooks/daily-briefing'
 import { Route as ApiPublicHooksActivityRemindersRouteImport } from './routes/api/public/hooks/activity-reminders'
 
 const LoginRoute = LoginRouteImport.update({
@@ -434,6 +437,11 @@ const AppActivitiesRoute = AppActivitiesRouteImport.update({
   path: '/activities',
   getParentRoute: () => AppRoute,
 } as any)
+const IOrgSlugRoute = IOrgSlugRouteImport.update({
+  id: '/i/$org/$slug',
+  path: '/i/$org/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicLeadFormRoute = ApiPublicLeadFormRouteImport.update({
   id: '/api/public/lead-form',
   path: '/api/public/lead-form',
@@ -513,6 +521,18 @@ const ApiPublicHooksGenerateAlertsRoute =
   ApiPublicHooksGenerateAlertsRouteImport.update({
     id: '/api/public/hooks/generate-alerts',
     path: '/api/public/hooks/generate-alerts',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicHooksErpAgentPushRoute =
+  ApiPublicHooksErpAgentPushRouteImport.update({
+    id: '/api/public/hooks/erp-agent-push',
+    path: '/api/public/hooks/erp-agent-push',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicHooksDailyBriefingRoute =
+  ApiPublicHooksDailyBriefingRouteImport.update({
+    id: '/api/public/hooks/daily-briefing',
+    path: '/api/public/hooks/daily-briefing',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ApiPublicHooksActivityRemindersRoute =
@@ -605,7 +625,10 @@ export interface FileRoutesByFullPath {
   '/tickets/$id': typeof AppTicketsIdRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
+  '/i/$org/$slug': typeof IOrgSlugRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
+  '/api/public/hooks/daily-briefing': typeof ApiPublicHooksDailyBriefingRoute
+  '/api/public/hooks/erp-agent-push': typeof ApiPublicHooksErpAgentPushRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
 }
 export interface FileRoutesByTo {
@@ -691,7 +714,10 @@ export interface FileRoutesByTo {
   '/tickets/$id': typeof AppTicketsIdRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
+  '/i/$org/$slug': typeof IOrgSlugRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
+  '/api/public/hooks/daily-briefing': typeof ApiPublicHooksDailyBriefingRoute
+  '/api/public/hooks/erp-agent-push': typeof ApiPublicHooksErpAgentPushRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
 }
 export interface FileRoutesById {
@@ -779,7 +805,10 @@ export interface FileRoutesById {
   '/_app/tickets/$id': typeof AppTicketsIdRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
+  '/i/$org/$slug': typeof IOrgSlugRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
+  '/api/public/hooks/daily-briefing': typeof ApiPublicHooksDailyBriefingRoute
+  '/api/public/hooks/erp-agent-push': typeof ApiPublicHooksErpAgentPushRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
 }
 export interface FileRouteTypes {
@@ -867,7 +896,10 @@ export interface FileRouteTypes {
     | '/tickets/$id'
     | '/api/public/inbound-email'
     | '/api/public/lead-form'
+    | '/i/$org/$slug'
     | '/api/public/hooks/activity-reminders'
+    | '/api/public/hooks/daily-briefing'
+    | '/api/public/hooks/erp-agent-push'
     | '/api/public/hooks/generate-alerts'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -953,7 +985,10 @@ export interface FileRouteTypes {
     | '/tickets/$id'
     | '/api/public/inbound-email'
     | '/api/public/lead-form'
+    | '/i/$org/$slug'
     | '/api/public/hooks/activity-reminders'
+    | '/api/public/hooks/daily-briefing'
+    | '/api/public/hooks/erp-agent-push'
     | '/api/public/hooks/generate-alerts'
   id:
     | '__root__'
@@ -1040,7 +1075,10 @@ export interface FileRouteTypes {
     | '/_app/tickets/$id'
     | '/api/public/inbound-email'
     | '/api/public/lead-form'
+    | '/i/$org/$slug'
     | '/api/public/hooks/activity-reminders'
+    | '/api/public/hooks/daily-briefing'
+    | '/api/public/hooks/erp-agent-push'
     | '/api/public/hooks/generate-alerts'
   fileRoutesById: FileRoutesById
 }
@@ -1050,7 +1088,10 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   ApiPublicInboundEmailRoute: typeof ApiPublicInboundEmailRoute
   ApiPublicLeadFormRoute: typeof ApiPublicLeadFormRoute
+  IOrgSlugRoute: typeof IOrgSlugRoute
   ApiPublicHooksActivityRemindersRoute: typeof ApiPublicHooksActivityRemindersRoute
+  ApiPublicHooksDailyBriefingRoute: typeof ApiPublicHooksDailyBriefingRoute
+  ApiPublicHooksErpAgentPushRoute: typeof ApiPublicHooksErpAgentPushRoute
   ApiPublicHooksGenerateAlertsRoute: typeof ApiPublicHooksGenerateAlertsRoute
 }
 
@@ -1532,6 +1573,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppActivitiesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/i/$org/$slug': {
+      id: '/i/$org/$slug'
+      path: '/i/$org/$slug'
+      fullPath: '/i/$org/$slug'
+      preLoaderRoute: typeof IOrgSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/lead-form': {
       id: '/api/public/lead-form'
       path: '/api/public/lead-form'
@@ -1642,6 +1690,20 @@ declare module '@tanstack/react-router' {
       path: '/api/public/hooks/generate-alerts'
       fullPath: '/api/public/hooks/generate-alerts'
       preLoaderRoute: typeof ApiPublicHooksGenerateAlertsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/hooks/erp-agent-push': {
+      id: '/api/public/hooks/erp-agent-push'
+      path: '/api/public/hooks/erp-agent-push'
+      fullPath: '/api/public/hooks/erp-agent-push'
+      preLoaderRoute: typeof ApiPublicHooksErpAgentPushRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/hooks/daily-briefing': {
+      id: '/api/public/hooks/daily-briefing'
+      path: '/api/public/hooks/daily-briefing'
+      fullPath: '/api/public/hooks/daily-briefing'
+      preLoaderRoute: typeof ApiPublicHooksDailyBriefingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/hooks/activity-reminders': {
@@ -1882,7 +1944,10 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   ApiPublicInboundEmailRoute: ApiPublicInboundEmailRoute,
   ApiPublicLeadFormRoute: ApiPublicLeadFormRoute,
+  IOrgSlugRoute: IOrgSlugRoute,
   ApiPublicHooksActivityRemindersRoute: ApiPublicHooksActivityRemindersRoute,
+  ApiPublicHooksDailyBriefingRoute: ApiPublicHooksDailyBriefingRoute,
+  ApiPublicHooksErpAgentPushRoute: ApiPublicHooksErpAgentPushRoute,
   ApiPublicHooksGenerateAlertsRoute: ApiPublicHooksGenerateAlertsRoute,
 }
 export const routeTree = rootRouteImport
