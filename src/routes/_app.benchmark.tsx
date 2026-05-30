@@ -155,31 +155,7 @@ function BenchmarkPage() {
         </TabsContent>
       </Tabs>
 
-      {/* Removido: bloco "Consolidado" antigo movido para a aba Consolidado acima. */}
-      <div className="hidden">{/* keep legacy markers for diff context */}</div>
-      {/* Tabela comparativa */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <KPI loading={isLoading} label="Receita 90d (consolidado)" value={fmt(consolidated.wonRevenue90)} icon={TrendingUp} tone="ok" />
-        <KPI loading={isLoading} label="Pipeline aberto" value={fmt(consolidated.openPipeline)} icon={Activity} />
-        <KPI loading={isLoading} label="Clientes ativos" value={consolidated.activeCustomers.toString()} icon={Users} />
-        <KPI loading={isLoading} label="A receber em atraso" value={fmt(consolidated.overdue)} icon={AlertTriangle} tone="danger" />
-      </div>
-
-      {leaders && (
-        <Card className="p-4">
-          <div className="text-sm font-medium flex items-center gap-2 mb-3">
-            <Trophy className="h-4 w-4 text-amber-500" /> Líderes do grupo (replicar prática)
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 text-sm">
-            <LeaderCell label="Maior receita 90d" row={leaders.revenue} value={leaders.revenue ? fmt(leaders.revenue.wonRevenue90) : "—"} />
-            <LeaderCell label="Maior conversão" row={leaders.conversion} value={leaders.conversion ? pct(leaders.conversion.conversion) : "—"} />
-            <LeaderCell label="Maior ticket médio" row={leaders.ticket} value={leaders.ticket ? fmt(leaders.ticket.ticketAvg) : "—"} />
-            <LeaderCell label="Mais ativa (30d)" row={leaders.activity} value={leaders.activity ? `${leaders.activity.activities30} atividades` : "—"} />
-          </div>
-        </Card>
-      )}
-
-      {/* Tabela comparativa */}
+      {/* Tabela comparativa (sempre visível abaixo das abas) */}
       {isLoading ? (
         <div className="space-y-2">
           {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-14 w-full" />)}
