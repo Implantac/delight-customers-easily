@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/select";
 import { Plus, DollarSign, AlertCircle, CheckCircle2, Trash2, Check } from "lucide-react";
 import { toast } from "sonner";
+import { ErpReadOnlyBanner } from "@/components/erp-readonly-banner";
 
 export const Route = createFileRoute("/_app/finance")({ component: FinancePage });
 
@@ -47,6 +48,7 @@ function FinancePage() {
   if (isLoading || !data) {
     return (
       <div className="p-4 md:p-8 space-y-4">
+      <ErpReadOnlyBanner entity="Lançamentos financeiros" />
         <Skeleton className="h-10 w-64" />
         <div className="grid gap-3 md:grid-cols-4">{[0,1,2,3].map(i => <Skeleton key={i} className="h-24" />)}</div>
         <Skeleton className="h-96" />

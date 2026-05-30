@@ -17,6 +17,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
 import { Boxes, Plus, ArrowDownToLine, ArrowUpFromLine, RefreshCcw, Trash2 } from "lucide-react";
+import { ErpReadOnlyBanner } from "@/components/erp-readonly-banner";
 
 export const Route = createFileRoute("/_app/stock")({ component: StockPage });
 
@@ -56,6 +57,7 @@ function StockPage() {
 
   return (
     <div className="space-y-6 p-4 md:p-6">
+      <ErpReadOnlyBanner entity="Movimentos de estoque" />
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="flex items-center gap-2 text-2xl font-semibold tracking-tight">

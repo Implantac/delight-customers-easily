@@ -17,6 +17,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
 import { Truck, Plus, Pencil, Trash2, Power, Mail, Phone } from "lucide-react";
+import { ErpReadOnlyBanner } from "@/components/erp-readonly-banner";
 
 export const Route = createFileRoute("/_app/suppliers")({ component: SuppliersPage });
 
@@ -55,6 +56,7 @@ function SuppliersPage() {
 
   return (
     <div className="space-y-6 p-4 md:p-6">
+      <ErpReadOnlyBanner entity="Fornecedores" />
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="flex items-center gap-2 text-2xl font-semibold tracking-tight">
