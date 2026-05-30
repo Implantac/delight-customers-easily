@@ -58,8 +58,6 @@ const nav = [
   { to: "/tickets", label: "Tickets", icon: LifeBuoy, shortcut: "", managerOnly: false },
   { to: "/templates", label: "Templates", icon: FileText, shortcut: "", managerOnly: false },
   { to: "/sequences", label: "Sequências", icon: Workflow, shortcut: "", managerOnly: false },
-  { to: "/playbooks", label: "Playbooks", icon: ClipboardList, shortcut: "", managerOnly: false },
-  { to: "/surveys", label: "Pesquisas NPS", icon: ClipboardCheck, shortcut: "", managerOnly: false },
   { to: "/kb", label: "Base de Conhecimento", icon: BookOpen, shortcut: "", managerOnly: false },
   { to: "/tags", label: "Tags", icon: Tag, shortcut: "", managerOnly: false },
   { to: "/views", label: "Visualizações", icon: Bookmark, shortcut: "", managerOnly: false },
