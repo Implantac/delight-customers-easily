@@ -530,49 +530,70 @@ export type Database = {
       }
       companies: {
         Row: {
+          address: string | null
+          city: string | null
+          country: string | null
           created_at: string
           custom_values: Json
           id: string
           industry: string | null
+          latitude: number | null
+          longitude: number | null
           name: string
           notes: string | null
           omie_id: number | null
           omie_synced_at: string | null
           organization_id: string
           size: string | null
+          state: string | null
           updated_at: string
           user_id: string
           website: string | null
+          zip: string | null
         }
         Insert: {
+          address?: string | null
+          city?: string | null
+          country?: string | null
           created_at?: string
           custom_values?: Json
           id?: string
           industry?: string | null
+          latitude?: number | null
+          longitude?: number | null
           name: string
           notes?: string | null
           omie_id?: number | null
           omie_synced_at?: string | null
           organization_id: string
           size?: string | null
+          state?: string | null
           updated_at?: string
           user_id: string
           website?: string | null
+          zip?: string | null
         }
         Update: {
+          address?: string | null
+          city?: string | null
+          country?: string | null
           created_at?: string
           custom_values?: Json
           id?: string
           industry?: string | null
+          latitude?: number | null
+          longitude?: number | null
           name?: string
           notes?: string | null
           omie_id?: number | null
           omie_synced_at?: string | null
           organization_id?: string
           size?: string | null
+          state?: string | null
           updated_at?: string
           user_id?: string
           website?: string | null
+          zip?: string | null
         }
         Relationships: [
           {
@@ -1415,6 +1436,59 @@ export type Database = {
           },
         ]
       }
+      influencers: {
+        Row: {
+          commission_pct: number | null
+          coupon_code: string | null
+          created_at: string
+          handle: string | null
+          id: string
+          is_active: boolean
+          name: string
+          notes: string | null
+          organization_id: string
+          platform: string | null
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          commission_pct?: number | null
+          coupon_code?: string | null
+          created_at?: string
+          handle?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          notes?: string | null
+          organization_id: string
+          platform?: string | null
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          commission_pct?: number | null
+          coupon_code?: string | null
+          created_at?: string
+          handle?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          notes?: string | null
+          organization_id?: string
+          platform?: string | null
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "influencers_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       invoices: {
         Row: {
           amount: number
@@ -1887,6 +1961,85 @@ export type Database = {
             columns: ["account_id"]
             isOneToOne: false
             referencedRelation: "loyalty_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      marketing_leads: {
+        Row: {
+          channel: string
+          city: string | null
+          converted_contact_id: string | null
+          converted_deal_id: string | null
+          created_at: string
+          email: string | null
+          id: string
+          message: string | null
+          name: string | null
+          organization_id: string
+          payload: Json
+          phone: string | null
+          source: string | null
+          state: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          channel: string
+          city?: string | null
+          converted_contact_id?: string | null
+          converted_deal_id?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          message?: string | null
+          name?: string | null
+          organization_id: string
+          payload?: Json
+          phone?: string | null
+          source?: string | null
+          state?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          channel?: string
+          city?: string | null
+          converted_contact_id?: string | null
+          converted_deal_id?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          message?: string | null
+          name?: string | null
+          organization_id?: string
+          payload?: Json
+          phone?: string | null
+          source?: string | null
+          state?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketing_leads_converted_contact_id_fkey"
+            columns: ["converted_contact_id"]
+            isOneToOne: false
+            referencedRelation: "contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketing_leads_converted_deal_id_fkey"
+            columns: ["converted_deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketing_leads_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
