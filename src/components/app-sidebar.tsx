@@ -93,6 +93,12 @@ export function AppSidebar() {
     }
   };
 
+  const visibleNav = useMemo(
+    () => nav.filter((n) => !n.managerOnly || canManage),
+    [canManage],
+  );
+
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="border-b">
