@@ -20,7 +20,7 @@ import {
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter,
 } from "@/components/ui/dialog";
-import { Plus, Trash2, Zap, ArrowRight } from "lucide-react";
+import { Plus, Trash2, Zap, ArrowRight, Sparkles, Trophy, Flame, UserPlus, Clock, Target } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/settings/automations")({
@@ -47,6 +47,80 @@ const ACTION_TYPES = [
 ];
 
 const ACTIVITY_TYPES = ["task", "call", "email", "meeting", "note"] as const;
+
+type Template = {
+  id: string;
+  icon: typeof Zap;
+  name: string;
+  description: string;
+  trigger_event: string;
+  conditions: Record<string, unknown>;
+  action_type: string;
+  action_config: Record<string, unknown>;
+};
+
+const TEMPLATES: Template[] = [
+  {
+    id: "onboarding-won",
+    icon: Trophy,
+    name: "Onboarding ao ganhar negócio",
+    description: "Quando um deal vai para 'won', cria tarefa de kick-off em 1 dia.",
+    trigger_event: "deal.stage_changed",
+    conditions: { to_stage: "won" },
+    action_type: "create_activity",
+    action_config: { type: "task", title: "Kick-off de onboarding", description: "Agendar primeira reunião com cliente novo.", due_in_days: 1 },
+  },
+  {
+    id: "recover-lost",
+    icon: Flame,
+    name: "Recuperar negócio perdido",
+    description: "Quando um deal vira 'lost', cria tarefa de reativação em 30 dias.",
+    trigger_event: "deal.stage_changed",
+    conditions: { to_stage: "lost" },
+    action_type: "create_activity",
+    action_config: { type: "call", title: "Reativar cliente perdido", description: "Ligar 30 dias depois para reabrir oportunidade.", due_in_days: 30 },
+  },
+  {
+    id: "welcome-contact",
+    icon: UserPlus,
+    name: "Boas-vindas a novo contato",
+    description: "Quando um contato é criado, agenda follow-up em 2 dias.",
+    trigger_event: "contact.created",
+    conditions: {},
+    action_type: "create_activity",
+    action_config: { type: "email", title: "E-mail de boas-vindas", description: "Apresentar a empresa e qualificar interesse.", due_in_days: 2 },
+  },
+  {
+    id: "notify-big-deal",
+    icon: Target,
+    name: "Avisar a equipe de deal grande",
+    description: "Quando um deal é criado, notifica o time (configure threshold depois).",
+    trigger_event: "deal.created",
+    conditions: {},
+    action_type: "create_notification",
+    action_config: { title: "Novo negócio criado", body: "Verifique se precisa de aprovação ou apoio." },
+  },
+  {
+    id: "followup-proposal",
+    icon: Clock,
+    name: "Follow-up de proposta enviada",
+    description: "Quando deal vai para 'proposal', cria follow-up em 3 dias.",
+    trigger_event: "deal.stage_changed",
+    conditions: { to_stage: "proposal" },
+    action_type: "create_activity",
+    action_config: { type: "call", title: "Follow-up de proposta", description: "Confirmar recebimento e tirar dúvidas.", due_in_days: 3 },
+  },
+  {
+    id: "recommend-on-win",
+    icon: Sparkles,
+    name: "Gerar recomendação no ganho",
+    description: "Ao ganhar deal, pede para a IA sugerir próximas ações naquela conta.",
+    trigger_event: "deal.won",
+    conditions: {},
+    action_type: "create_recommendation",
+    action_config: { surface: "customer-360" },
+  },
+];
 
 type AutomationRow = {
   id: string;
@@ -100,6 +174,28 @@ function AutomationsPage() {
     },
   });
 
+  const applyTemplate = useMutation({
+    mutationFn: async (t: Template) => {
+      if (!orgId || !user?.id) throw new Error("Sem organização");
+      const { error } = await supabase.from("automations").insert({
+        organization_id: orgId,
+        created_by: user.id,
+        name: t.name,
+        trigger_event: t.trigger_event,
+        conditions: t.conditions as never,
+        action_type: t.action_type,
+        action_config: t.action_config as never,
+        enabled: true,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["automations", orgId] });
+      toast.success("Automação criada a partir do template");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
   return (
     <div className="p-6 space-y-6 max-w-5xl mx-auto">
       <PageHeader
@@ -122,6 +218,39 @@ function AutomationsPage() {
           </Dialog>
         }
       />
+
+      <Card className="p-4">
+        <div className="flex items-center gap-2 mb-3">
+          <Sparkles className="h-4 w-4 text-primary" />
+          <h3 className="text-sm font-semibold">Templates prontos</h3>
+          <span className="text-xs text-muted-foreground">
+            Clique em um para ativar imediatamente — depois edite ou desligue se quiser.
+          </span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          {TEMPLATES.map((t) => {
+            const Icon = t.icon;
+            return (
+              <button
+                key={t.id}
+                type="button"
+                disabled={applyTemplate.isPending}
+                onClick={() => applyTemplate.mutate(t)}
+                className="text-left rounded-md border bg-card hover:bg-accent/40 transition p-3 disabled:opacity-50"
+              >
+                <div className="flex items-center gap-2 mb-1">
+                  <Icon className="h-4 w-4 text-primary shrink-0" />
+                  <span className="font-medium text-sm truncate">{t.name}</span>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">{t.description}</p>
+                <div className="mt-2 flex items-center gap-1 text-[11px] text-primary">
+                  <Plus className="h-3 w-3" /> Aplicar
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </Card>
 
       {isLoading ? (
         <Card className="p-8 text-sm text-muted-foreground">Carregando…</Card>
