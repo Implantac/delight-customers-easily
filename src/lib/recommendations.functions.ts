@@ -338,6 +338,229 @@ export const generateRecommendations = createServerFn({ method: "POST" })
     }
 
 
+    // ============================================================
+    // BLOCOS DE CRESCIMENTO / RETENÇÃO / PRODUTIVIDADE
+    // ============================================================
+    const STAGE_PROB: Record<string, number> = {
+      lead: 10, qualified: 30, proposal: 55, negotiation: 75, won: 100, lost: 0,
+    };
+
+    const [goalsRes, profilesRes, membersRes, contactsRes] = await Promise.all([
+      supabase.from("sales_goals").select("user_id, period_month, target_value").eq("organization_id", org),
+      supabase.from("profiles").select("id, full_name"),
+      supabase.from("memberships").select("user_id, role").eq("organization_id", org),
+      supabase.from("contacts").select("id, company_id").eq("organization_id", org),
+    ]);
+    const goals = goalsRes.data ?? [];
+    const profiles = new Map((profilesRes.data ?? []).map((p: any) => [p.id, p.full_name ?? "Vendedor"]));
+    const members = membersRes.data ?? [];
+    const contacts = contactsRes.data ?? [];
+
+    // 7) FORECAST — gap-to-goal por vendedor (mês corrente)
+    const today = new Date();
+    const cmStart = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), 1));
+    const nmStart = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth() + 1, 1));
+    type Rep = { uid: string; target: number; won: number; weighted: number };
+    const reps = new Map<string, Rep>();
+    const ensureRep = (uid: string | null | undefined) => {
+      if (!uid) return null;
+      if (!reps.has(uid)) reps.set(uid, { uid, target: 0, won: 0, weighted: 0 });
+      return reps.get(uid)!;
+    };
+    for (const g of goals as any[]) {
+      if (!g.user_id) continue;
+      const gm = new Date(g.period_month);
+      if (gm.getUTCFullYear() !== cmStart.getUTCFullYear() || gm.getUTCMonth() !== cmStart.getUTCMonth()) continue;
+      const r = ensureRep(g.user_id);
+      if (r) r.target += Number(g.target_value) || 0;
+    }
+    for (const d of deals as any[]) {
+      const close = d.expected_close ? new Date(d.expected_close) : null;
+      const inMonth = close && close >= cmStart && close < nmStart;
+      const wonThisMonth = d.stage === "won" &&
+        new Date(d.updated_at) >= cmStart && new Date(d.updated_at) < nmStart;
+      if (!inMonth && !wonThisMonth) continue;
+      const r = ensureRep(d.user_id);
+      if (!r) continue;
+      const value = Number(d.value) || 0;
+      const prob = STAGE_PROB[d.stage] ?? 10;
+      if (d.stage === "won") r.won += value;
+      else if (d.stage !== "lost") r.weighted += value * (prob / 100);
+    }
+    let orgGap = 0;
+    let orgTarget = 0;
+    for (const r of reps.values()) {
+      if (r.target <= 0) continue;
+      orgTarget += r.target;
+      const projected = r.won + r.weighted;
+      const gap = Math.max(0, r.target - projected);
+      orgGap += gap;
+      const attainment = Math.round((projected / r.target) * 100);
+      if (gap > 0 && attainment < 80) {
+        const name = profiles.get(r.uid) ?? "Vendedor";
+        drafts.push({
+          surface: "forecast",
+          entity_type: "user",
+          entity_id: r.uid,
+          user_id: r.uid,
+          priority: attainment < 40 ? 92 : attainment < 60 ? 85 : 75,
+          impact_brl: gap,
+          title: `${name} está em ${attainment}% da meta`,
+          reason: `Gap de ${gap.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 })} para fechar o mês. Priorizar deals em negociação.`,
+          action_label: "Ver pipeline",
+          action_href: `/pipeline`,
+          source: "heuristic",
+        });
+      }
+    }
+    if (orgTarget > 0 && orgGap > 0) {
+      const orgAttain = Math.round(((orgTarget - orgGap) / orgTarget) * 100);
+      if (orgAttain < 80) {
+        drafts.push({
+          surface: "dashboard",
+          priority: orgAttain < 50 ? 94 : 82,
+          impact_brl: orgGap,
+          title: `Fechar gap de meta: ${orgGap.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 })}`,
+          reason: `Time está em ${orgAttain}% da meta agregada do mês. Forecast aponta déficit.`,
+          action_label: "Abrir forecast",
+          action_href: `/forecast`,
+          source: "heuristic",
+        });
+      }
+    }
+
+    // 8) CHURN — empresas em risco alto + 9) EXPANSÃO
+    const contactsByCompany = new Map<string, string[]>();
+    for (const c of contacts as any[]) {
+      if (!c.company_id) continue;
+      const arr = contactsByCompany.get(c.company_id) ?? [];
+      arr.push(c.id);
+      contactsByCompany.set(c.company_id, arr);
+    }
+    type CoStat = { id: string; name: string; risk: number; daysSilent: number; wonValue: number; openValue: number; openCount: number; wonCount: number };
+    const coStats: CoStat[] = [];
+    for (const co of companies as any[]) {
+      const cDeals = deals.filter((d: any) => d.company_id === co.id);
+      const won = cDeals.filter((d: any) => d.stage === "won");
+      const lost = cDeals.filter((d: any) => d.stage === "lost");
+      const open = cDeals.filter((d: any) => d.stage !== "won" && d.stage !== "lost");
+      const cContactIds = contactsByCompany.get(co.id) ?? [];
+      const rel = acts.filter((a: any) =>
+        (a.deal_id && cDeals.some((d: any) => d.id === a.deal_id)) ||
+        (a.contact_id && cContactIds.includes(a.contact_id)),
+      );
+      const lastTs = Math.max(0,
+        ...cDeals.map((d: any) => new Date(d.updated_at).getTime()),
+        ...rel.map((a: any) => new Date(a.created_at).getTime()),
+      );
+      const daysSilent = lastTs ? Math.floor((now - lastTs) / DAY) : 9999;
+      let risk = 0;
+      if (daysSilent >= 90) risk += 45; else if (daysSilent >= 60) risk += 30; else if (daysSilent >= 30) risk += 15;
+      const lossRate = cDeals.length ? lost.length / cDeals.length : 0;
+      if (lossRate >= 0.5 && cDeals.length >= 2) risk += 20;
+      if (open.length === 0 && won.length > 0) risk += 15;
+      if (cContactIds.length === 0) risk += 10;
+      risk = Math.min(100, risk);
+      const wonValue = won.reduce((s: number, d: any) => s + Number(d.value || 0), 0);
+      const openValue = open.reduce((s: number, d: any) => s + Number(d.value || 0), 0);
+      coStats.push({ id: co.id, name: co.name, risk, daysSilent, wonValue, openValue, openCount: open.length, wonCount: won.length });
+    }
+
+    // Churn top 5
+    const churnTop = coStats.filter((c) => c.risk >= 60 && c.wonCount > 0)
+      .sort((a, b) => b.wonValue - a.wonValue).slice(0, 5);
+    for (const c of churnTop) {
+      drafts.push({
+        surface: "retention",
+        entity_type: "company",
+        entity_id: c.id,
+        priority: c.risk >= 80 ? 90 : 80,
+        impact_brl: c.wonValue,
+        title: `Reativar ${c.name} (risco ${c.risk})`,
+        reason: `${c.daysSilent === 9999 ? "Sem contato registrado" : `${c.daysSilent}d sem contato`}. Histórico de ${c.wonValue.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 })} em ganhos.`,
+        action_label: "Abrir cliente",
+        action_href: `/companies/${c.id}`,
+        source: "heuristic",
+      });
+    }
+    for (const c of churnTop.slice(0, 2)) {
+      drafts.push({
+        surface: "dashboard",
+        entity_type: "company",
+        entity_id: c.id,
+        priority: 86,
+        impact_brl: c.wonValue,
+        title: `Risco de churn: ${c.name}`,
+        reason: `Score ${c.risk}/100. Acionar antes de virar perda.`,
+        action_label: "Plano de retenção",
+        action_href: `/retention`,
+        source: "heuristic",
+      });
+    }
+
+    // Expansão top 5
+    const expansionTop = coStats.filter((c) =>
+      c.wonCount > 0 && c.risk < 60 && (c.openCount === 0 || c.openValue < c.wonValue * 0.3),
+    ).sort((a, b) => b.wonValue - a.wonValue).slice(0, 5);
+    for (const c of expansionTop) {
+      const expectedTicket = Math.round(c.wonValue / Math.max(1, c.wonCount));
+      drafts.push({
+        surface: "retention",
+        entity_type: "company",
+        entity_id: c.id,
+        priority: 70,
+        impact_brl: expectedTicket,
+        title: `Upsell em ${c.name}`,
+        reason: c.openCount === 0
+          ? `Cliente recorrente sem deal ativo. Ticket médio ${expectedTicket.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 })}.`
+          : `Pipeline aberto < 30% do histórico. Espaço claro para expandir.`,
+        action_label: "Abrir oportunidade",
+        action_href: `/companies/${c.id}`,
+        source: "heuristic",
+      });
+    }
+
+    // 10) PRODUTIVIDADE — gargalos individuais
+    const userIds = Array.from(new Set(members.map((m: any) => m.user_id)));
+    for (const uid of userIds) {
+      const myActs = acts.filter((a: any) => a.user_id === uid);
+      if (myActs.length < 5) continue;
+      const completed = myActs.filter((a: any) => a.completed);
+      const overdue = myActs.filter((a: any) =>
+        !a.completed && a.due_date && new Date(a.due_date).getTime() < now,
+      );
+      const completionRate = completed.length / myActs.length;
+      const name = profiles.get(uid) ?? "Vendedor";
+      if (overdue.length >= 5) {
+        drafts.push({
+          surface: "productivity",
+          entity_type: "user",
+          entity_id: uid,
+          user_id: uid,
+          priority: 80,
+          title: `${name} com ${overdue.length} tarefas atrasadas`,
+          reason: `Backlog crescente derruba conversão. Redistribuir ou destravar com coaching 1:1.`,
+          action_label: "Abrir agenda",
+          action_href: `/mytasks`,
+          source: "heuristic",
+        });
+      } else if (completionRate < 0.4 && myActs.length >= 10) {
+        drafts.push({
+          surface: "productivity",
+          entity_type: "user",
+          entity_id: uid,
+          user_id: uid,
+          priority: 70,
+          title: `${name} executando ${Math.round(completionRate * 100)}% das tarefas`,
+          reason: `Volume alto (${myActs.length}) mas baixa execução. Validar prioridades e remover bloqueios.`,
+          action_label: "Coaching",
+          action_href: `/coaching`,
+          source: "heuristic",
+        });
+      }
+    }
+
+
     // Wipe previous heuristic open recs, then bulk insert.
     await supabase
       .from("recommendations")

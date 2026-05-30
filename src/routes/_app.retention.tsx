@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useCurrentOrg } from "@/lib/org";
 import { getRetentionInsights } from "@/lib/churn.functions";
 import { PageHeader } from "@/components/page-header";
+import { NextActionBlock } from "@/components/next-action-block";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -43,6 +44,9 @@ function RetentionPage() {
         title="Retenção & Expansão"
         subtitle="Quem corre risco de churn e onde estão as oportunidades de crescer dentro da base."
       />
+
+      <NextActionBlock surface="retention" title="Reter e expandir agora" showRegenerate />
+
 
       <div className="grid gap-3 md:grid-cols-4">
         <Kpi icon={Heart} label="Saudáveis" value={summary.saudaveis} tone="emerald" />

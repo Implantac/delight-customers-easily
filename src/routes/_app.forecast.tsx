@@ -7,6 +7,7 @@ import { useCanManage } from "@/lib/permissions";
 import { supabase } from "@/integrations/supabase/client";
 import { getForecast, listGoals, upsertGoal, deleteGoal } from "@/lib/forecast.functions";
 import { PageHeader } from "@/components/page-header";
+import { NextActionBlock } from "@/components/next-action-block";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -63,6 +64,9 @@ function ForecastPage() {
         subtitle="Forecast ponderado pelo pipeline e progresso vs. meta deste mês."
         action={canManage ? <GoalsDialog orgId={orgId!} /> : null}
       />
+
+      <NextActionBlock surface="forecast" title="Como fechar o mês" showRegenerate />
+
 
       {/* KPIs */}
       <div className="grid gap-3 md:grid-cols-4">
