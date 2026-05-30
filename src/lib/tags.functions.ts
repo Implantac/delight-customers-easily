@@ -78,7 +78,7 @@ export const updateTag = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const { supabase } = context;
-    const patch: Record<string, unknown> = {};
+    const patch: { name?: string; color?: string } = {};
     if (data.name !== undefined) patch.name = data.name.trim();
     if (data.color !== undefined) patch.color = data.color;
     const { error } = await supabase.from("tags").update(patch).eq("id", data.id);
