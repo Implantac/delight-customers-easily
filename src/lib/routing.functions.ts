@@ -159,10 +159,10 @@ export const routeLead = createServerFn({ method: "POST" })
     }
 
     // Apply ownership to the underlying entity when supported
-    const tableMap: Record<string, string> = { deal: "deals", contact: "contacts", company: "companies" };
+    const tableMap: Record<string, "deals" | "contacts" | "companies"> = { deal: "deals", contact: "contacts", company: "companies" };
     const table = tableMap[data.lead_type];
     if (table) {
-      await supabase.from(table).update({ owner_id: pick.user_id }).eq("id", data.lead_id);
+      await (supabase as any).from(table).update({ owner_id: pick.user_id }).eq("id", data.lead_id);
     }
 
     await supabase.from("lead_routing_log").insert({
