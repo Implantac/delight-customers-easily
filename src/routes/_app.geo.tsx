@@ -207,6 +207,34 @@ function GeoPage() {
             </Button>
           </Card>
 
+          {displayRoute.length > 0 && (
+            <Card className="p-3 flex flex-wrap items-center gap-2">
+              <span className="text-xs text-muted-foreground mr-1">
+                {displayRoute.length} parada{displayRoute.length > 1 ? "s" : ""} · abrir navegação:
+              </span>
+              <Button size="sm" variant="outline" className="gap-1.5 h-8" onClick={() => openInMaps(displayRoute, "google")}>
+                <Navigation className="h-3.5 w-3.5" /> Google Maps
+              </Button>
+              <Button size="sm" variant="outline" className="gap-1.5 h-8" onClick={() => openInMaps(displayRoute, "waze")}>
+                <Navigation className="h-3.5 w-3.5" /> Waze
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="gap-1.5 h-8"
+                onClick={() => {
+                  const url = buildGoogleMapsUrl(displayRoute);
+                  navigator.clipboard.writeText(url).then(
+                    () => toast.success("Link da rota copiado"),
+                    () => toast.error("Falha ao copiar"),
+                  );
+                }}
+              >
+                <Share2 className="h-3.5 w-3.5" /> Copiar link
+              </Button>
+            </Card>
+          )}
+
           {aiM.data?.summary && (
             <Card className="p-3 border-primary/30 bg-primary/5 text-sm">
               <div className="flex items-center gap-2 text-primary font-medium mb-1">
