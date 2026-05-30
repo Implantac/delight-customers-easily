@@ -15,6 +15,8 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CopilotDrawer } from "@/components/copilot-drawer";
+import { BusinessHealthCard } from "@/components/business-health-card";
+import { NextActionBlock } from "@/components/next-action-block";
 import {
   AlertTriangle, TrendingUp, Target, Clock, Users, ArrowRight,
   Sparkles, Flame, Calendar, DollarSign, HeartPulse, Receipt, Gauge, Zap,
@@ -90,6 +92,12 @@ function CommandCenter() {
         subtitle="Onde está o dinheiro que ainda não estamos ganhando — e o que fazer hoje."
         action={<CopilotDrawer />}
       />
+
+      <BusinessHealthCard />
+
+      <NextActionBlock surface="dashboard" title="Ações para hoje" showRegenerate />
+
+
 
       {isLoading || !data ? (
         <div className="space-y-4">

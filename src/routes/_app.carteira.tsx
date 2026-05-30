@@ -5,6 +5,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useCurrentOrg } from "@/lib/org";
 import { getCommercialWallet, type WalletRow } from "@/lib/wallet.functions";
 import { PageHeader } from "@/components/page-header";
+import { NextActionBlock } from "@/components/next-action-block";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -84,6 +85,10 @@ function CarteiraPage() {
         subtitle="Quem comprou, quem está sumindo, quem está pronto pra recomprar — em uma visão só."
         icon={Briefcase}
       />
+
+      <div className="mt-4"><NextActionBlock surface="carteira" /></div>
+
+
 
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
         <KPI loading={isLoading} label="Clientes" value={data?.summary.total ?? 0} icon={Briefcase} />

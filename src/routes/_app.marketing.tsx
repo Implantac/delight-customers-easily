@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useCurrentOrg } from "@/lib/org";
 import { getMarketingOverview, updateLeadStatus, CHANNELS, type MarketingLead } from "@/lib/marketing.functions";
 import { PageHeader } from "@/components/page-header";
+import { NextActionBlock } from "@/components/next-action-block";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -50,6 +51,10 @@ function MarketingPage() {
         subtitle="Leads de todos os canais num só inbox — WhatsApp, redes sociais, Google e LPs."
         icon={Megaphone}
       />
+
+      <div className="mt-4"><NextActionBlock surface="marketing" /></div>
+
+
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <KPI loading={isLoading} label="Leads 30d" value={data?.summary.total_30d ?? 0} icon={Inbox} />

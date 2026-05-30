@@ -1,9 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
-// Daily briefing: 1 notification per user with a snapshot of their day:
-// open deals, overdue tasks, expected closes in 7d, top opportunity.
-// Designed to be scheduled via pg_cron at 07:30 local time.
+// Daily briefing — uma notificação por usuário às 07:30 BRT:
+// Pipeline, tarefas hoje, atrasadas, top oportunidade, top 3 riscos,
+// próxima ação prioritária. Lê da fila unificada `recommendations`.
 
 const DAY = 86400000;
 const fmt = (n: number) =>
@@ -21,23 +21,40 @@ type Row = {
 async function briefForOrg(orgId: string): Promise<Row[]> {
   const now = Date.now();
   const in7 = new Date(now + 7 * DAY).toISOString();
-  const [members, deals, acts] = await Promise.all([
+  const [members, deals, acts, recs, invoices] = await Promise.all([
     supabaseAdmin.from("memberships").select("user_id").eq("organization_id", orgId),
     supabaseAdmin.from("deals")
-      .select("id, title, value, stage, user_id, expected_close")
+      .select("id, title, value, stage, user_id, expected_close, company_id")
       .eq("organization_id", orgId)
       .not("stage", "in", "(won,lost)"),
     supabaseAdmin.from("activities")
       .select("id, due_date, completed, user_id")
       .eq("organization_id", orgId)
       .eq("completed", false),
+    supabaseAdmin.from("recommendations")
+      .select("user_id, title, priority, impact_brl, action_href, surface")
+      .eq("organization_id", orgId)
+      .eq("status", "open")
+      .order("priority", { ascending: false })
+      .limit(200),
+    supabaseAdmin.from("invoices")
+      .select("amount, status, due_date, company_id")
+      .eq("organization_id", orgId)
+      .neq("status", "paid"),
   ]);
+
+  const allRecs = (recs.data ?? []) as any[];
+  const allInvoices = (invoices.data ?? []) as any[];
+  const overdueTotal = allInvoices
+    .filter((i) => i.due_date && new Date(i.due_date).getTime() < now)
+    .reduce((s, i) => s + Number(i.amount ?? 0), 0);
 
   const rows: Row[] = [];
   for (const m of (members.data ?? []) as any[]) {
     const uid = m.user_id;
     const myDeals = ((deals.data ?? []) as any[]).filter((d) => d.user_id === uid);
     const myActs = ((acts.data ?? []) as any[]).filter((a) => a.user_id === uid && a.due_date);
+    const myRecs = allRecs.filter((r) => !r.user_id || r.user_id === uid);
 
     const overdue = myActs.filter((a) => new Date(a.due_date).getTime() < now).length;
     const today = myActs.filter((a) => {
@@ -46,14 +63,36 @@ async function briefForOrg(orgId: string): Promise<Row[]> {
     }).length;
     const closingSoon = myDeals.filter((d) => d.expected_close && d.expected_close <= in7).length;
     const pipelineValue = myDeals.reduce((s, d) => s + Number(d.value ?? 0), 0);
-    const top = [...myDeals].sort((a, b) => Number(b.value ?? 0) - Number(a.value ?? 0))[0];
+
+    // Top 3 oportunidades (priority desc, impact desc)
+    const opportunities = myRecs
+      .filter((r) => r.surface === "pipeline" || r.surface === "marketing" || r.surface === "dashboard")
+      .slice(0, 3);
+
+    // Top 3 riscos (carteira + alta prioridade)
+    const risks = myRecs
+      .filter((r) => r.surface === "carteira" || r.priority >= 88)
+      .slice(0, 3);
+
+    // Ação prioritária (single)
+    const priorityAction = myRecs[0];
 
     const lines: string[] = [];
-    lines.push(`Pipeline: ${myDeals.length} negócios · ${fmt(pipelineValue)}`);
+    lines.push(`📊 Pipeline: ${myDeals.length} negócios · ${fmt(pipelineValue)}`);
     if (today) lines.push(`📌 ${today} tarefa(s) hoje`);
     if (overdue) lines.push(`⚠️ ${overdue} atrasada(s)`);
     if (closingSoon) lines.push(`🎯 ${closingSoon} fecha(m) em 7d`);
-    if (top) lines.push(`Top: ${top.title} (${fmt(Number(top.value ?? 0))})`);
+    if (overdueTotal > 0) lines.push(`💰 Inadimplência: ${fmt(overdueTotal)}`);
+
+    if (opportunities.length) {
+      lines.push(`🚀 Top oportunidades: ${opportunities.map((o) => o.title).join(" • ")}`);
+    }
+    if (risks.length) {
+      lines.push(`🛑 Riscos: ${risks.map((r) => r.title).join(" • ")}`);
+    }
+    if (priorityAction) {
+      lines.push(`👉 Comece por: ${priorityAction.title}`);
+    }
 
     if (lines.length <= 1 && !myDeals.length && !myActs.length) continue;
 
@@ -63,7 +102,7 @@ async function briefForOrg(orgId: string): Promise<Row[]> {
       type: "briefing.daily",
       title: "Seu plano do dia",
       body: lines.join(" · "),
-      link: "/command",
+      link: priorityAction?.action_href ?? "/command",
     });
   }
   return rows;
