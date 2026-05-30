@@ -28,6 +28,7 @@ import { Route as AppRoutingRouteImport } from './routes/_app.routing'
 import { Route as AppRetentionRouteImport } from './routes/_app.retention'
 import { Route as AppReportsRouteImport } from './routes/_app.reports'
 import { Route as AppReferralsRouteImport } from './routes/_app.referrals'
+import { Route as AppQuotesRouteImport } from './routes/_app.quotes'
 import { Route as AppProposalsRouteImport } from './routes/_app.proposals'
 import { Route as AppProductsRouteImport } from './routes/_app.products'
 import { Route as AppProductivityRouteImport } from './routes/_app.productivity'
@@ -174,6 +175,11 @@ const AppReportsRoute = AppReportsRouteImport.update({
 const AppReferralsRoute = AppReferralsRouteImport.update({
   id: '/referrals',
   path: '/referrals',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppQuotesRoute = AppQuotesRouteImport.update({
+  id: '/quotes',
+  path: '/quotes',
   getParentRoute: () => AppRoute,
 } as any)
 const AppProposalsRoute = AppProposalsRouteImport.update({
@@ -484,6 +490,7 @@ export interface FileRoutesByFullPath {
   '/productivity': typeof AppProductivityRoute
   '/products': typeof AppProductsRoute
   '/proposals': typeof AppProposalsRouteWithChildren
+  '/quotes': typeof AppQuotesRoute
   '/referrals': typeof AppReferralsRoute
   '/reports': typeof AppReportsRoute
   '/retention': typeof AppRetentionRoute
@@ -557,6 +564,7 @@ export interface FileRoutesByTo {
   '/productivity': typeof AppProductivityRoute
   '/products': typeof AppProductsRoute
   '/proposals': typeof AppProposalsRouteWithChildren
+  '/quotes': typeof AppQuotesRoute
   '/referrals': typeof AppReferralsRoute
   '/reports': typeof AppReportsRoute
   '/retention': typeof AppRetentionRoute
@@ -632,6 +640,7 @@ export interface FileRoutesById {
   '/_app/productivity': typeof AppProductivityRoute
   '/_app/products': typeof AppProductsRoute
   '/_app/proposals': typeof AppProposalsRouteWithChildren
+  '/_app/quotes': typeof AppQuotesRoute
   '/_app/referrals': typeof AppReferralsRoute
   '/_app/reports': typeof AppReportsRoute
   '/_app/retention': typeof AppRetentionRoute
@@ -707,6 +716,7 @@ export interface FileRouteTypes {
     | '/productivity'
     | '/products'
     | '/proposals'
+    | '/quotes'
     | '/referrals'
     | '/reports'
     | '/retention'
@@ -780,6 +790,7 @@ export interface FileRouteTypes {
     | '/productivity'
     | '/products'
     | '/proposals'
+    | '/quotes'
     | '/referrals'
     | '/reports'
     | '/retention'
@@ -854,6 +865,7 @@ export interface FileRouteTypes {
     | '/_app/productivity'
     | '/_app/products'
     | '/_app/proposals'
+    | '/_app/quotes'
     | '/_app/referrals'
     | '/_app/reports'
     | '/_app/retention'
@@ -1031,6 +1043,13 @@ declare module '@tanstack/react-router' {
       path: '/referrals'
       fullPath: '/referrals'
       preLoaderRoute: typeof AppReferralsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/quotes': {
+      id: '/_app/quotes'
+      path: '/quotes'
+      fullPath: '/quotes'
+      preLoaderRoute: typeof AppQuotesRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/proposals': {
@@ -1515,6 +1534,7 @@ interface AppRouteChildren {
   AppProductivityRoute: typeof AppProductivityRoute
   AppProductsRoute: typeof AppProductsRoute
   AppProposalsRoute: typeof AppProposalsRouteWithChildren
+  AppQuotesRoute: typeof AppQuotesRoute
   AppReferralsRoute: typeof AppReferralsRoute
   AppReportsRoute: typeof AppReportsRoute
   AppRetentionRoute: typeof AppRetentionRoute
@@ -1577,6 +1597,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppProductivityRoute: AppProductivityRoute,
   AppProductsRoute: AppProductsRoute,
   AppProposalsRoute: AppProposalsRouteWithChildren,
+  AppQuotesRoute: AppQuotesRoute,
   AppReferralsRoute: AppReferralsRoute,
   AppReportsRoute: AppReportsRoute,
   AppRetentionRoute: AppRetentionRoute,
