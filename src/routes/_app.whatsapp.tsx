@@ -218,6 +218,10 @@ function WhatsAppPage() {
         }
       />
 
+      <div className="px-6 mb-4">
+        <WhatsAppSlaPanel onPick={(id) => setSelectedId(id)} />
+      </div>
+
       {/* SLA strip */}
       <div className="px-6 grid grid-cols-2 md:grid-cols-6 gap-3 mb-4">
         <SlaCard label="Abertas" value={slaQ.data?.open ?? 0} />
