@@ -21,9 +21,10 @@ import {
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { Sparkles, Plus, Trash2, Copy } from "lucide-react";
+import { Sparkles, Plus, Trash2, Copy, Download } from "lucide-react";
 import { toast } from "sonner";
 import { InfluencerMetricsPanel } from "@/components/influencer-metrics-panel";
+import { toCSV, downloadCSV } from "@/lib/csv-export";
 
 export const Route = createFileRoute("/_app/influencers")({ component: InfluencersPage });
 
