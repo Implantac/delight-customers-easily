@@ -134,7 +134,7 @@ function WeeklyExec() {
           <div className="flex items-baseline justify-between">
             <div>
               <h1 className="text-2xl font-bold tracking-tight">Relatório Executivo Semanal</h1>
-              <p className="text-gray-600 mt-1">{organization?.name ?? "Organização"} · {periodLabel}</p>
+              <p className="text-gray-600 mt-1">{org?.name ?? "Organização"} · {periodLabel}</p>
             </div>
             <div className="text-right text-xs text-gray-500">
               Gerado em<br />
