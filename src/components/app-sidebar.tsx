@@ -42,115 +42,103 @@ type NavSection = {
 };
 
 /**
- * Nova arquitetura comercial — CRM como copiloto, não ERP.
- * Grupos colapsados por padrão = ruído menor, foco no que vende.
+ * Arquitetura comercial do USE CRM.
+ * Regra: CRM ≠ ERP. Tudo que parece ERP fica sob "Integrações ERP (consulta)",
+ * colapsado por padrão. A nav primária responde "o que faço para vender mais hoje?".
+ *
+ * Mapeamento dos 17 itens pedidos no briefing:
+ *   Dashboard → /dashboard          Representantes → /goals (Onda 5 ganha rota dedicada)
+ *   Carteira  → /carteira           Agenda         → /calendar
+ *   Leads     → /marketing          WhatsApp       → /whatsapp
+ *   Clientes  → /contacts           Marketing      → /campaigns
+ *   Oportunidades → /opportunity-map (Onda 4 traz Central)
+ *   Influencers → /influencers      Geointeligência → /geo
+ *   IA Comercial → /ia-comercial    Relatórios      → /reports
+ *   Integrações ERP → /integrations Empresas        → /companies
+ *   Usuários  → /settings/organization (aba membros)
+ *   Configurações → /settings/organization
  */
 const navSections: NavSection[] = [
   {
-    id: "today",
-    label: "Hoje",
+    id: "comercial",
+    label: "Comercial",
     items: [
-      { to: "/command", label: "Plano do dia", icon: Sparkles, shortcut: "G H" },
       { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, shortcut: "G D" },
-      { to: "/alerts", label: "Alertas", icon: AlertTriangle, shortcut: "G L" },
-    ],
-  },
-  {
-    id: "wallet",
-    label: "Carteira comercial",
-    items: [
-      { to: "/carteira", label: "Carteira 360", icon: Briefcase, shortcut: "G W" },
+      { to: "/carteira", label: "Carteira", icon: Briefcase, shortcut: "G W" },
+      { to: "/marketing", label: "Leads", icon: Flame, shortcut: "G L" },
       { to: "/contacts", label: "Clientes", icon: Users, shortcut: "G C" },
-      { to: "/companies", label: "Grupos / Filiais", icon: Building, shortcut: "G E" },
-      { to: "/lead-scoring", label: "Lead scoring", icon: Flame },
-      { to: "/retention", label: "Retenção & churn", icon: HeartPulse },
+      { to: "/opportunity-map", label: "Oportunidades", icon: Target },
+      { to: "/goals", label: "Representantes", icon: Award, managerOnly: true },
     ],
   },
   {
-    id: "pipeline",
-    label: "Pipeline & metas",
+    id: "engajamento",
+    label: "Engajamento",
+    items: [
+      { to: "/calendar", label: "Agenda", icon: CalendarIcon },
+      { to: "/whatsapp", label: "WhatsApp", icon: MessageSquare },
+      { to: "/campaigns", label: "Marketing", icon: Megaphone },
+      { to: "/influencers", label: "Influencers", icon: Sparkles },
+    ],
+  },
+  {
+    id: "inteligencia",
+    label: "Inteligência",
+    items: [
+      { to: "/geo", label: "Geointeligência", icon: MapPin, shortcut: "G M" },
+      { to: "/ia-comercial", label: "IA Comercial", icon: Sparkles, shortcut: "G I" },
+      { to: "/reports", label: "Relatórios", icon: BarChart3, shortcut: "G R", managerOnly: true },
+    ],
+  },
+  {
+    id: "configuracao",
+    label: "Configuração",
+    items: [
+      { to: "/integrations", label: "Integrações ERP", icon: Plug, managerOnly: true },
+      { to: "/companies", label: "Empresas", icon: Building },
+      { to: "/settings/organization", label: "Configurações", icon: Settings },
+    ],
+  },
+  {
+    id: "comercial-extra",
+    label: "Comercial — aprofundar",
+    defaultCollapsed: true,
     items: [
       { to: "/pipeline", label: "Pipeline", icon: KanbanSquare, shortcut: "G P" },
       { to: "/forecast", label: "Previsão", icon: Target, shortcut: "G F" },
       { to: "/win-loss", label: "Win / Loss", icon: Trophy },
-      { to: "/goals", label: "Metas & ranking", icon: Award },
+      { to: "/lead-scoring", label: "Lead scoring", icon: Flame },
+      { to: "/retention", label: "Retenção & churn", icon: HeartPulse },
+      { to: "/segments", label: "Segmentação RFM", icon: PieChart },
+      { to: "/territories", label: "Territórios", icon: RouteIcon, managerOnly: true },
+      { to: "/cohorts", label: "Cohorts", icon: PieChart, managerOnly: true },
+      { to: "/benchmark", label: "Benchmark do grupo", icon: GitBranch, managerOnly: true },
+      { to: "/productivity", label: "Produtividade", icon: Activity, managerOnly: true },
+      { to: "/commissions", label: "Comissões", icon: Receipt },
     ],
   },
   {
-    id: "relationship",
-    label: "Relacionamento",
+    id: "engajamento-extra",
+    label: "Engajamento — aprofundar",
+    defaultCollapsed: true,
     items: [
-      { to: "/calendar", label: "Agenda", icon: CalendarIcon },
       { to: "/activities", label: "Atividades", icon: CheckSquare, shortcut: "G A" },
       { to: "/mytasks", label: "Minhas tarefas", icon: Inbox, shortcut: "G T" },
-    ],
-  },
-  {
-    id: "omni",
-    label: "Omnichannel",
-    items: [
-      { to: "/whatsapp", label: "WhatsApp multi-atendimento", icon: MessageSquare },
       { to: "/chat", label: "Chat interno", icon: MessageSquare },
-      { to: "/campaigns", label: "E-mail & campanhas", icon: Mail },
       { to: "/templates", label: "Templates", icon: FileText },
       { to: "/sequences", label: "Sequências", icon: Workflow },
-    ],
-  },
-  {
-    id: "ai",
-    label: "IA comercial",
-    items: [
-      { to: "/ia-comercial", label: "Agentes IA", icon: Sparkles, shortcut: "G I" },
-      { to: "/coaching", label: "Coaching IA", icon: Compass },
-      { to: "/playbooks", label: "Playbooks", icon: ClipboardList },
-      { to: "/lead-forms", label: "Captura de leads", icon: FormInput },
-      { to: "/referrals", label: "Indicações", icon: Gift },
-    ],
-  },
-  {
-    id: "geo",
-    label: "Geointeligência",
-    items: [
-      { to: "/geo", label: "Mapa & Rotas IA", icon: MapPin, shortcut: "G M" },
-      { to: "/opportunity-map", label: "Oportunidades", icon: Map },
-      { to: "/territories", label: "Territórios", icon: RouteIcon, managerOnly: true },
-      { to: "/segments", label: "Segmentação RFM", icon: PieChart },
-    ],
-  },
-  {
-    id: "marketing",
-    label: "Marketing & Captação",
-    items: [
-      { to: "/marketing", label: "Inbox de leads", icon: Megaphone, shortcut: "G L" },
-      { to: "/influencers", label: "Influenciadores", icon: Sparkles },
       { to: "/lead-forms", label: "Formulários / LPs", icon: FormInput },
-      { to: "/campaigns", label: "Campanhas", icon: Send },
-    ],
-  },
-  {
-    id: "bi",
-    label: "BI comercial",
-    items: [
-      { to: "/reports", label: "Relatórios", icon: BarChart3, shortcut: "G R", managerOnly: true },
-      { to: "/benchmark", label: "Benchmark do grupo", icon: GitBranch, managerOnly: true },
-      { to: "/cohorts", label: "Cohorts", icon: PieChart, managerOnly: true },
-      { to: "/productivity", label: "Produtividade", icon: Activity, managerOnly: true },
+      { to: "/referrals", label: "Indicações", icon: Gift },
       { to: "/surveys", label: "Pesquisas (NPS)", icon: Smile },
       { to: "/loyalty", label: "Fidelidade", icon: Award },
+      { to: "/coaching", label: "Coaching IA", icon: Compass },
+      { to: "/playbooks", label: "Playbooks", icon: ClipboardList },
+      { to: "/command", label: "Plano do dia", icon: Sparkles, shortcut: "G H" },
+      { to: "/alerts", label: "Alertas", icon: AlertTriangle },
     ],
   },
   {
-    id: "integrations",
-    label: "Integrações & ERP",
-    items: [
-      { to: "/integrations", label: "ERP Connect Hub", icon: Plug, managerOnly: true },
-      { to: "/settings/erp-agent", label: "Agente ERP local", icon: Plug, managerOnly: true },
-      { to: "/onboarding", label: "Onboarding", icon: Rocket },
-    ],
-  },
-
-  {
-    id: "support",
+    id: "atendimento",
     label: "Atendimento",
     defaultCollapsed: true,
     items: [
@@ -161,13 +149,12 @@ const navSections: NavSection[] = [
     ],
   },
   /**
-   * ERP (leitura) — módulos mantidos por compatibilidade mas que pertencem ao ERP.
-   * Ficam colapsados por padrão para reforçar que o CRM NÃO é ERP.
-   * Rotas não são removidas; só saem da navegação primária.
+   * ERP (consulta) — módulos herdados que pertencem ao ERP.
+   * Mantidos para não quebrar links, mas escondidos para reforçar o foco do CRM.
    */
   {
     id: "erp-readonly",
-    label: "ERP (leitura)",
+    label: "Integrações ERP (consulta)",
     defaultCollapsed: true,
     items: [
       { to: "/products", label: "Produtos", icon: Package },
@@ -181,20 +168,21 @@ const navSections: NavSection[] = [
       { to: "/subscriptions", label: "Assinaturas", icon: Repeat },
       { to: "/banking", label: "Banco", icon: Landmark },
       { to: "/expenses", label: "Despesas", icon: Wallet },
-      { to: "/commissions", label: "Comissões", icon: Receipt },
       { to: "/stock", label: "Estoque", icon: Boxes },
       { to: "/suppliers", label: "Fornecedores", icon: Truck },
       { to: "/assets", label: "Ativos", icon: Boxes },
       { to: "/time", label: "Horas", icon: Clock },
       { to: "/documents", label: "Documentos", icon: Files },
+      { to: "/settings/erp-agent", label: "Agente ERP local", icon: Plug, managerOnly: true },
     ],
   },
   {
-    id: "system",
+    id: "sistema",
     label: "Sistema",
     defaultCollapsed: true,
     items: [
       { to: "/notifications", label: "Notificações", icon: Bell },
+      { to: "/onboarding", label: "Onboarding", icon: Rocket },
       { to: "/data-quality", label: "Data quality", icon: ShieldCheck, managerOnly: true },
       { to: "/audit", label: "Auditoria", icon: History, managerOnly: true },
     ],
