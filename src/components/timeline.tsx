@@ -1,8 +1,8 @@
-import { CheckSquare, Phone, Mail, Users, FileText, KanbanSquare } from "lucide-react";
+import { CheckSquare, Phone, Mail, Users, FileText, KanbanSquare, MessageCircle, Receipt, Trophy, XCircle } from "lucide-react";
 
 export type TimelineItem = {
   id: string;
-  kind: "activity" | "deal";
+  kind: "activity" | "deal" | "whatsapp" | "invoice" | "won" | "lost";
   type?: string | null;
   title: string;
   date: string;
@@ -14,6 +14,14 @@ const ACTIVITY_ICONS: Record<string, typeof CheckSquare> = {
   task: CheckSquare, call: Phone, email: Mail, meeting: Users, note: FileText,
 };
 
+const KIND_ICONS: Partial<Record<TimelineItem["kind"], typeof CheckSquare>> = {
+  deal: KanbanSquare,
+  whatsapp: MessageCircle,
+  invoice: Receipt,
+  won: Trophy,
+  lost: XCircle,
+};
+
 export function Timeline({ items, emptyLabel = "Nada por aqui." }: { items: TimelineItem[]; emptyLabel?: string }) {
   if (items.length === 0) {
     return <p className="text-sm text-muted-foreground">{emptyLabel}</p>;
@@ -21,7 +29,7 @@ export function Timeline({ items, emptyLabel = "Nada por aqui." }: { items: Time
   return (
     <ol className="relative space-y-4 border-l pl-5">
       {items.map((item) => {
-        const Icon = item.kind === "deal" ? KanbanSquare : (ACTIVITY_ICONS[item.type ?? "task"] ?? CheckSquare);
+        const Icon = KIND_ICONS[item.kind] ?? (item.kind === "activity" ? (ACTIVITY_ICONS[item.type ?? "task"] ?? CheckSquare) : CheckSquare);
         return (
           <li key={`${item.kind}-${item.id}`} className="relative">
             <span className="absolute -left-[26px] flex h-5 w-5 items-center justify-center rounded-full border bg-background text-muted-foreground">
