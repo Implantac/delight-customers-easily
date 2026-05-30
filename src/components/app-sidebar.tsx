@@ -3,7 +3,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import {
   LayoutDashboard, Users, KanbanSquare, CheckSquare, Briefcase, Check, ChevronsUpDown,
   ChevronRight, LogOut, Settings, Upload, BarChart3, Sliders, Webhook, Zap, Sparkles,
-  AlertTriangle, Target, HeartPulse, Map, Package, MessageSquare, ShieldCheck, Trophy,
+  AlertTriangle, Target, HeartPulse, Map, MapPin, Megaphone, Send, Package, MessageSquare, ShieldCheck, Trophy,
   Flame, Activity, Compass, PieChart, FileText, FileSignature, History, Bell,
   Calendar as CalendarIcon, BookOpen, LifeBuoy, Inbox, Workflow, Repeat, Receipt,
   Wallet, ClipboardList, PenLine, Route as RouteIcon, FormInput, Mail, Gift, Rocket,
@@ -110,9 +110,20 @@ const navSections: NavSection[] = [
     id: "geo",
     label: "Geointeligência",
     items: [
-      { to: "/opportunity-map", label: "Mapa de oportunidades", icon: Map },
+      { to: "/geo", label: "Mapa & Rotas IA", icon: MapPin, shortcut: "G M" },
+      { to: "/opportunity-map", label: "Oportunidades", icon: Map },
       { to: "/territories", label: "Territórios", icon: RouteIcon, managerOnly: true },
       { to: "/segments", label: "Segmentação RFM", icon: PieChart },
+    ],
+  },
+  {
+    id: "marketing",
+    label: "Marketing & Captação",
+    items: [
+      { to: "/marketing", label: "Inbox de leads", icon: Megaphone, shortcut: "G L" },
+      { to: "/influencers", label: "Influenciadores", icon: Sparkles },
+      { to: "/lead-forms", label: "Formulários / LPs", icon: FormInput },
+      { to: "/campaigns", label: "Campanhas", icon: Send },
     ],
   },
   {

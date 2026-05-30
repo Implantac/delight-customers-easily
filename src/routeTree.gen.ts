@@ -41,14 +41,17 @@ import { Route as AppOpportunityMapRouteImport } from './routes/_app.opportunity
 import { Route as AppOnboardingRouteImport } from './routes/_app.onboarding'
 import { Route as AppNotificationsRouteImport } from './routes/_app.notifications'
 import { Route as AppMytasksRouteImport } from './routes/_app.mytasks'
+import { Route as AppMarketingRouteImport } from './routes/_app.marketing'
 import { Route as AppLoyaltyRouteImport } from './routes/_app.loyalty'
 import { Route as AppLeadScoringRouteImport } from './routes/_app.lead-scoring'
 import { Route as AppLeadFormsRouteImport } from './routes/_app.lead-forms'
 import { Route as AppKbRouteImport } from './routes/_app.kb'
 import { Route as AppInvoicesRouteImport } from './routes/_app.invoices'
 import { Route as AppIntegrationsRouteImport } from './routes/_app.integrations'
+import { Route as AppInfluencersRouteImport } from './routes/_app.influencers'
 import { Route as AppIaComercialRouteImport } from './routes/_app.ia-comercial'
 import { Route as AppGoalsRouteImport } from './routes/_app.goals'
+import { Route as AppGeoRouteImport } from './routes/_app.geo'
 import { Route as AppForecastRouteImport } from './routes/_app.forecast'
 import { Route as AppFinanceRouteImport } from './routes/_app.finance'
 import { Route as AppExpensesRouteImport } from './routes/_app.expenses'
@@ -249,6 +252,11 @@ const AppMytasksRoute = AppMytasksRouteImport.update({
   path: '/mytasks',
   getParentRoute: () => AppRoute,
 } as any)
+const AppMarketingRoute = AppMarketingRouteImport.update({
+  id: '/marketing',
+  path: '/marketing',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppLoyaltyRoute = AppLoyaltyRouteImport.update({
   id: '/loyalty',
   path: '/loyalty',
@@ -279,6 +287,11 @@ const AppIntegrationsRoute = AppIntegrationsRouteImport.update({
   path: '/integrations',
   getParentRoute: () => AppRoute,
 } as any)
+const AppInfluencersRoute = AppInfluencersRouteImport.update({
+  id: '/influencers',
+  path: '/influencers',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppIaComercialRoute = AppIaComercialRouteImport.update({
   id: '/ia-comercial',
   path: '/ia-comercial',
@@ -287,6 +300,11 @@ const AppIaComercialRoute = AppIaComercialRouteImport.update({
 const AppGoalsRoute = AppGoalsRouteImport.update({
   id: '/goals',
   path: '/goals',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppGeoRoute = AppGeoRouteImport.update({
+  id: '/geo',
+  path: '/geo',
   getParentRoute: () => AppRoute,
 } as any)
 const AppForecastRoute = AppForecastRouteImport.update({
@@ -519,14 +537,17 @@ export interface FileRoutesByFullPath {
   '/expenses': typeof AppExpensesRoute
   '/finance': typeof AppFinanceRoute
   '/forecast': typeof AppForecastRoute
+  '/geo': typeof AppGeoRoute
   '/goals': typeof AppGoalsRoute
   '/ia-comercial': typeof AppIaComercialRoute
+  '/influencers': typeof AppInfluencersRoute
   '/integrations': typeof AppIntegrationsRoute
   '/invoices': typeof AppInvoicesRoute
   '/kb': typeof AppKbRouteWithChildren
   '/lead-forms': typeof AppLeadFormsRoute
   '/lead-scoring': typeof AppLeadScoringRoute
   '/loyalty': typeof AppLoyaltyRoute
+  '/marketing': typeof AppMarketingRoute
   '/mytasks': typeof AppMytasksRoute
   '/notifications': typeof AppNotificationsRoute
   '/onboarding': typeof AppOnboardingRoute
@@ -600,14 +621,17 @@ export interface FileRoutesByTo {
   '/expenses': typeof AppExpensesRoute
   '/finance': typeof AppFinanceRoute
   '/forecast': typeof AppForecastRoute
+  '/geo': typeof AppGeoRoute
   '/goals': typeof AppGoalsRoute
   '/ia-comercial': typeof AppIaComercialRoute
+  '/influencers': typeof AppInfluencersRoute
   '/integrations': typeof AppIntegrationsRoute
   '/invoices': typeof AppInvoicesRoute
   '/kb': typeof AppKbRouteWithChildren
   '/lead-forms': typeof AppLeadFormsRoute
   '/lead-scoring': typeof AppLeadScoringRoute
   '/loyalty': typeof AppLoyaltyRoute
+  '/marketing': typeof AppMarketingRoute
   '/mytasks': typeof AppMytasksRoute
   '/notifications': typeof AppNotificationsRoute
   '/onboarding': typeof AppOnboardingRoute
@@ -683,14 +707,17 @@ export interface FileRoutesById {
   '/_app/expenses': typeof AppExpensesRoute
   '/_app/finance': typeof AppFinanceRoute
   '/_app/forecast': typeof AppForecastRoute
+  '/_app/geo': typeof AppGeoRoute
   '/_app/goals': typeof AppGoalsRoute
   '/_app/ia-comercial': typeof AppIaComercialRoute
+  '/_app/influencers': typeof AppInfluencersRoute
   '/_app/integrations': typeof AppIntegrationsRoute
   '/_app/invoices': typeof AppInvoicesRoute
   '/_app/kb': typeof AppKbRouteWithChildren
   '/_app/lead-forms': typeof AppLeadFormsRoute
   '/_app/lead-scoring': typeof AppLeadScoringRoute
   '/_app/loyalty': typeof AppLoyaltyRoute
+  '/_app/marketing': typeof AppMarketingRoute
   '/_app/mytasks': typeof AppMytasksRoute
   '/_app/notifications': typeof AppNotificationsRoute
   '/_app/onboarding': typeof AppOnboardingRoute
@@ -766,14 +793,17 @@ export interface FileRouteTypes {
     | '/expenses'
     | '/finance'
     | '/forecast'
+    | '/geo'
     | '/goals'
     | '/ia-comercial'
+    | '/influencers'
     | '/integrations'
     | '/invoices'
     | '/kb'
     | '/lead-forms'
     | '/lead-scoring'
     | '/loyalty'
+    | '/marketing'
     | '/mytasks'
     | '/notifications'
     | '/onboarding'
@@ -847,14 +877,17 @@ export interface FileRouteTypes {
     | '/expenses'
     | '/finance'
     | '/forecast'
+    | '/geo'
     | '/goals'
     | '/ia-comercial'
+    | '/influencers'
     | '/integrations'
     | '/invoices'
     | '/kb'
     | '/lead-forms'
     | '/lead-scoring'
     | '/loyalty'
+    | '/marketing'
     | '/mytasks'
     | '/notifications'
     | '/onboarding'
@@ -929,14 +962,17 @@ export interface FileRouteTypes {
     | '/_app/expenses'
     | '/_app/finance'
     | '/_app/forecast'
+    | '/_app/geo'
     | '/_app/goals'
     | '/_app/ia-comercial'
+    | '/_app/influencers'
     | '/_app/integrations'
     | '/_app/invoices'
     | '/_app/kb'
     | '/_app/lead-forms'
     | '/_app/lead-scoring'
     | '/_app/loyalty'
+    | '/_app/marketing'
     | '/_app/mytasks'
     | '/_app/notifications'
     | '/_app/onboarding'
@@ -1220,6 +1256,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppMytasksRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/marketing': {
+      id: '/_app/marketing'
+      path: '/marketing'
+      fullPath: '/marketing'
+      preLoaderRoute: typeof AppMarketingRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/loyalty': {
       id: '/_app/loyalty'
       path: '/loyalty'
@@ -1262,6 +1305,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIntegrationsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/influencers': {
+      id: '/_app/influencers'
+      path: '/influencers'
+      fullPath: '/influencers'
+      preLoaderRoute: typeof AppInfluencersRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/ia-comercial': {
       id: '/_app/ia-comercial'
       path: '/ia-comercial'
@@ -1274,6 +1324,13 @@ declare module '@tanstack/react-router' {
       path: '/goals'
       fullPath: '/goals'
       preLoaderRoute: typeof AppGoalsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/geo': {
+      id: '/_app/geo'
+      path: '/geo'
+      fullPath: '/geo'
+      preLoaderRoute: typeof AppGeoRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/forecast': {
@@ -1654,14 +1711,17 @@ interface AppRouteChildren {
   AppExpensesRoute: typeof AppExpensesRoute
   AppFinanceRoute: typeof AppFinanceRoute
   AppForecastRoute: typeof AppForecastRoute
+  AppGeoRoute: typeof AppGeoRoute
   AppGoalsRoute: typeof AppGoalsRoute
   AppIaComercialRoute: typeof AppIaComercialRoute
+  AppInfluencersRoute: typeof AppInfluencersRoute
   AppIntegrationsRoute: typeof AppIntegrationsRoute
   AppInvoicesRoute: typeof AppInvoicesRoute
   AppKbRoute: typeof AppKbRouteWithChildren
   AppLeadFormsRoute: typeof AppLeadFormsRoute
   AppLeadScoringRoute: typeof AppLeadScoringRoute
   AppLoyaltyRoute: typeof AppLoyaltyRoute
+  AppMarketingRoute: typeof AppMarketingRoute
   AppMytasksRoute: typeof AppMytasksRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppOnboardingRoute: typeof AppOnboardingRoute
@@ -1724,14 +1784,17 @@ const AppRouteChildren: AppRouteChildren = {
   AppExpensesRoute: AppExpensesRoute,
   AppFinanceRoute: AppFinanceRoute,
   AppForecastRoute: AppForecastRoute,
+  AppGeoRoute: AppGeoRoute,
   AppGoalsRoute: AppGoalsRoute,
   AppIaComercialRoute: AppIaComercialRoute,
+  AppInfluencersRoute: AppInfluencersRoute,
   AppIntegrationsRoute: AppIntegrationsRoute,
   AppInvoicesRoute: AppInvoicesRoute,
   AppKbRoute: AppKbRouteWithChildren,
   AppLeadFormsRoute: AppLeadFormsRoute,
   AppLeadScoringRoute: AppLeadScoringRoute,
   AppLoyaltyRoute: AppLoyaltyRoute,
+  AppMarketingRoute: AppMarketingRoute,
   AppMytasksRoute: AppMytasksRoute,
   AppNotificationsRoute: AppNotificationsRoute,
   AppOnboardingRoute: AppOnboardingRoute,
