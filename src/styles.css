@@ -272,7 +272,19 @@
     border-color: color-mix(in oklab, var(--primary) 20%, var(--border));
   }
 
-  /* Surface elevada genérica */
+  /* Card interativo (clicável) — opt-in: aplica lift + glow no hover */
+  .interactive-card {
+    cursor: pointer;
+    transition: transform 200ms var(--ease-out), box-shadow 200ms var(--ease-out), border-color 200ms var(--ease-out);
+  }
+  .interactive-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: color-mix(in oklab, var(--primary) 25%, var(--border));
+  }
+  .interactive-card:active {
+    transform: translateY(0);
+  }
   .surface-elevated {
     background: var(--card);
     border: 1px solid var(--border);
