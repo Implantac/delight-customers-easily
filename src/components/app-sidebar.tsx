@@ -42,6 +42,7 @@ const nav = [
   { to: "/routing", label: "Roteamento", icon: RouteIcon, shortcut: "", managerOnly: true },
   { to: "/lead-forms", label: "Formulários", icon: FormInput, shortcut: "", managerOnly: false },
   { to: "/campaigns", label: "Campanhas", icon: Mail, shortcut: "", managerOnly: false },
+  { to: "/referrals", label: "Indicações", icon: Gift, shortcut: "", managerOnly: false },
   { to: "/expenses", label: "Despesas", icon: Wallet, shortcut: "", managerOnly: false },
   { to: "/territories", label: "Territórios", icon: Map, shortcut: "", managerOnly: true },
   { to: "/opportunity-map", label: "Mapa de Oportunidades", icon: Map, shortcut: "", managerOnly: false },
