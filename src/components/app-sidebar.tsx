@@ -7,7 +7,7 @@ import {
   Flame, Activity, Compass, PieChart, FileText, FileSignature, History, Bell,
   Calendar as CalendarIcon, BookOpen, LifeBuoy, Inbox, Workflow, Repeat, Receipt,
   Wallet, ClipboardList, PenLine, Route as RouteIcon, FormInput, Mail, Gift, Rocket,
-  Files, Clock, Award, Boxes, Smile, Landmark, Truck, Plug, Building, type LucideIcon,
+  Files, Clock, Award, Boxes, Smile, Landmark, Truck, Plug, Building, GitBranch, type LucideIcon,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useCurrentOrg, switchOrganization } from "@/lib/org";
