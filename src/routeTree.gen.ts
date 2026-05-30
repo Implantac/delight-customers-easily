@@ -13,6 +13,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppWinLossRouteImport } from './routes/_app.win-loss'
+import { Route as AppViewsRouteImport } from './routes/_app.views'
 import { Route as AppTemplatesRouteImport } from './routes/_app.templates'
 import { Route as AppTagsRouteImport } from './routes/_app.tags'
 import { Route as AppSegmentsRouteImport } from './routes/_app.segments'
@@ -69,6 +70,11 @@ const IndexRoute = IndexRouteImport.update({
 const AppWinLossRoute = AppWinLossRouteImport.update({
   id: '/win-loss',
   path: '/win-loss',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppViewsRoute = AppViewsRouteImport.update({
+  id: '/views',
+  path: '/views',
   getParentRoute: () => AppRoute,
 } as any)
 const AppTemplatesRoute = AppTemplatesRouteImport.update({
@@ -293,6 +299,7 @@ export interface FileRoutesByFullPath {
   '/segments': typeof AppSegmentsRoute
   '/tags': typeof AppTagsRoute
   '/templates': typeof AppTemplatesRoute
+  '/views': typeof AppViewsRoute
   '/win-loss': typeof AppWinLossRoute
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
@@ -336,6 +343,7 @@ export interface FileRoutesByTo {
   '/segments': typeof AppSegmentsRoute
   '/tags': typeof AppTagsRoute
   '/templates': typeof AppTemplatesRoute
+  '/views': typeof AppViewsRoute
   '/win-loss': typeof AppWinLossRoute
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
@@ -381,6 +389,7 @@ export interface FileRoutesById {
   '/_app/segments': typeof AppSegmentsRoute
   '/_app/tags': typeof AppTagsRoute
   '/_app/templates': typeof AppTemplatesRoute
+  '/_app/views': typeof AppViewsRoute
   '/_app/win-loss': typeof AppWinLossRoute
   '/_app/companies/$id': typeof AppCompaniesIdRoute
   '/_app/contacts/$id': typeof AppContactsIdRoute
@@ -426,6 +435,7 @@ export interface FileRouteTypes {
     | '/segments'
     | '/tags'
     | '/templates'
+    | '/views'
     | '/win-loss'
     | '/companies/$id'
     | '/contacts/$id'
@@ -469,6 +479,7 @@ export interface FileRouteTypes {
     | '/segments'
     | '/tags'
     | '/templates'
+    | '/views'
     | '/win-loss'
     | '/companies/$id'
     | '/contacts/$id'
@@ -513,6 +524,7 @@ export interface FileRouteTypes {
     | '/_app/segments'
     | '/_app/tags'
     | '/_app/templates'
+    | '/_app/views'
     | '/_app/win-loss'
     | '/_app/companies/$id'
     | '/_app/contacts/$id'
@@ -565,6 +577,13 @@ declare module '@tanstack/react-router' {
       path: '/win-loss'
       fullPath: '/win-loss'
       preLoaderRoute: typeof AppWinLossRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/views': {
+      id: '/_app/views'
+      path: '/views'
+      fullPath: '/views'
+      preLoaderRoute: typeof AppViewsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/templates': {
@@ -899,6 +918,7 @@ interface AppRouteChildren {
   AppSegmentsRoute: typeof AppSegmentsRoute
   AppTagsRoute: typeof AppTagsRoute
   AppTemplatesRoute: typeof AppTemplatesRoute
+  AppViewsRoute: typeof AppViewsRoute
   AppWinLossRoute: typeof AppWinLossRoute
   AppInviteTokenRoute: typeof AppInviteTokenRoute
   AppSettingsAutomationsRoute: typeof AppSettingsAutomationsRoute
@@ -935,6 +955,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSegmentsRoute: AppSegmentsRoute,
   AppTagsRoute: AppTagsRoute,
   AppTemplatesRoute: AppTemplatesRoute,
+  AppViewsRoute: AppViewsRoute,
   AppWinLossRoute: AppWinLossRoute,
   AppInviteTokenRoute: AppInviteTokenRoute,
   AppSettingsAutomationsRoute: AppSettingsAutomationsRoute,
