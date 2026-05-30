@@ -323,15 +323,15 @@ export const listOrgMembers = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     const ids = (members ?? []).map((m) => m.user_id);
     const { data: profiles } = ids.length
-      ? await supabase.from("profiles").select("id, full_name, email").in("id", ids)
-      : { data: [] as Array<{ id: string; full_name: string | null; email: string | null }> };
-    const profMap = new Map((profiles ?? []).map((p) => [p.id, p]));
+      ? await supabase.from("profiles").select("id, full_name").in("id", ids)
+      : { data: [] as Array<{ id: string; full_name: string | null }> };
+    const profMap = new Map((profiles ?? []).map((p) => [p.id, p.full_name]));
     return (members ?? []).map((m) => ({
       user_id: m.user_id,
       role: m.role as string,
-      full_name: profMap.get(m.user_id)?.full_name ?? null,
-      email: profMap.get(m.user_id)?.email ?? null,
+      full_name: profMap.get(m.user_id) ?? null,
     }));
+  });
   });
 
 export const listWATemplates = createServerFn({ method: "POST" })
