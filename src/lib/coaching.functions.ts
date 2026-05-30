@@ -57,7 +57,7 @@ export const getCoaching = createServerFn({ method: "POST" })
         .limit(50),
       supabase
         .from("deals")
-        .select("id, title, value, stage, expected_close_date, updated_at, contact_id, company_id")
+        .select("id, title, value, stage, expected_close, updated_at, contact_id, company_id")
         .eq("organization_id", data.organization_id)
         .eq("user_id", targetUser)
         .not("stage", "in", "(won,lost)")
@@ -74,7 +74,7 @@ export const getCoaching = createServerFn({ method: "POST" })
     const overdue = overdueRes.data ?? [];
     const deals = (dealsRes.data ?? []) as Array<{
       id: string; title: string; value: number | null; stage: string;
-      expected_close_date: string | null; updated_at: string;
+      expected_close: string | null; updated_at: string;
       contact_id: string | null; company_id: string | null;
     }>;
     const recentActs = recentActsRes.data ?? [];
@@ -105,7 +105,7 @@ export const getCoaching = createServerFn({ method: "POST" })
       const updatedDays = Math.floor((now - new Date(d.updated_at).getTime()) / 86400_000);
       const value = Number(d.value ?? 0);
       const hasRecent = actsByDeal.has(d.id);
-      const closeDate = d.expected_close_date ? new Date(d.expected_close_date) : null;
+      const closeDate = d.expected_close ? new Date(d.expected_close) : null;
 
       if (closeDate && closeDate.toISOString() <= next14 && closeDate.getTime() >= now - 86400_000) {
         const daysToClose = Math.max(0, Math.floor((closeDate.getTime() - now) / 86400_000));
