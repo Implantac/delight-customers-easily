@@ -90,6 +90,8 @@ function InfluencersPage() {
         }
       />
 
+      <NextActionBlock surface="influencers" title="Ações com influenciadores" />
+
       <InfluencerMetricsPanel />
 
       {isLoading ? (
