@@ -107,8 +107,8 @@ export const generateRecommendations = createServerFn({ method: "POST" })
         .select("id, name")
         .eq("organization_id", org),
       supabase
-        .from("leads")
-        .select("id, name, score, status, created_at, owner_id")
+        .from("marketing_leads")
+        .select("id, name, status, channel, created_at, converted_deal_id")
         .eq("organization_id", org)
         .gte("created_at", new Date(now - 30 * DAY).toISOString())
         .limit(200),
