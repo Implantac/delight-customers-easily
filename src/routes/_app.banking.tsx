@@ -49,17 +49,17 @@ function BankingPage() {
   const invalidate = () => qc.invalidateQueries({ queryKey: ["banking", orgId] });
 
   const mAcc = useMutation({
-    mutationFn: (v: Parameters<typeof saveAcc>[0]["data"]) => saveAcc({ data: v }),
+    mutationFn: (v: any) => saveAcc({ data: v }),
     onSuccess: () => { toast.success("Conta salva"); invalidate(); },
     onError: (e: any) => toast.error(e.message),
   });
   const mTx = useMutation({
-    mutationFn: (v: Parameters<typeof saveTx>[0]["data"]) => saveTx({ data: v }),
+    mutationFn: (v: any) => saveTx({ data: v }),
     onSuccess: () => { toast.success("Lançamento salvo"); invalidate(); },
     onError: (e: any) => toast.error(e.message),
   });
   const mToggle = useMutation({
-    mutationFn: (v: Parameters<typeof toggle>[0]["data"]) => toggle({ data: v }),
+    mutationFn: (v: any) => toggle({ data: v }),
     onSuccess: () => invalidate(),
   });
   const mDel = useMutation({
