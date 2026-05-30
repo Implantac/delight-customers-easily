@@ -326,6 +326,14 @@ function WhatsAppPage() {
                   <div className="font-medium truncate">{selected.contact_name}</div>
                   <div className="text-xs text-muted-foreground truncate">{selected.contact_phone}</div>
                 </div>
+                {selected.contact_id && (
+                  <Button asChild variant="outline" size="sm" className="h-8">
+                    <Link to="/contacts/$id" params={{ id: selected.contact_id }}>
+                      <User className="w-3.5 h-3.5 mr-1" />Abrir contato
+                    </Link>
+                  </Button>
+                )}
+
                 <Select
                   value={selected.status}
                   onValueChange={(v) => updateMut.mutate({ status: v as "open" | "pending" | "resolved" })}
