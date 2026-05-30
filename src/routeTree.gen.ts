@@ -13,6 +13,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppWinLossRouteImport } from './routes/_app.win-loss'
+import { Route as AppWhatsappRouteImport } from './routes/_app.whatsapp'
 import { Route as AppViewsRouteImport } from './routes/_app.views'
 import { Route as AppTimeRouteImport } from './routes/_app.time'
 import { Route as AppTicketsRouteImport } from './routes/_app.tickets'
@@ -111,6 +112,11 @@ const IndexRoute = IndexRouteImport.update({
 const AppWinLossRoute = AppWinLossRouteImport.update({
   id: '/win-loss',
   path: '/win-loss',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppWhatsappRoute = AppWhatsappRouteImport.update({
+  id: '/whatsapp',
+  path: '/whatsapp',
   getParentRoute: () => AppRoute,
 } as any)
 const AppViewsRoute = AppViewsRouteImport.update({
@@ -582,6 +588,7 @@ export interface FileRoutesByFullPath {
   '/tickets': typeof AppTicketsRouteWithChildren
   '/time': typeof AppTimeRoute
   '/views': typeof AppViewsRoute
+  '/whatsapp': typeof AppWhatsappRoute
   '/win-loss': typeof AppWinLossRoute
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
@@ -667,6 +674,7 @@ export interface FileRoutesByTo {
   '/tickets': typeof AppTicketsRouteWithChildren
   '/time': typeof AppTimeRoute
   '/views': typeof AppViewsRoute
+  '/whatsapp': typeof AppWhatsappRoute
   '/win-loss': typeof AppWinLossRoute
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
@@ -754,6 +762,7 @@ export interface FileRoutesById {
   '/_app/tickets': typeof AppTicketsRouteWithChildren
   '/_app/time': typeof AppTimeRoute
   '/_app/views': typeof AppViewsRoute
+  '/_app/whatsapp': typeof AppWhatsappRoute
   '/_app/win-loss': typeof AppWinLossRoute
   '/_app/companies/$id': typeof AppCompaniesIdRoute
   '/_app/contacts/$id': typeof AppContactsIdRoute
@@ -841,6 +850,7 @@ export interface FileRouteTypes {
     | '/tickets'
     | '/time'
     | '/views'
+    | '/whatsapp'
     | '/win-loss'
     | '/companies/$id'
     | '/contacts/$id'
@@ -926,6 +936,7 @@ export interface FileRouteTypes {
     | '/tickets'
     | '/time'
     | '/views'
+    | '/whatsapp'
     | '/win-loss'
     | '/companies/$id'
     | '/contacts/$id'
@@ -1012,6 +1023,7 @@ export interface FileRouteTypes {
     | '/_app/tickets'
     | '/_app/time'
     | '/_app/views'
+    | '/_app/whatsapp'
     | '/_app/win-loss'
     | '/_app/companies/$id'
     | '/_app/contacts/$id'
@@ -1070,6 +1082,13 @@ declare module '@tanstack/react-router' {
       path: '/win-loss'
       fullPath: '/win-loss'
       preLoaderRoute: typeof AppWinLossRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/whatsapp': {
+      id: '/_app/whatsapp'
+      path: '/whatsapp'
+      fullPath: '/whatsapp'
+      preLoaderRoute: typeof AppWhatsappRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/views': {
@@ -1769,6 +1788,7 @@ interface AppRouteChildren {
   AppTicketsRoute: typeof AppTicketsRouteWithChildren
   AppTimeRoute: typeof AppTimeRoute
   AppViewsRoute: typeof AppViewsRoute
+  AppWhatsappRoute: typeof AppWhatsappRoute
   AppWinLossRoute: typeof AppWinLossRoute
   AppInviteTokenRoute: typeof AppInviteTokenRoute
   AppSettingsAutomationsRoute: typeof AppSettingsAutomationsRoute
@@ -1843,6 +1863,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppTicketsRoute: AppTicketsRouteWithChildren,
   AppTimeRoute: AppTimeRoute,
   AppViewsRoute: AppViewsRoute,
+  AppWhatsappRoute: AppWhatsappRoute,
   AppWinLossRoute: AppWinLossRoute,
   AppInviteTokenRoute: AppInviteTokenRoute,
   AppSettingsAutomationsRoute: AppSettingsAutomationsRoute,

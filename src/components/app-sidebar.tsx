@@ -89,7 +89,8 @@ const navSections: NavSection[] = [
     id: "omni",
     label: "Omnichannel",
     items: [
-      { to: "/chat", label: "WhatsApp & chat", icon: MessageSquare },
+      { to: "/whatsapp", label: "WhatsApp multi-atendimento", icon: MessageSquare },
+      { to: "/chat", label: "Chat interno", icon: MessageSquare },
       { to: "/campaigns", label: "E-mail & campanhas", icon: Mail },
       { to: "/templates", label: "Templates", icon: FileText },
       { to: "/sequences", label: "Sequências", icon: Workflow },
