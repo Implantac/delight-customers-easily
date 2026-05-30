@@ -162,6 +162,10 @@
   }
   body {
     background-color: var(--color-background);
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -10%, color-mix(in oklab, var(--primary) 8%, transparent), transparent 70%),
+      radial-gradient(ellipse 60% 40% at 100% 0%, color-mix(in oklab, var(--primary-glow) 6%, transparent), transparent 60%);
+    background-attachment: fixed;
     color: var(--color-foreground);
     /* Recursos tipográficos: ligaturas, números proporcionais, melhor leitura */
     font-feature-settings: "cv11", "ss01", "ss03", "cv02";
