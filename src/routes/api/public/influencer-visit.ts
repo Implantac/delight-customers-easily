@@ -7,7 +7,7 @@ import { z } from "zod";
 // visitor_id + IP no nível de banco (idempotência leve no client).
 
 const Body = z.object({
-  organization_id: z.string().uuid(),
+  org_slug: z.string().min(1).max(120),
   slug: z.string().min(1).max(120),
   visitor_id: z.string().max(80).optional(),
   referer: z.string().max(500).optional(),
@@ -27,10 +27,17 @@ export const Route = createFileRoute("/api/public/influencer-visit")({
           return new Response("Bad request", { status: 400 });
         }
 
+        const { data: org } = await supabaseAdmin
+          .from("organizations")
+          .select("id")
+          .eq("slug", body.org_slug)
+          .maybeSingle();
+        if (!org) return new Response("Not found", { status: 404 });
+
         const { data: inf } = await supabaseAdmin
           .from("influencers")
           .select("id,is_active")
-          .eq("organization_id", body.organization_id)
+          .eq("organization_id", org.id)
           .eq("slug", body.slug)
           .maybeSingle();
 
@@ -41,7 +48,7 @@ export const Route = createFileRoute("/api/public/influencer-visit")({
         const ua = request.headers.get("user-agent")?.slice(0, 300) ?? null;
 
         await supabaseAdmin.from("influencer_visits").insert({
-          organization_id: body.organization_id,
+          organization_id: org.id,
           influencer_id: inf.id,
           visitor_id: body.visitor_id ?? null,
           referer: body.referer ?? null,
@@ -50,6 +57,7 @@ export const Route = createFileRoute("/api/public/influencer-visit")({
           utm_campaign: body.utm_campaign ?? null,
           country: body.country ?? null,
         });
+
 
         return Response.json({ ok: true });
       },
