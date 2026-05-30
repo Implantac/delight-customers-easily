@@ -362,13 +362,14 @@ function NavGroup({ section, path, collapsed }: NavGroupProps) {
           <SidebarMenu>
             {section.items.map((item) => (
               <NavItem
-                key={item.to}
+                key={`${section.id}:${item.to}:${item.label}`}
                 to={item.to}
                 label={item.label}
                 Icon={item.icon}
                 active={isItemActive(item.to)}
               />
             ))}
+
           </SidebarMenu>
         </SidebarGroupContent>
       )}
