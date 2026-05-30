@@ -110,9 +110,20 @@ const navSections: NavSection[] = [
     id: "geo",
     label: "Geointeligência",
     items: [
-      { to: "/opportunity-map", label: "Mapa de oportunidades", icon: Map },
+      { to: "/geo", label: "Mapa & Rotas IA", icon: MapPin, shortcut: "G M" },
+      { to: "/opportunity-map", label: "Oportunidades", icon: Map },
       { to: "/territories", label: "Territórios", icon: RouteIcon, managerOnly: true },
       { to: "/segments", label: "Segmentação RFM", icon: PieChart },
+    ],
+  },
+  {
+    id: "marketing",
+    label: "Marketing & Captação",
+    items: [
+      { to: "/marketing", label: "Inbox de leads", icon: Megaphone, shortcut: "G L" },
+      { to: "/influencers", label: "Influenciadores", icon: Sparkles },
+      { to: "/lead-forms", label: "Formulários / LPs", icon: FormInput },
+      { to: "/campaigns", label: "Campanhas", icon: Send },
     ],
   },
   {
