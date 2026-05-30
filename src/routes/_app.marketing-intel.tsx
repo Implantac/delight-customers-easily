@@ -267,3 +267,46 @@ function Kpi({
     </Card>
   );
 }
+
+type ChannelRow = { channel: string; leads: number; converted: number; conversion_rate: number; open_pipeline: number; won_revenue: number };
+
+function ChannelInsight({ channels, loading }: { channels: ChannelRow[]; loading: boolean }) {
+  const insight = useMemo(() => {
+    if (!channels.length) return null;
+    const withRPL = channels.map((c) => ({ ...c, rpl: c.leads > 0 ? c.won_revenue / c.leads : 0 }));
+    const topRevenue = [...withRPL].sort((a, b) => b.won_revenue - a.won_revenue)[0];
+    const topCVR = [...withRPL].filter((c) => c.leads >= 3).sort((a, b) => b.conversion_rate - a.conversion_rate)[0] ?? topRevenue;
+    const topRPL = [...withRPL].filter((c) => c.leads >= 3).sort((a, b) => b.rpl - a.rpl)[0] ?? topRevenue;
+    return { topRevenue, topCVR, topRPL };
+  }, [channels]);
+
+  if (loading) return <Skeleton className="h-24 w-full" />;
+  if (!insight) return null;
+
+  return (
+    <Card className="p-4 border-primary/30 bg-gradient-to-br from-primary/5 to-transparent">
+      <div className="flex items-center gap-2 mb-3">
+        <Sparkles className="h-4 w-4 text-primary" />
+        <h3 className="text-sm font-semibold">Onde focar agora</h3>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm">
+        <InsightCell icon={Trophy} label="Mais receita" channel={insight.topRevenue.channel} value={fmt(insight.topRevenue.won_revenue)} hint="canal que mais converteu em R$" />
+        <InsightCell icon={Flame} label="Maior taxa" channel={insight.topCVR.channel} value={pct(insight.topCVR.conversion_rate)} hint="melhor eficiência de funil" />
+        <InsightCell icon={TrendingUp} label="Melhor R$/lead" channel={insight.topRPL.channel} value={fmt(insight.topRPL.rpl)} hint="onde cada lead vale mais" />
+      </div>
+    </Card>
+  );
+}
+
+function InsightCell({ icon: Icon, label, channel, value, hint }: { icon: typeof Trophy; label: string; channel: string; value: string; hint: string }) {
+  return (
+    <div className="rounded-md border bg-card/70 p-3">
+      <div className="flex items-center gap-1.5 text-[11px] uppercase tracking-wide text-muted-foreground">
+        <Icon className="h-3 w-3" /> {label}
+      </div>
+      <div className="font-medium capitalize mt-1">{channel}</div>
+      <div className="text-primary font-mono text-sm">{value}</div>
+      <div className="text-[11px] text-muted-foreground mt-0.5">{hint}</div>
+    </div>
+  );
+}
