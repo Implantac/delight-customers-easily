@@ -54,7 +54,7 @@ function CommissionsPage() {
       <PageHeader
         title="Comissões"
         subtitle="Cálculo automático baseado em deals ganhos e metas batidas."
-        actions={
+        action={
           <Input
             type="month"
             value={period}
