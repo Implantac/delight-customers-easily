@@ -144,9 +144,11 @@ const navSections: NavSection[] = [
     label: "Integrações & ERP",
     items: [
       { to: "/integrations", label: "ERP Connect Hub", icon: Plug, managerOnly: true },
+      { to: "/settings/erp-agent", label: "Agente ERP local", icon: Plug, managerOnly: true },
       { to: "/onboarding", label: "Onboarding", icon: Rocket },
     ],
   },
+
   {
     id: "support",
     label: "Atendimento",
