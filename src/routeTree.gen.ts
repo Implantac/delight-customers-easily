@@ -77,6 +77,7 @@ import { Route as AppAssetsRouteImport } from './routes/_app.assets'
 import { Route as AppApprovalsRouteImport } from './routes/_app.approvals'
 import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
 import { Route as AppActivitiesRouteImport } from './routes/_app.activities'
+import { Route as IOrgSlugRouteImport } from './routes/i.$org.$slug'
 import { Route as ApiPublicLeadFormRouteImport } from './routes/api/public/lead-form'
 import { Route as ApiPublicInboundEmailRouteImport } from './routes/api/public/inbound-email'
 import { Route as AppTicketsIdRouteImport } from './routes/_app.tickets.$id'
@@ -85,6 +86,7 @@ import { Route as AppSettingsSecurityRouteImport } from './routes/_app.settings.
 import { Route as AppSettingsOrganizationRouteImport } from './routes/_app.settings.organization'
 import { Route as AppSettingsImportRouteImport } from './routes/_app.settings.import'
 import { Route as AppSettingsFieldsRouteImport } from './routes/_app.settings.fields'
+import { Route as AppSettingsErpAgentRouteImport } from './routes/_app.settings.erp-agent'
 import { Route as AppSettingsAutomationsRouteImport } from './routes/_app.settings.automations'
 import { Route as AppSequencesIdRouteImport } from './routes/_app.sequences.$id'
 import { Route as AppProposalsIdRouteImport } from './routes/_app.proposals.$id'
@@ -93,6 +95,8 @@ import { Route as AppInviteTokenRouteImport } from './routes/_app.invite.$token'
 import { Route as AppContactsIdRouteImport } from './routes/_app.contacts.$id'
 import { Route as AppCompaniesIdRouteImport } from './routes/_app.companies.$id'
 import { Route as ApiPublicHooksGenerateAlertsRouteImport } from './routes/api/public/hooks/generate-alerts'
+import { Route as ApiPublicHooksErpAgentPushRouteImport } from './routes/api/public/hooks/erp-agent-push'
+import { Route as ApiPublicHooksDailyBriefingRouteImport } from './routes/api/public/hooks/daily-briefing'
 import { Route as ApiPublicHooksActivityRemindersRouteImport } from './routes/api/public/hooks/activity-reminders'
 
 const LoginRoute = LoginRouteImport.update({
@@ -434,6 +438,11 @@ const AppActivitiesRoute = AppActivitiesRouteImport.update({
   path: '/activities',
   getParentRoute: () => AppRoute,
 } as any)
+const IOrgSlugRoute = IOrgSlugRouteImport.update({
+  id: '/i/$org/$slug',
+  path: '/i/$org/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicLeadFormRoute = ApiPublicLeadFormRouteImport.update({
   id: '/api/public/lead-form',
   path: '/api/public/lead-form',
@@ -472,6 +481,11 @@ const AppSettingsImportRoute = AppSettingsImportRouteImport.update({
 const AppSettingsFieldsRoute = AppSettingsFieldsRouteImport.update({
   id: '/settings/fields',
   path: '/settings/fields',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsErpAgentRoute = AppSettingsErpAgentRouteImport.update({
+  id: '/settings/erp-agent',
+  path: '/settings/erp-agent',
   getParentRoute: () => AppRoute,
 } as any)
 const AppSettingsAutomationsRoute = AppSettingsAutomationsRouteImport.update({
@@ -513,6 +527,18 @@ const ApiPublicHooksGenerateAlertsRoute =
   ApiPublicHooksGenerateAlertsRouteImport.update({
     id: '/api/public/hooks/generate-alerts',
     path: '/api/public/hooks/generate-alerts',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicHooksErpAgentPushRoute =
+  ApiPublicHooksErpAgentPushRouteImport.update({
+    id: '/api/public/hooks/erp-agent-push',
+    path: '/api/public/hooks/erp-agent-push',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicHooksDailyBriefingRoute =
+  ApiPublicHooksDailyBriefingRouteImport.update({
+    id: '/api/public/hooks/daily-briefing',
+    path: '/api/public/hooks/daily-briefing',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ApiPublicHooksActivityRemindersRoute =
@@ -597,6 +623,7 @@ export interface FileRoutesByFullPath {
   '/proposals/$id': typeof AppProposalsIdRoute
   '/sequences/$id': typeof AppSequencesIdRoute
   '/settings/automations': typeof AppSettingsAutomationsRoute
+  '/settings/erp-agent': typeof AppSettingsErpAgentRoute
   '/settings/fields': typeof AppSettingsFieldsRoute
   '/settings/import': typeof AppSettingsImportRoute
   '/settings/organization': typeof AppSettingsOrganizationRoute
@@ -605,7 +632,10 @@ export interface FileRoutesByFullPath {
   '/tickets/$id': typeof AppTicketsIdRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
+  '/i/$org/$slug': typeof IOrgSlugRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
+  '/api/public/hooks/daily-briefing': typeof ApiPublicHooksDailyBriefingRoute
+  '/api/public/hooks/erp-agent-push': typeof ApiPublicHooksErpAgentPushRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
 }
 export interface FileRoutesByTo {
@@ -683,6 +713,7 @@ export interface FileRoutesByTo {
   '/proposals/$id': typeof AppProposalsIdRoute
   '/sequences/$id': typeof AppSequencesIdRoute
   '/settings/automations': typeof AppSettingsAutomationsRoute
+  '/settings/erp-agent': typeof AppSettingsErpAgentRoute
   '/settings/fields': typeof AppSettingsFieldsRoute
   '/settings/import': typeof AppSettingsImportRoute
   '/settings/organization': typeof AppSettingsOrganizationRoute
@@ -691,7 +722,10 @@ export interface FileRoutesByTo {
   '/tickets/$id': typeof AppTicketsIdRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
+  '/i/$org/$slug': typeof IOrgSlugRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
+  '/api/public/hooks/daily-briefing': typeof ApiPublicHooksDailyBriefingRoute
+  '/api/public/hooks/erp-agent-push': typeof ApiPublicHooksErpAgentPushRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
 }
 export interface FileRoutesById {
@@ -771,6 +805,7 @@ export interface FileRoutesById {
   '/_app/proposals/$id': typeof AppProposalsIdRoute
   '/_app/sequences/$id': typeof AppSequencesIdRoute
   '/_app/settings/automations': typeof AppSettingsAutomationsRoute
+  '/_app/settings/erp-agent': typeof AppSettingsErpAgentRoute
   '/_app/settings/fields': typeof AppSettingsFieldsRoute
   '/_app/settings/import': typeof AppSettingsImportRoute
   '/_app/settings/organization': typeof AppSettingsOrganizationRoute
@@ -779,7 +814,10 @@ export interface FileRoutesById {
   '/_app/tickets/$id': typeof AppTicketsIdRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
+  '/i/$org/$slug': typeof IOrgSlugRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
+  '/api/public/hooks/daily-briefing': typeof ApiPublicHooksDailyBriefingRoute
+  '/api/public/hooks/erp-agent-push': typeof ApiPublicHooksErpAgentPushRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
 }
 export interface FileRouteTypes {
@@ -859,6 +897,7 @@ export interface FileRouteTypes {
     | '/proposals/$id'
     | '/sequences/$id'
     | '/settings/automations'
+    | '/settings/erp-agent'
     | '/settings/fields'
     | '/settings/import'
     | '/settings/organization'
@@ -867,7 +906,10 @@ export interface FileRouteTypes {
     | '/tickets/$id'
     | '/api/public/inbound-email'
     | '/api/public/lead-form'
+    | '/i/$org/$slug'
     | '/api/public/hooks/activity-reminders'
+    | '/api/public/hooks/daily-briefing'
+    | '/api/public/hooks/erp-agent-push'
     | '/api/public/hooks/generate-alerts'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -945,6 +987,7 @@ export interface FileRouteTypes {
     | '/proposals/$id'
     | '/sequences/$id'
     | '/settings/automations'
+    | '/settings/erp-agent'
     | '/settings/fields'
     | '/settings/import'
     | '/settings/organization'
@@ -953,7 +996,10 @@ export interface FileRouteTypes {
     | '/tickets/$id'
     | '/api/public/inbound-email'
     | '/api/public/lead-form'
+    | '/i/$org/$slug'
     | '/api/public/hooks/activity-reminders'
+    | '/api/public/hooks/daily-briefing'
+    | '/api/public/hooks/erp-agent-push'
     | '/api/public/hooks/generate-alerts'
   id:
     | '__root__'
@@ -1032,6 +1078,7 @@ export interface FileRouteTypes {
     | '/_app/proposals/$id'
     | '/_app/sequences/$id'
     | '/_app/settings/automations'
+    | '/_app/settings/erp-agent'
     | '/_app/settings/fields'
     | '/_app/settings/import'
     | '/_app/settings/organization'
@@ -1040,7 +1087,10 @@ export interface FileRouteTypes {
     | '/_app/tickets/$id'
     | '/api/public/inbound-email'
     | '/api/public/lead-form'
+    | '/i/$org/$slug'
     | '/api/public/hooks/activity-reminders'
+    | '/api/public/hooks/daily-briefing'
+    | '/api/public/hooks/erp-agent-push'
     | '/api/public/hooks/generate-alerts'
   fileRoutesById: FileRoutesById
 }
@@ -1050,7 +1100,10 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   ApiPublicInboundEmailRoute: typeof ApiPublicInboundEmailRoute
   ApiPublicLeadFormRoute: typeof ApiPublicLeadFormRoute
+  IOrgSlugRoute: typeof IOrgSlugRoute
   ApiPublicHooksActivityRemindersRoute: typeof ApiPublicHooksActivityRemindersRoute
+  ApiPublicHooksDailyBriefingRoute: typeof ApiPublicHooksDailyBriefingRoute
+  ApiPublicHooksErpAgentPushRoute: typeof ApiPublicHooksErpAgentPushRoute
   ApiPublicHooksGenerateAlertsRoute: typeof ApiPublicHooksGenerateAlertsRoute
 }
 
@@ -1532,6 +1585,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppActivitiesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/i/$org/$slug': {
+      id: '/i/$org/$slug'
+      path: '/i/$org/$slug'
+      fullPath: '/i/$org/$slug'
+      preLoaderRoute: typeof IOrgSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/lead-form': {
       id: '/api/public/lead-form'
       path: '/api/public/lead-form'
@@ -1588,6 +1648,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsFieldsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/settings/erp-agent': {
+      id: '/_app/settings/erp-agent'
+      path: '/settings/erp-agent'
+      fullPath: '/settings/erp-agent'
+      preLoaderRoute: typeof AppSettingsErpAgentRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/settings/automations': {
       id: '/_app/settings/automations'
       path: '/settings/automations'
@@ -1642,6 +1709,20 @@ declare module '@tanstack/react-router' {
       path: '/api/public/hooks/generate-alerts'
       fullPath: '/api/public/hooks/generate-alerts'
       preLoaderRoute: typeof ApiPublicHooksGenerateAlertsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/hooks/erp-agent-push': {
+      id: '/api/public/hooks/erp-agent-push'
+      path: '/api/public/hooks/erp-agent-push'
+      fullPath: '/api/public/hooks/erp-agent-push'
+      preLoaderRoute: typeof ApiPublicHooksErpAgentPushRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/hooks/daily-briefing': {
+      id: '/api/public/hooks/daily-briefing'
+      path: '/api/public/hooks/daily-briefing'
+      fullPath: '/api/public/hooks/daily-briefing'
+      preLoaderRoute: typeof ApiPublicHooksDailyBriefingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/hooks/activity-reminders': {
@@ -1792,6 +1873,7 @@ interface AppRouteChildren {
   AppWinLossRoute: typeof AppWinLossRoute
   AppInviteTokenRoute: typeof AppInviteTokenRoute
   AppSettingsAutomationsRoute: typeof AppSettingsAutomationsRoute
+  AppSettingsErpAgentRoute: typeof AppSettingsErpAgentRoute
   AppSettingsFieldsRoute: typeof AppSettingsFieldsRoute
   AppSettingsImportRoute: typeof AppSettingsImportRoute
   AppSettingsOrganizationRoute: typeof AppSettingsOrganizationRoute
@@ -1867,6 +1949,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppWinLossRoute: AppWinLossRoute,
   AppInviteTokenRoute: AppInviteTokenRoute,
   AppSettingsAutomationsRoute: AppSettingsAutomationsRoute,
+  AppSettingsErpAgentRoute: AppSettingsErpAgentRoute,
   AppSettingsFieldsRoute: AppSettingsFieldsRoute,
   AppSettingsImportRoute: AppSettingsImportRoute,
   AppSettingsOrganizationRoute: AppSettingsOrganizationRoute,
@@ -1882,19 +1965,12 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   ApiPublicInboundEmailRoute: ApiPublicInboundEmailRoute,
   ApiPublicLeadFormRoute: ApiPublicLeadFormRoute,
+  IOrgSlugRoute: IOrgSlugRoute,
   ApiPublicHooksActivityRemindersRoute: ApiPublicHooksActivityRemindersRoute,
+  ApiPublicHooksDailyBriefingRoute: ApiPublicHooksDailyBriefingRoute,
+  ApiPublicHooksErpAgentPushRoute: ApiPublicHooksErpAgentPushRoute,
   ApiPublicHooksGenerateAlertsRoute: ApiPublicHooksGenerateAlertsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

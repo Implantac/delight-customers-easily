@@ -1308,6 +1308,47 @@ export type Database = {
         }
         Relationships: []
       }
+      erp_agent_tokens: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          last_used_at: string | null
+          name: string
+          organization_id: string
+          revoked_at: string | null
+          token_hash: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          last_used_at?: string | null
+          name: string
+          organization_id: string
+          revoked_at?: string | null
+          token_hash: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          last_used_at?: string | null
+          name?: string
+          organization_id?: string
+          revoked_at?: string | null
+          token_hash?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "erp_agent_tokens_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       erp_integrations: {
         Row: {
           app_key: string
@@ -1438,12 +1479,18 @@ export type Database = {
       }
       influencers: {
         Row: {
+          bio: string | null
           commission_pct: number | null
           coupon_code: string | null
           created_at: string
+          cta_text: string | null
+          cta_url: string | null
           handle: string | null
+          headline: string | null
+          hero_image_url: string | null
           id: string
           is_active: boolean
+          lp_enabled: boolean
           name: string
           notes: string | null
           organization_id: string
@@ -1452,12 +1499,18 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          bio?: string | null
           commission_pct?: number | null
           coupon_code?: string | null
           created_at?: string
+          cta_text?: string | null
+          cta_url?: string | null
           handle?: string | null
+          headline?: string | null
+          hero_image_url?: string | null
           id?: string
           is_active?: boolean
+          lp_enabled?: boolean
           name: string
           notes?: string | null
           organization_id: string
@@ -1466,12 +1519,18 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          bio?: string | null
           commission_pct?: number | null
           coupon_code?: string | null
           created_at?: string
+          cta_text?: string | null
+          cta_url?: string | null
           handle?: string | null
+          headline?: string | null
+          hero_image_url?: string | null
           id?: string
           is_active?: boolean
+          lp_enabled?: boolean
           name?: string
           notes?: string | null
           organization_id?: string
@@ -2703,6 +2762,7 @@ export type Database = {
           current_organization_id: string | null
           full_name: string | null
           id: string
+          theme_preference: string
           updated_at: string
         }
         Insert: {
@@ -2711,6 +2771,7 @@ export type Database = {
           current_organization_id?: string | null
           full_name?: string | null
           id: string
+          theme_preference?: string
           updated_at?: string
         }
         Update: {
@@ -2719,6 +2780,7 @@ export type Database = {
           current_organization_id?: string | null
           full_name?: string | null
           id?: string
+          theme_preference?: string
           updated_at?: string
         }
         Relationships: [
@@ -4254,6 +4316,22 @@ export type Database = {
     }
     Functions: {
       accept_org_invite: { Args: { _token: string }; Returns: string }
+      get_influencer_lp: {
+        Args: { _inf_slug: string; _org_slug: string }
+        Returns: {
+          bio: string
+          coupon_code: string
+          cta_text: string
+          cta_url: string
+          handle: string
+          headline: string
+          hero_image_url: string
+          name: string
+          organization_name: string
+          platform: string
+          slug: string
+        }[]
+      }
       has_org_role: {
         Args: {
           _org: string
