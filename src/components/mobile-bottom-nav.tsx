@@ -9,7 +9,7 @@ const items = [
   { to: "/dashboard", label: "Início", icon: LayoutDashboard },
   { to: "/carteira", label: "Carteira", icon: Briefcase },
   { to: "/contacts", label: "Clientes", icon: Users },
-  { to: "/opportunity-map", label: "Oportun.", icon: Target },
+  { to: "/oportunidades", label: "Oportun.", icon: Target },
   { to: "/whatsapp", label: "WhatsApp", icon: MessageSquare },
 ] as const;
 
