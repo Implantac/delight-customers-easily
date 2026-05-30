@@ -213,14 +213,14 @@ function MyDayPage() {
               <p className="text-sm text-muted-foreground">Nenhum compromisso hoje. Use o tempo livre pra prospectar.</p>
             ) : (
               (todayEvents.data ?? []).map((e) => {
-                const hr = new Date(e.starts_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
-                const past = new Date(e.starts_at).getTime() < now;
+                const hr = new Date(e.due_date).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+                const past = new Date(e.due_date).getTime() < now;
                 return (
                   <div key={e.id} className={`flex items-center gap-3 rounded-md border p-2.5 ${past ? "opacity-60" : ""}`}>
                     <span className="text-xs font-mono w-12 text-muted-foreground">{hr}</span>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium">{e.title}</p>
-                      {e.location && <p className="truncate text-[11px] text-muted-foreground">{e.location}</p>}
+                      {e.type && <p className="truncate text-[11px] text-muted-foreground">{e.type}</p>}
                     </div>
                   </div>
                 );
