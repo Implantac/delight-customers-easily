@@ -1,6 +1,14 @@
-import { memo, useMemo } from "react";
+import { memo, useMemo, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Users, Building2, KanbanSquare, CheckSquare, Briefcase, Check, ChevronsUpDown, LogOut, Settings, Upload, BarChart3, Sliders, Webhook, Zap, Sparkles, AlertTriangle, Target, HeartPulse, DollarSign, Map, Package, MessageSquare, ShieldCheck, Trophy, Coins, Flame, Activity, Compass, PieChart, FileText, FileSignature, Grid3x3, History, Medal, Tag, Bookmark, Bell, Calendar as CalendarIcon, BookOpen, LifeBuoy, Inbox, Workflow, Repeat, Receipt, Wallet, ClipboardList, ClipboardCheck, PenLine, Route as RouteIcon, FormInput, Mail, Gift, Rocket, Files, Clock, Award, Boxes, Smile, Landmark, Truck, Plug, type LucideIcon } from "lucide-react";
+import {
+  LayoutDashboard, Users, KanbanSquare, CheckSquare, Briefcase, Check, ChevronsUpDown,
+  ChevronRight, LogOut, Settings, Upload, BarChart3, Sliders, Webhook, Zap, Sparkles,
+  AlertTriangle, Target, HeartPulse, Map, Package, MessageSquare, ShieldCheck, Trophy,
+  Flame, Activity, Compass, PieChart, FileText, FileSignature, History, Bell,
+  Calendar as CalendarIcon, BookOpen, LifeBuoy, Inbox, Workflow, Repeat, Receipt,
+  Wallet, ClipboardList, PenLine, Route as RouteIcon, FormInput, Mail, Gift, Rocket,
+  Files, Clock, Award, Boxes, Smile, Landmark, Truck, Plug, Building, type LucideIcon,
+} from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useCurrentOrg, switchOrganization } from "@/lib/org";
 import { useCanManage } from "@/lib/permissions";
@@ -10,10 +18,13 @@ import {
   SidebarHeader, SidebarFooter, SidebarMenu, SidebarMenuButton, SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator, DropdownMenuLabel } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
+  DropdownMenuSeparator, DropdownMenuLabel,
+} from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 type NavEntry = {
   to: string;
@@ -22,30 +33,36 @@ type NavEntry = {
   shortcut?: string;
   managerOnly?: boolean;
 };
-type NavSection = { id: string; label: string; items: NavEntry[] };
+type NavSection = {
+  id: string;
+  label: string;
+  items: NavEntry[];
+  /** Quando true, o grupo começa colapsado (clutter reduzido por padrão). */
+  defaultCollapsed?: boolean;
+};
 
+/**
+ * Nova arquitetura comercial — CRM como copiloto, não ERP.
+ * Grupos colapsados por padrão = ruído menor, foco no que vende.
+ */
 const navSections: NavSection[] = [
   {
-    id: "focus",
-    label: "Visão & foco",
+    id: "today",
+    label: "Hoje",
     items: [
-      { to: "/command", label: "Comando", icon: Sparkles, shortcut: "G H" },
-      { to: "/coaching", label: "Coaching", icon: Compass },
+      { to: "/command", label: "Plano do dia", icon: Sparkles, shortcut: "G H" },
       { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, shortcut: "G D" },
-      { to: "/reports", label: "Relatórios", icon: BarChart3, shortcut: "G R", managerOnly: true },
+      { to: "/alerts", label: "Alertas", icon: AlertTriangle, shortcut: "G L" },
     ],
   },
   {
-    id: "crm",
-    label: "CRM",
+    id: "wallet",
+    label: "Carteira comercial",
     items: [
-      { to: "/contacts", label: "Contatos", icon: Users, shortcut: "G C" },
-      { to: "/companies", label: "Empresas", icon: Building2, shortcut: "G E" },
+      { to: "/contacts", label: "Clientes", icon: Users, shortcut: "G C" },
+      { to: "/companies", label: "Grupos / Filiais", icon: Building, shortcut: "G E" },
       { to: "/lead-scoring", label: "Lead scoring", icon: Flame },
-      { to: "/activities", label: "Atividades", icon: CheckSquare, shortcut: "G A" },
-      { to: "/mytasks", label: "Minhas tarefas", icon: Inbox, shortcut: "G T" },
-      { to: "/calendar", label: "Agenda", icon: CalendarIcon },
-      { to: "/alerts", label: "Alertas", icon: AlertTriangle, shortcut: "G L" },
+      { to: "/retention", label: "Retenção & churn", icon: HeartPulse },
     ],
   },
   {
@@ -54,87 +71,115 @@ const navSections: NavSection[] = [
     items: [
       { to: "/pipeline", label: "Pipeline", icon: KanbanSquare, shortcut: "G P" },
       { to: "/forecast", label: "Previsão", icon: Target, shortcut: "G F" },
-      { to: "/win-loss", label: "Win/Loss", icon: Trophy },
-      { to: "/goals", label: "Metas & ranking", icon: Medal },
-      { to: "/commissions", label: "Comissões", icon: Coins },
-      { to: "/opportunity-map", label: "Mapa de oportunidades", icon: Map },
+      { to: "/win-loss", label: "Win / Loss", icon: Trophy },
+      { to: "/goals", label: "Metas & ranking", icon: Award },
     ],
   },
   {
-    id: "sales",
-    label: "Vendas",
+    id: "relationship",
+    label: "Relacionamento",
     items: [
-      { to: "/products", label: "Produtos", icon: Package },
-      { to: "/proposals", label: "Propostas", icon: FileSignature },
-      { to: "/quotes", label: "Orçamentos", icon: FileSignature },
-      { to: "/sales-orders", label: "Pedidos", icon: Package },
-      { to: "/stock", label: "Estoque", icon: Boxes },
-      { to: "/suppliers", label: "Fornecedores", icon: Truck },
+      { to: "/calendar", label: "Agenda", icon: CalendarIcon },
+      { to: "/activities", label: "Atividades", icon: CheckSquare, shortcut: "G A" },
+      { to: "/mytasks", label: "Minhas tarefas", icon: Inbox, shortcut: "G T" },
     ],
   },
   {
-    id: "finance",
-    label: "Financeiro",
+    id: "omni",
+    label: "Omnichannel",
     items: [
-      { to: "/finance", label: "Financeiro", icon: DollarSign },
-      { to: "/subscriptions", label: "Assinaturas", icon: Repeat },
-      { to: "/invoices", label: "Faturas", icon: Receipt },
-      { to: "/banking", label: "Banco", icon: Landmark },
-      { to: "/expenses", label: "Despesas", icon: Wallet },
-      { to: "/approvals", label: "Aprovações", icon: ShieldCheck },
-      { to: "/contracts", label: "Contratos", icon: FileSignature },
-      { to: "/signatures", label: "Assinaturas eletrônicas", icon: PenLine },
+      { to: "/chat", label: "WhatsApp & chat", icon: MessageSquare },
+      { to: "/campaigns", label: "E-mail & campanhas", icon: Mail },
+      { to: "/templates", label: "Templates", icon: FileText },
+      { to: "/sequences", label: "Sequências", icon: Workflow },
     ],
   },
   {
-    id: "marketing",
-    label: "Marketing & engajamento",
+    id: "ai",
+    label: "IA comercial",
     items: [
-      { to: "/campaigns", label: "Campanhas", icon: Mail },
-      { to: "/lead-forms", label: "Formulários", icon: FormInput },
+      { to: "/coaching", label: "Coaching IA", icon: Compass },
+      { to: "/playbooks", label: "Playbooks", icon: ClipboardList },
+      { to: "/lead-forms", label: "Captura de leads", icon: FormInput },
       { to: "/referrals", label: "Indicações", icon: Gift },
-      { to: "/loyalty", label: "Fidelidade", icon: Award },
+    ],
+  },
+  {
+    id: "geo",
+    label: "Geointeligência",
+    items: [
+      { to: "/opportunity-map", label: "Mapa de oportunidades", icon: Map },
+      { to: "/territories", label: "Territórios", icon: RouteIcon, managerOnly: true },
       { to: "/segments", label: "Segmentação RFM", icon: PieChart },
-      { to: "/cohorts", label: "Cohorts", icon: Grid3x3, managerOnly: true },
-      { to: "/retention", label: "Retenção", icon: HeartPulse },
-      { to: "/surveys", label: "Pesquisas", icon: Smile },
+    ],
+  },
+  {
+    id: "bi",
+    label: "BI comercial",
+    items: [
+      { to: "/reports", label: "Relatórios", icon: BarChart3, shortcut: "G R", managerOnly: true },
+      { to: "/cohorts", label: "Cohorts", icon: PieChart, managerOnly: true },
+      { to: "/productivity", label: "Produtividade", icon: Activity, managerOnly: true },
+      { to: "/surveys", label: "Pesquisas (NPS)", icon: Smile },
+      { to: "/loyalty", label: "Fidelidade", icon: Award },
+    ],
+  },
+  {
+    id: "integrations",
+    label: "Integrações & ERP",
+    items: [
+      { to: "/integrations", label: "ERP Connect", icon: Plug, managerOnly: true },
+      { to: "/onboarding", label: "Onboarding", icon: Rocket },
     ],
   },
   {
     id: "support",
     label: "Atendimento",
+    defaultCollapsed: true,
     items: [
-      { to: "/chat", label: "Chat", icon: MessageSquare },
       { to: "/tickets", label: "Tickets", icon: LifeBuoy },
       { to: "/kb", label: "Base de conhecimento", icon: BookOpen },
-      { to: "/templates", label: "Templates", icon: FileText },
-      { to: "/sequences", label: "Sequências", icon: Workflow },
-      { to: "/playbooks", label: "Playbooks", icon: ClipboardList },
       { to: "/routing", label: "Roteamento", icon: RouteIcon, managerOnly: true },
+      { to: "/approvals", label: "Aprovações", icon: ShieldCheck },
     ],
   },
+  /**
+   * ERP (leitura) — módulos mantidos por compatibilidade mas que pertencem ao ERP.
+   * Ficam colapsados por padrão para reforçar que o CRM NÃO é ERP.
+   * Rotas não são removidas; só saem da navegação primária.
+   */
   {
-    id: "ops",
-    label: "Operação",
+    id: "erp-readonly",
+    label: "ERP (leitura)",
+    defaultCollapsed: true,
     items: [
-      { to: "/onboarding", label: "Onboarding", icon: Rocket },
-      { to: "/documents", label: "Documentos", icon: Files },
-      { to: "/time", label: "Horas", icon: Clock },
+      { to: "/products", label: "Produtos", icon: Package },
+      { to: "/proposals", label: "Propostas", icon: FileSignature },
+      { to: "/quotes", label: "Orçamentos", icon: FileSignature },
+      { to: "/sales-orders", label: "Pedidos", icon: Package },
+      { to: "/contracts", label: "Contratos", icon: FileSignature },
+      { to: "/signatures", label: "Assinaturas eletrônicas", icon: PenLine },
+      { to: "/invoices", label: "Faturas", icon: Receipt },
+      { to: "/finance", label: "Financeiro", icon: Landmark },
+      { to: "/subscriptions", label: "Assinaturas", icon: Repeat },
+      { to: "/banking", label: "Banco", icon: Landmark },
+      { to: "/expenses", label: "Despesas", icon: Wallet },
+      { to: "/commissions", label: "Comissões", icon: Receipt },
+      { to: "/stock", label: "Estoque", icon: Boxes },
+      { to: "/suppliers", label: "Fornecedores", icon: Truck },
       { to: "/assets", label: "Ativos", icon: Boxes },
-      { to: "/territories", label: "Territórios", icon: Map, managerOnly: true },
+      { to: "/time", label: "Horas", icon: Clock },
+      { to: "/documents", label: "Documentos", icon: Files },
     ],
   },
   {
     id: "system",
     label: "Sistema",
+    defaultCollapsed: true,
     items: [
-      { to: "/tags", label: "Tags", icon: Tag },
-      { to: "/views", label: "Visualizações", icon: Bookmark },
       { to: "/notifications", label: "Notificações", icon: Bell },
       { to: "/data-quality", label: "Data quality", icon: ShieldCheck, managerOnly: true },
       { to: "/audit", label: "Auditoria", icon: History, managerOnly: true },
-      { to: "/productivity", label: "Produtividade", icon: Activity, managerOnly: true },
-      { to: "/integrations", label: "Integrações ERP", icon: Plug, managerOnly: true },
     ],
   },
 ];
@@ -172,7 +217,6 @@ export function AppSidebar() {
         .filter((section) => section.items.length > 0),
     [canManage],
   );
-
 
   return (
     <Sidebar collapsible="icon">
@@ -229,24 +273,7 @@ export function AppSidebar() {
 
       <SidebarContent>
         {visibleSections.map((section) => (
-          <SidebarGroup key={section.id}>
-            <SidebarGroupLabel className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">
-              {section.label}
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {section.items.map((item) => (
-                  <NavItem
-                    key={item.to}
-                    to={item.to}
-                    label={item.label}
-                    Icon={item.icon}
-                    active={path === item.to || (item.to !== "/dashboard" && path.startsWith(item.to + "/"))}
-                  />
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
+          <NavGroup key={section.id} section={section} path={path} collapsed={collapsed} />
         ))}
       </SidebarContent>
 
@@ -255,7 +282,7 @@ export function AppSidebar() {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton size="lg">
               <Avatar className="h-8 w-8">
-                <AvatarFallback className="bg-accent text-accent-foreground text-xs">{initials}</AvatarFallback>
+                <AvatarFallback className="text-xs">{initials}</AvatarFallback>
               </Avatar>
               {!collapsed && (
                 <div className="flex-1 text-left text-sm leading-tight min-w-0">
@@ -281,6 +308,61 @@ export function AppSidebar() {
   );
 }
 
+type NavGroupProps = {
+  section: NavSection;
+  path: string;
+  collapsed: boolean;
+};
+
+function NavGroup({ section, path, collapsed }: NavGroupProps) {
+  const isItemActive = (to: string) =>
+    path === to || (to !== "/dashboard" && path.startsWith(to + "/"));
+  const hasActive = section.items.some((it) => isItemActive(it.to));
+  // Se o grupo é "colapsável por padrão", abre automaticamente caso contenha rota ativa.
+  const [open, setOpen] = useState(!section.defaultCollapsed || hasActive);
+  const canCollapse = !!section.defaultCollapsed && !collapsed;
+
+  return (
+    <SidebarGroup>
+      {canCollapse ? (
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          className="group/label flex w-full items-center gap-1 rounded-md px-2 py-1 text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 transition-colors hover:text-foreground"
+        >
+          <ChevronRight
+            className={cn(
+              "h-3 w-3 transition-transform duration-200",
+              open && "rotate-90",
+            )}
+          />
+          <span className="flex-1 text-left">{section.label}</span>
+        </button>
+      ) : (
+        <SidebarGroupLabel className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">
+          {section.label}
+        </SidebarGroupLabel>
+      )}
+
+      {(open || collapsed) && (
+        <SidebarGroupContent>
+          <SidebarMenu>
+            {section.items.map((item) => (
+              <NavItem
+                key={item.to}
+                to={item.to}
+                label={item.label}
+                Icon={item.icon}
+                active={isItemActive(item.to)}
+              />
+            ))}
+          </SidebarMenu>
+        </SidebarGroupContent>
+      )}
+    </SidebarGroup>
+  );
+}
+
 type NavItemProps = { to: string; label: string; Icon: LucideIcon; active: boolean };
 const NavItem = memo(function NavItem({ to, label, Icon, active }: NavItemProps) {
   return (
@@ -294,4 +376,3 @@ const NavItem = memo(function NavItem({ to, label, Icon, active }: NavItemProps)
     </SidebarMenuItem>
   );
 });
-
