@@ -156,6 +156,12 @@ function InfluencerForm({
   const [coupon, setCoupon] = useState(initial?.coupon_code ?? "");
   const [pct, setPct] = useState(String(initial?.commission_pct ?? 10));
   const [active, setActive] = useState(initial?.is_active ?? true);
+  const [headline, setHeadline] = useState(initial?.headline ?? "");
+  const [bio, setBio] = useState(initial?.bio ?? "");
+  const [hero, setHero] = useState(initial?.hero_image_url ?? "");
+  const [ctaText, setCtaText] = useState(initial?.cta_text ?? "");
+  const [ctaUrl, setCtaUrl] = useState(initial?.cta_url ?? "");
+  const [lpEnabled, setLpEnabled] = useState(initial?.lp_enabled ?? false);
 
   return (
     <form
@@ -167,6 +173,9 @@ function InfluencerForm({
           name, handle: handle || null, platform,
           slug, coupon_code: coupon || null,
           commission_pct: Number(pct) || 0, is_active: active,
+          headline: headline || null, bio: bio || null,
+          hero_image_url: hero || null, cta_text: ctaText || null,
+          cta_url: ctaUrl || null, lp_enabled: lpEnabled,
         });
       }}
     >
@@ -190,7 +199,32 @@ function InfluencerForm({
         <Label>Ativo</Label>
         <Switch checked={active} onCheckedChange={setActive} />
       </div>
+
+      <div className="rounded-md border p-3 space-y-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <Label className="text-sm font-semibold">Landing page pública</Label>
+            <p className="text-xs text-muted-foreground">Disponível em <code>/i/&lt;org&gt;/{slug || "slug"}</code></p>
+          </div>
+          <Switch checked={lpEnabled} onCheckedChange={setLpEnabled} />
+        </div>
+        {lpEnabled && (
+          <>
+            <div className="space-y-1.5"><Label>Manchete</Label><Input value={headline} onChange={(e) => setHeadline(e.target.value)} placeholder="Use meu cupom e ganhe 10%" /></div>
+            <div className="space-y-1.5"><Label>Bio / texto</Label>
+              <textarea value={bio} onChange={(e) => setBio(e.target.value)} rows={3}
+                className="w-full rounded-md border bg-background px-3 py-2 text-sm" /></div>
+            <div className="space-y-1.5"><Label>Imagem de capa (URL)</Label><Input value={hero} onChange={(e) => setHero(e.target.value)} placeholder="https://..." /></div>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="space-y-1.5"><Label>Texto do botão</Label><Input value={ctaText} onChange={(e) => setCtaText(e.target.value)} placeholder="Quero falar agora" /></div>
+              <div className="space-y-1.5"><Label>Link extra</Label><Input value={ctaUrl} onChange={(e) => setCtaUrl(e.target.value)} placeholder="https://..." /></div>
+            </div>
+          </>
+        )}
+      </div>
+
       <Button type="submit" className="w-full" disabled={pending}>{pending ? "Salvando..." : "Salvar"}</Button>
     </form>
   );
 }
+
