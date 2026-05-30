@@ -64,6 +64,22 @@ function CommandCenter() {
     refetchOnWindowFocus: false,
   });
 
+  const in30 = new Date(Date.now() + 30 * 24 * 3600 * 1000).toISOString().slice(0, 10);
+  const { data: hotDeals } = useQuery({
+    queryKey: ["cc-hot-deals", orgId, in30],
+    enabled: !!orgId,
+    queryFn: async () =>
+      (await supabase
+        .from("deals")
+        .select("id, title, value, stage, expected_close, companies(name)")
+        .eq("organization_id", orgId!)
+        .not("stage", "in", "(won,lost)")
+        .lte("expected_close", in30)
+        .order("value", { ascending: false })
+        .limit(6)).data ?? [],
+    refetchOnWindowFocus: false,
+  });
+
   const firstName = (user?.user_metadata?.full_name ?? user?.email ?? "").toString().split(" ")[0] ?? "";
 
 
