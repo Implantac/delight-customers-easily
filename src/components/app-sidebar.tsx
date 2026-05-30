@@ -38,6 +38,7 @@ const nav = [
   { to: "/proposals", label: "Propostas", icon: FileSignature, shortcut: "", managerOnly: false },
   { to: "/chat", label: "Chat", icon: MessageSquare, shortcut: "", managerOnly: false },
   { to: "/templates", label: "Templates", icon: FileText, shortcut: "", managerOnly: false },
+  { to: "/kb", label: "Base de Conhecimento", icon: BookOpen, shortcut: "", managerOnly: false },
   { to: "/tags", label: "Tags", icon: Tag, shortcut: "", managerOnly: false },
   { to: "/views", label: "Visualizações", icon: Bookmark, shortcut: "", managerOnly: false },
   { to: "/notifications", label: "Notificações", icon: Bell, shortcut: "", managerOnly: false },
