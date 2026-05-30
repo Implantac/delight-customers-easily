@@ -38,6 +38,7 @@ import { Route as AppCommandRouteImport } from './routes/_app.command'
 import { Route as AppCohortsRouteImport } from './routes/_app.cohorts'
 import { Route as AppCoachingRouteImport } from './routes/_app.coaching'
 import { Route as AppChatRouteImport } from './routes/_app.chat'
+import { Route as AppCalendarRouteImport } from './routes/_app.calendar'
 import { Route as AppAuditRouteImport } from './routes/_app.audit'
 import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
 import { Route as AppActivitiesRouteImport } from './routes/_app.activities'
@@ -198,6 +199,11 @@ const AppChatRoute = AppChatRouteImport.update({
   path: '/chat',
   getParentRoute: () => AppRoute,
 } as any)
+const AppCalendarRoute = AppCalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppAuditRoute = AppAuditRouteImport.update({
   id: '/audit',
   path: '/audit',
@@ -282,6 +288,7 @@ export interface FileRoutesByFullPath {
   '/activities': typeof AppActivitiesRoute
   '/alerts': typeof AppAlertsRoute
   '/audit': typeof AppAuditRoute
+  '/calendar': typeof AppCalendarRoute
   '/chat': typeof AppChatRoute
   '/coaching': typeof AppCoachingRoute
   '/cohorts': typeof AppCohortsRoute
@@ -327,6 +334,7 @@ export interface FileRoutesByTo {
   '/activities': typeof AppActivitiesRoute
   '/alerts': typeof AppAlertsRoute
   '/audit': typeof AppAuditRoute
+  '/calendar': typeof AppCalendarRoute
   '/chat': typeof AppChatRoute
   '/coaching': typeof AppCoachingRoute
   '/cohorts': typeof AppCohortsRoute
@@ -374,6 +382,7 @@ export interface FileRoutesById {
   '/_app/activities': typeof AppActivitiesRoute
   '/_app/alerts': typeof AppAlertsRoute
   '/_app/audit': typeof AppAuditRoute
+  '/_app/calendar': typeof AppCalendarRoute
   '/_app/chat': typeof AppChatRoute
   '/_app/coaching': typeof AppCoachingRoute
   '/_app/cohorts': typeof AppCohortsRoute
@@ -421,6 +430,7 @@ export interface FileRouteTypes {
     | '/activities'
     | '/alerts'
     | '/audit'
+    | '/calendar'
     | '/chat'
     | '/coaching'
     | '/cohorts'
@@ -466,6 +476,7 @@ export interface FileRouteTypes {
     | '/activities'
     | '/alerts'
     | '/audit'
+    | '/calendar'
     | '/chat'
     | '/coaching'
     | '/cohorts'
@@ -512,6 +523,7 @@ export interface FileRouteTypes {
     | '/_app/activities'
     | '/_app/alerts'
     | '/_app/audit'
+    | '/_app/calendar'
     | '/_app/chat'
     | '/_app/coaching'
     | '/_app/cohorts'
@@ -766,6 +778,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppChatRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/calendar': {
+      id: '/_app/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof AppCalendarRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/audit': {
       id: '/_app/audit'
       path: '/audit'
@@ -914,6 +933,7 @@ interface AppRouteChildren {
   AppActivitiesRoute: typeof AppActivitiesRoute
   AppAlertsRoute: typeof AppAlertsRoute
   AppAuditRoute: typeof AppAuditRoute
+  AppCalendarRoute: typeof AppCalendarRoute
   AppChatRoute: typeof AppChatRoute
   AppCoachingRoute: typeof AppCoachingRoute
   AppCohortsRoute: typeof AppCohortsRoute
@@ -952,6 +972,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppActivitiesRoute: AppActivitiesRoute,
   AppAlertsRoute: AppAlertsRoute,
   AppAuditRoute: AppAuditRoute,
+  AppCalendarRoute: AppCalendarRoute,
   AppChatRoute: AppChatRoute,
   AppCoachingRoute: AppCoachingRoute,
   AppCohortsRoute: AppCohortsRoute,
