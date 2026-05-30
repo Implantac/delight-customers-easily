@@ -53,6 +53,36 @@ function GeoPage() {
       }),
   });
 
+  const runAI = useServerFn(optimizeRouteWithAI);
+  const aiM = useMutation({
+    mutationFn: async () => {
+      const base = routeQ.data?.route ?? [];
+      if (base.length === 0) throw new Error("Sem candidatos. Gere uma rota primeiro.");
+      return runAI({
+        data: {
+          organization_id: orgId!,
+          start_city: city === "all" ? undefined : city,
+          candidates: base.map((r) => ({
+            id: r.id,
+            name: r.name,
+            city: r.city ?? null,
+            state: r.state ?? null,
+            industry: r.industry ?? null,
+            open_value: Number(r.open_value ?? 0),
+            won_value: Number(r.won_value ?? 0),
+            daysSilent: Number(r.daysSilent ?? 0),
+          })),
+        },
+      });
+    },
+    onError: (e: any) => toast.error(e?.message ?? "Falha na IA"),
+    onSuccess: (r) => toast.success(r.summary || "Rota otimizada pela IA"),
+  });
+
+  const displayRoute = aiM.data?.stops?.length
+    ? aiM.data.stops.map((s) => ({ ...(routeQ.data?.route.find((x) => x.id === s.id)!), reason: s.reason }))
+    : routeQ.data?.route ?? [];
+
   return (
     <div className="space-y-6">
       <PageHeader
