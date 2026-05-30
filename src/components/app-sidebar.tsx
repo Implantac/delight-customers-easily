@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Users, Building2, KanbanSquare, CheckSquare, Briefcase, Check, ChevronsUpDown, LogOut, Settings, Upload, BarChart3, Sliders, Webhook, Zap, Sparkles, AlertTriangle, Target, HeartPulse, DollarSign, Map, Package, MessageSquare, ShieldCheck, Trophy, Coins, Flame, Activity, Compass, PieChart, FileText, FileSignature, Grid3x3 } from "lucide-react";
+import { LayoutDashboard, Users, Building2, KanbanSquare, CheckSquare, Briefcase, Check, ChevronsUpDown, LogOut, Settings, Upload, BarChart3, Sliders, Webhook, Zap, Sparkles, AlertTriangle, Target, HeartPulse, DollarSign, Map, Package, MessageSquare, ShieldCheck, Trophy, Coins, Flame, Activity, Compass, PieChart, FileText, FileSignature, Grid3x3, History } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useCurrentOrg, switchOrganization } from "@/lib/org";
 import { useCanManage } from "@/lib/permissions";
@@ -37,6 +37,7 @@ const nav = [
   { to: "/chat", label: "Chat", icon: MessageSquare, shortcut: "", managerOnly: false },
   { to: "/templates", label: "Templates", icon: FileText, shortcut: "", managerOnly: false },
   { to: "/data-quality", label: "Data Quality", icon: ShieldCheck, shortcut: "", managerOnly: true },
+  { to: "/audit", label: "Auditoria", icon: History, shortcut: "", managerOnly: true },
   { to: "/productivity", label: "Produtividade", icon: Activity, shortcut: "", managerOnly: true },
   { to: "/reports", label: "Relatórios", icon: BarChart3, shortcut: "G R", managerOnly: true },
 ] as const;
