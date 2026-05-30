@@ -86,6 +86,7 @@ import { Route as AppSettingsSecurityRouteImport } from './routes/_app.settings.
 import { Route as AppSettingsOrganizationRouteImport } from './routes/_app.settings.organization'
 import { Route as AppSettingsImportRouteImport } from './routes/_app.settings.import'
 import { Route as AppSettingsFieldsRouteImport } from './routes/_app.settings.fields'
+import { Route as AppSettingsErpAgentRouteImport } from './routes/_app.settings.erp-agent'
 import { Route as AppSettingsAutomationsRouteImport } from './routes/_app.settings.automations'
 import { Route as AppSequencesIdRouteImport } from './routes/_app.sequences.$id'
 import { Route as AppProposalsIdRouteImport } from './routes/_app.proposals.$id'
@@ -482,6 +483,11 @@ const AppSettingsFieldsRoute = AppSettingsFieldsRouteImport.update({
   path: '/settings/fields',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSettingsErpAgentRoute = AppSettingsErpAgentRouteImport.update({
+  id: '/settings/erp-agent',
+  path: '/settings/erp-agent',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppSettingsAutomationsRoute = AppSettingsAutomationsRouteImport.update({
   id: '/settings/automations',
   path: '/settings/automations',
@@ -617,6 +623,7 @@ export interface FileRoutesByFullPath {
   '/proposals/$id': typeof AppProposalsIdRoute
   '/sequences/$id': typeof AppSequencesIdRoute
   '/settings/automations': typeof AppSettingsAutomationsRoute
+  '/settings/erp-agent': typeof AppSettingsErpAgentRoute
   '/settings/fields': typeof AppSettingsFieldsRoute
   '/settings/import': typeof AppSettingsImportRoute
   '/settings/organization': typeof AppSettingsOrganizationRoute
@@ -706,6 +713,7 @@ export interface FileRoutesByTo {
   '/proposals/$id': typeof AppProposalsIdRoute
   '/sequences/$id': typeof AppSequencesIdRoute
   '/settings/automations': typeof AppSettingsAutomationsRoute
+  '/settings/erp-agent': typeof AppSettingsErpAgentRoute
   '/settings/fields': typeof AppSettingsFieldsRoute
   '/settings/import': typeof AppSettingsImportRoute
   '/settings/organization': typeof AppSettingsOrganizationRoute
@@ -797,6 +805,7 @@ export interface FileRoutesById {
   '/_app/proposals/$id': typeof AppProposalsIdRoute
   '/_app/sequences/$id': typeof AppSequencesIdRoute
   '/_app/settings/automations': typeof AppSettingsAutomationsRoute
+  '/_app/settings/erp-agent': typeof AppSettingsErpAgentRoute
   '/_app/settings/fields': typeof AppSettingsFieldsRoute
   '/_app/settings/import': typeof AppSettingsImportRoute
   '/_app/settings/organization': typeof AppSettingsOrganizationRoute
@@ -888,6 +897,7 @@ export interface FileRouteTypes {
     | '/proposals/$id'
     | '/sequences/$id'
     | '/settings/automations'
+    | '/settings/erp-agent'
     | '/settings/fields'
     | '/settings/import'
     | '/settings/organization'
@@ -977,6 +987,7 @@ export interface FileRouteTypes {
     | '/proposals/$id'
     | '/sequences/$id'
     | '/settings/automations'
+    | '/settings/erp-agent'
     | '/settings/fields'
     | '/settings/import'
     | '/settings/organization'
@@ -1067,6 +1078,7 @@ export interface FileRouteTypes {
     | '/_app/proposals/$id'
     | '/_app/sequences/$id'
     | '/_app/settings/automations'
+    | '/_app/settings/erp-agent'
     | '/_app/settings/fields'
     | '/_app/settings/import'
     | '/_app/settings/organization'
@@ -1636,6 +1648,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsFieldsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/settings/erp-agent': {
+      id: '/_app/settings/erp-agent'
+      path: '/settings/erp-agent'
+      fullPath: '/settings/erp-agent'
+      preLoaderRoute: typeof AppSettingsErpAgentRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/settings/automations': {
       id: '/_app/settings/automations'
       path: '/settings/automations'
@@ -1854,6 +1873,7 @@ interface AppRouteChildren {
   AppWinLossRoute: typeof AppWinLossRoute
   AppInviteTokenRoute: typeof AppInviteTokenRoute
   AppSettingsAutomationsRoute: typeof AppSettingsAutomationsRoute
+  AppSettingsErpAgentRoute: typeof AppSettingsErpAgentRoute
   AppSettingsFieldsRoute: typeof AppSettingsFieldsRoute
   AppSettingsImportRoute: typeof AppSettingsImportRoute
   AppSettingsOrganizationRoute: typeof AppSettingsOrganizationRoute
@@ -1929,6 +1949,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppWinLossRoute: AppWinLossRoute,
   AppInviteTokenRoute: AppInviteTokenRoute,
   AppSettingsAutomationsRoute: AppSettingsAutomationsRoute,
+  AppSettingsErpAgentRoute: AppSettingsErpAgentRoute,
   AppSettingsFieldsRoute: AppSettingsFieldsRoute,
   AppSettingsImportRoute: AppSettingsImportRoute,
   AppSettingsOrganizationRoute: AppSettingsOrganizationRoute,
