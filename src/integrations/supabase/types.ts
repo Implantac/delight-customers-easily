@@ -138,6 +138,113 @@ export type Database = {
         }
         Relationships: []
       }
+      asset_assignments: {
+        Row: {
+          asset_id: string
+          assigned_at: string
+          assigned_by: string | null
+          company_id: string | null
+          contact_id: string | null
+          created_at: string
+          id: string
+          notes: string | null
+          organization_id: string
+          returned_at: string | null
+        }
+        Insert: {
+          asset_id: string
+          assigned_at?: string
+          assigned_by?: string | null
+          company_id?: string | null
+          contact_id?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          organization_id: string
+          returned_at?: string | null
+        }
+        Update: {
+          asset_id?: string
+          assigned_at?: string
+          assigned_by?: string | null
+          company_id?: string | null
+          contact_id?: string | null
+          created_at?: string
+          id?: string
+          notes?: string | null
+          organization_id?: string
+          returned_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "asset_assignments_asset_id_fkey"
+            columns: ["asset_id"]
+            isOneToOne: false
+            referencedRelation: "assets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      assets: {
+        Row: {
+          assigned_at: string | null
+          category: string | null
+          cost: number | null
+          created_at: string
+          current_company_id: string | null
+          current_contact_id: string | null
+          id: string
+          manufacturer: string | null
+          model: string | null
+          name: string
+          notes: string | null
+          organization_id: string
+          purchased_at: string | null
+          serial_number: string | null
+          status: string
+          updated_at: string
+          warranty_until: string | null
+        }
+        Insert: {
+          assigned_at?: string | null
+          category?: string | null
+          cost?: number | null
+          created_at?: string
+          current_company_id?: string | null
+          current_contact_id?: string | null
+          id?: string
+          manufacturer?: string | null
+          model?: string | null
+          name: string
+          notes?: string | null
+          organization_id: string
+          purchased_at?: string | null
+          serial_number?: string | null
+          status?: string
+          updated_at?: string
+          warranty_until?: string | null
+        }
+        Update: {
+          assigned_at?: string | null
+          category?: string | null
+          cost?: number | null
+          created_at?: string
+          current_company_id?: string | null
+          current_contact_id?: string | null
+          id?: string
+          manufacturer?: string | null
+          model?: string | null
+          name?: string
+          notes?: string | null
+          organization_id?: string
+          purchased_at?: string | null
+          serial_number?: string | null
+          status?: string
+          updated_at?: string
+          warranty_until?: string | null
+        }
+        Relationships: []
+      }
       attachments: {
         Row: {
           created_at: string
