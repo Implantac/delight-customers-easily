@@ -65,6 +65,9 @@ function ForecastPage() {
         action={canManage ? <GoalsDialog orgId={orgId!} /> : null}
       />
 
+      <NextActionBlock surface="forecast" title="Como fechar o mês" showRegenerate />
+
+
       {/* KPIs */}
       <div className="grid gap-3 md:grid-cols-4">
         <Kpi icon={Target} label="Meta do mês" value={current.target > 0 ? fmt(current.target) : "—"} />
