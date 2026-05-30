@@ -23,6 +23,7 @@ const nav = [
   { to: "/lead-scoring", label: "Lead Scoring", icon: Flame, shortcut: "", managerOnly: false },
   { to: "/companies", label: "Empresas", icon: Building2, shortcut: "G E", managerOnly: false },
   { to: "/activities", label: "Atividades", icon: CheckSquare, shortcut: "G A", managerOnly: false },
+  { to: "/calendar", label: "Agenda", icon: CalendarIcon, shortcut: "", managerOnly: false },
   { to: "/alerts", label: "Alertas", icon: AlertTriangle, shortcut: "G L", managerOnly: false },
   { to: "/forecast", label: "Previsão", icon: Target, shortcut: "G F", managerOnly: false },
   { to: "/win-loss", label: "Win/Loss", icon: Trophy, shortcut: "", managerOnly: false },
