@@ -14,6 +14,7 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppWinLossRouteImport } from './routes/_app.win-loss'
 import { Route as AppViewsRouteImport } from './routes/_app.views'
+import { Route as AppTimeRouteImport } from './routes/_app.time'
 import { Route as AppTicketsRouteImport } from './routes/_app.tickets'
 import { Route as AppTerritoriesRouteImport } from './routes/_app.territories'
 import { Route as AppTemplatesRouteImport } from './routes/_app.templates'
@@ -100,6 +101,11 @@ const AppWinLossRoute = AppWinLossRouteImport.update({
 const AppViewsRoute = AppViewsRouteImport.update({
   id: '/views',
   path: '/views',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTimeRoute = AppTimeRouteImport.update({
+  id: '/time',
+  path: '/time',
   getParentRoute: () => AppRoute,
 } as any)
 const AppTicketsRoute = AppTicketsRouteImport.update({
@@ -470,6 +476,7 @@ export interface FileRoutesByFullPath {
   '/templates': typeof AppTemplatesRoute
   '/territories': typeof AppTerritoriesRoute
   '/tickets': typeof AppTicketsRouteWithChildren
+  '/time': typeof AppTimeRoute
   '/views': typeof AppViewsRoute
   '/win-loss': typeof AppWinLossRoute
   '/companies/$id': typeof AppCompaniesIdRoute
@@ -539,6 +546,7 @@ export interface FileRoutesByTo {
   '/templates': typeof AppTemplatesRoute
   '/territories': typeof AppTerritoriesRoute
   '/tickets': typeof AppTicketsRouteWithChildren
+  '/time': typeof AppTimeRoute
   '/views': typeof AppViewsRoute
   '/win-loss': typeof AppWinLossRoute
   '/companies/$id': typeof AppCompaniesIdRoute
@@ -610,6 +618,7 @@ export interface FileRoutesById {
   '/_app/templates': typeof AppTemplatesRoute
   '/_app/territories': typeof AppTerritoriesRoute
   '/_app/tickets': typeof AppTicketsRouteWithChildren
+  '/_app/time': typeof AppTimeRoute
   '/_app/views': typeof AppViewsRoute
   '/_app/win-loss': typeof AppWinLossRoute
   '/_app/companies/$id': typeof AppCompaniesIdRoute
@@ -681,6 +690,7 @@ export interface FileRouteTypes {
     | '/templates'
     | '/territories'
     | '/tickets'
+    | '/time'
     | '/views'
     | '/win-loss'
     | '/companies/$id'
@@ -750,6 +760,7 @@ export interface FileRouteTypes {
     | '/templates'
     | '/territories'
     | '/tickets'
+    | '/time'
     | '/views'
     | '/win-loss'
     | '/companies/$id'
@@ -820,6 +831,7 @@ export interface FileRouteTypes {
     | '/_app/templates'
     | '/_app/territories'
     | '/_app/tickets'
+    | '/_app/time'
     | '/_app/views'
     | '/_app/win-loss'
     | '/_app/companies/$id'
@@ -885,6 +897,13 @@ declare module '@tanstack/react-router' {
       path: '/views'
       fullPath: '/views'
       preLoaderRoute: typeof AppViewsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/time': {
+      id: '/_app/time'
+      path: '/time'
+      fullPath: '/time'
+      preLoaderRoute: typeof AppTimeRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/tickets': {
@@ -1449,6 +1468,7 @@ interface AppRouteChildren {
   AppTemplatesRoute: typeof AppTemplatesRoute
   AppTerritoriesRoute: typeof AppTerritoriesRoute
   AppTicketsRoute: typeof AppTicketsRouteWithChildren
+  AppTimeRoute: typeof AppTimeRoute
   AppViewsRoute: typeof AppViewsRoute
   AppWinLossRoute: typeof AppWinLossRoute
   AppInviteTokenRoute: typeof AppInviteTokenRoute
@@ -1507,6 +1527,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppTemplatesRoute: AppTemplatesRoute,
   AppTerritoriesRoute: AppTerritoriesRoute,
   AppTicketsRoute: AppTicketsRouteWithChildren,
+  AppTimeRoute: AppTimeRoute,
   AppViewsRoute: AppViewsRoute,
   AppWinLossRoute: AppWinLossRoute,
   AppInviteTokenRoute: AppInviteTokenRoute,
