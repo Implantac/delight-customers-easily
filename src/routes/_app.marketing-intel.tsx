@@ -45,6 +45,8 @@ function MarketingIntelPage() {
         icon={Megaphone}
       />
 
+      <NextActionBlock surface="marketing-intel" title="Ações sugeridas pela IA" />
+
       <div className="flex justify-between items-center">
         <div className="text-xs text-muted-foreground">
           Janela analisada — últimos {windowDays} dias
