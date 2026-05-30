@@ -1,0 +1,228 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { useCurrentOrg } from "@/lib/org";
+import { getMarketingIntel } from "@/lib/marketing-intel.functions";
+import { PageHeader } from "@/components/page-header";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from "@/components/ui/select";
+import {
+  Megaphone, TrendingUp, Users, Flame, Sparkles, ArrowRight, Mail, Eye, MousePointerClick,
+} from "lucide-react";
+
+export const Route = createFileRoute("/_app/marketing-intel")({
+  component: MarketingIntelPage,
+});
+
+const fmt = (n: number) =>
+  n.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
+const pct = (n: number) => `${n.toFixed(1)}%`;
+
+function MarketingIntelPage() {
+  const { orgId } = useCurrentOrg();
+  const run = useServerFn(getMarketingIntel);
+  const [windowDays, setWindowDays] = useState<string>("90");
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["marketing-intel", orgId, windowDays],
+    enabled: !!orgId,
+    queryFn: () => run({ data: { organization_id: orgId!, window_days: Number(windowDays) } }),
+  });
+
+  return (
+    <div className="space-y-6">
+      <PageHeader
+        title="Marketing Intelligence"
+        subtitle="De campanha a receita: o que de fato traz cliente e quanto custa."
+        icon={Megaphone}
+      />
+
+      <div className="flex justify-between items-center">
+        <div className="text-xs text-muted-foreground">
+          Janela analisada — últimos {windowDays} dias
+        </div>
+        <Select value={windowDays} onValueChange={setWindowDays}>
+          <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value="30">30 dias</SelectItem>
+            <SelectItem value="90">90 dias</SelectItem>
+            <SelectItem value="180">180 dias</SelectItem>
+            <SelectItem value="365">12 meses</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
+        <Kpi loading={isLoading} label="Leads captados" value={data?.summary.total_leads ?? 0} icon={Users} />
+        <Kpi loading={isLoading} label="Convertidos" value={data?.summary.total_converted ?? 0} icon={Flame} tone="ok" />
+        <Kpi loading={isLoading} label="Receita gerada" value={data ? fmt(data.summary.total_won_revenue) : "—"} icon={TrendingUp} tone="ok" />
+        <Kpi loading={isLoading} label="Pipeline aberto" value={data ? fmt(data.summary.total_pipeline) : "—"} icon={TrendingUp} />
+        <Kpi loading={isLoading} label="Visitas influencer" value={data?.summary.total_visits ?? 0} icon={Sparkles} />
+      </div>
+
+      <Tabs defaultValue="canais" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="canais">Canais</TabsTrigger>
+          <TabsTrigger value="campanhas">Campanhas</TabsTrigger>
+          <TabsTrigger value="influencers">Influencers</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="canais">
+          {isLoading ? <Skeleton className="h-60 w-full" /> : (
+            <Card className="overflow-hidden">
+              <table className="w-full text-sm">
+                <thead className="bg-muted/30 text-xs uppercase text-muted-foreground">
+                  <tr>
+                    <th className="text-left px-3 py-2">Canal</th>
+                    <th className="text-right px-3 py-2">Leads</th>
+                    <th className="text-right px-3 py-2">Convertidos</th>
+                    <th className="text-right px-3 py-2">Taxa</th>
+                    <th className="text-right px-3 py-2">Pipeline</th>
+                    <th className="text-right px-3 py-2">Receita</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(data?.channels ?? []).map((c) => (
+                    <tr key={c.channel} className="border-t">
+                      <td className="px-3 py-2 font-medium capitalize">{c.channel}</td>
+                      <td className="px-3 py-2 text-right">{c.leads}</td>
+                      <td className="px-3 py-2 text-right">{c.converted}</td>
+                      <td className="px-3 py-2 text-right">
+                        <span className={c.conversion_rate >= 20 ? "text-emerald-600" : c.conversion_rate >= 5 ? "text-amber-600" : "text-muted-foreground"}>
+                          {pct(c.conversion_rate)}
+                        </span>
+                      </td>
+                      <td className="px-3 py-2 text-right font-mono">{fmt(c.open_pipeline)}</td>
+                      <td className="px-3 py-2 text-right font-mono text-emerald-600">{fmt(c.won_revenue)}</td>
+                    </tr>
+                  ))}
+                  {!data?.channels.length && (
+                    <tr><td colSpan={6} className="text-center p-8 text-muted-foreground text-sm">
+                      Nenhum lead capturado nessa janela.
+                    </td></tr>
+                  )}
+                </tbody>
+              </table>
+            </Card>
+          )}
+        </TabsContent>
+
+        <TabsContent value="campanhas">
+          {isLoading ? <Skeleton className="h-60 w-full" /> : (
+            <Card className="overflow-hidden">
+              <table className="w-full text-sm">
+                <thead className="bg-muted/30 text-xs uppercase text-muted-foreground">
+                  <tr>
+                    <th className="text-left px-3 py-2">Campanha</th>
+                    <th className="text-left px-3 py-2">Status</th>
+                    <th className="text-right px-3 py-2"><Mail className="h-3 w-3 inline" /> Enviados</th>
+                    <th className="text-right px-3 py-2"><Eye className="h-3 w-3 inline" /> Abertura</th>
+                    <th className="text-right px-3 py-2"><MousePointerClick className="h-3 w-3 inline" /> Clique</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(data?.campaigns ?? []).map((c) => (
+                    <tr key={c.id} className="border-t">
+                      <td className="px-3 py-2 font-medium truncate max-w-[300px]">{c.name}</td>
+                      <td className="px-3 py-2"><Badge variant="outline" className="capitalize">{c.status}</Badge></td>
+                      <td className="px-3 py-2 text-right">{c.sent}</td>
+                      <td className="px-3 py-2 text-right">{pct(c.open_rate)}</td>
+                      <td className="px-3 py-2 text-right">{pct(c.click_rate)}</td>
+                    </tr>
+                  ))}
+                  {!data?.campaigns.length && (
+                    <tr><td colSpan={5} className="text-center p-8 text-muted-foreground text-sm">
+                      Nenhuma campanha cadastrada.
+                    </td></tr>
+                  )}
+                </tbody>
+              </table>
+              <div className="border-t p-2 flex justify-end">
+                <Button asChild size="sm" variant="ghost" className="gap-1">
+                  <Link to="/campaigns">Abrir campanhas <ArrowRight className="h-3 w-3" /></Link>
+                </Button>
+              </div>
+            </Card>
+          )}
+        </TabsContent>
+
+        <TabsContent value="influencers">
+          {isLoading ? <Skeleton className="h-60 w-full" /> : (
+            <Card className="overflow-hidden">
+              <table className="w-full text-sm">
+                <thead className="bg-muted/30 text-xs uppercase text-muted-foreground">
+                  <tr>
+                    <th className="text-left px-3 py-2">Influencer</th>
+                    <th className="text-left px-3 py-2">Plataforma</th>
+                    <th className="text-right px-3 py-2">Visitas</th>
+                    <th className="text-right px-3 py-2">Conversões</th>
+                    <th className="text-right px-3 py-2">CVR</th>
+                    <th className="text-right px-3 py-2">Receita</th>
+                    <th className="text-right px-3 py-2">Comissão</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(data?.influencers ?? []).map((i) => (
+                    <tr key={i.id} className="border-t">
+                      <td className="px-3 py-2">
+                        <div className="font-medium">{i.name}</div>
+                        {i.handle && <div className="text-xs text-muted-foreground">@{i.handle}</div>}
+                      </td>
+                      <td className="px-3 py-2 text-muted-foreground capitalize">{i.platform ?? "—"}</td>
+                      <td className="px-3 py-2 text-right">{i.visits}</td>
+                      <td className="px-3 py-2 text-right">{i.conversions}</td>
+                      <td className="px-3 py-2 text-right">
+                        <span className={i.cvr >= 5 ? "text-emerald-600" : "text-muted-foreground"}>{pct(i.cvr)}</span>
+                      </td>
+                      <td className="px-3 py-2 text-right font-mono text-emerald-600">{fmt(i.revenue)}</td>
+                      <td className="px-3 py-2 text-right font-mono">{fmt(i.commission)}</td>
+                    </tr>
+                  ))}
+                  {!data?.influencers.length && (
+                    <tr><td colSpan={7} className="text-center p-8 text-muted-foreground text-sm">
+                      Nenhum influencer cadastrado.
+                    </td></tr>
+                  )}
+                </tbody>
+              </table>
+              <div className="border-t p-2 flex justify-end">
+                <Button asChild size="sm" variant="ghost" className="gap-1">
+                  <Link to="/influencers">Gerenciar <ArrowRight className="h-3 w-3" /></Link>
+                </Button>
+              </div>
+            </Card>
+          )}
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}
+
+function Kpi({
+  label, value, icon: Icon, tone, loading,
+}: {
+  label: string; value: string | number; icon: typeof Megaphone;
+  tone?: "ok" | "warn" | "danger"; loading?: boolean;
+}) {
+  const color =
+    tone === "danger" ? "text-destructive"
+    : tone === "warn" ? "text-amber-600"
+    : tone === "ok" ? "text-emerald-600"
+    : "text-primary";
+  return (
+    <Card className="p-3">
+      <div className="flex items-center justify-between">
+        <span className="text-xs text-muted-foreground">{label}</span>
+        <Icon className={`h-4 w-4 ${color}`} />
+      </div>
+      {loading ? <Skeleton className="h-6 w-16 mt-1" /> : <div className={`text-xl font-semibold mt-1 ${color}`}>{value}</div>}
+    </Card>
+  );
+}
