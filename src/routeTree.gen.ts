@@ -17,6 +17,7 @@ import { Route as AppViewsRouteImport } from './routes/_app.views'
 import { Route as AppTicketsRouteImport } from './routes/_app.tickets'
 import { Route as AppTemplatesRouteImport } from './routes/_app.templates'
 import { Route as AppTagsRouteImport } from './routes/_app.tags'
+import { Route as AppSubscriptionsRouteImport } from './routes/_app.subscriptions'
 import { Route as AppSequencesRouteImport } from './routes/_app.sequences'
 import { Route as AppSegmentsRouteImport } from './routes/_app.segments'
 import { Route as AppRetentionRouteImport } from './routes/_app.retention'
@@ -99,6 +100,11 @@ const AppTemplatesRoute = AppTemplatesRouteImport.update({
 const AppTagsRoute = AppTagsRouteImport.update({
   id: '/tags',
   path: '/tags',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSubscriptionsRoute = AppSubscriptionsRouteImport.update({
+  id: '/subscriptions',
+  path: '/subscriptions',
   getParentRoute: () => AppRoute,
 } as any)
 const AppSequencesRoute = AppSequencesRouteImport.update({
@@ -356,6 +362,7 @@ export interface FileRoutesByFullPath {
   '/retention': typeof AppRetentionRoute
   '/segments': typeof AppSegmentsRoute
   '/sequences': typeof AppSequencesRouteWithChildren
+  '/subscriptions': typeof AppSubscriptionsRoute
   '/tags': typeof AppTagsRoute
   '/templates': typeof AppTemplatesRoute
   '/tickets': typeof AppTicketsRouteWithChildren
@@ -409,6 +416,7 @@ export interface FileRoutesByTo {
   '/retention': typeof AppRetentionRoute
   '/segments': typeof AppSegmentsRoute
   '/sequences': typeof AppSequencesRouteWithChildren
+  '/subscriptions': typeof AppSubscriptionsRoute
   '/tags': typeof AppTagsRoute
   '/templates': typeof AppTemplatesRoute
   '/tickets': typeof AppTicketsRouteWithChildren
@@ -464,6 +472,7 @@ export interface FileRoutesById {
   '/_app/retention': typeof AppRetentionRoute
   '/_app/segments': typeof AppSegmentsRoute
   '/_app/sequences': typeof AppSequencesRouteWithChildren
+  '/_app/subscriptions': typeof AppSubscriptionsRoute
   '/_app/tags': typeof AppTagsRoute
   '/_app/templates': typeof AppTemplatesRoute
   '/_app/tickets': typeof AppTicketsRouteWithChildren
@@ -519,6 +528,7 @@ export interface FileRouteTypes {
     | '/retention'
     | '/segments'
     | '/sequences'
+    | '/subscriptions'
     | '/tags'
     | '/templates'
     | '/tickets'
@@ -572,6 +582,7 @@ export interface FileRouteTypes {
     | '/retention'
     | '/segments'
     | '/sequences'
+    | '/subscriptions'
     | '/tags'
     | '/templates'
     | '/tickets'
@@ -626,6 +637,7 @@ export interface FileRouteTypes {
     | '/_app/retention'
     | '/_app/segments'
     | '/_app/sequences'
+    | '/_app/subscriptions'
     | '/_app/tags'
     | '/_app/templates'
     | '/_app/tickets'
@@ -713,6 +725,13 @@ declare module '@tanstack/react-router' {
       path: '/tags'
       fullPath: '/tags'
       preLoaderRoute: typeof AppTagsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/subscriptions': {
+      id: '/_app/subscriptions'
+      path: '/subscriptions'
+      fullPath: '/subscriptions'
+      preLoaderRoute: typeof AppSubscriptionsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/sequences': {
@@ -1126,6 +1145,7 @@ interface AppRouteChildren {
   AppRetentionRoute: typeof AppRetentionRoute
   AppSegmentsRoute: typeof AppSegmentsRoute
   AppSequencesRoute: typeof AppSequencesRouteWithChildren
+  AppSubscriptionsRoute: typeof AppSubscriptionsRoute
   AppTagsRoute: typeof AppTagsRoute
   AppTemplatesRoute: typeof AppTemplatesRoute
   AppTicketsRoute: typeof AppTicketsRouteWithChildren
@@ -1169,6 +1189,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppRetentionRoute: AppRetentionRoute,
   AppSegmentsRoute: AppSegmentsRoute,
   AppSequencesRoute: AppSequencesRouteWithChildren,
+  AppSubscriptionsRoute: AppSubscriptionsRoute,
   AppTagsRoute: AppTagsRoute,
   AppTemplatesRoute: AppTemplatesRoute,
   AppTicketsRoute: AppTicketsRouteWithChildren,
@@ -1195,3 +1216,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
