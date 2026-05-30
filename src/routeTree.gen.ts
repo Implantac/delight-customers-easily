@@ -26,6 +26,7 @@ import { Route as AppProductivityRouteImport } from './routes/_app.productivity'
 import { Route as AppPipelineRouteImport } from './routes/_app.pipeline'
 import { Route as AppOpportunityMapRouteImport } from './routes/_app.opportunity-map'
 import { Route as AppNotificationsRouteImport } from './routes/_app.notifications'
+import { Route as AppMytasksRouteImport } from './routes/_app.mytasks'
 import { Route as AppLeadScoringRouteImport } from './routes/_app.lead-scoring'
 import { Route as AppKbRouteImport } from './routes/_app.kb'
 import { Route as AppGoalsRouteImport } from './routes/_app.goals'
@@ -141,6 +142,11 @@ const AppOpportunityMapRoute = AppOpportunityMapRouteImport.update({
 const AppNotificationsRoute = AppNotificationsRouteImport.update({
   id: '/notifications',
   path: '/notifications',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMytasksRoute = AppMytasksRouteImport.update({
+  id: '/mytasks',
+  path: '/mytasks',
   getParentRoute: () => AppRoute,
 } as any)
 const AppLeadScoringRoute = AppLeadScoringRouteImport.update({
@@ -327,6 +333,7 @@ export interface FileRoutesByFullPath {
   '/goals': typeof AppGoalsRoute
   '/kb': typeof AppKbRouteWithChildren
   '/lead-scoring': typeof AppLeadScoringRoute
+  '/mytasks': typeof AppMytasksRoute
   '/notifications': typeof AppNotificationsRoute
   '/opportunity-map': typeof AppOpportunityMapRoute
   '/pipeline': typeof AppPipelineRoute
@@ -377,6 +384,7 @@ export interface FileRoutesByTo {
   '/goals': typeof AppGoalsRoute
   '/kb': typeof AppKbRouteWithChildren
   '/lead-scoring': typeof AppLeadScoringRoute
+  '/mytasks': typeof AppMytasksRoute
   '/notifications': typeof AppNotificationsRoute
   '/opportunity-map': typeof AppOpportunityMapRoute
   '/pipeline': typeof AppPipelineRoute
@@ -429,6 +437,7 @@ export interface FileRoutesById {
   '/_app/goals': typeof AppGoalsRoute
   '/_app/kb': typeof AppKbRouteWithChildren
   '/_app/lead-scoring': typeof AppLeadScoringRoute
+  '/_app/mytasks': typeof AppMytasksRoute
   '/_app/notifications': typeof AppNotificationsRoute
   '/_app/opportunity-map': typeof AppOpportunityMapRoute
   '/_app/pipeline': typeof AppPipelineRoute
@@ -481,6 +490,7 @@ export interface FileRouteTypes {
     | '/goals'
     | '/kb'
     | '/lead-scoring'
+    | '/mytasks'
     | '/notifications'
     | '/opportunity-map'
     | '/pipeline'
@@ -531,6 +541,7 @@ export interface FileRouteTypes {
     | '/goals'
     | '/kb'
     | '/lead-scoring'
+    | '/mytasks'
     | '/notifications'
     | '/opportunity-map'
     | '/pipeline'
@@ -582,6 +593,7 @@ export interface FileRouteTypes {
     | '/_app/goals'
     | '/_app/kb'
     | '/_app/lead-scoring'
+    | '/_app/mytasks'
     | '/_app/notifications'
     | '/_app/opportunity-map'
     | '/_app/pipeline'
@@ -740,6 +752,13 @@ declare module '@tanstack/react-router' {
       path: '/notifications'
       fullPath: '/notifications'
       preLoaderRoute: typeof AppNotificationsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/mytasks': {
+      id: '/_app/mytasks'
+      path: '/mytasks'
+      fullPath: '/mytasks'
+      preLoaderRoute: typeof AppMytasksRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/lead-scoring': {
@@ -1046,6 +1065,7 @@ interface AppRouteChildren {
   AppGoalsRoute: typeof AppGoalsRoute
   AppKbRoute: typeof AppKbRouteWithChildren
   AppLeadScoringRoute: typeof AppLeadScoringRoute
+  AppMytasksRoute: typeof AppMytasksRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppOpportunityMapRoute: typeof AppOpportunityMapRoute
   AppPipelineRoute: typeof AppPipelineRoute
@@ -1087,6 +1107,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppGoalsRoute: AppGoalsRoute,
   AppKbRoute: AppKbRouteWithChildren,
   AppLeadScoringRoute: AppLeadScoringRoute,
+  AppMytasksRoute: AppMytasksRoute,
   AppNotificationsRoute: AppNotificationsRoute,
   AppOpportunityMapRoute: AppOpportunityMapRoute,
   AppPipelineRoute: AppPipelineRoute,
