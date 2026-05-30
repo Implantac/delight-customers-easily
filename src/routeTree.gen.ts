@@ -59,6 +59,7 @@ import { Route as AppCoachingRouteImport } from './routes/_app.coaching'
 import { Route as AppChatRouteImport } from './routes/_app.chat'
 import { Route as AppCampaignsRouteImport } from './routes/_app.campaigns'
 import { Route as AppCalendarRouteImport } from './routes/_app.calendar'
+import { Route as AppBankingRouteImport } from './routes/_app.banking'
 import { Route as AppAuditRouteImport } from './routes/_app.audit'
 import { Route as AppAssetsRouteImport } from './routes/_app.assets'
 import { Route as AppApprovalsRouteImport } from './routes/_app.approvals'
@@ -330,6 +331,11 @@ const AppCalendarRoute = AppCalendarRouteImport.update({
   path: '/calendar',
   getParentRoute: () => AppRoute,
 } as any)
+const AppBankingRoute = AppBankingRouteImport.update({
+  id: '/banking',
+  path: '/banking',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppAuditRoute = AppAuditRouteImport.update({
   id: '/audit',
   path: '/audit',
@@ -446,6 +452,7 @@ export interface FileRoutesByFullPath {
   '/approvals': typeof AppApprovalsRoute
   '/assets': typeof AppAssetsRoute
   '/audit': typeof AppAuditRoute
+  '/banking': typeof AppBankingRoute
   '/calendar': typeof AppCalendarRoute
   '/campaigns': typeof AppCampaignsRoute
   '/chat': typeof AppChatRoute
@@ -518,6 +525,7 @@ export interface FileRoutesByTo {
   '/approvals': typeof AppApprovalsRoute
   '/assets': typeof AppAssetsRoute
   '/audit': typeof AppAuditRoute
+  '/banking': typeof AppBankingRoute
   '/calendar': typeof AppCalendarRoute
   '/campaigns': typeof AppCampaignsRoute
   '/chat': typeof AppChatRoute
@@ -592,6 +600,7 @@ export interface FileRoutesById {
   '/_app/approvals': typeof AppApprovalsRoute
   '/_app/assets': typeof AppAssetsRoute
   '/_app/audit': typeof AppAuditRoute
+  '/_app/banking': typeof AppBankingRoute
   '/_app/calendar': typeof AppCalendarRoute
   '/_app/campaigns': typeof AppCampaignsRoute
   '/_app/chat': typeof AppChatRoute
@@ -666,6 +675,7 @@ export interface FileRouteTypes {
     | '/approvals'
     | '/assets'
     | '/audit'
+    | '/banking'
     | '/calendar'
     | '/campaigns'
     | '/chat'
@@ -738,6 +748,7 @@ export interface FileRouteTypes {
     | '/approvals'
     | '/assets'
     | '/audit'
+    | '/banking'
     | '/calendar'
     | '/campaigns'
     | '/chat'
@@ -811,6 +822,7 @@ export interface FileRouteTypes {
     | '/_app/approvals'
     | '/_app/assets'
     | '/_app/audit'
+    | '/_app/banking'
     | '/_app/calendar'
     | '/_app/campaigns'
     | '/_app/chat'
@@ -1238,6 +1250,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCalendarRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/banking': {
+      id: '/_app/banking'
+      path: '/banking'
+      fullPath: '/banking'
+      preLoaderRoute: typeof AppBankingRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/audit': {
       id: '/_app/audit'
       path: '/audit'
@@ -1464,6 +1483,7 @@ interface AppRouteChildren {
   AppApprovalsRoute: typeof AppApprovalsRoute
   AppAssetsRoute: typeof AppAssetsRoute
   AppAuditRoute: typeof AppAuditRoute
+  AppBankingRoute: typeof AppBankingRoute
   AppCalendarRoute: typeof AppCalendarRoute
   AppCampaignsRoute: typeof AppCampaignsRoute
   AppChatRoute: typeof AppChatRoute
@@ -1525,6 +1545,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppApprovalsRoute: AppApprovalsRoute,
   AppAssetsRoute: AppAssetsRoute,
   AppAuditRoute: AppAuditRoute,
+  AppBankingRoute: AppBankingRoute,
   AppCalendarRoute: AppCalendarRoute,
   AppCampaignsRoute: AppCampaignsRoute,
   AppChatRoute: AppChatRoute,
