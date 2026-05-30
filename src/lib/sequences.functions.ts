@@ -93,16 +93,31 @@ export const getSequence = createServerFn({ method: "POST" })
         .order("step_order", { ascending: true }),
       supabase
         .from("sequence_enrollments")
-        .select("id, sequence_id, contact_id, status, enrolled_at, completed_at, contacts(id, first_name, last_name, email)")
+        .select("id, sequence_id, contact_id, status, enrolled_at, completed_at")
         .eq("sequence_id", data.id)
         .order("enrolled_at", { ascending: false })
         .limit(200),
     ]);
 
+    const contactIds = Array.from(new Set((enrollments ?? []).map((e: any) => e.contact_id)));
+    let contactsById: Record<string, any> = {};
+    if (contactIds.length) {
+      const { data: contacts } = await supabase
+        .from("contacts")
+        .select("id, first_name, last_name, email")
+        .in("id", contactIds);
+      (contacts ?? []).forEach((c: any) => {
+        contactsById[c.id] = c;
+      });
+    }
+
     return {
       sequence: seq,
       steps: (steps ?? []) as SequenceStep[],
-      enrollments: (enrollments ?? []) as SequenceEnrollment[],
+      enrollments: (enrollments ?? []).map((e: any) => ({
+        ...e,
+        contacts: contactsById[e.contact_id] ?? null,
+      })) as SequenceEnrollment[],
     };
   });
 
