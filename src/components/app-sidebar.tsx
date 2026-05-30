@@ -7,7 +7,7 @@ import {
   Flame, Activity, Compass, PieChart, FileText, FileSignature, History, Bell,
   Calendar as CalendarIcon, BookOpen, LifeBuoy, Inbox, Workflow, Repeat, Receipt,
   Wallet, ClipboardList, PenLine, Route as RouteIcon, FormInput, Mail, Gift, Rocket,
-  Files, Clock, Award, Boxes, Smile, Landmark, Truck, Plug, Building, type LucideIcon,
+  Files, Clock, Award, Boxes, Smile, Landmark, Truck, Plug, Building, GitBranch, type LucideIcon,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useCurrentOrg, switchOrganization } from "@/lib/org";
@@ -120,6 +120,7 @@ const navSections: NavSection[] = [
     label: "BI comercial",
     items: [
       { to: "/reports", label: "Relatórios", icon: BarChart3, shortcut: "G R", managerOnly: true },
+      { to: "/benchmark", label: "Benchmark do grupo", icon: GitBranch, managerOnly: true },
       { to: "/cohorts", label: "Cohorts", icon: PieChart, managerOnly: true },
       { to: "/productivity", label: "Produtividade", icon: Activity, managerOnly: true },
       { to: "/surveys", label: "Pesquisas (NPS)", icon: Smile },
