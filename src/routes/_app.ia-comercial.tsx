@@ -210,6 +210,31 @@ function IAComercialPage() {
   );
 }
 
+function AIRecommendationsButton() {
+  const { orgId } = useCurrentOrg();
+  const run = useServerFn(generateAIRecommendations);
+  const qc = useQueryClient();
+  const mut = useMutation({
+    mutationFn: () => run({ data: { organization_id: orgId! } }),
+    onSuccess: (r) => {
+      toast.success(`IA gerou ${r.generated} novas recomendações`);
+      qc.invalidateQueries({ queryKey: ["recommendations", orgId] });
+    },
+    onError: (e: any) => toast.error(e?.message ?? "Falha na IA"),
+  });
+  return (
+    <Card className="p-4 flex items-center justify-between gap-4 border-primary/40 bg-primary/5">
+      <div>
+        <p className="text-sm font-semibold">Pedir análise ao Comitê Executivo IA (Gemini 2.5 Pro)</p>
+        <p className="text-xs text-muted-foreground">Gera até 12 recomendações novas a partir dos seus dados reais e injeta na fila de ações.</p>
+      </div>
+      <Button onClick={() => mut.mutate()} disabled={mut.isPending || !orgId}>
+        <Sparkles className="h-4 w-4 mr-2" />
+        {mut.isPending ? "Analisando..." : "Gerar agora"}
+      </Button>
+    </Card>
+  );
+
 function StatCard({
   label, value, hint, icon: Icon, loading, tone,
 }: {
