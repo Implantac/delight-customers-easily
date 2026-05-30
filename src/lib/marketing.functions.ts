@@ -172,11 +172,18 @@ export const listInfluencers = createServerFn({ method: "POST" })
         is_active: i.is_active,
         leads_30d: s.leads,
         converted_30d: s.converted,
+        headline: i.headline ?? null,
+        bio: i.bio ?? null,
+        hero_image_url: i.hero_image_url ?? null,
+        cta_text: i.cta_text ?? null,
+        cta_url: i.cta_url ?? null,
+        lp_enabled: !!i.lp_enabled,
       };
     });
 
     return { rows };
   });
+
 
 export const upsertInfluencer = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
