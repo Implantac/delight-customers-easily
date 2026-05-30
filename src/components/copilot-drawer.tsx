@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Sparkles, Send, Loader2 } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { Sparkles, Send, Loader2, ArrowRight } from "lucide-react";
 import { copilotAsk } from "@/lib/copilot.functions";
 import { useCurrentOrg } from "@/lib/org";
 import { Button } from "@/components/ui/button";
