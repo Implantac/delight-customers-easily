@@ -57,6 +57,7 @@ const nav = [
   { to: "/products", label: "Produtos", icon: Package, shortcut: "", managerOnly: false },
   { to: "/proposals", label: "Propostas", icon: FileSignature, shortcut: "", managerOnly: false },
   { to: "/quotes", label: "Orçamentos", icon: FileSignature, shortcut: "", managerOnly: false },
+  { to: "/sales-orders", label: "Pedidos", icon: Package, shortcut: "", managerOnly: false },
   { to: "/chat", label: "Chat", icon: MessageSquare, shortcut: "", managerOnly: false },
   { to: "/tickets", label: "Tickets", icon: LifeBuoy, shortcut: "", managerOnly: false },
   { to: "/templates", label: "Templates", icon: FileText, shortcut: "", managerOnly: false },
