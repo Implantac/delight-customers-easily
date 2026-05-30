@@ -172,6 +172,8 @@ function PipelinePage() {
         }
       />
 
+      <div className="mt-4"><NextActionBlock surface="pipeline" /></div>
+
       {isLoading ? (
         <div className="mt-6 grid grid-cols-1 gap-3 md:grid-cols-3 lg:grid-cols-6">
           {STAGES.map((s) => <Skeleton key={s.id} className="h-64 w-full" />)}
