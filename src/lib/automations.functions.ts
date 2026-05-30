@@ -74,7 +74,7 @@ export const runAutomations = createServerFn({ method: "POST" })
           if (dealId && toStage) {
             await supabase
               .from("deals")
-              .update({ stage: toStage, updated_at: new Date().toISOString() })
+              .update({ stage: toStage as any, updated_at: new Date().toISOString() })
               .eq("id", dealId)
               .eq("organization_id", data.organization_id);
           } else continue;
