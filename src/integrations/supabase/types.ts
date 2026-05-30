@@ -1501,6 +1501,111 @@ export type Database = {
           },
         ]
       }
+      influencer_conversions: {
+        Row: {
+          commission: number
+          created_at: string
+          id: string
+          influencer_id: string
+          kind: string
+          organization_id: string
+          ref_id: string | null
+          status: string
+          value: number
+        }
+        Insert: {
+          commission?: number
+          created_at?: string
+          id?: string
+          influencer_id: string
+          kind: string
+          organization_id: string
+          ref_id?: string | null
+          status?: string
+          value?: number
+        }
+        Update: {
+          commission?: number
+          created_at?: string
+          id?: string
+          influencer_id?: string
+          kind?: string
+          organization_id?: string
+          ref_id?: string | null
+          status?: string
+          value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "influencer_conversions_influencer_id_fkey"
+            columns: ["influencer_id"]
+            isOneToOne: false
+            referencedRelation: "influencers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "influencer_conversions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      influencer_visits: {
+        Row: {
+          country: string | null
+          created_at: string
+          id: string
+          influencer_id: string
+          organization_id: string
+          referer: string | null
+          user_agent: string | null
+          utm_campaign: string | null
+          utm_source: string | null
+          visitor_id: string | null
+        }
+        Insert: {
+          country?: string | null
+          created_at?: string
+          id?: string
+          influencer_id: string
+          organization_id: string
+          referer?: string | null
+          user_agent?: string | null
+          utm_campaign?: string | null
+          utm_source?: string | null
+          visitor_id?: string | null
+        }
+        Update: {
+          country?: string | null
+          created_at?: string
+          id?: string
+          influencer_id?: string
+          organization_id?: string
+          referer?: string | null
+          user_agent?: string | null
+          utm_campaign?: string | null
+          utm_source?: string | null
+          visitor_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "influencer_visits_influencer_id_fkey"
+            columns: ["influencer_id"]
+            isOneToOne: false
+            referencedRelation: "influencers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "influencer_visits_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       influencers: {
         Row: {
           bio: string | null
@@ -4292,6 +4397,8 @@ export type Database = {
           organization_id: string
           priority: string
           resolved_at: string | null
+          sla_breached: boolean
+          sla_due_at: string | null
           status: string
           unread_count: number
           updated_at: string
@@ -4310,6 +4417,8 @@ export type Database = {
           organization_id: string
           priority?: string
           resolved_at?: string | null
+          sla_breached?: boolean
+          sla_due_at?: string | null
           status?: string
           unread_count?: number
           updated_at?: string
@@ -4328,6 +4437,8 @@ export type Database = {
           organization_id?: string
           priority?: string
           resolved_at?: string | null
+          sla_breached?: boolean
+          sla_due_at?: string | null
           status?: string
           unread_count?: number
           updated_at?: string
@@ -4393,6 +4504,53 @@ export type Database = {
           },
           {
             foreignKeyName: "whatsapp_messages_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      whatsapp_sla_policies: {
+        Row: {
+          business_hours_only: boolean
+          created_at: string
+          first_response_minutes: number
+          id: string
+          is_active: boolean
+          name: string
+          organization_id: string
+          priority: string
+          resolution_minutes: number
+          updated_at: string
+        }
+        Insert: {
+          business_hours_only?: boolean
+          created_at?: string
+          first_response_minutes?: number
+          id?: string
+          is_active?: boolean
+          name?: string
+          organization_id: string
+          priority?: string
+          resolution_minutes?: number
+          updated_at?: string
+        }
+        Update: {
+          business_hours_only?: boolean
+          created_at?: string
+          first_response_minutes?: number
+          id?: string
+          is_active?: boolean
+          name?: string
+          organization_id?: string
+          priority?: string
+          resolution_minutes?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "whatsapp_sla_policies_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
