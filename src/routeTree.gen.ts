@@ -56,6 +56,7 @@ import { Route as AppAuditRouteImport } from './routes/_app.audit'
 import { Route as AppApprovalsRouteImport } from './routes/_app.approvals'
 import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
 import { Route as AppActivitiesRouteImport } from './routes/_app.activities'
+import { Route as ApiPublicLeadFormRouteImport } from './routes/api/public/lead-form'
 import { Route as ApiPublicInboundEmailRouteImport } from './routes/api/public/inbound-email'
 import { Route as AppTicketsIdRouteImport } from './routes/_app.tickets.$id'
 import { Route as AppSettingsWebhooksRouteImport } from './routes/_app.settings.webhooks'
@@ -306,6 +307,11 @@ const AppActivitiesRoute = AppActivitiesRouteImport.update({
   path: '/activities',
   getParentRoute: () => AppRoute,
 } as any)
+const ApiPublicLeadFormRoute = ApiPublicLeadFormRouteImport.update({
+  id: '/api/public/lead-form',
+  path: '/api/public/lead-form',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicInboundEmailRoute = ApiPublicInboundEmailRouteImport.update({
   id: '/api/public/inbound-email',
   path: '/api/public/inbound-email',
@@ -444,6 +450,7 @@ export interface FileRoutesByFullPath {
   '/settings/webhooks': typeof AppSettingsWebhooksRoute
   '/tickets/$id': typeof AppTicketsIdRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
+  '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
 }
@@ -507,6 +514,7 @@ export interface FileRoutesByTo {
   '/settings/webhooks': typeof AppSettingsWebhooksRoute
   '/tickets/$id': typeof AppTicketsIdRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
+  '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
 }
@@ -572,6 +580,7 @@ export interface FileRoutesById {
   '/_app/settings/webhooks': typeof AppSettingsWebhooksRoute
   '/_app/tickets/$id': typeof AppTicketsIdRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
+  '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
 }
@@ -637,6 +646,7 @@ export interface FileRouteTypes {
     | '/settings/webhooks'
     | '/tickets/$id'
     | '/api/public/inbound-email'
+    | '/api/public/lead-form'
     | '/api/public/hooks/activity-reminders'
     | '/api/public/hooks/generate-alerts'
   fileRoutesByTo: FileRoutesByTo
@@ -700,6 +710,7 @@ export interface FileRouteTypes {
     | '/settings/webhooks'
     | '/tickets/$id'
     | '/api/public/inbound-email'
+    | '/api/public/lead-form'
     | '/api/public/hooks/activity-reminders'
     | '/api/public/hooks/generate-alerts'
   id:
@@ -764,6 +775,7 @@ export interface FileRouteTypes {
     | '/_app/settings/webhooks'
     | '/_app/tickets/$id'
     | '/api/public/inbound-email'
+    | '/api/public/lead-form'
     | '/api/public/hooks/activity-reminders'
     | '/api/public/hooks/generate-alerts'
   fileRoutesById: FileRoutesById
@@ -773,6 +785,7 @@ export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   LoginRoute: typeof LoginRoute
   ApiPublicInboundEmailRoute: typeof ApiPublicInboundEmailRoute
+  ApiPublicLeadFormRoute: typeof ApiPublicLeadFormRoute
   ApiPublicHooksActivityRemindersRoute: typeof ApiPublicHooksActivityRemindersRoute
   ApiPublicHooksGenerateAlertsRoute: typeof ApiPublicHooksGenerateAlertsRoute
 }
@@ -1108,6 +1121,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppActivitiesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/api/public/lead-form': {
+      id: '/api/public/lead-form'
+      path: '/api/public/lead-form'
+      fullPath: '/api/public/lead-form'
+      preLoaderRoute: typeof ApiPublicLeadFormRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/inbound-email': {
       id: '/api/public/inbound-email'
       path: '/api/public/inbound-email'
@@ -1399,9 +1419,20 @@ const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   LoginRoute: LoginRoute,
   ApiPublicInboundEmailRoute: ApiPublicInboundEmailRoute,
+  ApiPublicLeadFormRoute: ApiPublicLeadFormRoute,
   ApiPublicHooksActivityRemindersRoute: ApiPublicHooksActivityRemindersRoute,
   ApiPublicHooksGenerateAlertsRoute: ApiPublicHooksGenerateAlertsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
