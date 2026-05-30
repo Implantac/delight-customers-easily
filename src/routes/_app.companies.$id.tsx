@@ -6,12 +6,13 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { PageHeader } from "@/components/page-header";
 import { HealthScore } from "@/components/health-score";
 import { Timeline, type TimelineItem } from "@/components/timeline";
 import {
   ArrowLeft, Globe, Trash2, Users, KanbanSquare, Clock, History as HistoryIcon,
-  Plug, TrendingUp, Receipt, Package, MessageCircle, Mail, Phone, Sparkles,
+  Plug, TrendingUp, Receipt, Package, MessageCircle, Mail, Phone, Sparkles, LayoutGrid,
 } from "lucide-react";
 import { Attachments } from "@/components/attachments";
 import { TagPicker } from "@/components/tag-picker";
