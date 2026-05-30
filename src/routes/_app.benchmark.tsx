@@ -13,8 +13,9 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   GitBranch, Trophy, AlertTriangle, TrendingUp, Users, Activity, ArrowRight, Layers,
-  Building2, Scale,
+  Building2, Scale, Download,
 } from "lucide-react";
+import { toCSV, downloadCSV } from "@/lib/csv-export";
 
 export const Route = createFileRoute("/_app/benchmark")({
   component: BenchmarkPage,
@@ -67,6 +68,50 @@ function BenchmarkPage() {
         title="Benchmark do grupo"
         subtitle="Compare unidades, identifique a melhor prática, replique no resto."
         icon={GitBranch}
+        action={
+          rows.length > 0 ? (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                const csv = toCSV(
+                  rows.map((r) => ({
+                    unidade: r.name,
+                    matriz: r.isChild ? "filial" : "matriz",
+                    atual: r.isCurrent ? "sim" : "",
+                    receita_30d: r.wonRevenue30,
+                    receita_90d: r.wonRevenue90,
+                    pipeline_aberto: r.openPipeline,
+                    conversao_pct: r.conversion.toFixed(2),
+                    ticket_medio: r.ticketAvg,
+                    clientes_ativos: r.activeCustomers,
+                    novos_deals_30d: r.newDeals30,
+                    atividades_30d: r.activities30,
+                    em_atraso: r.overdue,
+                  })),
+                  [
+                    { key: "unidade", label: "Unidade" },
+                    { key: "matriz", label: "Tipo" },
+                    { key: "atual", label: "Atual" },
+                    { key: "receita_30d", label: "Receita 30d (BRL)" },
+                    { key: "receita_90d", label: "Receita 90d (BRL)" },
+                    { key: "pipeline_aberto", label: "Pipeline aberto (BRL)" },
+                    { key: "conversao_pct", label: "Conversão %" },
+                    { key: "ticket_medio", label: "Ticket médio (BRL)" },
+                    { key: "clientes_ativos", label: "Clientes ativos" },
+                    { key: "novos_deals_30d", label: "Novos deals 30d" },
+                    { key: "atividades_30d", label: "Atividades 30d" },
+                    { key: "em_atraso", label: "Em atraso (BRL)" },
+                  ],
+                );
+                const date = new Date().toISOString().slice(0, 10);
+                downloadCSV(`benchmark-grupo-${date}.csv`, csv);
+              }}
+            >
+              <Download className="h-4 w-4 mr-2" /> Exportar CSV
+            </Button>
+          ) : undefined
+        }
       />
 
       <NextActionBlock surface="benchmark" title="Ações para fechar o gap" />
