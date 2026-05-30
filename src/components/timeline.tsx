@@ -1,8 +1,8 @@
-import { CheckSquare, Phone, Mail, Users, FileText, KanbanSquare, MessageCircle, Receipt, Trophy, XCircle } from "lucide-react";
+import { CheckSquare, Phone, Mail, Users, FileText, KanbanSquare, MessageCircle, Receipt, Trophy, XCircle, FormInput } from "lucide-react";
 
 export type TimelineItem = {
   id: string;
-  kind: "activity" | "deal" | "whatsapp" | "invoice" | "won" | "lost";
+  kind: "activity" | "deal" | "whatsapp" | "invoice" | "won" | "lost" | "email" | "form";
   type?: string | null;
   title: string;
   date: string;
@@ -20,6 +20,8 @@ const KIND_ICONS: Partial<Record<TimelineItem["kind"], typeof CheckSquare>> = {
   invoice: Receipt,
   won: Trophy,
   lost: XCircle,
+  email: Mail,
+  form: FormInput,
 };
 
 export function Timeline({ items, emptyLabel = "Nada por aqui." }: { items: TimelineItem[]; emptyLabel?: string }) {
