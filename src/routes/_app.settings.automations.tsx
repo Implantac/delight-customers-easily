@@ -20,7 +20,7 @@ import {
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter,
 } from "@/components/ui/dialog";
-import { Plus, Trash2, Zap, ArrowRight } from "lucide-react";
+import { Plus, Trash2, Zap, ArrowRight, Sparkles, Trophy, Flame, UserPlus, Clock, Target } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/settings/automations")({
