@@ -13,12 +13,45 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MapPin, Route as RouteIcon, Building, TrendingUp, Compass, ArrowRight, Sparkles } from "lucide-react";
+import { MapPin, Route as RouteIcon, Building, TrendingUp, Compass, ArrowRight, Sparkles, Navigation, Share2 } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/geo")({ component: GeoPage });
 
 const fmt = (n: number) => n.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
+
+type Stop = { name?: string; city?: string | null; state?: string | null; lat?: number | null; lng?: number | null };
+
+function stopToQuery(s: Stop): string | null {
+  if (typeof s.lat === "number" && typeof s.lng === "number") return `${s.lat},${s.lng}`;
+  const text = [s.name, s.city, s.state].filter(Boolean).join(", ");
+  return text ? encodeURIComponent(text) : null;
+}
+
+function buildGoogleMapsUrl(stops: Stop[]): string {
+  const points = stops.map(stopToQuery).filter(Boolean) as string[];
+  if (points.length === 0) return "https://www.google.com/maps";
+  if (points.length === 1) return `https://www.google.com/maps/dir/?api=1&destination=${points[0]}&travelmode=driving`;
+  const destination = points[points.length - 1];
+  const origin = points[0];
+  const waypoints = points.slice(1, -1).join("|");
+  const wp = waypoints ? `&waypoints=${waypoints}` : "";
+  return `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}${wp}&travelmode=driving`;
+}
+
+function openInMaps(stops: Stop[], provider: "google" | "waze") {
+  if (provider === "waze") {
+    // Waze não suporta múltiplas paradas via URL — abre o primeiro destino
+    const first = stops[0];
+    if (!first) return;
+    const url = typeof first.lat === "number" && typeof first.lng === "number"
+      ? `https://waze.com/ul?ll=${first.lat},${first.lng}&navigate=yes`
+      : `https://waze.com/ul?q=${stopToQuery(first) ?? ""}&navigate=yes`;
+    window.open(url, "_blank", "noopener,noreferrer");
+    return;
+  }
+  window.open(buildGoogleMapsUrl(stops), "_blank", "noopener,noreferrer");
+}
 
 function GeoPage() {
   const { orgId } = useCurrentOrg();
@@ -206,6 +239,34 @@ function GeoPage() {
               {aiM.isPending ? "Otimizando..." : "Otimizar com IA"}
             </Button>
           </Card>
+
+          {displayRoute.length > 0 && (
+            <Card className="p-3 flex flex-wrap items-center gap-2">
+              <span className="text-xs text-muted-foreground mr-1">
+                {displayRoute.length} parada{displayRoute.length > 1 ? "s" : ""} · abrir navegação:
+              </span>
+              <Button size="sm" variant="outline" className="gap-1.5 h-8" onClick={() => openInMaps(displayRoute, "google")}>
+                <Navigation className="h-3.5 w-3.5" /> Google Maps
+              </Button>
+              <Button size="sm" variant="outline" className="gap-1.5 h-8" onClick={() => openInMaps(displayRoute, "waze")}>
+                <Navigation className="h-3.5 w-3.5" /> Waze
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                className="gap-1.5 h-8"
+                onClick={() => {
+                  const url = buildGoogleMapsUrl(displayRoute);
+                  navigator.clipboard.writeText(url).then(
+                    () => toast.success("Link da rota copiado"),
+                    () => toast.error("Falha ao copiar"),
+                  );
+                }}
+              >
+                <Share2 className="h-3.5 w-3.5" /> Copiar link
+              </Button>
+            </Card>
+          )}
 
           {aiM.data?.summary && (
             <Card className="p-3 border-primary/30 bg-primary/5 text-sm">
