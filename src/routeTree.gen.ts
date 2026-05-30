@@ -79,6 +79,7 @@ import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
 import { Route as AppActivitiesRouteImport } from './routes/_app.activities'
 import { Route as IOrgSlugRouteImport } from './routes/i.$org.$slug'
 import { Route as ApiPublicLeadFormRouteImport } from './routes/api/public/lead-form'
+import { Route as ApiPublicInfluencerVisitRouteImport } from './routes/api/public/influencer-visit'
 import { Route as ApiPublicInboundEmailRouteImport } from './routes/api/public/inbound-email'
 import { Route as AppTicketsIdRouteImport } from './routes/_app.tickets.$id'
 import { Route as AppSettingsWebhooksRouteImport } from './routes/_app.settings.webhooks'
@@ -448,6 +449,12 @@ const ApiPublicLeadFormRoute = ApiPublicLeadFormRouteImport.update({
   path: '/api/public/lead-form',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicInfluencerVisitRoute =
+  ApiPublicInfluencerVisitRouteImport.update({
+    id: '/api/public/influencer-visit',
+    path: '/api/public/influencer-visit',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicInboundEmailRoute = ApiPublicInboundEmailRouteImport.update({
   id: '/api/public/inbound-email',
   path: '/api/public/inbound-email',
@@ -631,6 +638,7 @@ export interface FileRoutesByFullPath {
   '/settings/webhooks': typeof AppSettingsWebhooksRoute
   '/tickets/$id': typeof AppTicketsIdRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
+  '/api/public/influencer-visit': typeof ApiPublicInfluencerVisitRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/i/$org/$slug': typeof IOrgSlugRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
@@ -721,6 +729,7 @@ export interface FileRoutesByTo {
   '/settings/webhooks': typeof AppSettingsWebhooksRoute
   '/tickets/$id': typeof AppTicketsIdRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
+  '/api/public/influencer-visit': typeof ApiPublicInfluencerVisitRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/i/$org/$slug': typeof IOrgSlugRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
@@ -813,6 +822,7 @@ export interface FileRoutesById {
   '/_app/settings/webhooks': typeof AppSettingsWebhooksRoute
   '/_app/tickets/$id': typeof AppTicketsIdRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
+  '/api/public/influencer-visit': typeof ApiPublicInfluencerVisitRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/i/$org/$slug': typeof IOrgSlugRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
@@ -905,6 +915,7 @@ export interface FileRouteTypes {
     | '/settings/webhooks'
     | '/tickets/$id'
     | '/api/public/inbound-email'
+    | '/api/public/influencer-visit'
     | '/api/public/lead-form'
     | '/i/$org/$slug'
     | '/api/public/hooks/activity-reminders'
@@ -995,6 +1006,7 @@ export interface FileRouteTypes {
     | '/settings/webhooks'
     | '/tickets/$id'
     | '/api/public/inbound-email'
+    | '/api/public/influencer-visit'
     | '/api/public/lead-form'
     | '/i/$org/$slug'
     | '/api/public/hooks/activity-reminders'
@@ -1086,6 +1098,7 @@ export interface FileRouteTypes {
     | '/_app/settings/webhooks'
     | '/_app/tickets/$id'
     | '/api/public/inbound-email'
+    | '/api/public/influencer-visit'
     | '/api/public/lead-form'
     | '/i/$org/$slug'
     | '/api/public/hooks/activity-reminders'
@@ -1099,6 +1112,7 @@ export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   LoginRoute: typeof LoginRoute
   ApiPublicInboundEmailRoute: typeof ApiPublicInboundEmailRoute
+  ApiPublicInfluencerVisitRoute: typeof ApiPublicInfluencerVisitRoute
   ApiPublicLeadFormRoute: typeof ApiPublicLeadFormRoute
   IOrgSlugRoute: typeof IOrgSlugRoute
   ApiPublicHooksActivityRemindersRoute: typeof ApiPublicHooksActivityRemindersRoute
@@ -1599,6 +1613,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicLeadFormRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/influencer-visit': {
+      id: '/api/public/influencer-visit'
+      path: '/api/public/influencer-visit'
+      fullPath: '/api/public/influencer-visit'
+      preLoaderRoute: typeof ApiPublicInfluencerVisitRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/inbound-email': {
       id: '/api/public/inbound-email'
       path: '/api/public/inbound-email'
@@ -1964,6 +1985,7 @@ const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   LoginRoute: LoginRoute,
   ApiPublicInboundEmailRoute: ApiPublicInboundEmailRoute,
+  ApiPublicInfluencerVisitRoute: ApiPublicInfluencerVisitRoute,
   ApiPublicLeadFormRoute: ApiPublicLeadFormRoute,
   IOrgSlugRoute: IOrgSlugRoute,
   ApiPublicHooksActivityRemindersRoute: ApiPublicHooksActivityRemindersRoute,
