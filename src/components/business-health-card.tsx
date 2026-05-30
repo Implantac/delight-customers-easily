@@ -65,7 +65,9 @@ export function BusinessHealthCard() {
               <span className="text-xs font-medium">{p.label}</span>
               <span className={`text-xs font-semibold ${toneOf(p.score)}`}>{p.score}</span>
             </div>
-            <Progress value={p.score} className="h-1.5" indicatorClassName={barTone(p.score)} />
+            <div className="h-1.5 bg-muted rounded overflow-hidden">
+              <div className={`h-full ${barTone(p.score)}`} style={{ width: `${p.score}%` }} />
+            </div>
             <p className="text-[11px] text-muted-foreground leading-tight" title={p.detail}>{p.value}</p>
           </div>
         ))}
