@@ -20,6 +20,39 @@ export const Route = createFileRoute("/_app/geo")({ component: GeoPage });
 
 const fmt = (n: number) => n.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
 
+type Stop = { name?: string; city?: string | null; state?: string | null; lat?: number | null; lng?: number | null };
+
+function stopToQuery(s: Stop): string | null {
+  if (typeof s.lat === "number" && typeof s.lng === "number") return `${s.lat},${s.lng}`;
+  const text = [s.name, s.city, s.state].filter(Boolean).join(", ");
+  return text ? encodeURIComponent(text) : null;
+}
+
+function buildGoogleMapsUrl(stops: Stop[]): string {
+  const points = stops.map(stopToQuery).filter(Boolean) as string[];
+  if (points.length === 0) return "https://www.google.com/maps";
+  if (points.length === 1) return `https://www.google.com/maps/dir/?api=1&destination=${points[0]}&travelmode=driving`;
+  const destination = points[points.length - 1];
+  const origin = points[0];
+  const waypoints = points.slice(1, -1).join("|");
+  const wp = waypoints ? `&waypoints=${waypoints}` : "";
+  return `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${destination}${wp}&travelmode=driving`;
+}
+
+function openInMaps(stops: Stop[], provider: "google" | "waze") {
+  if (provider === "waze") {
+    // Waze não suporta múltiplas paradas via URL — abre o primeiro destino
+    const first = stops[0];
+    if (!first) return;
+    const url = typeof first.lat === "number" && typeof first.lng === "number"
+      ? `https://waze.com/ul?ll=${first.lat},${first.lng}&navigate=yes`
+      : `https://waze.com/ul?q=${stopToQuery(first) ?? ""}&navigate=yes`;
+    window.open(url, "_blank", "noopener,noreferrer");
+    return;
+  }
+  window.open(buildGoogleMapsUrl(stops), "_blank", "noopener,noreferrer");
+}
+
 function GeoPage() {
   const { orgId } = useCurrentOrg();
   const run = useServerFn(getGeoOverview);
