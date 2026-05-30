@@ -481,6 +481,30 @@ export type Database = {
           },
         ]
       }
+      business_health_scores: {
+        Row: {
+          computed_at: string
+          id: string
+          organization_id: string
+          pillars: Json
+          score: number
+        }
+        Insert: {
+          computed_at?: string
+          id?: string
+          organization_id: string
+          pillars?: Json
+          score: number
+        }
+        Update: {
+          computed_at?: string
+          id?: string
+          organization_id?: string
+          pillars?: Json
+          score?: number
+        }
+        Relationships: []
+      }
       commission_rules: {
         Row: {
           accelerator_percent: number
@@ -3010,6 +3034,72 @@ export type Database = {
           total?: number
           updated_at?: string
           valid_until?: string | null
+        }
+        Relationships: []
+      }
+      recommendations: {
+        Row: {
+          action_href: string | null
+          action_label: string
+          created_at: string
+          entity_id: string | null
+          entity_type: string | null
+          expires_at: string | null
+          id: string
+          impact_brl: number | null
+          organization_id: string
+          priority: number
+          reason: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          source: string
+          status: string
+          surface: string
+          title: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          action_href?: string | null
+          action_label?: string
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          expires_at?: string | null
+          id?: string
+          impact_brl?: number | null
+          organization_id: string
+          priority?: number
+          reason?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          source?: string
+          status?: string
+          surface: string
+          title: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          action_href?: string | null
+          action_label?: string
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string | null
+          expires_at?: string | null
+          id?: string
+          impact_brl?: number | null
+          organization_id?: string
+          priority?: number
+          reason?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          source?: string
+          status?: string
+          surface?: string
+          title?: string
+          updated_at?: string
+          user_id?: string | null
         }
         Relationships: []
       }
