@@ -762,6 +762,153 @@ export type Database = {
           },
         ]
       }
+      document_folders: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          name: string
+          organization_id: string
+          parent_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name: string
+          organization_id: string
+          parent_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name?: string
+          organization_id?: string
+          parent_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_folders_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "document_folders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      document_versions: {
+        Row: {
+          created_at: string
+          document_id: string
+          id: string
+          notes: string | null
+          organization_id: string
+          size_bytes: number | null
+          uploaded_by: string | null
+          url: string
+          version: number
+        }
+        Insert: {
+          created_at?: string
+          document_id: string
+          id?: string
+          notes?: string | null
+          organization_id: string
+          size_bytes?: number | null
+          uploaded_by?: string | null
+          url: string
+          version: number
+        }
+        Update: {
+          created_at?: string
+          document_id?: string
+          id?: string
+          notes?: string | null
+          organization_id?: string
+          size_bytes?: number | null
+          uploaded_by?: string | null
+          url?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_versions_document_id_fkey"
+            columns: ["document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      documents: {
+        Row: {
+          company_id: string | null
+          contact_id: string | null
+          created_at: string
+          deal_id: string | null
+          description: string | null
+          folder_id: string | null
+          id: string
+          mime_type: string | null
+          name: string
+          organization_id: string
+          size_bytes: number | null
+          tags: string[]
+          updated_at: string
+          uploaded_by: string | null
+          url: string
+          version: number
+        }
+        Insert: {
+          company_id?: string | null
+          contact_id?: string | null
+          created_at?: string
+          deal_id?: string | null
+          description?: string | null
+          folder_id?: string | null
+          id?: string
+          mime_type?: string | null
+          name: string
+          organization_id: string
+          size_bytes?: number | null
+          tags?: string[]
+          updated_at?: string
+          uploaded_by?: string | null
+          url: string
+          version?: number
+        }
+        Update: {
+          company_id?: string | null
+          contact_id?: string | null
+          created_at?: string
+          deal_id?: string | null
+          description?: string | null
+          folder_id?: string | null
+          id?: string
+          mime_type?: string | null
+          name?: string
+          organization_id?: string
+          size_bytes?: number | null
+          tags?: string[]
+          updated_at?: string
+          uploaded_by?: string | null
+          url?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "documents_folder_id_fkey"
+            columns: ["folder_id"]
+            isOneToOne: false
+            referencedRelation: "document_folders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       email_campaign_recipients: {
         Row: {
           bounced_at: string | null
