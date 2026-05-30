@@ -21,6 +21,7 @@ import { activitySchema, fromForm } from "@/lib/validation";
 import { downloadICS } from "@/lib/ics";
 import { useServerFn } from "@tanstack/react-start";
 import { triggerWebhooks } from "@/lib/webhooks.functions";
+import { runAutomations } from "@/lib/automations.functions";
 import { SavedViews } from "@/components/saved-views";
 
 export const Route = createFileRoute("/_app/activities")({ component: ActivitiesPage });
@@ -63,6 +64,9 @@ function ActivitiesPage() {
     queryFn: async () => (await supabase.from("deals").select("id, title").order("title")).data ?? [],
   });
 
+  const fire = useServerFn(triggerWebhooks);
+  const runRules = useServerFn(runAutomations);
+
   const create = useMutation({
     mutationFn: async (form: FormData) => {
       if (!orgId) throw new Error("Nenhuma organização ativa");
@@ -78,14 +82,14 @@ function ActivitiesPage() {
     onError: (e: any) => toast.error(e.message),
   });
 
-  const fire = useServerFn(triggerWebhooks);
-
   const toggle = useMutation({
     mutationFn: async ({ id, completed, activity }: { id: string; completed: boolean; activity: any }) => {
       const { error } = await supabase.from("activities").update({ completed }).eq("id", id);
       if (error) throw error;
       if (completed && orgId) {
-        fire({ data: { organization_id: orgId, event: "activity.completed", payload: { id, title: activity.title, type: activity.type } } }).catch(() => {});
+        const payload = { id, title: activity.title, type: activity.type, contact_id: activity.contact_id, deal_id: activity.deal_id };
+        fire({ data: { organization_id: orgId, event: "activity.completed", payload } }).catch(() => {});
+        runRules({ data: { organization_id: orgId, event: "activity.completed", payload } }).catch(() => {});
       }
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ["activities"] }),

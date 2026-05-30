@@ -21,6 +21,9 @@ import { contactSchema, fromForm } from "@/lib/validation";
 import { ContactDuplicateWarning } from "@/components/duplicate-warning";
 import { toCSV, downloadCSV } from "@/lib/csv-export";
 import { SavedViews } from "@/components/saved-views";
+import { useServerFn } from "@tanstack/react-start";
+import { runAutomations } from "@/lib/automations.functions";
+import { triggerWebhooks } from "@/lib/webhooks.functions";
 
 export const Route = createFileRoute("/_app/contacts")({ component: ContactsPage });
 
@@ -72,14 +75,22 @@ function ContactsPage() {
     onError: (e: any) => toast.error(e.message),
   });
 
+  const fire = useServerFn(triggerWebhooks);
+  const runRules = useServerFn(runAutomations);
+
   const create = useMutation({
     mutationFn: async (form: FormData) => {
       if (!orgId) throw new Error("Nenhuma organização ativa");
       const v = fromForm(contactSchema, form);
-      const { error } = await supabase.from("contacts").insert({
+      const { data: inserted, error } = await supabase.from("contacts").insert({
         ...v, user_id: user!.id, organization_id: orgId,
-      });
+      }).select("id, name, email, phone, company_id").single();
       if (error) throw error;
+      if (orgId && inserted) {
+        const payload = { contact_id: inserted.id, contact: inserted, ...v };
+        fire({ data: { organization_id: orgId, event: "contact.created", payload } }).catch(() => {});
+        runRules({ data: { organization_id: orgId, event: "contact.created", payload } }).catch(() => {});
+      }
     },
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["contacts"] }); setOpen(false); toast.success("Contato criado"); },
     onError: (e: any) => toast.error(e.message),
