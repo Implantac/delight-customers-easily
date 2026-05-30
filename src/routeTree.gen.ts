@@ -15,6 +15,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppWinLossRouteImport } from './routes/_app.win-loss'
 import { Route as AppViewsRouteImport } from './routes/_app.views'
 import { Route as AppTicketsRouteImport } from './routes/_app.tickets'
+import { Route as AppTerritoriesRouteImport } from './routes/_app.territories'
 import { Route as AppTemplatesRouteImport } from './routes/_app.templates'
 import { Route as AppTagsRouteImport } from './routes/_app.tags'
 import { Route as AppSubscriptionsRouteImport } from './routes/_app.subscriptions'
@@ -93,6 +94,11 @@ const AppViewsRoute = AppViewsRouteImport.update({
 const AppTicketsRoute = AppTicketsRouteImport.update({
   id: '/tickets',
   path: '/tickets',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTerritoriesRoute = AppTerritoriesRouteImport.update({
+  id: '/territories',
+  path: '/territories',
   getParentRoute: () => AppRoute,
 } as any)
 const AppTemplatesRoute = AppTemplatesRouteImport.update({
@@ -386,6 +392,7 @@ export interface FileRoutesByFullPath {
   '/subscriptions': typeof AppSubscriptionsRoute
   '/tags': typeof AppTagsRoute
   '/templates': typeof AppTemplatesRoute
+  '/territories': typeof AppTerritoriesRoute
   '/tickets': typeof AppTicketsRouteWithChildren
   '/views': typeof AppViewsRoute
   '/win-loss': typeof AppWinLossRoute
@@ -443,6 +450,7 @@ export interface FileRoutesByTo {
   '/subscriptions': typeof AppSubscriptionsRoute
   '/tags': typeof AppTagsRoute
   '/templates': typeof AppTemplatesRoute
+  '/territories': typeof AppTerritoriesRoute
   '/tickets': typeof AppTicketsRouteWithChildren
   '/views': typeof AppViewsRoute
   '/win-loss': typeof AppWinLossRoute
@@ -502,6 +510,7 @@ export interface FileRoutesById {
   '/_app/subscriptions': typeof AppSubscriptionsRoute
   '/_app/tags': typeof AppTagsRoute
   '/_app/templates': typeof AppTemplatesRoute
+  '/_app/territories': typeof AppTerritoriesRoute
   '/_app/tickets': typeof AppTicketsRouteWithChildren
   '/_app/views': typeof AppViewsRoute
   '/_app/win-loss': typeof AppWinLossRoute
@@ -561,6 +570,7 @@ export interface FileRouteTypes {
     | '/subscriptions'
     | '/tags'
     | '/templates'
+    | '/territories'
     | '/tickets'
     | '/views'
     | '/win-loss'
@@ -618,6 +628,7 @@ export interface FileRouteTypes {
     | '/subscriptions'
     | '/tags'
     | '/templates'
+    | '/territories'
     | '/tickets'
     | '/views'
     | '/win-loss'
@@ -676,6 +687,7 @@ export interface FileRouteTypes {
     | '/_app/subscriptions'
     | '/_app/tags'
     | '/_app/templates'
+    | '/_app/territories'
     | '/_app/tickets'
     | '/_app/views'
     | '/_app/win-loss'
@@ -747,6 +759,13 @@ declare module '@tanstack/react-router' {
       path: '/tickets'
       fullPath: '/tickets'
       preLoaderRoute: typeof AppTicketsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/territories': {
+      id: '/_app/territories'
+      path: '/territories'
+      fullPath: '/territories'
+      preLoaderRoute: typeof AppTerritoriesRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/templates': {
@@ -1208,6 +1227,7 @@ interface AppRouteChildren {
   AppSubscriptionsRoute: typeof AppSubscriptionsRoute
   AppTagsRoute: typeof AppTagsRoute
   AppTemplatesRoute: typeof AppTemplatesRoute
+  AppTerritoriesRoute: typeof AppTerritoriesRoute
   AppTicketsRoute: typeof AppTicketsRouteWithChildren
   AppViewsRoute: typeof AppViewsRoute
   AppWinLossRoute: typeof AppWinLossRoute
@@ -1255,6 +1275,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSubscriptionsRoute: AppSubscriptionsRoute,
   AppTagsRoute: AppTagsRoute,
   AppTemplatesRoute: AppTemplatesRoute,
+  AppTerritoriesRoute: AppTerritoriesRoute,
   AppTicketsRoute: AppTicketsRouteWithChildren,
   AppViewsRoute: AppViewsRoute,
   AppWinLossRoute: AppWinLossRoute,

@@ -1618,6 +1618,118 @@ export type Database = {
         }
         Relationships: []
       }
+      territories: {
+        Row: {
+          active: boolean
+          color: string | null
+          created_at: string
+          default_owner_id: string | null
+          description: string | null
+          id: string
+          name: string
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          color?: string | null
+          created_at?: string
+          default_owner_id?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          organization_id: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          color?: string | null
+          created_at?: string
+          default_owner_id?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      territory_members: {
+        Row: {
+          created_at: string
+          id: string
+          organization_id: string
+          territory_id: string
+          user_id: string
+          weight: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          organization_id: string
+          territory_id: string
+          user_id: string
+          weight?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          organization_id?: string
+          territory_id?: string
+          user_id?: string
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "territory_members_territory_id_fkey"
+            columns: ["territory_id"]
+            isOneToOne: false
+            referencedRelation: "territories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      territory_rules: {
+        Row: {
+          created_at: string
+          field: string
+          id: string
+          operator: string
+          organization_id: string
+          priority: number
+          territory_id: string
+          value: string
+        }
+        Insert: {
+          created_at?: string
+          field: string
+          id?: string
+          operator?: string
+          organization_id: string
+          priority?: number
+          territory_id: string
+          value: string
+        }
+        Update: {
+          created_at?: string
+          field?: string
+          id?: string
+          operator?: string
+          organization_id?: string
+          priority?: number
+          territory_id?: string
+          value?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "territory_rules_territory_id_fkey"
+            columns: ["territory_id"]
+            isOneToOne: false
+            referencedRelation: "territories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ticket_comments: {
         Row: {
           author_id: string
