@@ -1484,6 +1484,128 @@ export type Database = {
         }
         Relationships: []
       }
+      loyalty_accounts: {
+        Row: {
+          balance: number
+          contact_id: string
+          created_at: string
+          id: string
+          organization_id: string
+          tier: string
+          total_earned: number
+          total_redeemed: number
+          updated_at: string
+        }
+        Insert: {
+          balance?: number
+          contact_id: string
+          created_at?: string
+          id?: string
+          organization_id: string
+          tier?: string
+          total_earned?: number
+          total_redeemed?: number
+          updated_at?: string
+        }
+        Update: {
+          balance?: number
+          contact_id?: string
+          created_at?: string
+          id?: string
+          organization_id?: string
+          tier?: string
+          total_earned?: number
+          total_redeemed?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      loyalty_rewards: {
+        Row: {
+          active: boolean
+          cost_points: number
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          organization_id: string
+          stock: number | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          cost_points?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          organization_id: string
+          stock?: number | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          cost_points?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          organization_id?: string
+          stock?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      loyalty_transactions: {
+        Row: {
+          account_id: string
+          contact_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          kind: string
+          organization_id: string
+          points: number
+          reason: string | null
+          reference: string | null
+          reward_id: string | null
+        }
+        Insert: {
+          account_id: string
+          contact_id: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          kind?: string
+          organization_id: string
+          points?: number
+          reason?: string | null
+          reference?: string | null
+          reward_id?: string | null
+        }
+        Update: {
+          account_id?: string
+          contact_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          kind?: string
+          organization_id?: string
+          points?: number
+          reason?: string | null
+          reference?: string | null
+          reward_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "loyalty_transactions_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "loyalty_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       memberships: {
         Row: {
           created_at: string
