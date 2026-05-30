@@ -63,6 +63,7 @@ const navSections: NavSection[] = [
     id: "comercial",
     label: "Comercial",
     items: [
+      { to: "/meu-dia", label: "Meu Dia", icon: Sun, shortcut: "G Y" },
       { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, shortcut: "G D" },
       { to: "/carteira", label: "Carteira Comercial", icon: Briefcase, shortcut: "G W" },
       { to: "/marketing", label: "Leads", icon: Flame, shortcut: "G L" },
