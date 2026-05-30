@@ -536,6 +536,8 @@ export type Database = {
           industry: string | null
           name: string
           notes: string | null
+          omie_id: number | null
+          omie_synced_at: string | null
           organization_id: string
           size: string | null
           updated_at: string
@@ -549,6 +551,8 @@ export type Database = {
           industry?: string | null
           name: string
           notes?: string | null
+          omie_id?: number | null
+          omie_synced_at?: string | null
           organization_id: string
           size?: string | null
           updated_at?: string
@@ -562,6 +566,8 @@ export type Database = {
           industry?: string | null
           name?: string
           notes?: string | null
+          omie_id?: number | null
+          omie_synced_at?: string | null
           organization_id?: string
           size?: string | null
           updated_at?: string
@@ -587,6 +593,8 @@ export type Database = {
           id: string
           name: string
           notes: string | null
+          omie_id: number | null
+          omie_synced_at: string | null
           organization_id: string
           phone: string | null
           position: string | null
@@ -601,6 +609,8 @@ export type Database = {
           id?: string
           name: string
           notes?: string | null
+          omie_id?: number | null
+          omie_synced_at?: string | null
           organization_id: string
           phone?: string | null
           position?: string | null
@@ -615,6 +625,8 @@ export type Database = {
           id?: string
           name?: string
           notes?: string | null
+          omie_id?: number | null
+          omie_synced_at?: string | null
           organization_id?: string
           phone?: string | null
           position?: string | null
@@ -1274,6 +1286,56 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      erp_integrations: {
+        Row: {
+          app_key: string
+          app_secret: string
+          created_at: string
+          id: string
+          is_active: boolean
+          last_error: string | null
+          last_sync_at: string | null
+          organization_id: string
+          provider: string
+          settings: Json
+          updated_at: string
+        }
+        Insert: {
+          app_key: string
+          app_secret: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          last_error?: string | null
+          last_sync_at?: string | null
+          organization_id: string
+          provider: string
+          settings?: Json
+          updated_at?: string
+        }
+        Update: {
+          app_key?: string
+          app_secret?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          last_error?: string | null
+          last_sync_at?: string | null
+          organization_id?: string
+          provider?: string
+          settings?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "erp_integrations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       expenses: {
         Row: {

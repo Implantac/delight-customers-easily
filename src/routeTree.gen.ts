@@ -46,6 +46,7 @@ import { Route as AppLeadScoringRouteImport } from './routes/_app.lead-scoring'
 import { Route as AppLeadFormsRouteImport } from './routes/_app.lead-forms'
 import { Route as AppKbRouteImport } from './routes/_app.kb'
 import { Route as AppInvoicesRouteImport } from './routes/_app.invoices'
+import { Route as AppIntegrationsRouteImport } from './routes/_app.integrations'
 import { Route as AppGoalsRouteImport } from './routes/_app.goals'
 import { Route as AppForecastRouteImport } from './routes/_app.forecast'
 import { Route as AppFinanceRouteImport } from './routes/_app.finance'
@@ -268,6 +269,11 @@ const AppKbRoute = AppKbRouteImport.update({
 const AppInvoicesRoute = AppInvoicesRouteImport.update({
   id: '/invoices',
   path: '/invoices',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppIntegrationsRoute = AppIntegrationsRouteImport.update({
+  id: '/integrations',
+  path: '/integrations',
   getParentRoute: () => AppRoute,
 } as any)
 const AppGoalsRoute = AppGoalsRouteImport.update({
@@ -494,6 +500,7 @@ export interface FileRoutesByFullPath {
   '/finance': typeof AppFinanceRoute
   '/forecast': typeof AppForecastRoute
   '/goals': typeof AppGoalsRoute
+  '/integrations': typeof AppIntegrationsRoute
   '/invoices': typeof AppInvoicesRoute
   '/kb': typeof AppKbRouteWithChildren
   '/lead-forms': typeof AppLeadFormsRoute
@@ -571,6 +578,7 @@ export interface FileRoutesByTo {
   '/finance': typeof AppFinanceRoute
   '/forecast': typeof AppForecastRoute
   '/goals': typeof AppGoalsRoute
+  '/integrations': typeof AppIntegrationsRoute
   '/invoices': typeof AppInvoicesRoute
   '/kb': typeof AppKbRouteWithChildren
   '/lead-forms': typeof AppLeadFormsRoute
@@ -650,6 +658,7 @@ export interface FileRoutesById {
   '/_app/finance': typeof AppFinanceRoute
   '/_app/forecast': typeof AppForecastRoute
   '/_app/goals': typeof AppGoalsRoute
+  '/_app/integrations': typeof AppIntegrationsRoute
   '/_app/invoices': typeof AppInvoicesRoute
   '/_app/kb': typeof AppKbRouteWithChildren
   '/_app/lead-forms': typeof AppLeadFormsRoute
@@ -729,6 +738,7 @@ export interface FileRouteTypes {
     | '/finance'
     | '/forecast'
     | '/goals'
+    | '/integrations'
     | '/invoices'
     | '/kb'
     | '/lead-forms'
@@ -806,6 +816,7 @@ export interface FileRouteTypes {
     | '/finance'
     | '/forecast'
     | '/goals'
+    | '/integrations'
     | '/invoices'
     | '/kb'
     | '/lead-forms'
@@ -884,6 +895,7 @@ export interface FileRouteTypes {
     | '/_app/finance'
     | '/_app/forecast'
     | '/_app/goals'
+    | '/_app/integrations'
     | '/_app/invoices'
     | '/_app/kb'
     | '/_app/lead-forms'
@@ -1205,6 +1217,13 @@ declare module '@tanstack/react-router' {
       path: '/invoices'
       fullPath: '/invoices'
       preLoaderRoute: typeof AppInvoicesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/integrations': {
+      id: '/_app/integrations'
+      path: '/integrations'
+      fullPath: '/integrations'
+      preLoaderRoute: typeof AppIntegrationsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/goals': {
@@ -1577,6 +1596,7 @@ interface AppRouteChildren {
   AppFinanceRoute: typeof AppFinanceRoute
   AppForecastRoute: typeof AppForecastRoute
   AppGoalsRoute: typeof AppGoalsRoute
+  AppIntegrationsRoute: typeof AppIntegrationsRoute
   AppInvoicesRoute: typeof AppInvoicesRoute
   AppKbRoute: typeof AppKbRouteWithChildren
   AppLeadFormsRoute: typeof AppLeadFormsRoute
@@ -1643,6 +1663,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppFinanceRoute: AppFinanceRoute,
   AppForecastRoute: AppForecastRoute,
   AppGoalsRoute: AppGoalsRoute,
+  AppIntegrationsRoute: AppIntegrationsRoute,
   AppInvoicesRoute: AppInvoicesRoute,
   AppKbRoute: AppKbRouteWithChildren,
   AppLeadFormsRoute: AppLeadFormsRoute,

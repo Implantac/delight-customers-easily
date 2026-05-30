@@ -1,6 +1,6 @@
 import { memo, useMemo } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Users, Building2, KanbanSquare, CheckSquare, Briefcase, Check, ChevronsUpDown, LogOut, Settings, Upload, BarChart3, Sliders, Webhook, Zap, Sparkles, AlertTriangle, Target, HeartPulse, DollarSign, Map, Package, MessageSquare, ShieldCheck, Trophy, Coins, Flame, Activity, Compass, PieChart, FileText, FileSignature, Grid3x3, History, Medal, Tag, Bookmark, Bell, Calendar as CalendarIcon, BookOpen, LifeBuoy, Inbox, Workflow, Repeat, Receipt, Wallet, ClipboardList, ClipboardCheck, PenLine, Route as RouteIcon, FormInput, Mail, Gift, Rocket, Files, Clock, Award, Boxes, Smile, Landmark, Truck, type LucideIcon } from "lucide-react";
+import { LayoutDashboard, Users, Building2, KanbanSquare, CheckSquare, Briefcase, Check, ChevronsUpDown, LogOut, Settings, Upload, BarChart3, Sliders, Webhook, Zap, Sparkles, AlertTriangle, Target, HeartPulse, DollarSign, Map, Package, MessageSquare, ShieldCheck, Trophy, Coins, Flame, Activity, Compass, PieChart, FileText, FileSignature, Grid3x3, History, Medal, Tag, Bookmark, Bell, Calendar as CalendarIcon, BookOpen, LifeBuoy, Inbox, Workflow, Repeat, Receipt, Wallet, ClipboardList, ClipboardCheck, PenLine, Route as RouteIcon, FormInput, Mail, Gift, Rocket, Files, Clock, Award, Boxes, Smile, Landmark, Truck, Plug, type LucideIcon } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useCurrentOrg, switchOrganization } from "@/lib/org";
 import { useCanManage } from "@/lib/permissions";
@@ -60,6 +60,7 @@ const nav = [
   { to: "/sales-orders", label: "Pedidos", icon: Package, shortcut: "", managerOnly: false },
   { to: "/stock", label: "Estoque", icon: Boxes, shortcut: "", managerOnly: false },
   { to: "/suppliers", label: "Fornecedores", icon: Truck, shortcut: "", managerOnly: false },
+  { to: "/integrations", label: "Integrações ERP", icon: Plug, shortcut: "", managerOnly: true },
   { to: "/chat", label: "Chat", icon: MessageSquare, shortcut: "", managerOnly: false },
   { to: "/tickets", label: "Tickets", icon: LifeBuoy, shortcut: "", managerOnly: false },
   { to: "/templates", label: "Templates", icon: FileText, shortcut: "", managerOnly: false },
