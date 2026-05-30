@@ -66,6 +66,29 @@ function LandingPage() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const sp = new URLSearchParams(window.location.search);
+    let visitorId = localStorage.getItem("inf_vid");
+    if (!visitorId) {
+      visitorId = crypto.randomUUID();
+      localStorage.setItem("inf_vid", visitorId);
+    }
+    fetch("/api/public/influencer-visit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        org_slug: org,
+        slug,
+        visitor_id: visitorId,
+        referer: document.referrer || undefined,
+        utm_source: sp.get("utm_source") || undefined,
+        utm_campaign: sp.get("utm_campaign") || undefined,
+      }),
+    }).catch(() => {});
+  }, [org, slug]);
+
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !email) return toast.error("Nome e e-mail são obrigatórios");
