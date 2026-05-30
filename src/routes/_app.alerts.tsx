@@ -99,6 +99,52 @@ function AlertsPage() {
         <KpiCard label="Informativos" value={counts.low} tone="sky" />
       </div>
 
+      {allAlerts.length > 0 && (
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+          <span className="text-xs text-muted-foreground mr-1">Filtrar:</span>
+          {([
+            ["all", "Todos", counts.total],
+            ["high", "Críticos", counts.high],
+            ["medium", "Atenção", counts.medium],
+            ["low", "Informativos", counts.low],
+          ] as const).map(([v, label, n]) => (
+            <Button
+              key={v}
+              size="sm"
+              variant={sevFilter === v ? "default" : "outline"}
+              onClick={() => setSevFilter(v as typeof sevFilter)}
+              className="h-7 text-xs"
+            >
+              {label} <Badge variant="secondary" className="ml-1.5">{n}</Badge>
+            </Button>
+          ))}
+          <span className="mx-2 h-4 w-px bg-border" />
+          <Button
+            size="sm"
+            variant={kindFilter === "all" ? "default" : "outline"}
+            onClick={() => setKindFilter("all")}
+            className="h-7 text-xs"
+          >
+            Todos os tipos
+          </Button>
+          {kindsPresent.map((k) => {
+            const meta = KIND_META[k] ?? { icon: AlertTriangle, label: k };
+            const Icon = meta.icon;
+            return (
+              <Button
+                key={k}
+                size="sm"
+                variant={kindFilter === k ? "default" : "outline"}
+                onClick={() => setKindFilter(k)}
+                className="h-7 text-xs gap-1"
+              >
+                <Icon className="h-3 w-3" /> {meta.label}
+              </Button>
+            );
+          })}
+        </div>
+      )}
+
       {isLoading ? (
         <div className="mt-6 space-y-3">
           {[0, 1, 2].map((i) => <Skeleton key={i} className="h-24 w-full" />)}
