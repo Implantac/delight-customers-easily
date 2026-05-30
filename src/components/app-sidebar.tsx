@@ -19,6 +19,7 @@ const nav = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, shortcut: "G D", managerOnly: false },
   { to: "/pipeline", label: "Pipeline", icon: KanbanSquare, shortcut: "G P", managerOnly: false },
   { to: "/contacts", label: "Contatos", icon: Users, shortcut: "G C", managerOnly: false },
+  { to: "/lead-scoring", label: "Lead Scoring", icon: Flame, shortcut: "", managerOnly: false },
   { to: "/companies", label: "Empresas", icon: Building2, shortcut: "G E", managerOnly: false },
   { to: "/activities", label: "Atividades", icon: CheckSquare, shortcut: "G A", managerOnly: false },
   { to: "/alerts", label: "Alertas", icon: AlertTriangle, shortcut: "G L", managerOnly: false },
