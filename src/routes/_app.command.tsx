@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useCurrentOrg } from "@/lib/org";
 import { useAuth } from "@/lib/auth";
+import { supabase } from "@/integrations/supabase/client";
 import { computeCommandCenter } from "@/lib/intelligence.functions";
 import { getForecast } from "@/lib/forecast.functions";
 import { getFinanceOverview } from "@/lib/finance.functions";
@@ -16,7 +17,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { CopilotDrawer } from "@/components/copilot-drawer";
 import {
   AlertTriangle, TrendingUp, Target, Clock, Users, ArrowRight,
-  Sparkles, Flame, Calendar, DollarSign, HeartPulse, Receipt, Gauge,
+  Sparkles, Flame, Calendar, DollarSign, HeartPulse, Receipt, Gauge, Zap,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/command")({ component: CommandCenter });
