@@ -194,16 +194,33 @@ function GeoPage() {
             <Button onClick={() => routeQ.refetch()} variant="secondary" className="gap-2">
               <RouteIcon className="h-4 w-4" /> Gerar rota
             </Button>
+            <Button
+              onClick={() => aiM.mutate()}
+              disabled={aiM.isPending || !routeQ.data?.route.length}
+              className="gap-2"
+            >
+              <Sparkles className={`h-4 w-4 ${aiM.isPending ? "animate-pulse" : ""}`} />
+              {aiM.isPending ? "Otimizando..." : "Otimizar com IA"}
+            </Button>
           </Card>
+
+          {aiM.data?.summary && (
+            <Card className="p-3 border-primary/30 bg-primary/5 text-sm">
+              <div className="flex items-center gap-2 text-primary font-medium mb-1">
+                <Sparkles className="h-3.5 w-3.5" /> Plano da IA
+              </div>
+              <p className="text-muted-foreground">{aiM.data.summary}</p>
+            </Card>
+          )}
 
           {routeQ.isLoading ? <Skeleton className="h-40 w-full" /> : (
             <div className="space-y-2">
-              {routeQ.data?.route.length === 0 && (
+              {displayRoute.length === 0 && (
                 <Card className="p-8 text-center text-sm text-muted-foreground">
                   Sem clientes nessa região. Tente outro filtro ou complete os endereços.
                 </Card>
               )}
-              {routeQ.data?.route.map((r, i) => (
+              {displayRoute.map((r: any, i: number) => (
                 <Card key={r.id} className="p-3 flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3 min-w-0">
                     <div className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-semibold">{i + 1}</div>
@@ -213,6 +230,11 @@ function GeoPage() {
                         {[r.city, r.state].filter(Boolean).join(" · ") || "sem endereço"}
                         {r.industry && ` · ${r.industry}`}
                       </div>
+                      {r.reason && (
+                        <div className="text-[11px] text-primary mt-0.5 truncate">
+                          <Sparkles className="h-2.5 w-2.5 inline mr-1" />{r.reason}
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -220,7 +242,7 @@ function GeoPage() {
                       <span className="font-mono">{fmt(r.open_value)}</span>
                       <span className="text-muted-foreground">{r.daysSilent}d sem contato</span>
                     </div>
-                    <Badge variant="secondary">{Math.round(r.score)}</Badge>
+                    {typeof r.score === "number" && <Badge variant="secondary">{Math.round(r.score)}</Badge>}
                     <Button asChild size="sm" variant="ghost">
                       <Link to="/companies/$id" params={{ id: r.id }}>Abrir <ArrowRight className="h-3 w-3 ml-1" /></Link>
                     </Button>
