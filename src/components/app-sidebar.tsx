@@ -98,6 +98,7 @@ const navSections: NavSection[] = [
     id: "ai",
     label: "IA comercial",
     items: [
+      { to: "/ia-comercial", label: "Agentes IA", icon: Sparkles, shortcut: "G I" },
       { to: "/coaching", label: "Coaching IA", icon: Compass },
       { to: "/playbooks", label: "Playbooks", icon: ClipboardList },
       { to: "/lead-forms", label: "Captura de leads", icon: FormInput },
