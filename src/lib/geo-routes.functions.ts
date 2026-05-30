@@ -41,17 +41,18 @@ export const getGeoOverview = createServerFn({ method: "POST" })
         .eq("organization_id", org),
       supabase
         .from("activities")
-        .select("company_id,created_at")
+        .select("deal_id,created_at")
         .eq("organization_id", org)
         .order("created_at", { ascending: false })
         .limit(2000),
     ]);
 
     const companies = coRes.data ?? [];
-    const deals = dealsRes.data ?? [];
-    const acts = actRes.data ?? [];
+    const deals = (dealsRes.data ?? []) as any[];
+    const acts = (actRes.data ?? []) as any[];
 
     const valByCo = new Map<string, { open: number; won: number }>();
+    const dealToCompany = new Map<string, string>();
     for (const d of deals) {
       if (!d.company_id) continue;
       const v = Number(d.value || 0);
@@ -61,10 +62,23 @@ export const getGeoOverview = createServerFn({ method: "POST" })
       valByCo.set(d.company_id, cur);
     }
 
+    // Map deal_id -> company_id (we need an extra query because deal id wasn't selected above)
+    const dealIds = Array.from(new Set(acts.map((a) => a.deal_id).filter(Boolean) as string[]));
+    if (dealIds.length > 0) {
+      const { data: dealRows } = await supabase
+        .from("deals")
+        .select("id,company_id")
+        .in("id", dealIds);
+      for (const r of (dealRows ?? []) as any[]) {
+        if (r.company_id) dealToCompany.set(r.id, r.company_id);
+      }
+    }
+
     const lastAct = new Map<string, string>();
     for (const a of acts) {
-      if (!a.company_id) continue;
-      if (!lastAct.has(a.company_id)) lastAct.set(a.company_id, a.created_at as string);
+      const coId = a.deal_id ? dealToCompany.get(a.deal_id) : null;
+      if (!coId) continue;
+      if (!lastAct.has(coId)) lastAct.set(coId, a.created_at as string);
     }
 
     const enriched: GeoCompany[] = companies.map((c: any) => {
