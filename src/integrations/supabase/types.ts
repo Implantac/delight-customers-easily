@@ -1495,6 +1495,116 @@ export type Database = {
         }
         Relationships: []
       }
+      onboarding_projects: {
+        Row: {
+          company_id: string | null
+          completed_at: string | null
+          contact_id: string | null
+          created_at: string
+          created_by: string | null
+          due_at: string | null
+          health: string
+          id: string
+          name: string
+          notes: string | null
+          organization_id: string
+          owner_id: string | null
+          progress_pct: number
+          started_at: string | null
+          status: string
+          steps: Json
+          template_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          company_id?: string | null
+          completed_at?: string | null
+          contact_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          due_at?: string | null
+          health?: string
+          id?: string
+          name: string
+          notes?: string | null
+          organization_id: string
+          owner_id?: string | null
+          progress_pct?: number
+          started_at?: string | null
+          status?: string
+          steps?: Json
+          template_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          company_id?: string | null
+          completed_at?: string | null
+          contact_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          due_at?: string | null
+          health?: string
+          id?: string
+          name?: string
+          notes?: string | null
+          organization_id?: string
+          owner_id?: string | null
+          progress_pct?: number
+          started_at?: string | null
+          status?: string
+          steps?: Json
+          template_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "onboarding_projects_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "onboarding_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      onboarding_templates: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          duration_days: number
+          id: string
+          is_active: boolean
+          name: string
+          organization_id: string
+          steps: Json
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          duration_days?: number
+          id?: string
+          is_active?: boolean
+          name: string
+          organization_id: string
+          steps?: Json
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          duration_days?: number
+          id?: string
+          is_active?: boolean
+          name?: string
+          organization_id?: string
+          steps?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           company_id: string | null

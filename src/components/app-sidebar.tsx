@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Users, Building2, KanbanSquare, CheckSquare, Briefcase, Check, ChevronsUpDown, LogOut, Settings, Upload, BarChart3, Sliders, Webhook, Zap, Sparkles, AlertTriangle, Target, HeartPulse, DollarSign, Map, Package, MessageSquare, ShieldCheck, Trophy, Coins, Flame, Activity, Compass, PieChart, FileText, FileSignature, Grid3x3, History, Medal, Tag, Bookmark, Bell, Calendar as CalendarIcon, BookOpen, LifeBuoy, Inbox, Workflow, Repeat, Receipt, Wallet, ClipboardList, ClipboardCheck, PenLine, Route as RouteIcon, FormInput, Mail, Gift } from "lucide-react";
+import { LayoutDashboard, Users, Building2, KanbanSquare, CheckSquare, Briefcase, Check, ChevronsUpDown, LogOut, Settings, Upload, BarChart3, Sliders, Webhook, Zap, Sparkles, AlertTriangle, Target, HeartPulse, DollarSign, Map, Package, MessageSquare, ShieldCheck, Trophy, Coins, Flame, Activity, Compass, PieChart, FileText, FileSignature, Grid3x3, History, Medal, Tag, Bookmark, Bell, Calendar as CalendarIcon, BookOpen, LifeBuoy, Inbox, Workflow, Repeat, Receipt, Wallet, ClipboardList, ClipboardCheck, PenLine, Route as RouteIcon, FormInput, Mail, Gift, Rocket } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useCurrentOrg, switchOrganization } from "@/lib/org";
 import { useCanManage } from "@/lib/permissions";
@@ -43,6 +43,7 @@ const nav = [
   { to: "/lead-forms", label: "Formulários", icon: FormInput, shortcut: "", managerOnly: false },
   { to: "/campaigns", label: "Campanhas", icon: Mail, shortcut: "", managerOnly: false },
   { to: "/referrals", label: "Indicações", icon: Gift, shortcut: "", managerOnly: false },
+  { to: "/onboarding", label: "Onboarding", icon: Rocket, shortcut: "", managerOnly: false },
   { to: "/expenses", label: "Despesas", icon: Wallet, shortcut: "", managerOnly: false },
   { to: "/territories", label: "Territórios", icon: Map, shortcut: "", managerOnly: true },
   { to: "/opportunity-map", label: "Mapa de Oportunidades", icon: Map, shortcut: "", managerOnly: false },
