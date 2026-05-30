@@ -28,6 +28,7 @@ const pct = (n: number) => `${n.toFixed(1)}%`;
 function BenchmarkPage() {
   const { orgId } = useCurrentOrg();
   const run = useServerFn(getGroupBenchmark);
+  const [mode, setMode] = useState<Mode>("consolidado");
   const { data, isLoading } = useQuery({
     queryKey: ["benchmark", orgId],
     enabled: !!orgId,
@@ -36,6 +37,7 @@ function BenchmarkPage() {
   });
 
   const rows = data?.rows ?? [];
+  const currentRow = rows.find((r) => r.isCurrent) ?? null;
   const consolidated = rows.reduce(
     (acc, r) => {
       acc.wonRevenue90 += r.wonRevenue90;
