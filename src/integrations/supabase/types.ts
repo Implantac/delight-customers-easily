@@ -1252,6 +1252,124 @@ export type Database = {
         }
         Relationships: []
       }
+      sequence_enrollments: {
+        Row: {
+          completed_at: string | null
+          contact_id: string
+          enrolled_at: string
+          enrolled_by: string
+          id: string
+          organization_id: string
+          sequence_id: string
+          status: string
+        }
+        Insert: {
+          completed_at?: string | null
+          contact_id: string
+          enrolled_at?: string
+          enrolled_by: string
+          id?: string
+          organization_id: string
+          sequence_id: string
+          status?: string
+        }
+        Update: {
+          completed_at?: string | null
+          contact_id?: string
+          enrolled_at?: string
+          enrolled_by?: string
+          id?: string
+          organization_id?: string
+          sequence_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sequence_enrollments_sequence_id_fkey"
+            columns: ["sequence_id"]
+            isOneToOne: false
+            referencedRelation: "sequences"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sequence_steps: {
+        Row: {
+          body: string | null
+          created_at: string
+          day_offset: number
+          id: string
+          organization_id: string
+          sequence_id: string
+          step_order: number
+          subject: string
+          type: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          day_offset?: number
+          id?: string
+          organization_id: string
+          sequence_id: string
+          step_order: number
+          subject: string
+          type: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          day_offset?: number
+          id?: string
+          organization_id?: string
+          sequence_id?: string
+          step_order?: number
+          subject?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sequence_steps_sequence_id_fkey"
+            columns: ["sequence_id"]
+            isOneToOne: false
+            referencedRelation: "sequences"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sequences: {
+        Row: {
+          active: boolean
+          created_at: string
+          created_by: string
+          description: string | null
+          id: string
+          name: string
+          organization_id: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          created_by: string
+          description?: string | null
+          id?: string
+          name: string
+          organization_id: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          id?: string
+          name?: string
+          organization_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       taggings: {
         Row: {
           created_at: string
