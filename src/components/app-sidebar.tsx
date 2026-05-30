@@ -69,7 +69,8 @@ const navSections: NavSection[] = [
       { to: "/contacts", label: "Clientes", icon: Users, shortcut: "G C" },
       { to: "/oportunidades", label: "Oportunidades", icon: Target },
       { to: "/opportunity-map", label: "Mapa territorial", icon: Target },
-      { to: "/goals", label: "Representantes", icon: Award, managerOnly: true },
+      { to: "/representantes", label: "Representantes", icon: Award, managerOnly: true },
+      { to: "/goals", label: "Metas & ranking", icon: Award, managerOnly: true },
     ],
   },
   {

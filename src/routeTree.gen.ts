@@ -30,6 +30,7 @@ import { Route as AppSegmentsRouteImport } from './routes/_app.segments'
 import { Route as AppSalesOrdersRouteImport } from './routes/_app.sales-orders'
 import { Route as AppRoutingRouteImport } from './routes/_app.routing'
 import { Route as AppRetentionRouteImport } from './routes/_app.retention'
+import { Route as AppRepresentantesRouteImport } from './routes/_app.representantes'
 import { Route as AppReportsRouteImport } from './routes/_app.reports'
 import { Route as AppReferralsRouteImport } from './routes/_app.referrals'
 import { Route as AppQuotesRouteImport } from './routes/_app.quotes'
@@ -205,6 +206,11 @@ const AppRoutingRoute = AppRoutingRouteImport.update({
 const AppRetentionRoute = AppRetentionRouteImport.update({
   id: '/retention',
   path: '/retention',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRepresentantesRoute = AppRepresentantesRouteImport.update({
+  id: '/representantes',
+  path: '/representantes',
   getParentRoute: () => AppRoute,
 } as any)
 const AppReportsRoute = AppReportsRouteImport.update({
@@ -625,6 +631,7 @@ export interface FileRoutesByFullPath {
   '/quotes': typeof AppQuotesRoute
   '/referrals': typeof AppReferralsRoute
   '/reports': typeof AppReportsRouteWithChildren
+  '/representantes': typeof AppRepresentantesRoute
   '/retention': typeof AppRetentionRoute
   '/routing': typeof AppRoutingRoute
   '/sales-orders': typeof AppSalesOrdersRoute
@@ -719,6 +726,7 @@ export interface FileRoutesByTo {
   '/quotes': typeof AppQuotesRoute
   '/referrals': typeof AppReferralsRoute
   '/reports': typeof AppReportsRouteWithChildren
+  '/representantes': typeof AppRepresentantesRoute
   '/retention': typeof AppRetentionRoute
   '/routing': typeof AppRoutingRoute
   '/sales-orders': typeof AppSalesOrdersRoute
@@ -815,6 +823,7 @@ export interface FileRoutesById {
   '/_app/quotes': typeof AppQuotesRoute
   '/_app/referrals': typeof AppReferralsRoute
   '/_app/reports': typeof AppReportsRouteWithChildren
+  '/_app/representantes': typeof AppRepresentantesRoute
   '/_app/retention': typeof AppRetentionRoute
   '/_app/routing': typeof AppRoutingRoute
   '/_app/sales-orders': typeof AppSalesOrdersRoute
@@ -911,6 +920,7 @@ export interface FileRouteTypes {
     | '/quotes'
     | '/referrals'
     | '/reports'
+    | '/representantes'
     | '/retention'
     | '/routing'
     | '/sales-orders'
@@ -1005,6 +1015,7 @@ export interface FileRouteTypes {
     | '/quotes'
     | '/referrals'
     | '/reports'
+    | '/representantes'
     | '/retention'
     | '/routing'
     | '/sales-orders'
@@ -1100,6 +1111,7 @@ export interface FileRouteTypes {
     | '/_app/quotes'
     | '/_app/referrals'
     | '/_app/reports'
+    | '/_app/representantes'
     | '/_app/retention'
     | '/_app/routing'
     | '/_app/sales-orders'
@@ -1306,6 +1318,13 @@ declare module '@tanstack/react-router' {
       path: '/retention'
       fullPath: '/retention'
       preLoaderRoute: typeof AppRetentionRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/representantes': {
+      id: '/_app/representantes'
+      path: '/representantes'
+      fullPath: '/representantes'
+      preLoaderRoute: typeof AppRepresentantesRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/reports': {
@@ -1946,6 +1965,7 @@ interface AppRouteChildren {
   AppQuotesRoute: typeof AppQuotesRoute
   AppReferralsRoute: typeof AppReferralsRoute
   AppReportsRoute: typeof AppReportsRouteWithChildren
+  AppRepresentantesRoute: typeof AppRepresentantesRoute
   AppRetentionRoute: typeof AppRetentionRoute
   AppRoutingRoute: typeof AppRoutingRoute
   AppSalesOrdersRoute: typeof AppSalesOrdersRoute
@@ -2023,6 +2043,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppQuotesRoute: AppQuotesRoute,
   AppReferralsRoute: AppReferralsRoute,
   AppReportsRoute: AppReportsRouteWithChildren,
+  AppRepresentantesRoute: AppRepresentantesRoute,
   AppRetentionRoute: AppRetentionRoute,
   AppRoutingRoute: AppRoutingRoute,
   AppSalesOrdersRoute: AppSalesOrdersRoute,
