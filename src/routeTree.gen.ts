@@ -41,6 +41,7 @@ import { Route as AppFinanceRouteImport } from './routes/_app.finance'
 import { Route as AppExpensesRouteImport } from './routes/_app.expenses'
 import { Route as AppDataQualityRouteImport } from './routes/_app.data-quality'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
+import { Route as AppContractsRouteImport } from './routes/_app.contracts'
 import { Route as AppContactsRouteImport } from './routes/_app.contacts'
 import { Route as AppCompaniesRouteImport } from './routes/_app.companies'
 import { Route as AppCommissionsRouteImport } from './routes/_app.commissions'
@@ -228,6 +229,11 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AppRoute,
 } as any)
+const AppContractsRoute = AppContractsRouteImport.update({
+  id: '/contracts',
+  path: '/contracts',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppContactsRoute = AppContactsRouteImport.update({
   id: '/contacts',
   path: '/contacts',
@@ -381,6 +387,7 @@ export interface FileRoutesByFullPath {
   '/commissions': typeof AppCommissionsRoute
   '/companies': typeof AppCompaniesRouteWithChildren
   '/contacts': typeof AppContactsRouteWithChildren
+  '/contracts': typeof AppContractsRoute
   '/dashboard': typeof AppDashboardRoute
   '/data-quality': typeof AppDataQualityRoute
   '/expenses': typeof AppExpensesRoute
@@ -441,6 +448,7 @@ export interface FileRoutesByTo {
   '/commissions': typeof AppCommissionsRoute
   '/companies': typeof AppCompaniesRouteWithChildren
   '/contacts': typeof AppContactsRouteWithChildren
+  '/contracts': typeof AppContractsRoute
   '/dashboard': typeof AppDashboardRoute
   '/data-quality': typeof AppDataQualityRoute
   '/expenses': typeof AppExpensesRoute
@@ -503,6 +511,7 @@ export interface FileRoutesById {
   '/_app/commissions': typeof AppCommissionsRoute
   '/_app/companies': typeof AppCompaniesRouteWithChildren
   '/_app/contacts': typeof AppContactsRouteWithChildren
+  '/_app/contracts': typeof AppContractsRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/data-quality': typeof AppDataQualityRoute
   '/_app/expenses': typeof AppExpensesRoute
@@ -565,6 +574,7 @@ export interface FileRouteTypes {
     | '/commissions'
     | '/companies'
     | '/contacts'
+    | '/contracts'
     | '/dashboard'
     | '/data-quality'
     | '/expenses'
@@ -625,6 +635,7 @@ export interface FileRouteTypes {
     | '/commissions'
     | '/companies'
     | '/contacts'
+    | '/contracts'
     | '/dashboard'
     | '/data-quality'
     | '/expenses'
@@ -686,6 +697,7 @@ export interface FileRouteTypes {
     | '/_app/commissions'
     | '/_app/companies'
     | '/_app/contacts'
+    | '/_app/contracts'
     | '/_app/dashboard'
     | '/_app/data-quality'
     | '/_app/expenses'
@@ -967,6 +979,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/contracts': {
+      id: '/_app/contracts'
+      path: '/contracts'
+      fullPath: '/contracts'
+      preLoaderRoute: typeof AppContractsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/contacts': {
       id: '/_app/contacts'
       path: '/contacts'
@@ -1242,6 +1261,7 @@ interface AppRouteChildren {
   AppCommissionsRoute: typeof AppCommissionsRoute
   AppCompaniesRoute: typeof AppCompaniesRouteWithChildren
   AppContactsRoute: typeof AppContactsRouteWithChildren
+  AppContractsRoute: typeof AppContractsRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppDataQualityRoute: typeof AppDataQualityRoute
   AppExpensesRoute: typeof AppExpensesRoute
@@ -1292,6 +1312,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppCommissionsRoute: AppCommissionsRoute,
   AppCompaniesRoute: AppCompaniesRouteWithChildren,
   AppContactsRoute: AppContactsRouteWithChildren,
+  AppContractsRoute: AppContractsRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppDataQualityRoute: AppDataQualityRoute,
   AppExpensesRoute: AppExpensesRoute,

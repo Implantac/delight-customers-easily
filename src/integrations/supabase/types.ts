@@ -415,6 +415,122 @@ export type Database = {
           },
         ]
       }
+      contract_events: {
+        Row: {
+          contract_id: string
+          created_at: string
+          created_by: string
+          description: string | null
+          event_type: string
+          id: string
+          organization_id: string
+        }
+        Insert: {
+          contract_id: string
+          created_at?: string
+          created_by: string
+          description?: string | null
+          event_type: string
+          id?: string
+          organization_id: string
+        }
+        Update: {
+          contract_id?: string
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          event_type?: string
+          id?: string
+          organization_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contract_events_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contracts: {
+        Row: {
+          amount: number | null
+          auto_renew: boolean
+          company_id: string | null
+          contact_id: string | null
+          created_at: string
+          created_by: string
+          currency: string
+          deal_id: string | null
+          description: string | null
+          document_url: string | null
+          end_date: string | null
+          id: string
+          notes: string | null
+          number: string
+          organization_id: string
+          owner_id: string | null
+          renewal_alert_days: number
+          signed_at: string | null
+          start_date: string | null
+          status: string
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          amount?: number | null
+          auto_renew?: boolean
+          company_id?: string | null
+          contact_id?: string | null
+          created_at?: string
+          created_by: string
+          currency?: string
+          deal_id?: string | null
+          description?: string | null
+          document_url?: string | null
+          end_date?: string | null
+          id?: string
+          notes?: string | null
+          number: string
+          organization_id: string
+          owner_id?: string | null
+          renewal_alert_days?: number
+          signed_at?: string | null
+          start_date?: string | null
+          status?: string
+          title: string
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number | null
+          auto_renew?: boolean
+          company_id?: string | null
+          contact_id?: string | null
+          created_at?: string
+          created_by?: string
+          currency?: string
+          deal_id?: string | null
+          description?: string | null
+          document_url?: string | null
+          end_date?: string | null
+          id?: string
+          notes?: string | null
+          number?: string
+          organization_id?: string
+          owner_id?: string | null
+          renewal_alert_days?: number
+          signed_at?: string | null
+          start_date?: string | null
+          status?: string
+          title?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       conversation_participants: {
         Row: {
           conversation_id: string
