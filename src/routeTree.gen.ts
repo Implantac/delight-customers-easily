@@ -44,6 +44,7 @@ import { Route as AppOportunidadesRouteImport } from './routes/_app.oportunidade
 import { Route as AppOnboardingRouteImport } from './routes/_app.onboarding'
 import { Route as AppNotificationsRouteImport } from './routes/_app.notifications'
 import { Route as AppMytasksRouteImport } from './routes/_app.mytasks'
+import { Route as AppMarketingIntelRouteImport } from './routes/_app.marketing-intel'
 import { Route as AppMarketingRouteImport } from './routes/_app.marketing'
 import { Route as AppLoyaltyRouteImport } from './routes/_app.loyalty'
 import { Route as AppLeadScoringRouteImport } from './routes/_app.lead-scoring'
@@ -276,6 +277,11 @@ const AppNotificationsRoute = AppNotificationsRouteImport.update({
 const AppMytasksRoute = AppMytasksRouteImport.update({
   id: '/mytasks',
   path: '/mytasks',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMarketingIntelRoute = AppMarketingIntelRouteImport.update({
+  id: '/marketing-intel',
+  path: '/marketing-intel',
   getParentRoute: () => AppRoute,
 } as any)
 const AppMarketingRoute = AppMarketingRouteImport.update({
@@ -618,6 +624,7 @@ export interface FileRoutesByFullPath {
   '/lead-scoring': typeof AppLeadScoringRoute
   '/loyalty': typeof AppLoyaltyRoute
   '/marketing': typeof AppMarketingRoute
+  '/marketing-intel': typeof AppMarketingIntelRoute
   '/mytasks': typeof AppMytasksRoute
   '/notifications': typeof AppNotificationsRoute
   '/onboarding': typeof AppOnboardingRoute
@@ -713,6 +720,7 @@ export interface FileRoutesByTo {
   '/lead-scoring': typeof AppLeadScoringRoute
   '/loyalty': typeof AppLoyaltyRoute
   '/marketing': typeof AppMarketingRoute
+  '/marketing-intel': typeof AppMarketingIntelRoute
   '/mytasks': typeof AppMytasksRoute
   '/notifications': typeof AppNotificationsRoute
   '/onboarding': typeof AppOnboardingRoute
@@ -810,6 +818,7 @@ export interface FileRoutesById {
   '/_app/lead-scoring': typeof AppLeadScoringRoute
   '/_app/loyalty': typeof AppLoyaltyRoute
   '/_app/marketing': typeof AppMarketingRoute
+  '/_app/marketing-intel': typeof AppMarketingIntelRoute
   '/_app/mytasks': typeof AppMytasksRoute
   '/_app/notifications': typeof AppNotificationsRoute
   '/_app/onboarding': typeof AppOnboardingRoute
@@ -907,6 +916,7 @@ export interface FileRouteTypes {
     | '/lead-scoring'
     | '/loyalty'
     | '/marketing'
+    | '/marketing-intel'
     | '/mytasks'
     | '/notifications'
     | '/onboarding'
@@ -1002,6 +1012,7 @@ export interface FileRouteTypes {
     | '/lead-scoring'
     | '/loyalty'
     | '/marketing'
+    | '/marketing-intel'
     | '/mytasks'
     | '/notifications'
     | '/onboarding'
@@ -1098,6 +1109,7 @@ export interface FileRouteTypes {
     | '/_app/lead-scoring'
     | '/_app/loyalty'
     | '/_app/marketing'
+    | '/_app/marketing-intel'
     | '/_app/mytasks'
     | '/_app/notifications'
     | '/_app/onboarding'
@@ -1416,6 +1428,13 @@ declare module '@tanstack/react-router' {
       path: '/mytasks'
       fullPath: '/mytasks'
       preLoaderRoute: typeof AppMytasksRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/marketing-intel': {
+      id: '/_app/marketing-intel'
+      path: '/marketing-intel'
+      fullPath: '/marketing-intel'
+      preLoaderRoute: typeof AppMarketingIntelRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/marketing': {
@@ -1952,6 +1971,7 @@ interface AppRouteChildren {
   AppLeadScoringRoute: typeof AppLeadScoringRoute
   AppLoyaltyRoute: typeof AppLoyaltyRoute
   AppMarketingRoute: typeof AppMarketingRoute
+  AppMarketingIntelRoute: typeof AppMarketingIntelRoute
   AppMytasksRoute: typeof AppMytasksRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppOnboardingRoute: typeof AppOnboardingRoute
@@ -2030,6 +2050,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppLeadScoringRoute: AppLeadScoringRoute,
   AppLoyaltyRoute: AppLoyaltyRoute,
   AppMarketingRoute: AppMarketingRoute,
+  AppMarketingIntelRoute: AppMarketingIntelRoute,
   AppMytasksRoute: AppMytasksRoute,
   AppNotificationsRoute: AppNotificationsRoute,
   AppOnboardingRoute: AppOnboardingRoute,
