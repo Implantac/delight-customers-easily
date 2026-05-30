@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -8,13 +9,17 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   GitBranch, Trophy, AlertTriangle, TrendingUp, Users, Activity, ArrowRight, Layers,
+  Building2, Scale,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/benchmark")({
   component: BenchmarkPage,
 });
+
+type Mode = "individual" | "consolidado" | "comparativo";
 
 const fmt = (n: number) =>
   n.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
