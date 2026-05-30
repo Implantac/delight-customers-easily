@@ -98,7 +98,7 @@ function QuotesPage() {
               <SelectItem value="expired">Expirado</SelectItem>
             </SelectContent>
           </Select>
-          <Button onClick={openNew}><Plus className="mr-2 h-4 w-4" /> Novo orçamento</Button>
+          {false && <Button onClick={openNew}><Plus className="mr-2 h-4 w-4" /> Novo orçamento</Button>}
         </div>
       </div>
 

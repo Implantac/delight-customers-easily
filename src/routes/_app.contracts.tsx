@@ -196,7 +196,7 @@ function ContractsPage() {
           </h1>
           <p className="text-sm text-muted-foreground">Gestão de contratos, renovações e linha do tempo de eventos.</p>
         </div>
-        <Button onClick={openNew}><Plus className="h-4 w-4 mr-1" /> Novo contrato</Button>
+        {false && <Button onClick={openNew}><Plus className="h-4 w-4 mr-1" /> Novo contrato</Button>}
       </div>
 
       <div className="grid gap-3 md:grid-cols-4">

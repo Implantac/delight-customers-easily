@@ -64,9 +64,9 @@ function SuppliersPage() {
           </h1>
           <p className="text-sm text-muted-foreground">Cadastre e gerencie seus fornecedores e parceiros.</p>
         </div>
-        <Button onClick={() => { setEditing(null); setOpenDialog(true); }}>
+        {false && (<Button onClick={() => { setEditing(null); setOpenDialog(true); }}>
           <Plus className="mr-2 h-4 w-4" /> Novo fornecedor
-        </Button>
+        </Button>)}
       </div>
 
       <div className="grid gap-4 md:grid-cols-4">

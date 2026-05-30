@@ -142,9 +142,9 @@ function AssetsPage() {
             Controle equipamentos, licenças e itens entregues a clientes com histórico completo.
           </p>
         </div>
-        <Button onClick={() => { setEditId(null); setDraft(emptyDraft()); setDlg(true); }}>
+        {false && (<Button onClick={() => { setEditId(null); setDraft(emptyDraft()); setDlg(true); }}>
           <Plus className="h-4 w-4 mr-2" /> Novo ativo
-        </Button>
+        </Button>)}
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
