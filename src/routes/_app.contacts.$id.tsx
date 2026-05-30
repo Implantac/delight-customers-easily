@@ -80,15 +80,15 @@ function ContactDetail() {
       />
 
       <div className="mt-6 grid gap-6 md:grid-cols-3">
-        <Card className="p-5 md:col-span-1">
+        <Card className="p-5 md:col-span-1 h-fit md:sticky md:top-4">
           <h3 className="text-sm font-semibold">Detalhes</h3>
           <dl className="mt-3 space-y-2 text-sm">
-            {contact.email && <div className="flex items-center gap-2"><Mail className="h-3.5 w-3.5 text-muted-foreground" /><a href={`mailto:${contact.email}`} className="hover:underline">{contact.email}</a></div>}
-            {contact.phone && <div className="flex items-center gap-2"><Phone className="h-3.5 w-3.5 text-muted-foreground" />{contact.phone}</div>}
-            {contact.position && <div className="flex items-center gap-2"><Briefcase className="h-3.5 w-3.5 text-muted-foreground" />{contact.position}</div>}
+            {contact.email && <div className="flex items-center gap-2"><Mail className="h-3.5 w-3.5 text-muted-foreground shrink-0" /><a href={`mailto:${contact.email}`} className="hover:underline truncate">{contact.email}</a></div>}
+            {contact.phone && <div className="flex items-center gap-2"><Phone className="h-3.5 w-3.5 text-muted-foreground shrink-0" />{contact.phone}</div>}
+            {contact.position && <div className="flex items-center gap-2"><Briefcase className="h-3.5 w-3.5 text-muted-foreground shrink-0" />{contact.position}</div>}
             {contact.companies && (
-              <div className="flex items-center gap-2"><Building2 className="h-3.5 w-3.5 text-muted-foreground" />
-                <Link to="/companies/$id" params={{ id: (contact.companies as any).id }} className="text-primary hover:underline">{(contact.companies as any).name}</Link>
+              <div className="flex items-center gap-2"><Building2 className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                <Link to="/companies/$id" params={{ id: (contact.companies as any).id }} className="text-primary hover:underline truncate">{(contact.companies as any).name}</Link>
               </div>
             )}
           </dl>
@@ -99,45 +99,81 @@ function ContactDetail() {
           {contact.notes && <><h3 className="mt-5 text-sm font-semibold">Notas</h3><p className="mt-2 whitespace-pre-wrap text-sm text-muted-foreground">{contact.notes}</p></>}
         </Card>
 
-        <div className="space-y-6 md:col-span-2">
-          <HealthScore contactId={contact.id} />
-          <Card className="p-5">
-            <h3 className="flex items-center gap-2 text-sm font-semibold"><KanbanSquare className="h-4 w-4" />Negócios ({deals?.length ?? 0})</h3>
-            <div className="mt-3 space-y-2">
-              {(deals ?? []).length === 0 && <p className="text-sm text-muted-foreground">Nenhum negócio vinculado.</p>}
-              {deals?.map((d) => (
-                <Link key={d.id} to="/pipeline" className="flex items-center justify-between rounded-md border p-3 text-sm hover:bg-accent">
-                  <span className="font-medium">{d.title}</span>
-                  <div className="flex items-center gap-2"><Badge variant="secondary">{d.stage}</Badge><span className="text-muted-foreground">{Number(d.value).toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 })}</span></div>
-                </Link>
-              ))}
-            </div>
-          </Card>
+        <div className="md:col-span-2">
+          <Tabs defaultValue="overview" className="w-full">
+            <TabsList className="w-full justify-start overflow-x-auto">
+              <TabsTrigger value="overview" className="gap-1.5"><LayoutGrid className="h-3.5 w-3.5" />Visão geral</TabsTrigger>
+              <TabsTrigger value="deals" className="gap-1.5"><KanbanSquare className="h-3.5 w-3.5" />Negócios{deals?.length ? ` · ${deals.length}` : ""}</TabsTrigger>
+              <TabsTrigger value="ai" className="gap-1.5"><Sparkles className="h-3.5 w-3.5" />IA</TabsTrigger>
+              <TabsTrigger value="timeline" className="gap-1.5"><Clock className="h-3.5 w-3.5" />Timeline</TabsTrigger>
+              <TabsTrigger value="files" className="gap-1.5"><Paperclip className="h-3.5 w-3.5" />Anexos</TabsTrigger>
+              <TabsTrigger value="history" className="gap-1.5"><HistoryIcon className="h-3.5 w-3.5" />Histórico</TabsTrigger>
+            </TabsList>
 
-          <Attachments entityType="contact" entityId={contact.id} />
+            <TabsContent value="overview" className="mt-4 space-y-6">
+              <HealthScore contactId={contact.id} />
+              <Card className="p-5">
+                <h3 className="flex items-center gap-2 text-sm font-semibold"><KanbanSquare className="h-4 w-4" />Negócios recentes</h3>
+                <div className="mt-3 space-y-2">
+                  {(deals ?? []).length === 0 && <p className="text-sm text-muted-foreground">Nenhum negócio vinculado.</p>}
+                  {(deals ?? []).slice(0, 3).map((d) => (
+                    <Link key={d.id} to="/pipeline" className="flex items-center justify-between rounded-md border p-3 text-sm hover:bg-accent">
+                      <span className="font-medium truncate">{d.title}</span>
+                      <div className="flex items-center gap-2 shrink-0"><Badge variant="secondary">{d.stage}</Badge><span className="text-muted-foreground">{Number(d.value).toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 })}</span></div>
+                    </Link>
+                  ))}
+                </div>
+              </Card>
+            </TabsContent>
 
-          <AIInsights contactId={contact.id} actions={["summarize_contact", "next_action"]} />
+            <TabsContent value="deals" className="mt-4">
+              <Card className="p-5">
+                <h3 className="flex items-center gap-2 text-sm font-semibold"><KanbanSquare className="h-4 w-4" />Negócios ({deals?.length ?? 0})</h3>
+                <div className="mt-3 space-y-2">
+                  {(deals ?? []).length === 0 && <p className="text-sm text-muted-foreground">Nenhum negócio vinculado.</p>}
+                  {deals?.map((d) => (
+                    <Link key={d.id} to="/pipeline" className="flex items-center justify-between rounded-md border p-3 text-sm hover:bg-accent">
+                      <span className="font-medium truncate">{d.title}</span>
+                      <div className="flex items-center gap-2 shrink-0"><Badge variant="secondary">{d.stage}</Badge><span className="text-muted-foreground">{Number(d.value).toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 })}</span></div>
+                    </Link>
+                  ))}
+                </div>
+              </Card>
+            </TabsContent>
 
-          <Card className="p-5">
-            <h3 className="flex items-center gap-2 text-sm font-semibold"><Clock className="h-4 w-4" />Timeline</h3>
-            <div className="mt-4">
-              <Timeline
-                emptyLabel="Sem atividades por aqui ainda."
-                items={[
-                  ...(activities ?? []).map<TimelineItem>((a) => ({
-                    id: a.id, kind: "activity", type: a.type, title: a.title, completed: a.completed,
-                    date: a.due_date ?? new Date().toISOString(),
-                    meta: a.type + (a.due_date ? ` · ${new Date(a.due_date).toLocaleString("pt-BR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}` : ""),
-                  })),
-                ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())}
-              />
-            </div>
-          </Card>
+            <TabsContent value="ai" className="mt-4">
+              <AIInsights contactId={contact.id} actions={["summarize_contact", "next_action"]} />
+            </TabsContent>
 
-          <Card className="p-5">
-            <h3 className="flex items-center gap-2 text-sm font-semibold mb-4"><HistoryIcon className="h-4 w-4" />Histórico de alterações</h3>
-            <AuditHistory entityType="contacts" entityId={contact.id} />
-          </Card>
+            <TabsContent value="timeline" className="mt-4">
+              <Card className="p-5">
+                <h3 className="flex items-center gap-2 text-sm font-semibold"><Clock className="h-4 w-4" />Timeline</h3>
+                <div className="mt-4">
+                  <Timeline
+                    emptyLabel="Sem atividades por aqui ainda."
+                    items={[
+                      ...(activities ?? []).map<TimelineItem>((a) => ({
+                        id: a.id, kind: "activity", type: a.type, title: a.title, completed: a.completed,
+                        date: a.due_date ?? new Date().toISOString(),
+                        meta: a.type + (a.due_date ? ` · ${new Date(a.due_date).toLocaleString("pt-BR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}` : ""),
+                      })),
+                    ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())}
+                  />
+                </div>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="files" className="mt-4">
+              <Attachments entityType="contact" entityId={contact.id} />
+            </TabsContent>
+
+            <TabsContent value="history" className="mt-4">
+              <Card className="p-5">
+                <h3 className="flex items-center gap-2 text-sm font-semibold mb-4"><HistoryIcon className="h-4 w-4" />Histórico de alterações</h3>
+                <AuditHistory entityType="contacts" entityId={contact.id} />
+              </Card>
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </div>
