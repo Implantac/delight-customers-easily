@@ -89,15 +89,35 @@ export function CopilotDrawer() {
           )}
 
           {turns.map((t, i) => (
-            <div
-              key={i}
-              className={
-                t.role === "user"
-                  ? "ml-8 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm"
-                  : "mr-4 rounded-lg border bg-card px-3 py-2 text-sm whitespace-pre-wrap prose prose-sm dark:prose-invert max-w-none"
-              }
-            >
-              {renderMarkdown(t.content)}
+            <div key={i} className="space-y-2">
+              <div
+                className={
+                  t.role === "user"
+                    ? "ml-8 rounded-lg bg-primary text-primary-foreground px-3 py-2 text-sm"
+                    : "mr-4 rounded-lg border bg-card px-3 py-2 text-sm whitespace-pre-wrap prose prose-sm dark:prose-invert max-w-none"
+                }
+              >
+                {renderMarkdown(t.content)}
+              </div>
+              {t.role === "assistant" && t.actions && t.actions.length > 0 && (
+                <div className="mr-4 flex flex-wrap gap-1.5">
+                  {t.actions.map((a, j) => (
+                    <Button
+                      key={j}
+                      asChild
+                      size="sm"
+                      variant="secondary"
+                      className="h-7 text-xs"
+                      onClick={() => setOpen(false)}
+                    >
+                      <Link to={a.href}>
+                        {a.label}
+                        <ArrowRight className="h-3 w-3 ml-1" />
+                      </Link>
+                    </Button>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
 
