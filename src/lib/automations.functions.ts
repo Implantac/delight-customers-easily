@@ -68,6 +68,38 @@ export const runAutomations = createServerFn({ method: "POST" })
             body: cfg.body ? String(cfg.body) : `Evento: ${data.event}`,
             link: cfg.link ? String(cfg.link) : null,
           });
+        } else if (rule.action_type === "change_deal_stage") {
+          const dealId = data.payload.deal_id as string | undefined;
+          const toStage = cfg.to_stage as string | undefined;
+          if (dealId && toStage) {
+            await supabase
+              .from("deals")
+              .update({ stage: toStage, updated_at: new Date().toISOString() })
+              .eq("id", dealId)
+              .eq("organization_id", data.organization_id);
+          } else continue;
+        } else if (rule.action_type === "assign_owner") {
+          const dealId = data.payload.deal_id as string | undefined;
+          const newOwner = (cfg.user_id as string | undefined) ?? userId;
+          if (dealId && newOwner) {
+            await supabase
+              .from("deals")
+              .update({ user_id: newOwner, updated_at: new Date().toISOString() })
+              .eq("id", dealId)
+              .eq("organization_id", data.organization_id);
+          } else continue;
+        } else if (rule.action_type === "create_recommendation") {
+          await supabase.from("recommendations").insert({
+            organization_id: data.organization_id,
+            surface: String(cfg.surface ?? "dashboard"),
+            title: String(cfg.title ?? "Ação recomendada"),
+            reason: cfg.reason ? String(cfg.reason) : `Disparado por ${data.event}`,
+            action_label: String(cfg.action_label ?? "Abrir"),
+            action_href: cfg.action_href ? String(cfg.action_href) : null,
+            priority: Math.max(50, Math.min(99, Number(cfg.priority ?? 75))),
+            source: "automation",
+            expires_at: new Date(Date.now() + 7 * 86400000).toISOString(),
+          });
         } else {
           continue; // tipo desconhecido
         }
