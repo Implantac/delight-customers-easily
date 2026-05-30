@@ -24,6 +24,7 @@ const nav = [
   { to: "/alerts", label: "Alertas", icon: AlertTriangle, shortcut: "G L", managerOnly: false },
   { to: "/forecast", label: "Previsão", icon: Target, shortcut: "G F", managerOnly: false },
   { to: "/win-loss", label: "Win/Loss", icon: Trophy, shortcut: "", managerOnly: false },
+  { to: "/commissions", label: "Comissões", icon: Coins, shortcut: "", managerOnly: false },
   { to: "/retention", label: "Retenção", icon: HeartPulse, shortcut: "", managerOnly: false },
   { to: "/finance", label: "Financeiro", icon: DollarSign, shortcut: "", managerOnly: false },
   { to: "/opportunity-map", label: "Mapa de Oportunidades", icon: Map, shortcut: "", managerOnly: false },
