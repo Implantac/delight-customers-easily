@@ -242,3 +242,42 @@ function KPI({
     </Card>
   );
 }
+
+function ComparativeGrid({ current, peers }: { current: BenchmarkRow; peers: BenchmarkRow[] }) {
+  const avg = (key: keyof BenchmarkRow) =>
+    peers.length ? peers.reduce((s, r) => s + Number(r[key]), 0) / peers.length : 0;
+
+  const metrics: Array<{ key: keyof BenchmarkRow; label: string; format: (n: number) => string; higherIsBetter: boolean }> = [
+    { key: "wonRevenue90", label: "Receita 90d", format: fmt, higherIsBetter: true },
+    { key: "openPipeline", label: "Pipeline aberto", format: fmt, higherIsBetter: true },
+    { key: "conversion", label: "Conversão", format: pct, higherIsBetter: true },
+    { key: "ticketAvg", label: "Ticket médio", format: fmt, higherIsBetter: true },
+    { key: "activeCustomers", label: "Clientes ativos", format: (n) => n.toString(), higherIsBetter: true },
+    { key: "activities30", label: "Atividades 30d", format: (n) => n.toString(), higherIsBetter: true },
+    { key: "overdue", label: "Em atraso", format: fmt, higherIsBetter: false },
+  ];
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+      {metrics.map((m) => {
+        const mine = Number(current[m.key]);
+        const peerAvg = avg(m.key);
+        const diff = mine - peerAvg;
+        const diffPct = peerAvg > 0 ? (diff / peerAvg) * 100 : 0;
+        const positive = m.higherIsBetter ? diff >= 0 : diff <= 0;
+        return (
+          <Card key={String(m.key)} className="p-4">
+            <div className="text-xs uppercase tracking-wide text-muted-foreground">{m.label}</div>
+            <div className="mt-2 flex items-baseline gap-2">
+              <span className="text-xl font-semibold">{m.format(mine)}</span>
+              <span className="text-xs text-muted-foreground">vs {m.format(peerAvg)}</span>
+            </div>
+            <div className={`mt-2 text-xs font-medium ${positive ? "text-emerald-600" : "text-destructive"}`}>
+              {positive ? "▲" : "▼"} {Math.abs(diffPct).toFixed(1)}% vs média do grupo
+            </div>
+          </Card>
+        );
+      })}
+    </div>
+  );
+}
