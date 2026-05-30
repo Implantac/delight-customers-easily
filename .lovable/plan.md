@@ -3,15 +3,9 @@
 
 O escopo é gigante (70+ rotas, 9 pilares, IA, ERP Connect, multiempresa, omnichannel). Impossível entregar em um único turno sem quebrar o sistema. Proponho **8 fases incrementais**, cada uma testável e reversível. Você aprova fase a fase — eu não avanço sem seu "ok prossiga".
 
-Já concluímos (turnos anteriores):
-- ✅ Fase 1 — Auditoria + Sidebar reorganizada
-- ✅ Fase 2 — Customer 360
-- ✅ Fase 3 — Revenue Command Center
-- ✅ Fase 4 — IA Comercial Unificada (4 agentes)
-- ✅ Fase 5 — Carteira Comercial Inteligente + Sales Intelligence
-- ✅ Fase 6 — Multiempresa / Holding + Benchmark
-- ✅ Fase 7 — ERP Connect Hub Universal
-- ✅ Fase 8 — Geointeligência + Rotas IA + Marketing/Influencers
+Já concluímos:
+- ✅ Fases 1–8 (sidebar, Customer 360, Revenue CC, IA Comercial, Carteira, Multiempresa, ERP Connect, Geo + Marketing)
+- ✅ Fase 9 — Hardening de performance (índices compostos em deals/activities/invoices/tickets/contacts/companies)
 
 ## Princípio-guia (vale para tudo)
 
