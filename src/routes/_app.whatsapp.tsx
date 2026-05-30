@@ -36,6 +36,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MessageCircle, Plus, Send, Check, CheckCheck, Clock, AlertTriangle, MoreVertical, UserPlus, FileText } from "lucide-react";
 import { toast } from "sonner";
+import { WhatsAppSlaPanel } from "@/components/whatsapp-sla-panel";
 
 export const Route = createFileRoute("/_app/whatsapp")({ component: WhatsAppPage });
 
@@ -216,6 +217,10 @@ function WhatsAppPage() {
           />
         }
       />
+
+      <div className="px-6 mb-4">
+        <WhatsAppSlaPanel onPick={(id) => setSelectedId(id)} />
+      </div>
 
       {/* SLA strip */}
       <div className="px-6 grid grid-cols-2 md:grid-cols-6 gap-3 mb-4">
