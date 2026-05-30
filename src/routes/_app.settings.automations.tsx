@@ -174,6 +174,28 @@ function AutomationsPage() {
     },
   });
 
+  const applyTemplate = useMutation({
+    mutationFn: async (t: Template) => {
+      if (!orgId || !user?.id) throw new Error("Sem organização");
+      const { error } = await supabase.from("automations").insert({
+        organization_id: orgId,
+        created_by: user.id,
+        name: t.name,
+        trigger_event: t.trigger_event,
+        conditions: t.conditions as never,
+        action_type: t.action_type,
+        action_config: t.action_config as never,
+        enabled: true,
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["automations", orgId] });
+      toast.success("Automação criada a partir do template");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
   return (
     <div className="p-6 space-y-6 max-w-5xl mx-auto">
       <PageHeader
