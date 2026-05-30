@@ -280,15 +280,7 @@
   .animate-in-page {
     animation: fade-up 280ms var(--ease-out) both;
   }
-  @keyframes fade-up {
-    from { opacity: 0; transform: translateY(6px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
 
-  /* Shimmer para skeleton premium */
-  @keyframes shimmer {
-    100% { transform: translateX(100%); }
-  }
 
   /* Link com sublinhado animado */
   .link-underline {
@@ -311,6 +303,16 @@
   }
 }
 
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
+
 #lovable-badge {
   display: none !important;
 }
+
