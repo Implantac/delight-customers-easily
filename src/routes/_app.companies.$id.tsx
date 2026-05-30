@@ -299,15 +299,19 @@ function CompanyDetail() {
         {/* ============ Coluna direita: ação comercial ============ */}
         <div className="space-y-6 lg:col-span-2">
           {/* Zona 6 — AI panel comercial */}
-          <Card className="p-5 border-primary/20 bg-[var(--gradient-primary)]/[0.04]">
-            <h3 className="flex items-center gap-2 text-sm font-semibold">
-              <Sparkles className="h-4 w-4 text-primary" />
-              O que fazer com este cliente agora
-            </h3>
-            <div className="mt-3">
-              <AIInsights companyId={company.id} actions={["next_action", "summarize_company"]} />
-            </div>
-          </Card>
+          {primaryContact ? (
+            <AIInsights contactId={primaryContact.id} actions={["next_action", "summarize_contact"]} />
+          ) : (
+            <Card className="p-5 border-dashed">
+              <h3 className="flex items-center gap-2 text-sm font-semibold">
+                <Sparkles className="h-4 w-4 text-primary" />
+                IA comercial
+              </h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Adicione um contato a esta empresa para receber sugestões de próxima ação geradas por IA.
+              </p>
+            </Card>
+          )}
 
           {/* Zona 4 — Oportunidades */}
           <Card className="p-5">
