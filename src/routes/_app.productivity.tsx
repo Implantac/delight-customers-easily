@@ -59,6 +59,9 @@ function ProductivityPage() {
         }
       />
 
+      <NextActionBlock surface="productivity" title="Destravar a equipe" showRegenerate />
+
+
       {isLoading || !data ? (
         <div className="grid gap-4 md:grid-cols-4">{[0,1,2,3].map((i) => <Skeleton key={i} className="h-28" />)}</div>
       ) : (
