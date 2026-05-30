@@ -1,6 +1,6 @@
 import { memo, useMemo } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Users, Building2, KanbanSquare, CheckSquare, Briefcase, Check, ChevronsUpDown, LogOut, Settings, Upload, BarChart3, Sliders, Webhook, Zap, Sparkles, AlertTriangle, Target, HeartPulse, DollarSign, Map, Package, MessageSquare, ShieldCheck, Trophy, Coins, Flame, Activity, Compass, PieChart, FileText, FileSignature, Grid3x3, History, Medal, Tag, Bookmark, Bell, Calendar as CalendarIcon, BookOpen, LifeBuoy, Inbox, Workflow, Repeat, Receipt, Wallet, ClipboardList, ClipboardCheck, PenLine, Route as RouteIcon, FormInput, Mail, Gift, Rocket, Files, Clock, Award, Boxes, Smile, type LucideIcon } from "lucide-react";
+import { LayoutDashboard, Users, Building2, KanbanSquare, CheckSquare, Briefcase, Check, ChevronsUpDown, LogOut, Settings, Upload, BarChart3, Sliders, Webhook, Zap, Sparkles, AlertTriangle, Target, HeartPulse, DollarSign, Map, Package, MessageSquare, ShieldCheck, Trophy, Coins, Flame, Activity, Compass, PieChart, FileText, FileSignature, Grid3x3, History, Medal, Tag, Bookmark, Bell, Calendar as CalendarIcon, BookOpen, LifeBuoy, Inbox, Workflow, Repeat, Receipt, Wallet, ClipboardList, ClipboardCheck, PenLine, Route as RouteIcon, FormInput, Mail, Gift, Rocket, Files, Clock, Award, Boxes, Smile, Landmark, type LucideIcon } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useCurrentOrg, switchOrganization } from "@/lib/org";
 import { useCanManage } from "@/lib/permissions";
@@ -37,6 +37,7 @@ const nav = [
   { to: "/finance", label: "Financeiro", icon: DollarSign, shortcut: "", managerOnly: false },
   { to: "/subscriptions", label: "Assinaturas", icon: Repeat, shortcut: "", managerOnly: false },
   { to: "/invoices", label: "Faturas", icon: Receipt, shortcut: "", managerOnly: false },
+  { to: "/banking", label: "Banco", icon: Landmark, shortcut: "", managerOnly: false },
   { to: "/approvals", label: "Aprovações", icon: ShieldCheck, shortcut: "", managerOnly: false },
   { to: "/contracts", label: "Contratos", icon: FileSignature, shortcut: "", managerOnly: false },
   { to: "/signatures", label: "Assinaturas", icon: PenLine, shortcut: "", managerOnly: false },
