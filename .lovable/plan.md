@@ -1,148 +1,94 @@
 
-# Refatoração CRM → Plataforma de Inteligência Comercial
+# Refatoração USE CRM → Plataforma de Inteligência Comercial
 
-Este escopo é gigante (~6 grandes pilares, 70+ rotas atuais). Não dá para fazer
-tudo em um único turno sem quebrar o sistema. Proponho **executar em 6 fases
-incrementais**, cada uma entregando valor isolado e testável. Você aprova fase
-por fase.
+O escopo é gigante (70+ rotas, 9 pilares, IA, ERP Connect, multiempresa, omnichannel). Impossível entregar em um único turno sem quebrar o sistema. Proponho **8 fases incrementais**, cada uma testável e reversível. Você aprova fase a fase — eu não avanço sem seu "ok prossiga".
 
-## Princípio-guia (vale para todas as fases)
+Já concluímos (turnos anteriores):
+- ✅ Fase 1 — Auditoria + Sidebar reorganizada por fluxo comercial
+- ✅ Fase 2 — Customer 360 (KPIs comerciais, curva ABC, timeline)
+- ✅ Fase 3 — Revenue Command Center (oportunidades quentes, plano do dia)
 
-Toda funcionalidade tem que responder SIM a pelo menos uma:
-vende mais? acha oportunidade? aumenta produtividade comercial?
-melhora relacionamento? ajuda gestor a decidir?
+## Princípio-guia (vale para tudo)
 
-Se não → fica fora do CRM (ou vai pro ERP Connect só como leitura).
-
----
-
-## FASE 1 — Auditoria + Reorganização da Sidebar  *(esta fase agora)*
-
-**Objetivo:** parar a poluição visual e dar o novo eixo mental do produto.
-
-- Auditar as 70+ rotas atuais e classificar cada uma em:
-  *(a) core CRM*, *(b) inteligência comercial*, *(c) integração*,
-  *(d) ERP-like a esconder*, *(e) duplicada/morta*.
-- Reorganizar a sidebar em **9 grupos comerciais**, com a nova hierarquia:
-  ```
-  Hoje                → Command Center / Plano do dia
-  Carteira Comercial  → Clientes (Customer 360) + Oportunidades
-  Pipeline & Metas    → Pipeline, Forecast, Goals
-  Relacionamento      → Agenda, Atividades, Tarefas
-  Omnichannel         → WhatsApp, E-mail, Chat interno
-  IA Comercial        → Copilot, Follow-up IA, Oportunidades IA
-  Geointeligência     → Mapa, Rotas, Prospecção geográfica
-  BI Comercial        → Reports, Inteligência de Produtos, Win/Loss
-  Integrações & ERP   → ERP Connect, Webhooks, Health Center
-  Sistema             → Empresas (tenants), Usuários, Configurações
-  ```
-- Esconder do menu (sem deletar rotas) módulos ERP-like:
-  `stock`, `suppliers`, `expenses`, `banking`, `invoices`, `assets`,
-  `commissions`, `subscriptions`, `sales-orders`, `quotes`, `contracts`,
-  `signatures`, `proposals`, `products` → vão para um grupo
-  "ERP (leitura)" colapsado, ou removidos do nav e mantidos só via URL
-  até decidirmos caso a caso na Fase 2.
-- Renomear rótulos para linguagem comercial (sem jargão técnico).
-- Adicionar busca rápida na sidebar (já temos Command Palette ⌘K — só
-  reforçar visualmente o atalho).
-
-**Entrega:** uma sidebar enxuta de ~10 itens visíveis por padrão, o resto
-agrupado/escondido. Zero rota deletada. Zero funcionalidade quebrada.
+Toda feature precisa responder SIM a pelo menos uma:
+vende mais? acha oportunidade? aumenta produtividade? melhora relacionamento? ajuda gestor a decidir?
+Se não → fica fora do menu (ou vira leitura no ERP Connect).
 
 ---
 
-## FASE 2 — Customer 360 (Carteira Comercial como coração)
+## FASE 4 — IA Comercial Unificada *(próxima)*
 
-- Refatorar `_app.companies.$id.tsx` e `_app.contacts.$id.tsx` em uma
-  única tela **Customer 360** com 6 zonas:
-  1. Cabeçalho: identificação + score + responsável + ações rápidas
-  2. KPIs comerciais: última compra, ticket médio, frequência, MRR
-  3. Timeline unificada (atividades + WhatsApp + e-mail + reuniões)
-  4. Oportunidades abertas + histórico
-  5. Produtos comprados (curva ABC do cliente)
-  6. IA panel: "o que fazer com este cliente agora"
-- Trazer dados do ERP (quando conectado) só como leitura comercial:
-  pedidos, faturamento, inadimplência.
-- Manter contacts/companies em rotas separadas só por compatibilidade;
-  a navegação primária passa a ser pela Carteira.
+Consolidar `ai-insights`, `copilot`, `coaching`, `playbooks`, `churn`, `lead-scoring`, `forecast` numa **suíte IA Comercial** com 4 agentes:
+- **Follow-up Agent** — quem ligar/visitar hoje, com roteiro
+- **Opportunity Agent** — upsell, cross-sell, reativação (usa curva ABC do cliente)
+- **Risk Agent** — churn, inadimplência, queda de frequência
+- **Rep Agent** — ranking de representantes, gaps de cobertura
 
----
+Cada agente: o que detectou → por quê → ação sugerida → aceitar/agendar/dispensar.
+Backend: `createServerFn` + Lovable AI Gateway (`google/gemini-3-flash-preview`).
 
-## FASE 3 — Revenue Command Center (Hoje)
+## FASE 5 — Carteira Comercial Inteligente + Sales Intelligence
 
-- Nova rota `/command` (já existe — refatorar pesado) virando o
-  **dashboard de ações do dia**, não de KPIs estáticos:
-  - Clientes em risco
-  - Follow-ups atrasados
-  - Oportunidades quentes
-  - Plano sugerido pela IA para hoje
-  - Alertas de inatividade
-- Cada card tem CTA direto ("ligar agora", "abrir WhatsApp", "criar tarefa").
-- Vira a home logo após o login.
+Nova rota `/carteira` (atual `/companies` fica como fallback). Tabela densa com:
+- Filtros: representante, região, cidade, estado, CNAE, segmento, canal
+- Colunas: última compra, ticket médio, frequência, score comercial, status relacionamento, potencial
+- Ações em massa: criar campanha, atribuir representante, exportar lista
+- Tabs de Sales Intelligence: "Visitar hoje", "Reativar", "Em risco", "Sem contato 30d+", "Inadimplentes"
 
----
+## FASE 6 — Multiempresa / Holding + Benchmark
 
-## FASE 4 — IA Comercial unificada (Diretor Virtual)
+- Modelo de **grupo empresarial**: organization pode ter `parent_org_id` (holding → filiais)
+- Seletor no header: **Individual | Consolidado | Comparativo**
+- Tela `/benchmark`: comparação entre unidades (conversão, ticket, retenção, crescimento)
+- IA aponta melhor unidade por métrica e sugere replicação de práticas
 
-- Consolidar o que hoje está espalhado em `ai-insights`, `copilot`,
-  `coaching`, `playbooks`, `intelligence`, `churn`, `leadscore`,
-  `forecast` numa **suíte IA Comercial** com 4 agentes claros:
-  - Agente de Follow-up
-  - Agente de Oportunidades (upsell/cross/reativação)
-  - Agente de Risco/Churn
-  - Agente de Representantes (ranking + sugestões)
-- Cada agente expõe: o que detectou, por quê, ação sugerida, botão de
-  aceitar/dispensar/agendar. Tudo via `createServerFn` chamando Lovable
-  AI Gateway (`google/gemini-3-flash-preview` por padrão).
+Migração: nova coluna `parent_org_id` + RLS atualizada via `is_org_member` recursivo.
 
----
+## FASE 7 — ERP Connect Hub Universal
 
-## FASE 5 — ERP Connect Universal (refatorar wizard)
+Refatorar `/integrations` em wizard de 7 passos:
+1. Escolher ERP (Omie, Bling, Tiny, SAP, Protheus, custom)
+2. Método (API / DB / Agent local / CSV / XML)
+3. Testar conexão
+4. IA detecta estrutura (mapa de tabelas/colunas)
+5. IA sugere mapeamentos campo-a-campo
+6. Validar amostra
+7. Sincronizar
 
-- Refatorar `_app.integrations.tsx` em wizard de 7 passos linear:
-  1. Escolher ERP → 2. Conexão → 3. Testar → 4. IA detecta estrutura →
-  5. Validar mapeamento (Smart Mapping) → 6. Sincronizar → 7. Done.
-- Criar **ERP Health Center**: status, última sync, erros, latência, filas.
-- Smart Mapping com IA: cliente, representante, pedido, financeiro, produto.
-- Sem termos de banco de dados na UI.
+Mais: **Health Center** (`/erp/health`) com status online/offline, latência, última sync, conflitos, fila de eventos, auditoria.
+Sincronização bidirecional com resolução de conflitos (last-write-wins por campo, com override manual).
 
----
+*ERP Connect Agent (Windows/Linux) fica como entregável separado — só web nesta fase.*
 
-## FASE 6 — Geointeligência + Omnichannel + Automações
+## FASE 8 — Geointeligência + IA de Rotas + Marketing/Influencers
 
-- Mapa comercial real (refatorar `opportunity-map`) com prospecção por
-  CNAE/segmento e oportunidades de rota.
-- Omnichannel: unificar WhatsApp + e-mail + chat numa inbox única
-  vinculada ao cliente.
-- Motor de automações no-code: SE...ENTÃO... com gatilhos comerciais.
-- Alertas diários via WhatsApp (gestor recebe resumo, rep recebe plano do
-  dia) — usando server function + cron.
+- `/geo` com mapa de clientes, representantes, prospects, rotas, cobertura
+- IA de Rotas: ao montar visita, busca clientes/prospects próximos por CNAE e perfil de melhores clientes
+- Marketing Intelligence: captura de leads de WhatsApp/Instagram/Facebook/TikTok/LinkedIn/LP/Google Business
+- Influencer Intelligence: link/cupom/LP exclusivos por influencer + ROI vs. outros canais
+
+## FASE 9 — Polimento Enterprise
+
+- WhatsApp Enterprise (multiatendimento, campanhas, templates) — já existe parcial, consolidar
+- Omnichannel unificado no Customer 360
+- Automações visuais (SE → ENTÃO) sem código
+- Alertas programados (07:30 representante recebe rota; gestor recebe receita em risco)
+- Modo claro / escuro como preferência de usuário (paleta atual preservada)
+- Hardening: MFA, auditoria LGPD, RBAC granular, índices/paginação/lazy loading
 
 ---
 
-## Detalhes técnicos (referência)
+## Detalhes técnicos
 
-- **Stack:** TanStack Start + Supabase (RLS multi-tenant já está sólida).
-- **Sem mudanças destrutivas:** nada de `DROP TABLE`. Ocultar ≠ deletar.
-- **IA:** sempre via `createServerFn` + Lovable AI Gateway. Nada de chave
-  no cliente. Default `google/gemini-3-flash-preview`.
-- **RLS:** toda nova feature respeita `is_org_member(org, auth.uid())` —
-  invariante do projeto (memory `0029`).
-- **UI:** continuar usando os tokens já refinados em `src/styles.css`
-  (gradientes, sombras, KPI card, page-container).
-- **Performance:** lazy-load por rota já existe via file-based routing;
-  vamos adicionar `ensureQueryData` + `useSuspenseQuery` onde ainda
-  estiver no padrão antigo, conforme tocar cada tela.
+- **Stack**: TanStack Start + Supabase + Lovable AI Gateway (já configurado)
+- **RLS**: tudo passa por `is_org_member(org, auth.uid())`; multiempresa adiciona check recursivo via `parent_org_id`
+- **IA**: server functions com `requireSupabaseAuth`; modelo padrão `google/gemini-3-flash-preview` (rápido e barato); upgrade para `gemini-2.5-pro` em análises pesadas
+- **Sem mocks**: tudo lê dados reais do Supabase; quando vazio, mostra empty state com CTA
+- **Identidade visual**: paleta atual mantida; só refinamentos de densidade e hierarquia
+- **Rotas existentes**: nenhuma deletada nesta etapa; apenas escondidas do nav ou reagrupadas
 
 ---
 
-## O que eu preciso de você agora
+## Próximo passo
 
-1. **Aprovar este plano em fases** (ou ajustar prioridades).
-2. **Confirmar que posso começar pela Fase 1 já neste turno** — ela é
-   100% UI/navegação, não toca banco, não quebra nada.
-3. Para a Fase 1: confirmar se posso **esconder do menu** os módulos
-   ERP-like listados acima (sem deletar), ou se prefere que eu liste
-   um por um pra você decidir.
-
-Se aprovar como está, começo pela Fase 1 no próximo turno.
+Confirma que avançamos com a **Fase 4 (IA Comercial Unificada)** agora? Ou prefere reordenar (ex: pular para Fase 6 multiempresa, ou Fase 7 ERP Connect primeiro)?
