@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -64,6 +65,29 @@ function LandingPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const sp = new URLSearchParams(window.location.search);
+    let visitorId = localStorage.getItem("inf_vid");
+    if (!visitorId) {
+      visitorId = crypto.randomUUID();
+      localStorage.setItem("inf_vid", visitorId);
+    }
+    fetch("/api/public/influencer-visit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        org_slug: org,
+        slug,
+        visitor_id: visitorId,
+        referer: document.referrer || undefined,
+        utm_source: sp.get("utm_source") || undefined,
+        utm_campaign: sp.get("utm_campaign") || undefined,
+      }),
+    }).catch(() => {});
+  }, [org, slug]);
+
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();

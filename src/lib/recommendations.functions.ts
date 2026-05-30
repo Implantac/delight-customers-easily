@@ -260,6 +260,84 @@ export const generateRecommendations = createServerFn({ method: "POST" })
       });
     }
 
+    // 5) WhatsApp SLA: conversas violadas viram ações urgentes
+    const { data: slaPols } = await supabase
+      .from("whatsapp_sla_policies")
+      .select("priority,first_response_minutes,resolution_minutes")
+      .eq("organization_id", org);
+    const polByPrio = new Map<string, { first: number; resolve: number }>();
+    for (const p of slaPols ?? []) {
+      polByPrio.set(p.priority, { first: p.first_response_minutes, resolve: p.resolution_minutes });
+    }
+    const { data: openConvs } = await supabase
+      .from("whatsapp_conversations")
+      .select("id,contact_name,priority,assigned_to,first_message_at,last_customer_message_at,first_response_at")
+      .eq("organization_id", org)
+      .neq("status", "resolved")
+      .limit(200);
+    for (const c of openConvs ?? []) {
+      if (c.first_response_at) continue;
+      const pol = polByPrio.get(c.priority) ?? { first: 15, resolve: 240 };
+      const startedAt = new Date(c.last_customer_message_at ?? c.first_message_at).getTime();
+      const due = startedAt + pol.first * 60_000;
+      if (now <= due) continue;
+      const overdueMin = Math.round((now - due) / 60_000);
+      drafts.push({
+        surface: "whatsapp",
+        entity_type: "wa_conversation",
+        entity_id: c.id,
+        user_id: c.assigned_to ?? null,
+        priority: 95,
+        impact_brl: undefined,
+        title: `Responder ${c.contact_name} (SLA violado há ${overdueMin}min)`,
+        reason: "Conversa de WhatsApp aguardando primeira resposta além do SLA.",
+        action_label: "Abrir conversa",
+        action_href: `/whatsapp?c=${c.id}`,
+        source: "heuristic",
+      });
+    }
+
+    // 6) Influenciadores com tráfego sem conversão (ROI negativo / 0)
+    const { data: infs } = await supabase
+      .from("influencers")
+      .select("id,name")
+      .eq("organization_id", org)
+      .eq("is_active", true);
+    if (infs && infs.length) {
+      const since = new Date(now - 30 * DAY).toISOString();
+      const [{ data: vis }, { data: conv }] = await Promise.all([
+        supabase.from("influencer_visits").select("influencer_id").eq("organization_id", org).gte("created_at", since),
+        supabase.from("influencer_conversions").select("influencer_id,status,value").eq("organization_id", org).gte("created_at", since),
+      ]);
+      const vByInf = new Map<string, number>();
+      for (const v of vis ?? []) vByInf.set(v.influencer_id, (vByInf.get(v.influencer_id) ?? 0) + 1);
+      const wonByInf = new Map<string, number>();
+      for (const c of conv ?? []) {
+        if (c.status === "won" || c.status === "paid")
+          wonByInf.set(c.influencer_id, (wonByInf.get(c.influencer_id) ?? 0) + Number(c.value ?? 0));
+      }
+      for (const inf of infs) {
+        const v = vByInf.get(inf.id) ?? 0;
+        const won = wonByInf.get(inf.id) ?? 0;
+        if (v >= 50 && won === 0) {
+          drafts.push({
+            surface: "influencers",
+            entity_type: "influencer",
+            entity_id: inf.id,
+            user_id: undefined,
+            priority: 65,
+            impact_brl: undefined,
+            title: `Revisar campanha de ${inf.name} — ${v} visitas, 0 conversão`,
+            reason: "Tráfego significativo nos últimos 30d sem nenhuma conversão registrada.",
+            action_label: "Abrir influenciador",
+            action_href: `/influencers`,
+            source: "heuristic",
+          });
+        }
+      }
+    }
+
+
     // Wipe previous heuristic open recs, then bulk insert.
     await supabase
       .from("recommendations")
