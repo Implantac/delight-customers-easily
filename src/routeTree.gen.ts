@@ -28,6 +28,7 @@ import { Route as AppContactsRouteImport } from './routes/_app.contacts'
 import { Route as AppCompaniesRouteImport } from './routes/_app.companies'
 import { Route as AppCommissionsRouteImport } from './routes/_app.commissions'
 import { Route as AppCommandRouteImport } from './routes/_app.command'
+import { Route as AppCoachingRouteImport } from './routes/_app.coaching'
 import { Route as AppChatRouteImport } from './routes/_app.chat'
 import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
 import { Route as AppActivitiesRouteImport } from './routes/_app.activities'
@@ -137,6 +138,11 @@ const AppCommandRoute = AppCommandRouteImport.update({
   path: '/command',
   getParentRoute: () => AppRoute,
 } as any)
+const AppCoachingRoute = AppCoachingRouteImport.update({
+  id: '/coaching',
+  path: '/coaching',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppChatRoute = AppChatRouteImport.update({
   id: '/chat',
   path: '/chat',
@@ -216,6 +222,7 @@ export interface FileRoutesByFullPath {
   '/activities': typeof AppActivitiesRoute
   '/alerts': typeof AppAlertsRoute
   '/chat': typeof AppChatRoute
+  '/coaching': typeof AppCoachingRoute
   '/command': typeof AppCommandRoute
   '/commissions': typeof AppCommissionsRoute
   '/companies': typeof AppCompaniesRouteWithChildren
@@ -250,6 +257,7 @@ export interface FileRoutesByTo {
   '/activities': typeof AppActivitiesRoute
   '/alerts': typeof AppAlertsRoute
   '/chat': typeof AppChatRoute
+  '/coaching': typeof AppCoachingRoute
   '/command': typeof AppCommandRoute
   '/commissions': typeof AppCommissionsRoute
   '/companies': typeof AppCompaniesRouteWithChildren
@@ -286,6 +294,7 @@ export interface FileRoutesById {
   '/_app/activities': typeof AppActivitiesRoute
   '/_app/alerts': typeof AppAlertsRoute
   '/_app/chat': typeof AppChatRoute
+  '/_app/coaching': typeof AppCoachingRoute
   '/_app/command': typeof AppCommandRoute
   '/_app/commissions': typeof AppCommissionsRoute
   '/_app/companies': typeof AppCompaniesRouteWithChildren
@@ -322,6 +331,7 @@ export interface FileRouteTypes {
     | '/activities'
     | '/alerts'
     | '/chat'
+    | '/coaching'
     | '/command'
     | '/commissions'
     | '/companies'
@@ -356,6 +366,7 @@ export interface FileRouteTypes {
     | '/activities'
     | '/alerts'
     | '/chat'
+    | '/coaching'
     | '/command'
     | '/commissions'
     | '/companies'
@@ -391,6 +402,7 @@ export interface FileRouteTypes {
     | '/_app/activities'
     | '/_app/alerts'
     | '/_app/chat'
+    | '/_app/coaching'
     | '/_app/command'
     | '/_app/commissions'
     | '/_app/companies'
@@ -564,6 +576,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCommandRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/coaching': {
+      id: '/_app/coaching'
+      path: '/coaching'
+      fullPath: '/coaching'
+      preLoaderRoute: typeof AppCoachingRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/chat': {
       id: '/_app/chat'
       path: '/chat'
@@ -693,6 +712,7 @@ interface AppRouteChildren {
   AppActivitiesRoute: typeof AppActivitiesRoute
   AppAlertsRoute: typeof AppAlertsRoute
   AppChatRoute: typeof AppChatRoute
+  AppCoachingRoute: typeof AppCoachingRoute
   AppCommandRoute: typeof AppCommandRoute
   AppCommissionsRoute: typeof AppCommissionsRoute
   AppCompaniesRoute: typeof AppCompaniesRouteWithChildren
@@ -721,6 +741,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppActivitiesRoute: AppActivitiesRoute,
   AppAlertsRoute: AppAlertsRoute,
   AppChatRoute: AppChatRoute,
+  AppCoachingRoute: AppCoachingRoute,
   AppCommandRoute: AppCommandRoute,
   AppCommissionsRoute: AppCommissionsRoute,
   AppCompaniesRoute: AppCompaniesRouteWithChildren,
@@ -758,3 +779,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
