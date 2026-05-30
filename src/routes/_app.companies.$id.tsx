@@ -93,6 +93,28 @@ function CompanyDetail() {
     enabled: !!contacts,
   });
 
+  const { data: waMessages } = useQuery({
+    queryKey: ["company-wa", id, contacts?.length ?? 0],
+    enabled: !!contacts,
+    queryFn: async () => {
+      const cIds = (contacts ?? []).map((c) => c.id);
+      if (cIds.length === 0) return [];
+      const { data: convs } = await supabase
+        .from("whatsapp_conversations")
+        .select("id")
+        .in("contact_id", cIds);
+      const convIds = (convs ?? []).map((c) => c.id);
+      if (convIds.length === 0) return [];
+      const { data } = await supabase
+        .from("whatsapp_messages")
+        .select("id, body, direction, created_at")
+        .in("conversation_id", convIds)
+        .order("created_at", { ascending: false })
+        .limit(30);
+      return data ?? [];
+    },
+  });
+
   // ============ Inteligência comercial derivada ============
   const kpis = useMemo(() => {
     const won = (deals ?? []).filter((d) => d.stage === "won");
