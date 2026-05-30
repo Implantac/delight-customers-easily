@@ -11,13 +11,14 @@ export type ErpIntegration = {
   provider: "omie";
   app_key: string;
   app_secret: string;
-  settings: Record<string, string | number | boolean | null>;
   is_active: boolean;
   last_sync_at: string | null;
   last_error: string | null;
   created_at: string;
   updated_at: string;
 };
+
+const INTEG_COLS = "id,organization_id,provider,app_key,app_secret,is_active,last_sync_at,last_error,created_at,updated_at";
 
 // ============================================================================
 // Helpers — Omie API (JSON-RPC like)
