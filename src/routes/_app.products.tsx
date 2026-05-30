@@ -85,7 +85,7 @@ function ProductsPage() {
         action={
           <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) setEditing(null); }}>
             <DialogTrigger asChild>
-              <Button onClick={() => setEditing(null)}><Plus className="mr-2 h-4 w-4" />Novo produto</Button>
+              {false && <Button onClick={() => setEditing(null)}><Plus className="mr-2 h-4 w-4" />Novo produto</Button>}
             </DialogTrigger>
             <ProductDialog
               initial={editing}

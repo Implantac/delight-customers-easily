@@ -92,9 +92,9 @@ function SalesOrdersPage() {
               <SelectItem value="cancelled">Cancelado</SelectItem>
             </SelectContent>
           </Select>
-          <Button onClick={() => { setEditingId(null); setOpenDialog(true); }}>
+          {false && (<Button onClick={() => { setEditingId(null); setOpenDialog(true); }}>
             <Plus className="mr-2 h-4 w-4" /> Novo pedido
-          </Button>
+          </Button>)}
         </div>
       </div>
 

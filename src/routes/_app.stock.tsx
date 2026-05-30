@@ -65,9 +65,9 @@ function StockPage() {
           </h1>
           <p className="text-sm text-muted-foreground">Registre entradas, saídas e ajustes e veja o saldo por produto.</p>
         </div>
-        <Button onClick={() => setOpenDialog(true)}>
+        {false && (<Button onClick={() => setOpenDialog(true)}>
           <Plus className="mr-2 h-4 w-4" /> Novo movimento
-        </Button>
+        </Button>)}
       </div>
 
       <div className="grid gap-4 md:grid-cols-4">
