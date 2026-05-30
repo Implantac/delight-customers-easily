@@ -60,6 +60,7 @@ import { Route as AppChatRouteImport } from './routes/_app.chat'
 import { Route as AppCampaignsRouteImport } from './routes/_app.campaigns'
 import { Route as AppCalendarRouteImport } from './routes/_app.calendar'
 import { Route as AppAuditRouteImport } from './routes/_app.audit'
+import { Route as AppAssetsRouteImport } from './routes/_app.assets'
 import { Route as AppApprovalsRouteImport } from './routes/_app.approvals'
 import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
 import { Route as AppActivitiesRouteImport } from './routes/_app.activities'
@@ -334,6 +335,11 @@ const AppAuditRoute = AppAuditRouteImport.update({
   path: '/audit',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAssetsRoute = AppAssetsRouteImport.update({
+  id: '/assets',
+  path: '/assets',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppApprovalsRoute = AppApprovalsRouteImport.update({
   id: '/approvals',
   path: '/approvals',
@@ -438,6 +444,7 @@ export interface FileRoutesByFullPath {
   '/activities': typeof AppActivitiesRoute
   '/alerts': typeof AppAlertsRoute
   '/approvals': typeof AppApprovalsRoute
+  '/assets': typeof AppAssetsRoute
   '/audit': typeof AppAuditRoute
   '/calendar': typeof AppCalendarRoute
   '/campaigns': typeof AppCampaignsRoute
@@ -509,6 +516,7 @@ export interface FileRoutesByTo {
   '/activities': typeof AppActivitiesRoute
   '/alerts': typeof AppAlertsRoute
   '/approvals': typeof AppApprovalsRoute
+  '/assets': typeof AppAssetsRoute
   '/audit': typeof AppAuditRoute
   '/calendar': typeof AppCalendarRoute
   '/campaigns': typeof AppCampaignsRoute
@@ -582,6 +590,7 @@ export interface FileRoutesById {
   '/_app/activities': typeof AppActivitiesRoute
   '/_app/alerts': typeof AppAlertsRoute
   '/_app/approvals': typeof AppApprovalsRoute
+  '/_app/assets': typeof AppAssetsRoute
   '/_app/audit': typeof AppAuditRoute
   '/_app/calendar': typeof AppCalendarRoute
   '/_app/campaigns': typeof AppCampaignsRoute
@@ -655,6 +664,7 @@ export interface FileRouteTypes {
     | '/activities'
     | '/alerts'
     | '/approvals'
+    | '/assets'
     | '/audit'
     | '/calendar'
     | '/campaigns'
@@ -726,6 +736,7 @@ export interface FileRouteTypes {
     | '/activities'
     | '/alerts'
     | '/approvals'
+    | '/assets'
     | '/audit'
     | '/calendar'
     | '/campaigns'
@@ -798,6 +809,7 @@ export interface FileRouteTypes {
     | '/_app/activities'
     | '/_app/alerts'
     | '/_app/approvals'
+    | '/_app/assets'
     | '/_app/audit'
     | '/_app/calendar'
     | '/_app/campaigns'
@@ -1233,6 +1245,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAuditRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/assets': {
+      id: '/_app/assets'
+      path: '/assets'
+      fullPath: '/assets'
+      preLoaderRoute: typeof AppAssetsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/approvals': {
       id: '/_app/approvals'
       path: '/approvals'
@@ -1443,6 +1462,7 @@ interface AppRouteChildren {
   AppActivitiesRoute: typeof AppActivitiesRoute
   AppAlertsRoute: typeof AppAlertsRoute
   AppApprovalsRoute: typeof AppApprovalsRoute
+  AppAssetsRoute: typeof AppAssetsRoute
   AppAuditRoute: typeof AppAuditRoute
   AppCalendarRoute: typeof AppCalendarRoute
   AppCampaignsRoute: typeof AppCampaignsRoute
@@ -1503,6 +1523,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppActivitiesRoute: AppActivitiesRoute,
   AppAlertsRoute: AppAlertsRoute,
   AppApprovalsRoute: AppApprovalsRoute,
+  AppAssetsRoute: AppAssetsRoute,
   AppAuditRoute: AppAuditRoute,
   AppCalendarRoute: AppCalendarRoute,
   AppCampaignsRoute: AppCampaignsRoute,
