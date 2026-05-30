@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/select";
 import { Sparkles, Plus, Trash2, Copy } from "lucide-react";
 import { toast } from "sonner";
+import { InfluencerMetricsPanel } from "@/components/influencer-metrics-panel";
 
 export const Route = createFileRoute("/_app/influencers")({ component: InfluencersPage });
 
