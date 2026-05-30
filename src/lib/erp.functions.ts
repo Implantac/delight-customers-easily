@@ -11,7 +11,7 @@ export type ErpIntegration = {
   provider: "omie";
   app_key: string;
   app_secret: string;
-  settings: Record<string, unknown>;
+  settings: Record<string, string | number | boolean | null>;
   is_active: boolean;
   last_sync_at: string | null;
   last_error: string | null;
@@ -98,14 +98,13 @@ export const saveErpIntegration = createServerFn({ method: "POST" })
     app_key: string;
     app_secret: string;
     is_active?: boolean;
-    settings?: Record<string, unknown>;
   }) => d)
   .handler(async ({ data, context }) => {
     const provider = data.provider ?? "omie";
     if (!data.app_key.trim() || !data.app_secret.trim()) {
       throw new Error("app_key e app_secret são obrigatórios");
     }
-    const { data: row, error } = await context.supabase
+    const { data: row, error } = await (context.supabase as any)
       .from("erp_integrations")
       .upsert(
         {
@@ -114,7 +113,6 @@ export const saveErpIntegration = createServerFn({ method: "POST" })
           app_key: data.app_key.trim(),
           app_secret: data.app_secret.trim(),
           is_active: data.is_active ?? true,
-          settings: data.settings ?? {},
           last_error: null,
         },
         { onConflict: "organization_id,provider" },
