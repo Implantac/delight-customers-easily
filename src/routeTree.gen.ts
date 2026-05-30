@@ -14,6 +14,7 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppWinLossRouteImport } from './routes/_app.win-loss'
 import { Route as AppTemplatesRouteImport } from './routes/_app.templates'
+import { Route as AppTagsRouteImport } from './routes/_app.tags'
 import { Route as AppSegmentsRouteImport } from './routes/_app.segments'
 import { Route as AppRetentionRouteImport } from './routes/_app.retention'
 import { Route as AppReportsRouteImport } from './routes/_app.reports'
@@ -73,6 +74,11 @@ const AppWinLossRoute = AppWinLossRouteImport.update({
 const AppTemplatesRoute = AppTemplatesRouteImport.update({
   id: '/templates',
   path: '/templates',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTagsRoute = AppTagsRouteImport.update({
+  id: '/tags',
+  path: '/tags',
   getParentRoute: () => AppRoute,
 } as any)
 const AppSegmentsRoute = AppSegmentsRouteImport.update({
@@ -285,6 +291,7 @@ export interface FileRoutesByFullPath {
   '/reports': typeof AppReportsRoute
   '/retention': typeof AppRetentionRoute
   '/segments': typeof AppSegmentsRoute
+  '/tags': typeof AppTagsRoute
   '/templates': typeof AppTemplatesRoute
   '/win-loss': typeof AppWinLossRoute
   '/companies/$id': typeof AppCompaniesIdRoute
@@ -327,6 +334,7 @@ export interface FileRoutesByTo {
   '/reports': typeof AppReportsRoute
   '/retention': typeof AppRetentionRoute
   '/segments': typeof AppSegmentsRoute
+  '/tags': typeof AppTagsRoute
   '/templates': typeof AppTemplatesRoute
   '/win-loss': typeof AppWinLossRoute
   '/companies/$id': typeof AppCompaniesIdRoute
@@ -371,6 +379,7 @@ export interface FileRoutesById {
   '/_app/reports': typeof AppReportsRoute
   '/_app/retention': typeof AppRetentionRoute
   '/_app/segments': typeof AppSegmentsRoute
+  '/_app/tags': typeof AppTagsRoute
   '/_app/templates': typeof AppTemplatesRoute
   '/_app/win-loss': typeof AppWinLossRoute
   '/_app/companies/$id': typeof AppCompaniesIdRoute
@@ -415,6 +424,7 @@ export interface FileRouteTypes {
     | '/reports'
     | '/retention'
     | '/segments'
+    | '/tags'
     | '/templates'
     | '/win-loss'
     | '/companies/$id'
@@ -457,6 +467,7 @@ export interface FileRouteTypes {
     | '/reports'
     | '/retention'
     | '/segments'
+    | '/tags'
     | '/templates'
     | '/win-loss'
     | '/companies/$id'
@@ -500,6 +511,7 @@ export interface FileRouteTypes {
     | '/_app/reports'
     | '/_app/retention'
     | '/_app/segments'
+    | '/_app/tags'
     | '/_app/templates'
     | '/_app/win-loss'
     | '/_app/companies/$id'
@@ -560,6 +572,13 @@ declare module '@tanstack/react-router' {
       path: '/templates'
       fullPath: '/templates'
       preLoaderRoute: typeof AppTemplatesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/tags': {
+      id: '/_app/tags'
+      path: '/tags'
+      fullPath: '/tags'
+      preLoaderRoute: typeof AppTagsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/segments': {
@@ -878,6 +897,7 @@ interface AppRouteChildren {
   AppReportsRoute: typeof AppReportsRoute
   AppRetentionRoute: typeof AppRetentionRoute
   AppSegmentsRoute: typeof AppSegmentsRoute
+  AppTagsRoute: typeof AppTagsRoute
   AppTemplatesRoute: typeof AppTemplatesRoute
   AppWinLossRoute: typeof AppWinLossRoute
   AppInviteTokenRoute: typeof AppInviteTokenRoute
@@ -913,6 +933,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppReportsRoute: AppReportsRoute,
   AppRetentionRoute: AppRetentionRoute,
   AppSegmentsRoute: AppSegmentsRoute,
+  AppTagsRoute: AppTagsRoute,
   AppTemplatesRoute: AppTemplatesRoute,
   AppWinLossRoute: AppWinLossRoute,
   AppInviteTokenRoute: AppInviteTokenRoute,
@@ -936,3 +957,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
