@@ -1804,6 +1804,113 @@ export type Database = {
         }
         Relationships: []
       }
+      signature_requests: {
+        Row: {
+          company_id: string | null
+          completed_at: string | null
+          contract_id: string | null
+          created_at: string
+          created_by: string
+          deal_id: string | null
+          description: string | null
+          document_url: string | null
+          expires_at: string | null
+          id: string
+          organization_id: string
+          sent_at: string | null
+          status: Database["public"]["Enums"]["signature_status"]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          company_id?: string | null
+          completed_at?: string | null
+          contract_id?: string | null
+          created_at?: string
+          created_by?: string
+          deal_id?: string | null
+          description?: string | null
+          document_url?: string | null
+          expires_at?: string | null
+          id?: string
+          organization_id: string
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["signature_status"]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          company_id?: string | null
+          completed_at?: string | null
+          contract_id?: string | null
+          created_at?: string
+          created_by?: string
+          deal_id?: string | null
+          description?: string | null
+          document_url?: string | null
+          expires_at?: string | null
+          id?: string
+          organization_id?: string
+          sent_at?: string | null
+          status?: Database["public"]["Enums"]["signature_status"]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      signature_signers: {
+        Row: {
+          created_at: string
+          declined_reason: string | null
+          email: string
+          id: string
+          name: string
+          organization_id: string
+          position: number
+          request_id: string
+          role: string | null
+          signed_at: string | null
+          status: Database["public"]["Enums"]["signer_status"]
+          viewed_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          declined_reason?: string | null
+          email: string
+          id?: string
+          name: string
+          organization_id: string
+          position?: number
+          request_id: string
+          role?: string | null
+          signed_at?: string | null
+          status?: Database["public"]["Enums"]["signer_status"]
+          viewed_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          declined_reason?: string | null
+          email?: string
+          id?: string
+          name?: string
+          organization_id?: string
+          position?: number
+          request_id?: string
+          role?: string | null
+          signed_at?: string | null
+          status?: Database["public"]["Enums"]["signer_status"]
+          viewed_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "signature_signers_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "signature_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       subscriptions: {
         Row: {
           billing_cycle: string
@@ -2290,6 +2397,15 @@ export type Database = {
         | "won"
         | "lost"
       org_role: "owner" | "admin" | "member"
+      signature_status:
+        | "draft"
+        | "sent"
+        | "viewed"
+        | "signed"
+        | "declined"
+        | "expired"
+        | "cancelled"
+      signer_status: "pending" | "viewed" | "signed" | "declined"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -2429,6 +2545,16 @@ export const Constants = {
         "lost",
       ],
       org_role: ["owner", "admin", "member"],
+      signature_status: [
+        "draft",
+        "sent",
+        "viewed",
+        "signed",
+        "declined",
+        "expired",
+        "cancelled",
+      ],
+      signer_status: ["pending", "viewed", "signed", "declined"],
     },
   },
 } as const
