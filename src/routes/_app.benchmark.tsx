@@ -13,8 +13,9 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   GitBranch, Trophy, AlertTriangle, TrendingUp, Users, Activity, ArrowRight, Layers,
-  Building2, Scale,
+  Building2, Scale, Download,
 } from "lucide-react";
+import { toCSV, downloadCSV } from "@/lib/csv-export";
 
 export const Route = createFileRoute("/_app/benchmark")({
   component: BenchmarkPage,
