@@ -939,6 +939,142 @@ export type Database = {
         }
         Relationships: []
       }
+      lead_routing_assignees: {
+        Row: {
+          created_at: string
+          id: string
+          organization_id: string
+          position: number
+          rule_id: string
+          user_id: string
+          weight: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          organization_id: string
+          position?: number
+          rule_id: string
+          user_id: string
+          weight?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          organization_id?: string
+          position?: number
+          rule_id?: string
+          user_id?: string
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_routing_assignees_rule_id_fkey"
+            columns: ["rule_id"]
+            isOneToOne: false
+            referencedRelation: "lead_routing_rules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lead_routing_log: {
+        Row: {
+          assigned_to: string | null
+          created_at: string
+          id: string
+          lead_id: string
+          lead_type: string
+          organization_id: string
+          reason: string | null
+          rule_id: string | null
+        }
+        Insert: {
+          assigned_to?: string | null
+          created_at?: string
+          id?: string
+          lead_id: string
+          lead_type: string
+          organization_id: string
+          reason?: string | null
+          rule_id?: string | null
+        }
+        Update: {
+          assigned_to?: string | null
+          created_at?: string
+          id?: string
+          lead_id?: string
+          lead_type?: string
+          organization_id?: string
+          reason?: string | null
+          rule_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_routing_log_rule_id_fkey"
+            columns: ["rule_id"]
+            isOneToOne: false
+            referencedRelation: "lead_routing_rules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lead_routing_rules: {
+        Row: {
+          active: boolean
+          created_at: string
+          created_by: string
+          description: string | null
+          id: string
+          match_max_value: number | null
+          match_min_value: number | null
+          match_source: string | null
+          match_tags: string[] | null
+          match_territory_id: string | null
+          name: string
+          organization_id: string
+          priority: number
+          rr_cursor: number
+          strategy: Database["public"]["Enums"]["routing_strategy"]
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          id?: string
+          match_max_value?: number | null
+          match_min_value?: number | null
+          match_source?: string | null
+          match_tags?: string[] | null
+          match_territory_id?: string | null
+          name: string
+          organization_id: string
+          priority?: number
+          rr_cursor?: number
+          strategy?: Database["public"]["Enums"]["routing_strategy"]
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          id?: string
+          match_max_value?: number | null
+          match_min_value?: number | null
+          match_source?: string | null
+          match_tags?: string[] | null
+          match_territory_id?: string | null
+          name?: string
+          organization_id?: string
+          priority?: number
+          rr_cursor?: number
+          strategy?: Database["public"]["Enums"]["routing_strategy"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       memberships: {
         Row: {
           created_at: string
@@ -2397,6 +2533,11 @@ export type Database = {
         | "won"
         | "lost"
       org_role: "owner" | "admin" | "member"
+      routing_strategy:
+        | "round_robin"
+        | "weighted"
+        | "first_available"
+        | "manual"
       signature_status:
         | "draft"
         | "sent"
@@ -2545,6 +2686,12 @@ export const Constants = {
         "lost",
       ],
       org_role: ["owner", "admin", "member"],
+      routing_strategy: [
+        "round_robin",
+        "weighted",
+        "first_available",
+        "manual",
+      ],
       signature_status: [
         "draft",
         "sent",

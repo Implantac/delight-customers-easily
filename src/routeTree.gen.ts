@@ -23,6 +23,7 @@ import { Route as AppSubscriptionsRouteImport } from './routes/_app.subscription
 import { Route as AppSignaturesRouteImport } from './routes/_app.signatures'
 import { Route as AppSequencesRouteImport } from './routes/_app.sequences'
 import { Route as AppSegmentsRouteImport } from './routes/_app.segments'
+import { Route as AppRoutingRouteImport } from './routes/_app.routing'
 import { Route as AppRetentionRouteImport } from './routes/_app.retention'
 import { Route as AppReportsRouteImport } from './routes/_app.reports'
 import { Route as AppProposalsRouteImport } from './routes/_app.proposals'
@@ -138,6 +139,11 @@ const AppSequencesRoute = AppSequencesRouteImport.update({
 const AppSegmentsRoute = AppSegmentsRouteImport.update({
   id: '/segments',
   path: '/segments',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppRoutingRoute = AppRoutingRouteImport.update({
+  id: '/routing',
+  path: '/routing',
   getParentRoute: () => AppRoute,
 } as any)
 const AppRetentionRoute = AppRetentionRouteImport.update({
@@ -413,6 +419,7 @@ export interface FileRoutesByFullPath {
   '/proposals': typeof AppProposalsRouteWithChildren
   '/reports': typeof AppReportsRoute
   '/retention': typeof AppRetentionRoute
+  '/routing': typeof AppRoutingRoute
   '/segments': typeof AppSegmentsRoute
   '/sequences': typeof AppSequencesRouteWithChildren
   '/signatures': typeof AppSignaturesRoute
@@ -475,6 +482,7 @@ export interface FileRoutesByTo {
   '/proposals': typeof AppProposalsRouteWithChildren
   '/reports': typeof AppReportsRoute
   '/retention': typeof AppRetentionRoute
+  '/routing': typeof AppRoutingRoute
   '/segments': typeof AppSegmentsRoute
   '/sequences': typeof AppSequencesRouteWithChildren
   '/signatures': typeof AppSignaturesRoute
@@ -539,6 +547,7 @@ export interface FileRoutesById {
   '/_app/proposals': typeof AppProposalsRouteWithChildren
   '/_app/reports': typeof AppReportsRoute
   '/_app/retention': typeof AppRetentionRoute
+  '/_app/routing': typeof AppRoutingRoute
   '/_app/segments': typeof AppSegmentsRoute
   '/_app/sequences': typeof AppSequencesRouteWithChildren
   '/_app/signatures': typeof AppSignaturesRoute
@@ -603,6 +612,7 @@ export interface FileRouteTypes {
     | '/proposals'
     | '/reports'
     | '/retention'
+    | '/routing'
     | '/segments'
     | '/sequences'
     | '/signatures'
@@ -665,6 +675,7 @@ export interface FileRouteTypes {
     | '/proposals'
     | '/reports'
     | '/retention'
+    | '/routing'
     | '/segments'
     | '/sequences'
     | '/signatures'
@@ -728,6 +739,7 @@ export interface FileRouteTypes {
     | '/_app/proposals'
     | '/_app/reports'
     | '/_app/retention'
+    | '/_app/routing'
     | '/_app/segments'
     | '/_app/sequences'
     | '/_app/signatures'
@@ -863,6 +875,13 @@ declare module '@tanstack/react-router' {
       path: '/segments'
       fullPath: '/segments'
       preLoaderRoute: typeof AppSegmentsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/routing': {
+      id: '/_app/routing'
+      path: '/routing'
+      fullPath: '/routing'
+      preLoaderRoute: typeof AppRoutingRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/retention': {
@@ -1300,6 +1319,7 @@ interface AppRouteChildren {
   AppProposalsRoute: typeof AppProposalsRouteWithChildren
   AppReportsRoute: typeof AppReportsRoute
   AppRetentionRoute: typeof AppRetentionRoute
+  AppRoutingRoute: typeof AppRoutingRoute
   AppSegmentsRoute: typeof AppSegmentsRoute
   AppSequencesRoute: typeof AppSequencesRouteWithChildren
   AppSignaturesRoute: typeof AppSignaturesRoute
@@ -1352,6 +1372,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppProposalsRoute: AppProposalsRouteWithChildren,
   AppReportsRoute: AppReportsRoute,
   AppRetentionRoute: AppRetentionRoute,
+  AppRoutingRoute: AppRoutingRoute,
   AppSegmentsRoute: AppSegmentsRoute,
   AppSequencesRoute: AppSequencesRouteWithChildren,
   AppSignaturesRoute: AppSignaturesRoute,
