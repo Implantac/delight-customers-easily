@@ -95,6 +95,7 @@ import { Route as AppKbIdRouteImport } from './routes/_app.kb.$id'
 import { Route as AppInviteTokenRouteImport } from './routes/_app.invite.$token'
 import { Route as AppContactsIdRouteImport } from './routes/_app.contacts.$id'
 import { Route as AppCompaniesIdRouteImport } from './routes/_app.companies.$id'
+import { Route as ApiPublicHooksRefreshRecommendationsRouteImport } from './routes/api/public/hooks/refresh-recommendations'
 import { Route as ApiPublicHooksGenerateAlertsRouteImport } from './routes/api/public/hooks/generate-alerts'
 import { Route as ApiPublicHooksErpAgentPushRouteImport } from './routes/api/public/hooks/erp-agent-push'
 import { Route as ApiPublicHooksDailyBriefingRouteImport } from './routes/api/public/hooks/daily-briefing'
@@ -530,6 +531,12 @@ const AppCompaniesIdRoute = AppCompaniesIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AppCompaniesRoute,
 } as any)
+const ApiPublicHooksRefreshRecommendationsRoute =
+  ApiPublicHooksRefreshRecommendationsRouteImport.update({
+    id: '/api/public/hooks/refresh-recommendations',
+    path: '/api/public/hooks/refresh-recommendations',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHooksGenerateAlertsRoute =
   ApiPublicHooksGenerateAlertsRouteImport.update({
     id: '/api/public/hooks/generate-alerts',
@@ -645,6 +652,7 @@ export interface FileRoutesByFullPath {
   '/api/public/hooks/daily-briefing': typeof ApiPublicHooksDailyBriefingRoute
   '/api/public/hooks/erp-agent-push': typeof ApiPublicHooksErpAgentPushRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
+  '/api/public/hooks/refresh-recommendations': typeof ApiPublicHooksRefreshRecommendationsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -736,6 +744,7 @@ export interface FileRoutesByTo {
   '/api/public/hooks/daily-briefing': typeof ApiPublicHooksDailyBriefingRoute
   '/api/public/hooks/erp-agent-push': typeof ApiPublicHooksErpAgentPushRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
+  '/api/public/hooks/refresh-recommendations': typeof ApiPublicHooksRefreshRecommendationsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -829,6 +838,7 @@ export interface FileRoutesById {
   '/api/public/hooks/daily-briefing': typeof ApiPublicHooksDailyBriefingRoute
   '/api/public/hooks/erp-agent-push': typeof ApiPublicHooksErpAgentPushRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
+  '/api/public/hooks/refresh-recommendations': typeof ApiPublicHooksRefreshRecommendationsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -922,6 +932,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/daily-briefing'
     | '/api/public/hooks/erp-agent-push'
     | '/api/public/hooks/generate-alerts'
+    | '/api/public/hooks/refresh-recommendations'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -1013,6 +1024,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/daily-briefing'
     | '/api/public/hooks/erp-agent-push'
     | '/api/public/hooks/generate-alerts'
+    | '/api/public/hooks/refresh-recommendations'
   id:
     | '__root__'
     | '/'
@@ -1105,6 +1117,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/daily-briefing'
     | '/api/public/hooks/erp-agent-push'
     | '/api/public/hooks/generate-alerts'
+    | '/api/public/hooks/refresh-recommendations'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1119,6 +1132,7 @@ export interface RootRouteChildren {
   ApiPublicHooksDailyBriefingRoute: typeof ApiPublicHooksDailyBriefingRoute
   ApiPublicHooksErpAgentPushRoute: typeof ApiPublicHooksErpAgentPushRoute
   ApiPublicHooksGenerateAlertsRoute: typeof ApiPublicHooksGenerateAlertsRoute
+  ApiPublicHooksRefreshRecommendationsRoute: typeof ApiPublicHooksRefreshRecommendationsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1725,6 +1739,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCompaniesIdRouteImport
       parentRoute: typeof AppCompaniesRoute
     }
+    '/api/public/hooks/refresh-recommendations': {
+      id: '/api/public/hooks/refresh-recommendations'
+      path: '/api/public/hooks/refresh-recommendations'
+      fullPath: '/api/public/hooks/refresh-recommendations'
+      preLoaderRoute: typeof ApiPublicHooksRefreshRecommendationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/generate-alerts': {
       id: '/api/public/hooks/generate-alerts'
       path: '/api/public/hooks/generate-alerts'
@@ -1992,6 +2013,8 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicHooksDailyBriefingRoute: ApiPublicHooksDailyBriefingRoute,
   ApiPublicHooksErpAgentPushRoute: ApiPublicHooksErpAgentPushRoute,
   ApiPublicHooksGenerateAlertsRoute: ApiPublicHooksGenerateAlertsRoute,
+  ApiPublicHooksRefreshRecommendationsRoute:
+    ApiPublicHooksRefreshRecommendationsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
