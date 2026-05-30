@@ -69,6 +69,8 @@ function BenchmarkPage() {
         icon={GitBranch}
       />
 
+      <NextActionBlock surface="benchmark" title="Ações para fechar o gap" />
+
       {!isLoading && data && !data.hasGroup && (
         <Card className="p-6 border-dashed">
           <div className="flex items-start gap-3">
