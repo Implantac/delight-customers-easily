@@ -18,6 +18,7 @@ import { Route as AppTicketsRouteImport } from './routes/_app.tickets'
 import { Route as AppTerritoriesRouteImport } from './routes/_app.territories'
 import { Route as AppTemplatesRouteImport } from './routes/_app.templates'
 import { Route as AppTagsRouteImport } from './routes/_app.tags'
+import { Route as AppSurveysRouteImport } from './routes/_app.surveys'
 import { Route as AppSubscriptionsRouteImport } from './routes/_app.subscriptions'
 import { Route as AppSequencesRouteImport } from './routes/_app.sequences'
 import { Route as AppSegmentsRouteImport } from './routes/_app.segments'
@@ -110,6 +111,11 @@ const AppTemplatesRoute = AppTemplatesRouteImport.update({
 const AppTagsRoute = AppTagsRouteImport.update({
   id: '/tags',
   path: '/tags',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSurveysRoute = AppSurveysRouteImport.update({
+  id: '/surveys',
+  path: '/surveys',
   getParentRoute: () => AppRoute,
 } as any)
 const AppSubscriptionsRoute = AppSubscriptionsRouteImport.update({
@@ -397,6 +403,7 @@ export interface FileRoutesByFullPath {
   '/segments': typeof AppSegmentsRoute
   '/sequences': typeof AppSequencesRouteWithChildren
   '/subscriptions': typeof AppSubscriptionsRoute
+  '/surveys': typeof AppSurveysRoute
   '/tags': typeof AppTagsRoute
   '/templates': typeof AppTemplatesRoute
   '/territories': typeof AppTerritoriesRoute
@@ -456,6 +463,7 @@ export interface FileRoutesByTo {
   '/segments': typeof AppSegmentsRoute
   '/sequences': typeof AppSequencesRouteWithChildren
   '/subscriptions': typeof AppSubscriptionsRoute
+  '/surveys': typeof AppSurveysRoute
   '/tags': typeof AppTagsRoute
   '/templates': typeof AppTemplatesRoute
   '/territories': typeof AppTerritoriesRoute
@@ -517,6 +525,7 @@ export interface FileRoutesById {
   '/_app/segments': typeof AppSegmentsRoute
   '/_app/sequences': typeof AppSequencesRouteWithChildren
   '/_app/subscriptions': typeof AppSubscriptionsRoute
+  '/_app/surveys': typeof AppSurveysRoute
   '/_app/tags': typeof AppTagsRoute
   '/_app/templates': typeof AppTemplatesRoute
   '/_app/territories': typeof AppTerritoriesRoute
@@ -578,6 +587,7 @@ export interface FileRouteTypes {
     | '/segments'
     | '/sequences'
     | '/subscriptions'
+    | '/surveys'
     | '/tags'
     | '/templates'
     | '/territories'
@@ -637,6 +647,7 @@ export interface FileRouteTypes {
     | '/segments'
     | '/sequences'
     | '/subscriptions'
+    | '/surveys'
     | '/tags'
     | '/templates'
     | '/territories'
@@ -697,6 +708,7 @@ export interface FileRouteTypes {
     | '/_app/segments'
     | '/_app/sequences'
     | '/_app/subscriptions'
+    | '/_app/surveys'
     | '/_app/tags'
     | '/_app/templates'
     | '/_app/territories'
@@ -792,6 +804,13 @@ declare module '@tanstack/react-router' {
       path: '/tags'
       fullPath: '/tags'
       preLoaderRoute: typeof AppTagsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/surveys': {
+      id: '/_app/surveys'
+      path: '/surveys'
+      fullPath: '/surveys'
+      preLoaderRoute: typeof AppSurveysRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/subscriptions': {
@@ -1245,6 +1264,7 @@ interface AppRouteChildren {
   AppSegmentsRoute: typeof AppSegmentsRoute
   AppSequencesRoute: typeof AppSequencesRouteWithChildren
   AppSubscriptionsRoute: typeof AppSubscriptionsRoute
+  AppSurveysRoute: typeof AppSurveysRoute
   AppTagsRoute: typeof AppTagsRoute
   AppTemplatesRoute: typeof AppTemplatesRoute
   AppTerritoriesRoute: typeof AppTerritoriesRoute
@@ -1294,6 +1314,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSegmentsRoute: AppSegmentsRoute,
   AppSequencesRoute: AppSequencesRouteWithChildren,
   AppSubscriptionsRoute: AppSubscriptionsRoute,
+  AppSurveysRoute: AppSurveysRoute,
   AppTagsRoute: AppTagsRoute,
   AppTemplatesRoute: AppTemplatesRoute,
   AppTerritoriesRoute: AppTerritoriesRoute,
