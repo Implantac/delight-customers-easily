@@ -14,6 +14,7 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppWinLossRouteImport } from './routes/_app.win-loss'
 import { Route as AppViewsRouteImport } from './routes/_app.views'
+import { Route as AppTicketsRouteImport } from './routes/_app.tickets'
 import { Route as AppTemplatesRouteImport } from './routes/_app.templates'
 import { Route as AppTagsRouteImport } from './routes/_app.tags'
 import { Route as AppSegmentsRouteImport } from './routes/_app.segments'
@@ -44,6 +45,7 @@ import { Route as AppAuditRouteImport } from './routes/_app.audit'
 import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
 import { Route as AppActivitiesRouteImport } from './routes/_app.activities'
 import { Route as ApiPublicInboundEmailRouteImport } from './routes/api/public/inbound-email'
+import { Route as AppTicketsIdRouteImport } from './routes/_app.tickets.$id'
 import { Route as AppSettingsWebhooksRouteImport } from './routes/_app.settings.webhooks'
 import { Route as AppSettingsOrganizationRouteImport } from './routes/_app.settings.organization'
 import { Route as AppSettingsImportRouteImport } from './routes/_app.settings.import'
@@ -79,6 +81,11 @@ const AppWinLossRoute = AppWinLossRouteImport.update({
 const AppViewsRoute = AppViewsRouteImport.update({
   id: '/views',
   path: '/views',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTicketsRoute = AppTicketsRouteImport.update({
+  id: '/tickets',
+  path: '/tickets',
   getParentRoute: () => AppRoute,
 } as any)
 const AppTemplatesRoute = AppTemplatesRouteImport.update({
@@ -231,6 +238,11 @@ const ApiPublicInboundEmailRoute = ApiPublicInboundEmailRouteImport.update({
   path: '/api/public/inbound-email',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppTicketsIdRoute = AppTicketsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppTicketsRoute,
+} as any)
 const AppSettingsWebhooksRoute = AppSettingsWebhooksRouteImport.update({
   id: '/settings/webhooks',
   path: '/settings/webhooks',
@@ -326,6 +338,7 @@ export interface FileRoutesByFullPath {
   '/segments': typeof AppSegmentsRoute
   '/tags': typeof AppTagsRoute
   '/templates': typeof AppTemplatesRoute
+  '/tickets': typeof AppTicketsRouteWithChildren
   '/views': typeof AppViewsRoute
   '/win-loss': typeof AppWinLossRoute
   '/companies/$id': typeof AppCompaniesIdRoute
@@ -338,6 +351,7 @@ export interface FileRoutesByFullPath {
   '/settings/import': typeof AppSettingsImportRoute
   '/settings/organization': typeof AppSettingsOrganizationRoute
   '/settings/webhooks': typeof AppSettingsWebhooksRoute
+  '/tickets/$id': typeof AppTicketsIdRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
@@ -374,6 +388,7 @@ export interface FileRoutesByTo {
   '/segments': typeof AppSegmentsRoute
   '/tags': typeof AppTagsRoute
   '/templates': typeof AppTemplatesRoute
+  '/tickets': typeof AppTicketsRouteWithChildren
   '/views': typeof AppViewsRoute
   '/win-loss': typeof AppWinLossRoute
   '/companies/$id': typeof AppCompaniesIdRoute
@@ -386,6 +401,7 @@ export interface FileRoutesByTo {
   '/settings/import': typeof AppSettingsImportRoute
   '/settings/organization': typeof AppSettingsOrganizationRoute
   '/settings/webhooks': typeof AppSettingsWebhooksRoute
+  '/tickets/$id': typeof AppTicketsIdRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
@@ -424,6 +440,7 @@ export interface FileRoutesById {
   '/_app/segments': typeof AppSegmentsRoute
   '/_app/tags': typeof AppTagsRoute
   '/_app/templates': typeof AppTemplatesRoute
+  '/_app/tickets': typeof AppTicketsRouteWithChildren
   '/_app/views': typeof AppViewsRoute
   '/_app/win-loss': typeof AppWinLossRoute
   '/_app/companies/$id': typeof AppCompaniesIdRoute
@@ -436,6 +453,7 @@ export interface FileRoutesById {
   '/_app/settings/import': typeof AppSettingsImportRoute
   '/_app/settings/organization': typeof AppSettingsOrganizationRoute
   '/_app/settings/webhooks': typeof AppSettingsWebhooksRoute
+  '/_app/tickets/$id': typeof AppTicketsIdRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
@@ -474,6 +492,7 @@ export interface FileRouteTypes {
     | '/segments'
     | '/tags'
     | '/templates'
+    | '/tickets'
     | '/views'
     | '/win-loss'
     | '/companies/$id'
@@ -486,6 +505,7 @@ export interface FileRouteTypes {
     | '/settings/import'
     | '/settings/organization'
     | '/settings/webhooks'
+    | '/tickets/$id'
     | '/api/public/inbound-email'
     | '/api/public/hooks/activity-reminders'
     | '/api/public/hooks/generate-alerts'
@@ -522,6 +542,7 @@ export interface FileRouteTypes {
     | '/segments'
     | '/tags'
     | '/templates'
+    | '/tickets'
     | '/views'
     | '/win-loss'
     | '/companies/$id'
@@ -534,6 +555,7 @@ export interface FileRouteTypes {
     | '/settings/import'
     | '/settings/organization'
     | '/settings/webhooks'
+    | '/tickets/$id'
     | '/api/public/inbound-email'
     | '/api/public/hooks/activity-reminders'
     | '/api/public/hooks/generate-alerts'
@@ -571,6 +593,7 @@ export interface FileRouteTypes {
     | '/_app/segments'
     | '/_app/tags'
     | '/_app/templates'
+    | '/_app/tickets'
     | '/_app/views'
     | '/_app/win-loss'
     | '/_app/companies/$id'
@@ -583,6 +606,7 @@ export interface FileRouteTypes {
     | '/_app/settings/import'
     | '/_app/settings/organization'
     | '/_app/settings/webhooks'
+    | '/_app/tickets/$id'
     | '/api/public/inbound-email'
     | '/api/public/hooks/activity-reminders'
     | '/api/public/hooks/generate-alerts'
@@ -632,6 +656,13 @@ declare module '@tanstack/react-router' {
       path: '/views'
       fullPath: '/views'
       preLoaderRoute: typeof AppViewsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/tickets': {
+      id: '/_app/tickets'
+      path: '/tickets'
+      fullPath: '/tickets'
+      preLoaderRoute: typeof AppTicketsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/templates': {
@@ -844,6 +875,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicInboundEmailRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/tickets/$id': {
+      id: '/_app/tickets/$id'
+      path: '/$id'
+      fullPath: '/tickets/$id'
+      preLoaderRoute: typeof AppTicketsIdRouteImport
+      parentRoute: typeof AppTicketsRoute
+    }
     '/_app/settings/webhooks': {
       id: '/_app/settings/webhooks'
       path: '/settings/webhooks'
@@ -977,6 +1015,18 @@ const AppProposalsRouteWithChildren = AppProposalsRoute._addFileChildren(
   AppProposalsRouteChildren,
 )
 
+interface AppTicketsRouteChildren {
+  AppTicketsIdRoute: typeof AppTicketsIdRoute
+}
+
+const AppTicketsRouteChildren: AppTicketsRouteChildren = {
+  AppTicketsIdRoute: AppTicketsIdRoute,
+}
+
+const AppTicketsRouteWithChildren = AppTicketsRoute._addFileChildren(
+  AppTicketsRouteChildren,
+)
+
 interface AppRouteChildren {
   AppActivitiesRoute: typeof AppActivitiesRoute
   AppAlertsRoute: typeof AppAlertsRoute
@@ -1007,6 +1057,7 @@ interface AppRouteChildren {
   AppSegmentsRoute: typeof AppSegmentsRoute
   AppTagsRoute: typeof AppTagsRoute
   AppTemplatesRoute: typeof AppTemplatesRoute
+  AppTicketsRoute: typeof AppTicketsRouteWithChildren
   AppViewsRoute: typeof AppViewsRoute
   AppWinLossRoute: typeof AppWinLossRoute
   AppInviteTokenRoute: typeof AppInviteTokenRoute
@@ -1047,6 +1098,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSegmentsRoute: AppSegmentsRoute,
   AppTagsRoute: AppTagsRoute,
   AppTemplatesRoute: AppTemplatesRoute,
+  AppTicketsRoute: AppTicketsRouteWithChildren,
   AppViewsRoute: AppViewsRoute,
   AppWinLossRoute: AppWinLossRoute,
   AppInviteTokenRoute: AppInviteTokenRoute,
