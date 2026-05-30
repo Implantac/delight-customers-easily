@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useMemo } from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
@@ -8,13 +9,21 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "@/components/page-header";
 import { HealthScore } from "@/components/health-score";
 import { Timeline, type TimelineItem } from "@/components/timeline";
-import { ArrowLeft, Globe, Trash2, Users, KanbanSquare, Clock, History as HistoryIcon } from "lucide-react";
+import {
+  ArrowLeft, Globe, Trash2, Users, KanbanSquare, Clock, History as HistoryIcon,
+  Plug, TrendingUp, Receipt, Package, MessageCircle, Mail, Phone, Sparkles,
+} from "lucide-react";
 import { Attachments } from "@/components/attachments";
 import { TagPicker } from "@/components/tag-picker";
 import { AuditHistory } from "@/components/audit-history";
+import { AIInsights } from "@/components/ai-insights";
+import { whatsappLink } from "@/lib/wa";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/companies/$id")({ component: CompanyDetail });
+
+const BRL = (n: number) =>
+  Number(n || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
 
 function CompanyDetail() {
   const { id } = Route.useParams();
@@ -25,24 +34,120 @@ function CompanyDetail() {
     queryKey: ["company", id],
     queryFn: async () => (await supabase.from("companies").select("*").eq("id", id).maybeSingle()).data,
   });
+
   const { data: contacts } = useQuery({
     queryKey: ["company-contacts", id],
-    queryFn: async () => (await supabase.from("contacts").select("id, name, position, email").eq("company_id", id)).data ?? [],
+    queryFn: async () =>
+      (await supabase.from("contacts").select("id, name, position, email, phone").eq("company_id", id)).data ?? [],
   });
+
   const { data: deals } = useQuery({
     queryKey: ["company-deals", id],
-    queryFn: async () => (await supabase.from("deals").select("id, title, value, stage").eq("company_id", id)).data ?? [],
+    queryFn: async () =>
+      (await supabase
+        .from("deals")
+        .select("id, title, value, stage, expected_close, closed_at")
+        .eq("company_id", id)
+        .order("created_at", { ascending: false })).data ?? [],
   });
+
+  const { data: invoices } = useQuery({
+    queryKey: ["company-invoices", id],
+    queryFn: async () =>
+      (await supabase
+        .from("invoices")
+        .select("id, amount, status, issued_at, due_date, paid_at, number")
+        .eq("company_id", id)
+        .order("issued_at", { ascending: false })).data ?? [],
+  });
+
+  const { data: orderItems } = useQuery({
+    queryKey: ["company-order-items", id],
+    queryFn: async () =>
+      (await supabase
+        .from("order_items")
+        .select("id, quantity, unit_price, occurred_at, product_id, products(name)")
+        .eq("company_id", id)
+        .order("occurred_at", { ascending: false })
+        .limit(500)).data ?? [],
+  });
+
   const { data: activities } = useQuery({
     queryKey: ["company-activities", id],
     queryFn: async () => {
       const { data: ds } = await supabase.from("deals").select("id").eq("company_id", id);
       const dealIds = (ds ?? []).map((d) => d.id);
-      if (dealIds.length === 0) return [];
-      const { data } = await supabase.from("activities").select("id, title, type, due_date, completed").in("deal_id", dealIds).order("due_date", { ascending: false, nullsFirst: false });
+      const cIds = (contacts ?? []).map((c) => c.id);
+      let q = supabase.from("activities").select("id, title, type, due_date, completed");
+      if (dealIds.length === 0 && cIds.length === 0) return [];
+      if (dealIds.length > 0 && cIds.length > 0) {
+        q = q.or(`deal_id.in.(${dealIds.join(",")}),contact_id.in.(${cIds.join(",")})`);
+      } else if (dealIds.length > 0) {
+        q = q.in("deal_id", dealIds);
+      } else {
+        q = q.in("contact_id", cIds);
+      }
+      const { data } = await q.order("due_date", { ascending: false, nullsFirst: false }).limit(50);
       return data ?? [];
     },
+    enabled: !!contacts,
   });
+
+  // ============ Inteligência comercial derivada ============
+  const kpis = useMemo(() => {
+    const won = (deals ?? []).filter((d) => d.stage === "won");
+    const open = (deals ?? []).filter((d) => d.stage !== "won" && d.stage !== "lost");
+    const wonRevenue = won.reduce((s, d) => s + Number(d.value || 0), 0);
+    const openPipeline = open.reduce((s, d) => s + Number(d.value || 0), 0);
+    const ticket = won.length ? wonRevenue / won.length : 0;
+
+    const lastWon = won
+      .map((d) => d.closed_at)
+      .filter(Boolean)
+      .sort()
+      .pop() as string | undefined;
+    const lastPurchase = lastWon ?? (orderItems ?? [])[0]?.occurred_at ?? null;
+
+    const overdueInvoices = (invoices ?? []).filter(
+      (i) => i.status !== "paid" && new Date(i.due_date) < new Date(),
+    );
+    const overdueAmount = overdueInvoices.reduce((s, i) => s + Number(i.amount || 0), 0);
+
+    // Curva ABC dos produtos (top 5)
+    const byProduct = new Map<string, { name: string; total: number; qty: number }>();
+    for (const it of orderItems ?? []) {
+      const key = it.product_id ?? "—";
+      const name = (it as any).products?.name ?? "Produto sem nome";
+      const total = Number(it.unit_price || 0) * Number(it.quantity || 0);
+      const prev = byProduct.get(key) ?? { name, total: 0, qty: 0 };
+      prev.total += total;
+      prev.qty += Number(it.quantity || 0);
+      byProduct.set(key, prev);
+    }
+    const products = [...byProduct.values()].sort((a, b) => b.total - a.total).slice(0, 5);
+    const productsTotal = products.reduce((s, p) => s + p.total, 0);
+
+    // Frequência: meses distintos com pedido ou won nos últimos 12
+    const monthSet = new Set<string>();
+    const cutoff = Date.now() - 365 * 24 * 3600 * 1000;
+    for (const it of orderItems ?? []) {
+      const t = new Date(it.occurred_at).getTime();
+      if (t >= cutoff) monthSet.add(it.occurred_at.slice(0, 7));
+    }
+    for (const d of won) {
+      if (!d.closed_at) continue;
+      const t = new Date(d.closed_at).getTime();
+      if (t >= cutoff) monthSet.add(d.closed_at.slice(0, 7));
+    }
+
+    return {
+      wonRevenue, openPipeline, ticket, lastPurchase,
+      overdueAmount, overdueCount: overdueInvoices.length,
+      products, productsTotal,
+      frequency: monthSet.size,
+      wonCount: won.length, openCount: open.length,
+    };
+  }, [deals, invoices, orderItems]);
 
   const del = useMutation({
     mutationFn: async () => {
@@ -56,79 +161,309 @@ function CompanyDetail() {
   if (isLoading) return <div className="p-4 md:p-8 space-y-4"><Skeleton className="h-8 w-64" /><Skeleton className="h-40 w-full max-w-2xl" /></div>;
   if (!company) return <div className="p-4 md:p-8"><p className="text-muted-foreground">Empresa não encontrada.</p></div>;
 
+  const primaryContact = (contacts ?? [])[0];
+  const waLink = primaryContact?.phone ? whatsappLink(primaryContact.phone) : null;
+
   return (
-    <div className="p-4 md:p-8 max-w-4xl">
-      <Button variant="ghost" size="sm" asChild className="mb-4"><Link to="/companies"><ArrowLeft className="mr-1 h-4 w-4" />Empresas</Link></Button>
+    <div className="p-4 md:p-8 max-w-6xl mx-auto">
+      <Button variant="ghost" size="sm" asChild className="mb-4">
+        <Link to="/companies"><ArrowLeft className="mr-1 h-4 w-4" />Carteira</Link>
+      </Button>
+
+      {/* ============ Zona 1 — Cabeçalho comercial ============ */}
       <PageHeader
         title={company.name}
-        subtitle={[company.industry, company.size].filter(Boolean).join(" · ") || undefined}
-        action={<Button variant="outline" size="sm" onClick={() => { if (confirm("Remover empresa?")) del.mutate(); }}><Trash2 className="mr-1 h-4 w-4" />Remover</Button>}
+        subtitle={[company.industry, company.size].filter(Boolean).join(" · ") || "Cliente da carteira"}
+        action={
+          <div className="flex flex-wrap gap-2">
+            {waLink && (
+              <Button variant="outline" size="sm" asChild>
+                <a href={waLink} target="_blank" rel="noreferrer"><MessageCircle className="mr-1 h-4 w-4" />WhatsApp</a>
+              </Button>
+            )}
+            {primaryContact?.email && (
+              <Button variant="outline" size="sm" asChild>
+                <a href={`mailto:${primaryContact.email}`}><Mail className="mr-1 h-4 w-4" />E-mail</a>
+              </Button>
+            )}
+            {primaryContact?.phone && (
+              <Button variant="outline" size="sm" asChild>
+                <a href={`tel:${primaryContact.phone}`}><Phone className="mr-1 h-4 w-4" />Ligar</a>
+              </Button>
+            )}
+            <Button size="sm" asChild>
+              <Link to="/pipeline"><KanbanSquare className="mr-1 h-4 w-4" />Nova oportunidade</Link>
+            </Button>
+            <Button variant="ghost" size="sm" onClick={() => { if (confirm("Remover empresa?")) del.mutate(); }}>
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </div>
+        }
       />
 
-      <div className="mt-6 grid gap-6 md:grid-cols-3">
-        <Card className="p-5 md:col-span-1">
-          <h3 className="text-sm font-semibold">Detalhes</h3>
-          <dl className="mt-3 space-y-2 text-sm">
-            {company.website && <div className="flex items-center gap-2"><Globe className="h-3.5 w-3.5 text-muted-foreground" /><a href={company.website} target="_blank" rel="noreferrer" className="text-primary hover:underline truncate">{company.website}</a></div>}
-            {company.industry && <div className="text-muted-foreground">Setor: <span className="text-foreground">{company.industry}</span></div>}
-            {company.size && <div className="text-muted-foreground">Tamanho: <span className="text-foreground">{company.size}</span></div>}
-          </dl>
-          <div className="mt-4">
-            <p className="mb-1.5 text-xs font-medium text-muted-foreground">Etiquetas</p>
-            <TagPicker entityType="company" entityId={company.id} />
-          </div>
-          {company.notes && <><h3 className="mt-5 text-sm font-semibold">Notas</h3><p className="mt-2 whitespace-pre-wrap text-sm text-muted-foreground">{company.notes}</p></>}
-        </Card>
+      {company.omie_id && (
+        <div className="mt-3 inline-flex items-center gap-2 rounded-md border border-dashed bg-muted/40 px-2.5 py-1 text-xs text-muted-foreground">
+          <Plug className="h-3 w-3" /> Sincronizado com ERP · ID {company.omie_id}
+          {company.omie_synced_at && <> · {new Date(company.omie_synced_at).toLocaleDateString("pt-BR")}</>}
+        </div>
+      )}
 
-        <div className="space-y-6 md:col-span-2">
+      {/* ============ Zona 2 — KPIs comerciais ============ */}
+      <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <Kpi
+          icon={<TrendingUp className="h-4 w-4" />}
+          label="Receita ganha"
+          value={BRL(kpis.wonRevenue)}
+          hint={`${kpis.wonCount} deal${kpis.wonCount === 1 ? "" : "s"} ganho${kpis.wonCount === 1 ? "" : "s"}`}
+        />
+        <Kpi
+          icon={<KanbanSquare className="h-4 w-4" />}
+          label="Pipeline aberto"
+          value={BRL(kpis.openPipeline)}
+          hint={`${kpis.openCount} oportunidade${kpis.openCount === 1 ? "" : "s"}`}
+        />
+        <Kpi
+          icon={<Receipt className="h-4 w-4" />}
+          label="Ticket médio"
+          value={BRL(kpis.ticket)}
+          hint={kpis.frequency ? `${kpis.frequency}× nos últimos 12m` : "sem histórico"}
+        />
+        <Kpi
+          icon={<Clock className="h-4 w-4" />}
+          label="Última compra"
+          value={kpis.lastPurchase
+            ? new Date(kpis.lastPurchase).toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" })
+            : "—"}
+          hint={kpis.overdueCount
+            ? `${kpis.overdueCount} fatura(s) em atraso · ${BRL(kpis.overdueAmount)}`
+            : "em dia"}
+          tone={kpis.overdueCount ? "warn" : undefined}
+        />
+      </div>
+
+      <div className="mt-6 grid gap-6 lg:grid-cols-3">
+        {/* ============ Coluna esquerda: identidade ============ */}
+        <div className="space-y-6 lg:col-span-1">
+          <Card className="p-5">
+            <h3 className="text-sm font-semibold">Detalhes</h3>
+            <dl className="mt-3 space-y-2 text-sm">
+              {company.website && (
+                <div className="flex items-center gap-2">
+                  <Globe className="h-3.5 w-3.5 text-muted-foreground" />
+                  <a href={company.website} target="_blank" rel="noreferrer" className="text-primary hover:underline truncate">
+                    {company.website}
+                  </a>
+                </div>
+              )}
+              {company.industry && <div className="text-muted-foreground">Setor: <span className="text-foreground">{company.industry}</span></div>}
+              {company.size && <div className="text-muted-foreground">Tamanho: <span className="text-foreground">{company.size}</span></div>}
+            </dl>
+            <div className="mt-4">
+              <p className="mb-1.5 text-xs font-medium text-muted-foreground">Etiquetas</p>
+              <TagPicker entityType="company" entityId={company.id} />
+            </div>
+            {company.notes && (
+              <>
+                <h3 className="mt-5 text-sm font-semibold">Notas</h3>
+                <p className="mt-2 whitespace-pre-wrap text-sm text-muted-foreground">{company.notes}</p>
+              </>
+            )}
+          </Card>
+
           <HealthScore companyId={company.id} />
-          <Attachments entityType="company" entityId={company.id} />
+
           <Card className="p-5">
             <h3 className="flex items-center gap-2 text-sm font-semibold"><Users className="h-4 w-4" />Contatos ({contacts?.length ?? 0})</h3>
             <div className="mt-3 space-y-2">
               {(contacts ?? []).length === 0 && <p className="text-sm text-muted-foreground">Sem contatos.</p>}
               {contacts?.map((c) => (
-                <Link key={c.id} to="/contacts/$id" params={{ id: c.id }} className="flex items-center justify-between rounded-md border p-3 text-sm hover:bg-accent">
-                  <div><p className="font-medium">{c.name}</p>{c.position && <p className="text-xs text-muted-foreground">{c.position}</p>}</div>
-                  {c.email && <span className="text-xs text-muted-foreground">{c.email}</span>}
+                <Link
+                  key={c.id}
+                  to="/contacts/$id"
+                  params={{ id: c.id }}
+                  className="flex items-center justify-between rounded-md border p-3 text-sm hover:bg-accent"
+                >
+                  <div>
+                    <p className="font-medium">{c.name}</p>
+                    {c.position && <p className="text-xs text-muted-foreground">{c.position}</p>}
+                  </div>
+                  {c.email && <span className="text-xs text-muted-foreground truncate ml-2">{c.email}</span>}
                 </Link>
               ))}
             </div>
           </Card>
 
+          <Attachments entityType="company" entityId={company.id} />
+        </div>
+
+        {/* ============ Coluna direita: ação comercial ============ */}
+        <div className="space-y-6 lg:col-span-2">
+          {/* Zona 6 — AI panel comercial */}
+          {primaryContact ? (
+            <AIInsights contactId={primaryContact.id} actions={["next_action", "summarize_contact"]} />
+          ) : (
+            <Card className="p-5 border-dashed">
+              <h3 className="flex items-center gap-2 text-sm font-semibold">
+                <Sparkles className="h-4 w-4 text-primary" />
+                IA comercial
+              </h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Adicione um contato a esta empresa para receber sugestões de próxima ação geradas por IA.
+              </p>
+            </Card>
+          )}
+
+          {/* Zona 4 — Oportunidades */}
           <Card className="p-5">
-            <h3 className="flex items-center gap-2 text-sm font-semibold"><KanbanSquare className="h-4 w-4" />Negócios ({deals?.length ?? 0})</h3>
+            <div className="flex items-center justify-between">
+              <h3 className="flex items-center gap-2 text-sm font-semibold">
+                <KanbanSquare className="h-4 w-4" />Oportunidades ({deals?.length ?? 0})
+              </h3>
+              <Button variant="ghost" size="sm" asChild>
+                <Link to="/pipeline">Ver pipeline →</Link>
+              </Button>
+            </div>
             <div className="mt-3 space-y-2">
-              {(deals ?? []).length === 0 && <p className="text-sm text-muted-foreground">Sem negócios.</p>}
+              {(deals ?? []).length === 0 && <p className="text-sm text-muted-foreground">Sem oportunidades registradas.</p>}
               {deals?.map((d) => (
                 <div key={d.id} className="flex items-center justify-between rounded-md border p-3 text-sm">
-                  <span className="font-medium">{d.title}</span>
-                  <div className="flex items-center gap-2"><Badge variant="secondary">{d.stage}</Badge><span className="text-muted-foreground">{Number(d.value).toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 })}</span></div>
+                  <div className="min-w-0">
+                    <p className="font-medium truncate">{d.title}</p>
+                    {d.expected_close && (
+                      <p className="text-xs text-muted-foreground">
+                        prev. {new Date(d.expected_close).toLocaleDateString("pt-BR")}
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    <Badge variant={d.stage === "won" ? "default" : d.stage === "lost" ? "destructive" : "secondary"}>
+                      {d.stage}
+                    </Badge>
+                    <span className="text-muted-foreground tabular-nums">{BRL(Number(d.value))}</span>
+                  </div>
                 </div>
               ))}
             </div>
           </Card>
 
+          {/* Zona 5 — Curva ABC de produtos */}
+          {kpis.products.length > 0 && (
+            <Card className="p-5">
+              <h3 className="flex items-center gap-2 text-sm font-semibold">
+                <Package className="h-4 w-4" />Produtos comprados (top 5)
+              </h3>
+              <div className="mt-3 space-y-2">
+                {kpis.products.map((p, i) => {
+                  const pct = kpis.productsTotal ? (p.total / kpis.productsTotal) * 100 : 0;
+                  return (
+                    <div key={i}>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="truncate">{p.name}</span>
+                        <span className="text-muted-foreground tabular-nums">{BRL(p.total)}</span>
+                      </div>
+                      <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-muted">
+                        <div
+                          className="h-full rounded-full bg-[var(--gradient-primary)] transition-all"
+                          style={{ width: `${Math.max(2, pct)}%` }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </Card>
+          )}
+
+          {/* Faturas (leitura ERP) */}
+          {(invoices ?? []).length > 0 && (
+            <Card className="p-5">
+              <h3 className="flex items-center gap-2 text-sm font-semibold">
+                <Receipt className="h-4 w-4" />Faturamento recente
+              </h3>
+              <div className="mt-3 space-y-2 text-sm">
+                {invoices!.slice(0, 5).map((inv) => {
+                  const overdue = inv.status !== "paid" && new Date(inv.due_date) < new Date();
+                  return (
+                    <div key={inv.id} className="flex items-center justify-between rounded-md border p-3">
+                      <div>
+                        <p className="font-medium">
+                          {inv.number ? `#${inv.number}` : "Fatura"}
+                          <span className="ml-2 text-xs text-muted-foreground">
+                            vence {new Date(inv.due_date).toLocaleDateString("pt-BR")}
+                          </span>
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge variant={inv.status === "paid" ? "default" : overdue ? "destructive" : "secondary"}>
+                          {inv.status === "paid" ? "paga" : overdue ? "vencida" : inv.status}
+                        </Badge>
+                        <span className="tabular-nums text-muted-foreground">{BRL(Number(inv.amount))}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </Card>
+          )}
+
+          {/* Zona 3 — Timeline unificada */}
           <Card className="p-5">
             <h3 className="flex items-center gap-2 text-sm font-semibold"><Clock className="h-4 w-4" />Timeline</h3>
             <div className="mt-4">
               <Timeline
-                emptyLabel="Sem atividades vinculadas aos negócios."
-                items={(activities ?? []).map<TimelineItem>((a) => ({
-                  id: a.id, kind: "activity", type: a.type, title: a.title, completed: a.completed,
-                  date: a.due_date ?? new Date().toISOString(),
-                  meta: a.type + (a.due_date ? ` · ${new Date(a.due_date).toLocaleString("pt-BR", { day: "2-digit", month: "short" })}` : ""),
-                })).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())}
+                emptyLabel="Sem atividades vinculadas a este cliente."
+                items={(activities ?? [])
+                  .map<TimelineItem>((a) => ({
+                    id: a.id,
+                    kind: "activity",
+                    type: a.type,
+                    title: a.title,
+                    completed: a.completed,
+                    date: a.due_date ?? new Date().toISOString(),
+                    meta:
+                      a.type +
+                      (a.due_date
+                        ? ` · ${new Date(a.due_date).toLocaleString("pt-BR", { day: "2-digit", month: "short" })}`
+                        : ""),
+                  }))
+                  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())}
               />
             </div>
           </Card>
 
           <Card className="p-5">
-            <h3 className="flex items-center gap-2 text-sm font-semibold mb-4"><HistoryIcon className="h-4 w-4" />Histórico de alterações</h3>
+            <h3 className="flex items-center gap-2 text-sm font-semibold mb-4">
+              <HistoryIcon className="h-4 w-4" />Histórico de alterações
+            </h3>
             <AuditHistory entityType="companies" entityId={company.id} />
           </Card>
         </div>
       </div>
     </div>
+  );
+}
+
+type KpiProps = {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  hint?: string;
+  tone?: "warn";
+};
+
+function Kpi({ icon, label, value, hint, tone }: KpiProps) {
+  return (
+    <Card className="p-4">
+      <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
+        <span className="text-primary">{icon}</span>
+        {label}
+      </div>
+      <p className="mt-2 text-2xl font-semibold tabular-nums tracking-tight">{value}</p>
+      {hint && (
+        <p className={`mt-1 text-xs ${tone === "warn" ? "text-destructive font-medium" : "text-muted-foreground"}`}>
+          {hint}
+        </p>
+      )}
+    </Card>
   );
 }
