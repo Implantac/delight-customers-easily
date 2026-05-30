@@ -52,6 +52,7 @@ function AppLayout() {
           </main>
           <MobileBottomNav />
           <ShortcutsHelp />
+          <PwaInstallBanner />
         </div>
       </div>
     </SidebarProvider>
