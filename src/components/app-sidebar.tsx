@@ -162,8 +162,14 @@ export function AppSidebar() {
     }
   };
 
-  const visibleNav = useMemo(
-    () => nav.filter((n) => !n.managerOnly || canManage),
+  const visibleSections = useMemo(
+    () =>
+      navSections
+        .map((section) => ({
+          ...section,
+          items: section.items.filter((n) => !n.managerOnly || canManage),
+        }))
+        .filter((section) => section.items.length > 0),
     [canManage],
   );
 
@@ -222,22 +228,26 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Navegação</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {visibleNav.map((item) => (
-                <NavItem
-                  key={item.to}
-                  to={item.to}
-                  label={item.label}
-                  Icon={item.icon}
-                  active={path === item.to || (item.to !== "/dashboard" && path.startsWith(item.to))}
-                />
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {visibleSections.map((section) => (
+          <SidebarGroup key={section.id}>
+            <SidebarGroupLabel className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">
+              {section.label}
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {section.items.map((item) => (
+                  <NavItem
+                    key={item.to}
+                    to={item.to}
+                    label={item.label}
+                    Icon={item.icon}
+                    active={path === item.to || (item.to !== "/dashboard" && path.startsWith(item.to + "/"))}
+                  />
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
       </SidebarContent>
 
       <SidebarFooter className="border-t">
