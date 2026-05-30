@@ -118,7 +118,14 @@ export type InfluencerRow = {
   is_active: boolean;
   leads_30d: number;
   converted_30d: number;
+  headline: string | null;
+  bio: string | null;
+  hero_image_url: string | null;
+  cta_text: string | null;
+  cta_url: string | null;
+  lp_enabled: boolean;
 };
+
 
 export const listInfluencers = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
