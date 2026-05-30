@@ -8,6 +8,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { NotificationsBell } from "@/components/notifications-bell";
 import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 import { ShortcutsHelp } from "@/components/shortcuts-help";
+import { PwaInstallBanner } from "@/components/pwa-install-banner";
 import { useGoToShortcuts } from "@/hooks/use-shortcuts";
 
 export const Route = createFileRoute("/_app")({ component: AppLayout });
