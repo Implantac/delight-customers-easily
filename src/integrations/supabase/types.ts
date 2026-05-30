@@ -2275,6 +2275,7 @@ export type Database = {
           created_by: string
           id: string
           name: string
+          parent_org_id: string | null
           slug: string
           updated_at: string
         }
@@ -2283,6 +2284,7 @@ export type Database = {
           created_by: string
           id?: string
           name: string
+          parent_org_id?: string | null
           slug: string
           updated_at?: string
         }
@@ -2291,10 +2293,19 @@ export type Database = {
           created_by?: string
           id?: string
           name?: string
+          parent_org_id?: string | null
           slug?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "organizations_parent_org_id_fkey"
+            columns: ["parent_org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       playbook_items: {
         Row: {
@@ -3980,6 +3991,16 @@ export type Database = {
         Returns: boolean
       }
       is_org_member: { Args: { _org: string; _user: string }; Returns: boolean }
+      is_org_or_descendant_member: {
+        Args: { _root: string; _user: string }
+        Returns: boolean
+      }
+      org_descendants: {
+        Args: { _root: string }
+        Returns: {
+          organization_id: string
+        }[]
+      }
     }
     Enums: {
       activity_type: "call" | "email" | "meeting" | "task" | "note"
