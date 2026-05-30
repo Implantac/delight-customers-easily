@@ -263,6 +263,9 @@ export function AppSidebar() {
             ))}
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
+              <Link to="/settings/security"><ShieldCheck className="mr-2 h-4 w-4" />Segurança & MFA</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
               <Link to="/settings/organization"><Settings className="mr-2 h-4 w-4" />Configurações</Link>
             </DropdownMenuItem>
             {canManage && (
