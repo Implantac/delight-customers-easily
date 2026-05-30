@@ -169,7 +169,7 @@ function AlertsPage() {
                   <Badge variant="secondary" className="ml-1">{items.length}</Badge>
                 </div>
                 <div className="space-y-2">
-                  {items.slice(0, 15).map((a, idx) => (
+                  {(expanded[kind] ? items : items.slice(0, 15)).map((a, idx) => (
                     <Card
                       key={`${a.entity_id}-${idx}`}
                       className={`flex items-center justify-between border-l-4 p-3 ${SEV_STYLES[a.severity]}`}
@@ -186,7 +186,14 @@ function AlertsPage() {
                     </Card>
                   ))}
                   {items.length > 15 && (
-                    <p className="text-xs text-muted-foreground">+ {items.length - 15} ocultos</p>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-xs"
+                      onClick={() => setExpanded((p) => ({ ...p, [kind]: !p[kind] }))}
+                    >
+                      {expanded[kind] ? "Recolher" : `Mostrar todos (+${items.length - 15})`}
+                    </Button>
                   )}
                 </div>
               </section>
