@@ -44,6 +44,7 @@ import { Route as AppGoalsRouteImport } from './routes/_app.goals'
 import { Route as AppForecastRouteImport } from './routes/_app.forecast'
 import { Route as AppFinanceRouteImport } from './routes/_app.finance'
 import { Route as AppExpensesRouteImport } from './routes/_app.expenses'
+import { Route as AppDocumentsRouteImport } from './routes/_app.documents'
 import { Route as AppDataQualityRouteImport } from './routes/_app.data-quality'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppContractsRouteImport } from './routes/_app.contracts'
@@ -251,6 +252,11 @@ const AppExpensesRoute = AppExpensesRouteImport.update({
   path: '/expenses',
   getParentRoute: () => AppRoute,
 } as any)
+const AppDocumentsRoute = AppDocumentsRouteImport.update({
+  id: '/documents',
+  path: '/documents',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppDataQualityRoute = AppDataQualityRouteImport.update({
   id: '/data-quality',
   path: '/data-quality',
@@ -433,6 +439,7 @@ export interface FileRoutesByFullPath {
   '/contracts': typeof AppContractsRoute
   '/dashboard': typeof AppDashboardRoute
   '/data-quality': typeof AppDataQualityRoute
+  '/documents': typeof AppDocumentsRoute
   '/expenses': typeof AppExpensesRoute
   '/finance': typeof AppFinanceRoute
   '/forecast': typeof AppForecastRoute
@@ -501,6 +508,7 @@ export interface FileRoutesByTo {
   '/contracts': typeof AppContractsRoute
   '/dashboard': typeof AppDashboardRoute
   '/data-quality': typeof AppDataQualityRoute
+  '/documents': typeof AppDocumentsRoute
   '/expenses': typeof AppExpensesRoute
   '/finance': typeof AppFinanceRoute
   '/forecast': typeof AppForecastRoute
@@ -571,6 +579,7 @@ export interface FileRoutesById {
   '/_app/contracts': typeof AppContractsRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/data-quality': typeof AppDataQualityRoute
+  '/_app/documents': typeof AppDocumentsRoute
   '/_app/expenses': typeof AppExpensesRoute
   '/_app/finance': typeof AppFinanceRoute
   '/_app/forecast': typeof AppForecastRoute
@@ -641,6 +650,7 @@ export interface FileRouteTypes {
     | '/contracts'
     | '/dashboard'
     | '/data-quality'
+    | '/documents'
     | '/expenses'
     | '/finance'
     | '/forecast'
@@ -709,6 +719,7 @@ export interface FileRouteTypes {
     | '/contracts'
     | '/dashboard'
     | '/data-quality'
+    | '/documents'
     | '/expenses'
     | '/finance'
     | '/forecast'
@@ -778,6 +789,7 @@ export interface FileRouteTypes {
     | '/_app/contracts'
     | '/_app/dashboard'
     | '/_app/data-quality'
+    | '/_app/documents'
     | '/_app/expenses'
     | '/_app/finance'
     | '/_app/forecast'
@@ -1083,6 +1095,13 @@ declare module '@tanstack/react-router' {
       path: '/expenses'
       fullPath: '/expenses'
       preLoaderRoute: typeof AppExpensesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/documents': {
+      id: '/_app/documents'
+      path: '/documents'
+      fullPath: '/documents'
+      preLoaderRoute: typeof AppDocumentsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/data-quality': {
@@ -1399,6 +1418,7 @@ interface AppRouteChildren {
   AppContractsRoute: typeof AppContractsRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppDataQualityRoute: typeof AppDataQualityRoute
+  AppDocumentsRoute: typeof AppDocumentsRoute
   AppExpensesRoute: typeof AppExpensesRoute
   AppFinanceRoute: typeof AppFinanceRoute
   AppForecastRoute: typeof AppForecastRoute
@@ -1456,6 +1476,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppContractsRoute: AppContractsRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppDataQualityRoute: AppDataQualityRoute,
+  AppDocumentsRoute: AppDocumentsRoute,
   AppExpensesRoute: AppExpensesRoute,
   AppFinanceRoute: AppFinanceRoute,
   AppForecastRoute: AppForecastRoute,
