@@ -28,7 +28,7 @@ export type LeadInboxItem = {
   deal_id: string | null;
   status: "new" | "contacted" | "converted" | "discarded";
   created_at: string;
-  payload: Record<string, unknown> | null;
+  payload: any;
 };
 
 export const getLeadsInbox = createServerFn({ method: "POST" })
@@ -41,13 +41,13 @@ export const getLeadsInbox = createServerFn({ method: "POST" })
     const [subsRes, formsRes, contactsRes, dealsRes, actsRes] = await Promise.all([
       supabase
         .from("lead_form_submissions")
-        .select("id, form_id, name, email, phone, contact_id, deal_id, payload, created_at, status")
+        .select("id, form_id, name, email, phone, contact_id, deal_id, payload, created_at")
         .order("created_at", { ascending: false })
         .limit(400),
       supabase.from("lead_forms").select("id, name, slug, default_source").eq("organization_id", org),
       supabase
         .from("contacts")
-        .select("id, name, email, phone, source, created_at")
+        .select("id, name, email, phone, created_at")
         .eq("organization_id", org)
         .order("created_at", { ascending: false })
         .limit(400),
@@ -85,13 +85,11 @@ export const getLeadsInbox = createServerFn({ method: "POST" })
       const form = formById.get(s.form_id);
       const hasDeal = !!s.deal_id;
       const contacted = s.contact_id && lastActByContact.has(s.contact_id);
-      const status: LeadInboxItem["status"] = (s.status === "discarded")
-        ? "discarded"
-        : hasDeal
-          ? "converted"
-          : contacted
-            ? "contacted"
-            : "new";
+      const status: LeadInboxItem["status"] = hasDeal
+        ? "converted"
+        : contacted
+          ? "contacted"
+          : "new";
       items.push({
         id: `sub:${s.id}`,
         kind: "form_submission",
@@ -125,7 +123,7 @@ export const getLeadsInbox = createServerFn({ method: "POST" })
         name: c.name,
         email: c.email,
         phone: c.phone,
-        source: c.source,
+        source: null,
         form_name: null,
         contact_id: c.id,
         deal_id: open?.id ?? null,
@@ -192,8 +190,7 @@ export const convertLeadToDeal = createServerFn({ method: "POST" })
             name: sub.name ?? sub.email ?? "Lead",
             email: sub.email,
             phone: sub.phone,
-            source: "form",
-            created_by: userId,
+            user_id: userId,
           })
           .select("id")
           .single();
@@ -242,17 +239,11 @@ export const discardLead = createServerFn({ method: "POST" })
     if (kind === "sub") {
       const { error } = await supabase
         .from("lead_form_submissions")
-        .update({ status: "discarded" })
+        .delete()
         .eq("id", rawId);
       if (error) throw new Error(error.message);
-    } else if (kind === "contact") {
-      // sem alteração destrutiva — marca contato como inativo via tags
-      const { error } = await supabase
-        .from("contacts")
-        .update({ status: "inactive" })
-        .eq("id", rawId)
-        .eq("organization_id", data.organization_id);
-      if (error) throw new Error(error.message);
+    } else {
+      throw new Error("Apenas submissões de formulário podem ser descartadas.");
     }
     return { ok: true };
   });
