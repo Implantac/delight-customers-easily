@@ -324,7 +324,7 @@ export const generateRecommendations = createServerFn({ method: "POST" })
             surface: "influencers",
             entity_type: "influencer",
             entity_id: inf.id,
-            user_id: null,
+            user_id: undefined,
             priority: 65,
             impact_brl: undefined,
             title: `Revisar campanha de ${inf.name} — ${v} visitas, 0 conversão`,
