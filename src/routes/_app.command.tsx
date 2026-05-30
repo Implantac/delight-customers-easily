@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useCurrentOrg } from "@/lib/org";
 import { useAuth } from "@/lib/auth";
+import { supabase } from "@/integrations/supabase/client";
 import { computeCommandCenter } from "@/lib/intelligence.functions";
 import { getForecast } from "@/lib/forecast.functions";
 import { getFinanceOverview } from "@/lib/finance.functions";
@@ -16,7 +17,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { CopilotDrawer } from "@/components/copilot-drawer";
 import {
   AlertTriangle, TrendingUp, Target, Clock, Users, ArrowRight,
-  Sparkles, Flame, Calendar, DollarSign, HeartPulse, Receipt, Gauge,
+  Sparkles, Flame, Calendar, DollarSign, HeartPulse, Receipt, Gauge, Zap,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/command")({ component: CommandCenter });
@@ -60,6 +61,22 @@ function CommandCenter() {
     queryKey: ["cc-retention", orgId],
     enabled: !!orgId,
     queryFn: () => runRetention({ data: { organization_id: orgId! } }),
+    refetchOnWindowFocus: false,
+  });
+
+  const in30 = new Date(Date.now() + 30 * 24 * 3600 * 1000).toISOString().slice(0, 10);
+  const { data: hotDeals } = useQuery({
+    queryKey: ["cc-hot-deals", orgId, in30],
+    enabled: !!orgId,
+    queryFn: async () =>
+      (await supabase
+        .from("deals")
+        .select("id, title, value, stage, expected_close, companies(name)")
+        .eq("organization_id", orgId!)
+        .not("stage", "in", "(won,lost)")
+        .lte("expected_close", in30)
+        .order("value", { ascending: false })
+        .limit(6)).data ?? [],
     refetchOnWindowFocus: false,
   });
 
@@ -200,6 +217,47 @@ function CommandCenter() {
               ) : <Skeleton className="h-32" />}
             </Card>
           </div>
+
+          {/* Oportunidades quentes (próximas a fechar) */}
+          <Card className="p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <Zap className="h-4 w-4 text-amber-500" />
+              <h3 className="font-semibold">Oportunidades quentes</h3>
+              <span className="ml-auto text-xs text-muted-foreground">Fechamento previsto nos próximos 30 dias</span>
+            </div>
+            {!hotDeals || hotDeals.length === 0 ? (
+              <p className="text-sm text-muted-foreground">
+                Nenhuma oportunidade com fechamento previsto nas próximas semanas. Hora de prospectar.
+              </p>
+            ) : (
+              <ul className="grid gap-2 sm:grid-cols-2">
+                {hotDeals.map((d: any) => {
+                  const days = Math.ceil((new Date(d.expected_close).getTime() - Date.now()) / (24 * 3600 * 1000));
+                  return (
+                    <li key={d.id} className="flex items-center gap-3 rounded-md border border-border/50 p-3 text-sm">
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium truncate">{d.title}</p>
+                        <p className="text-xs text-muted-foreground truncate">
+                          {d.companies?.name ?? "—"} · {d.stage}
+                        </p>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <p className="font-semibold tabular-nums">{fmt(Number(d.value))}</p>
+                        <p className={`text-xs ${days < 0 ? "text-rose-600" : days <= 7 ? "text-amber-600" : "text-muted-foreground"}`}>
+                          {days < 0 ? `${-days}d atrasado` : days === 0 ? "hoje" : `em ${days}d`}
+                        </p>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+            <Button asChild variant="outline" size="sm" className="mt-3 w-full">
+              <Link to="/pipeline">Abrir pipeline <ArrowRight className="ml-1 h-3 w-3" /></Link>
+            </Button>
+          </Card>
+
+
 
 
 
