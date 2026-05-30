@@ -51,10 +51,10 @@ export const getLeaderboard = createServerFn({ method: "POST" })
     if (memberIds.length) {
       const { data: profs } = await supabase
         .from("profiles")
-        .select("id, full_name, email")
+        .select("id, full_name")
         .in("id", memberIds);
       for (const p of profs ?? []) {
-        profilesMap.set(p.id, p.full_name || p.email || "Usuário");
+        profilesMap.set(p.id, p.full_name || "Usuário");
       }
     }
 
