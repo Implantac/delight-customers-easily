@@ -2903,6 +2903,119 @@ export type Database = {
           },
         ]
       }
+      sales_order_items: {
+        Row: {
+          created_at: string
+          description: string
+          discount_pct: number
+          id: string
+          line_total: number
+          order_id: string
+          organization_id: string
+          position: number
+          quantity: number
+          unit_price: number
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          discount_pct?: number
+          id?: string
+          line_total?: number
+          order_id: string
+          organization_id: string
+          position?: number
+          quantity?: number
+          unit_price?: number
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          discount_pct?: number
+          id?: string
+          line_total?: number
+          order_id?: string
+          organization_id?: string
+          position?: number
+          quantity?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sales_order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "sales_orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sales_orders: {
+        Row: {
+          company_id: string | null
+          contact_id: string | null
+          created_at: string
+          created_by: string | null
+          currency: string
+          discount: number
+          expected_delivery: string | null
+          id: string
+          notes: string | null
+          number: number
+          order_date: string
+          organization_id: string
+          quote_id: string | null
+          status: Database["public"]["Enums"]["sales_order_status"]
+          subtotal: number
+          tax: number
+          title: string
+          total: number
+          updated_at: string
+        }
+        Insert: {
+          company_id?: string | null
+          contact_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          discount?: number
+          expected_delivery?: string | null
+          id?: string
+          notes?: string | null
+          number: number
+          order_date?: string
+          organization_id: string
+          quote_id?: string | null
+          status?: Database["public"]["Enums"]["sales_order_status"]
+          subtotal?: number
+          tax?: number
+          title: string
+          total?: number
+          updated_at?: string
+        }
+        Update: {
+          company_id?: string | null
+          contact_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          currency?: string
+          discount?: number
+          expected_delivery?: string | null
+          id?: string
+          notes?: string | null
+          number?: number
+          order_date?: string
+          organization_id?: string
+          quote_id?: string | null
+          status?: Database["public"]["Enums"]["sales_order_status"]
+          subtotal?: number
+          tax?: number
+          title?: string
+          total?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       saved_views: {
         Row: {
           created_at: string
@@ -3718,6 +3831,13 @@ export type Database = {
         | "weighted"
         | "first_available"
         | "manual"
+      sales_order_status:
+        | "draft"
+        | "confirmed"
+        | "in_production"
+        | "shipped"
+        | "delivered"
+        | "cancelled"
       signature_status:
         | "draft"
         | "sent"
@@ -3871,6 +3991,14 @@ export const Constants = {
         "weighted",
         "first_available",
         "manual",
+      ],
+      sales_order_status: [
+        "draft",
+        "confirmed",
+        "in_production",
+        "shipped",
+        "delivered",
+        "cancelled",
       ],
       signature_status: [
         "draft",
