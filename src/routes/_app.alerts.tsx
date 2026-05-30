@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useCurrentOrg } from "@/lib/org";
@@ -33,6 +34,8 @@ function AlertsPage() {
   const qc = useQueryClient();
   const listFn = useServerFn(listAlerts);
   const generateFn = useServerFn(generateAlertNotifications);
+  const [sevFilter, setSevFilter] = useState<"all" | "high" | "medium" | "low">("all");
+  const [kindFilter, setKindFilter] = useState<string>("all");
 
   const { data, isLoading, refetch, isFetching } = useQuery({
     queryKey: ["alerts", orgId],
@@ -50,11 +53,21 @@ function AlertsPage() {
   });
 
   const counts = data?.counts ?? { high: 0, medium: 0, low: 0, total: 0 };
-  const alerts = data?.alerts ?? [];
+  const allAlerts = data?.alerts ?? [];
+  const alerts = useMemo(
+    () =>
+      allAlerts.filter(
+        (a) =>
+          (sevFilter === "all" || a.severity === sevFilter) &&
+          (kindFilter === "all" || a.kind === kindFilter),
+      ),
+    [allAlerts, sevFilter, kindFilter],
+  );
   const grouped = alerts.reduce<Record<string, typeof alerts>>((acc, a) => {
     (acc[a.kind] ??= []).push(a);
     return acc;
   }, {});
+  const kindsPresent = Array.from(new Set(allAlerts.map((a) => a.kind)));
 
   return (
     <div className="p-4 md:p-8">
@@ -85,6 +98,52 @@ function AlertsPage() {
         <KpiCard label="Atenção" value={counts.medium} tone="amber" />
         <KpiCard label="Informativos" value={counts.low} tone="sky" />
       </div>
+
+      {allAlerts.length > 0 && (
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+          <span className="text-xs text-muted-foreground mr-1">Filtrar:</span>
+          {([
+            ["all", "Todos", counts.total],
+            ["high", "Críticos", counts.high],
+            ["medium", "Atenção", counts.medium],
+            ["low", "Informativos", counts.low],
+          ] as const).map(([v, label, n]) => (
+            <Button
+              key={v}
+              size="sm"
+              variant={sevFilter === v ? "default" : "outline"}
+              onClick={() => setSevFilter(v as typeof sevFilter)}
+              className="h-7 text-xs"
+            >
+              {label} <Badge variant="secondary" className="ml-1.5">{n}</Badge>
+            </Button>
+          ))}
+          <span className="mx-2 h-4 w-px bg-border" />
+          <Button
+            size="sm"
+            variant={kindFilter === "all" ? "default" : "outline"}
+            onClick={() => setKindFilter("all")}
+            className="h-7 text-xs"
+          >
+            Todos os tipos
+          </Button>
+          {kindsPresent.map((k) => {
+            const meta = KIND_META[k] ?? { icon: AlertTriangle, label: k };
+            const Icon = meta.icon;
+            return (
+              <Button
+                key={k}
+                size="sm"
+                variant={kindFilter === k ? "default" : "outline"}
+                onClick={() => setKindFilter(k)}
+                className="h-7 text-xs gap-1"
+              >
+                <Icon className="h-3 w-3" /> {meta.label}
+              </Button>
+            );
+          })}
+        </div>
+      )}
 
       {isLoading ? (
         <div className="mt-6 space-y-3">
