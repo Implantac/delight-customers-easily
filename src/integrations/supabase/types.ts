@@ -2007,6 +2007,143 @@ export type Database = {
         }
         Relationships: []
       }
+      referral_programs: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          ends_at: string | null
+          id: string
+          name: string
+          organization_id: string
+          reward_currency: string
+          reward_type: string
+          reward_value: number
+          starts_at: string | null
+          status: string
+          terms: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          ends_at?: string | null
+          id?: string
+          name: string
+          organization_id: string
+          reward_currency?: string
+          reward_type?: string
+          reward_value?: number
+          starts_at?: string | null
+          status?: string
+          terms?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          ends_at?: string | null
+          id?: string
+          name?: string
+          organization_id?: string
+          reward_currency?: string
+          reward_type?: string
+          reward_value?: number
+          starts_at?: string | null
+          status?: string
+          terms?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      referrals: {
+        Row: {
+          converted_at: string | null
+          created_at: string
+          created_by: string | null
+          deal_id: string | null
+          deal_value: number | null
+          id: string
+          notes: string | null
+          organization_id: string
+          program_id: string | null
+          qualified_at: string | null
+          referred_company: string | null
+          referred_email: string | null
+          referred_name: string
+          referred_phone: string | null
+          referrer_contact_id: string | null
+          referrer_email: string | null
+          referrer_name: string | null
+          referrer_user_id: string | null
+          rejected_reason: string | null
+          reward_amount: number | null
+          reward_paid_at: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          converted_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          deal_id?: string | null
+          deal_value?: number | null
+          id?: string
+          notes?: string | null
+          organization_id: string
+          program_id?: string | null
+          qualified_at?: string | null
+          referred_company?: string | null
+          referred_email?: string | null
+          referred_name: string
+          referred_phone?: string | null
+          referrer_contact_id?: string | null
+          referrer_email?: string | null
+          referrer_name?: string | null
+          referrer_user_id?: string | null
+          rejected_reason?: string | null
+          reward_amount?: number | null
+          reward_paid_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          converted_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          deal_id?: string | null
+          deal_value?: number | null
+          id?: string
+          notes?: string | null
+          organization_id?: string
+          program_id?: string | null
+          qualified_at?: string | null
+          referred_company?: string | null
+          referred_email?: string | null
+          referred_name?: string
+          referred_phone?: string | null
+          referrer_contact_id?: string | null
+          referrer_email?: string | null
+          referrer_name?: string | null
+          referrer_user_id?: string | null
+          rejected_reason?: string | null
+          reward_amount?: number | null
+          reward_paid_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referrals_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "referral_programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       sales_goals: {
         Row: {
           created_at: string
