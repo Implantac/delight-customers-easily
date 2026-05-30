@@ -132,7 +132,7 @@ function MyDayPage() {
             <span>Vendido no mês</span><Trophy className="h-3.5 w-3.5 text-emerald-600" />
           </div>
           <p className="mt-1 text-2xl font-semibold">{myFc ? fmtBRL(myFc.won) : "—"}</p>
-          <p className="mt-0.5 text-[11px] text-muted-foreground">{myFc?.deals ?? 0} negócios fechados</p>
+          <p className="mt-0.5 text-[11px] text-muted-foreground">Ganho até agora no mês</p>
         </Card>
         <Card className="p-4">
           <div className="flex items-center justify-between text-xs text-muted-foreground">
