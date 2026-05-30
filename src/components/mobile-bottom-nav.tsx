@@ -1,13 +1,16 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, KanbanSquare, Users, CheckSquare, BarChart3 } from "lucide-react";
+import { LayoutDashboard, Briefcase, Users, Target, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+// Bottom nav alinhado à arquitetura comercial (Onda 1/2).
+// Foco: ir direto ao que gera receita — Dashboard, Carteira, Clientes,
+// Oportunidades, WhatsApp.
 const items = [
   { to: "/dashboard", label: "Início", icon: LayoutDashboard },
-  { to: "/pipeline", label: "Pipeline", icon: KanbanSquare },
-  { to: "/contacts", label: "Contatos", icon: Users },
-  { to: "/activities", label: "Tarefas", icon: CheckSquare },
-  { to: "/reports", label: "Relatórios", icon: BarChart3 },
+  { to: "/carteira", label: "Carteira", icon: Briefcase },
+  { to: "/contacts", label: "Clientes", icon: Users },
+  { to: "/opportunity-map", label: "Oportun.", icon: Target },
+  { to: "/whatsapp", label: "WhatsApp", icon: MessageSquare },
 ] as const;
 
 export function MobileBottomNav() {

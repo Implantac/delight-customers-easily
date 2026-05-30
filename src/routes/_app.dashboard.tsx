@@ -1,190 +1,373 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
-import { DollarSign, Users, Building2, TrendingUp, CheckCircle2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  AlertTriangle, TrendingUp, Target, Users, ArrowRight,
+  Flame, HeartPulse, Award,
+} from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { NextActionBlock } from "@/components/next-action-block";
-import { Skeleton } from "@/components/ui/skeleton";
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from "recharts";
+import { BusinessHealthCard } from "@/components/business-health-card";
 import { OnboardingChecklist } from "@/components/onboarding-checklist";
+import { useCurrentOrg } from "@/lib/org";
+import { getForecast } from "@/lib/forecast.functions";
+import { getRetentionInsights } from "@/lib/churn.functions";
 
 export const Route = createFileRoute("/_app/dashboard")({ component: DashboardPage });
 
 const fmtBRL = (n: number) =>
   n.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
 
-const STAGE_LABEL: Record<string, string> = { lead: "Lead", qualified: "Qualif.", proposal: "Proposta", negotiation: "Negoc.", won: "Ganho", lost: "Perdido" };
+const STAGE_LABEL: Record<string, string> = {
+  lead: "Lead", qualified: "Qualif.", proposal: "Proposta",
+  negotiation: "Negoc.", won: "Ganho", lost: "Perdido",
+};
 
+/**
+ * Revenue Command Center — Onda 2.
+ * Substitui o dashboard "relatório" por um painel acionável:
+ * "o que preciso fazer hoje para vender mais?".
+ *
+ * Componentes-chave:
+ *  • Business Health Score (saúde geral 0–100)
+ *  • KPI strip: receita ganha (mês), pipeline ponderado, gap-to-goal,
+ *    receita em risco, clientes sem compra.
+ *  • Plano do dia (NextActionBlock — recomendações IA).
+ *  • Oportunidades prioritárias (top deals abertos por valor).
+ *  • Cobertura de representantes (atingimento da meta no mês).
+ *  • Clientes em risco (churn alto).
+ */
 function DashboardPage() {
-  const { data, isLoading } = useQuery({
-    queryKey: ["dashboard"],
+  const { orgId } = useCurrentOrg();
+
+  const forecast = useServerFn(getForecast);
+  const retention = useServerFn(getRetentionInsights);
+
+  const dashQuery = useQuery({
+    queryKey: ["dashboard-rcc", orgId],
+    enabled: !!orgId,
     queryFn: async () => {
-      const sinceISO = new Date(Date.now() - 1000 * 60 * 60 * 24 * 56).toISOString(); // 8 weeks
-      const [contacts, companies, deals, upcoming, activitiesRange] = await Promise.all([
+      const since = new Date(Date.now() - 1000 * 60 * 60 * 24 * 90).toISOString();
+      const [contacts, companies, deals, openDeals] = await Promise.all([
         supabase.from("contacts").select("id", { count: "exact", head: true }),
         supabase.from("companies").select("id", { count: "exact", head: true }),
-        supabase.from("deals").select("id, value, stage"),
-        supabase.from("activities").select("id, title, due_date, completed, type").eq("completed", false).order("due_date", { ascending: true, nullsFirst: false }).limit(8),
-        supabase.from("activities").select("created_at, completed").gte("created_at", sinceISO),
+        supabase.from("deals").select("id, value, stage, updated_at").gte("updated_at", since),
+        supabase
+          .from("deals")
+          .select("id, title, value, stage, expected_close, company_id, companies(name)")
+          .not("stage", "in", "(won,lost)")
+          .order("value", { ascending: false })
+          .limit(6),
       ]);
       return {
         contacts: contacts.count ?? 0,
         companies: companies.count ?? 0,
         deals: deals.data ?? [],
-        upcoming: upcoming.data ?? [],
-        activitiesRange: activitiesRange.data ?? [],
+        topOpen: (openDeals.data ?? []) as any[],
       };
     },
   });
 
-  const deals = data?.deals ?? [];
-  const openValue = deals.filter((d) => !["won", "lost"].includes(d.stage)).reduce((s, d) => s + Number(d.value), 0);
-  const wonValue = deals.filter((d) => d.stage === "won").reduce((s, d) => s + Number(d.value), 0);
-  const openCount = deals.filter((d) => !["won", "lost"].includes(d.stage)).length;
-  const wonCount = deals.filter((d) => d.stage === "won").length;
-  const lostCount = deals.filter((d) => d.stage === "lost").length;
-  const winRate = wonCount + lostCount > 0 ? Math.round((wonCount / (wonCount + lostCount)) * 100) : 0;
+  const forecastQuery = useQuery({
+    queryKey: ["dashboard-forecast", orgId],
+    enabled: !!orgId,
+    queryFn: () => forecast({ data: { organization_id: orgId! } }),
+    staleTime: 5 * 60_000,
+  });
 
-  const stats = [
-    { label: "Pipeline aberto", value: fmtBRL(openValue), sub: `${openCount} negócios`, icon: DollarSign, accent: "text-primary" },
-    { label: "Receita ganha", value: fmtBRL(wonValue), sub: `${wonCount} fechados`, icon: TrendingUp, accent: "text-success" },
-    { label: "Taxa de conversão", value: `${winRate}%`, sub: "Ganhos vs perdidos", icon: CheckCircle2, accent: "text-warning" },
-    { label: "Contatos", value: String(data?.contacts ?? 0), sub: `${data?.companies ?? 0} empresas`, icon: Users, accent: "text-primary" },
+  const retentionQuery = useQuery({
+    queryKey: ["dashboard-retention", orgId],
+    enabled: !!orgId,
+    queryFn: () => retention({ data: { organization_id: orgId! } }),
+    staleTime: 5 * 60_000,
+  });
+
+  const fc = forecastQuery.data;
+  const ret = retentionQuery.data;
+
+  const atRiskValue = (ret?.rows ?? [])
+    .filter((r) => r.level === "risco")
+    .reduce((s, r) => s + Number(r.won_value || 0), 0);
+  const atRiskCount = ret?.summary?.em_risco ?? 0;
+  const noPurchaseCount = (ret?.rows ?? []).filter(
+    (r) => r.deals_won === 0 && (r.days_silent ?? 0) >= 30,
+  ).length;
+
+  const kpis = [
+    {
+      label: "Receita ganha (mês)",
+      value: fc ? fmtBRL(fc.current.won) : "—",
+      sub: fc ? `Meta ${fmtBRL(fc.current.target)}` : "Carregando…",
+      icon: TrendingUp,
+      tone: "text-emerald-600",
+      href: "/forecast",
+    },
+    {
+      label: "Pipeline ponderado",
+      value: fc ? fmtBRL(fc.current.weighted) : "—",
+      sub: fc ? `${fc.current.attainment}% do alvo projetado` : "—",
+      icon: Target,
+      tone: "text-primary",
+      href: "/pipeline",
+    },
+    {
+      label: "Gap para meta",
+      value: fc ? fmtBRL(fc.current.gap) : "—",
+      sub: fc && fc.current.gap > 0 ? "Falta fechar até o fim do mês" : "Meta atingida ✓",
+      icon: Flame,
+      tone: fc && fc.current.gap > 0 ? "text-warning" : "text-emerald-600",
+      href: "/forecast",
+    },
+    {
+      label: "Receita em risco",
+      value: fmtBRL(atRiskValue),
+      sub: `${atRiskCount} clientes em risco · ${noPurchaseCount} sem compra`,
+      icon: AlertTriangle,
+      tone: atRiskCount > 0 ? "text-destructive" : "text-muted-foreground",
+      href: "/retention",
+    },
   ];
 
-  // deals por estágio para barchart
-  const stageData = (["lead", "qualified", "proposal", "negotiation", "won", "lost"] as const).map((stage) => {
-    const items = deals.filter((d) => d.stage === stage);
-    return { stage: STAGE_LABEL[stage], total: items.reduce((s, d) => s + Number(d.value), 0), count: items.length };
-  });
-
-  // atividades por semana (últimas 8 semanas)
-  const weeks = Array.from({ length: 8 }).map((_, i) => {
-    const d = new Date();
-    d.setHours(0, 0, 0, 0);
-    d.setDate(d.getDate() - (7 - i) * 7);
-    return { start: d, label: d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" }), criadas: 0, concluidas: 0 };
-  });
-  for (const a of data?.activitiesRange ?? []) {
-    const t = new Date(a.created_at).getTime();
-    for (let i = 0; i < weeks.length; i++) {
-      const startMs = weeks[i].start.getTime();
-      const endMs = i === weeks.length - 1 ? Infinity : weeks[i + 1].start.getTime();
-      if (t >= startMs && t < endMs) {
-        weeks[i].criadas++;
-        if (a.completed) weeks[i].concluidas++;
-        break;
-      }
-    }
-  }
+  const reps = (fc?.reps ?? []).filter((r) => r.target > 0).slice(0, 5);
+  const riskRows = (ret?.rows ?? []).filter((r) => r.level === "risco").slice(0, 5);
 
   return (
     <div className="p-4 md:p-8">
-      <PageHeader title="Dashboard" subtitle="Visão geral do seu CRM" />
-      <div className="mt-6"><NextActionBlock surface="dashboard" showRegenerate /></div>
-      <div className="mt-6"><OnboardingChecklist /></div>
-      {isLoading ? (
-        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-28 w-full" />)}
-        </div>
-      ) : (
-        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {stats.map((s, i) => (
+      <PageHeader
+        title="Revenue Command Center"
+        subtitle="O que precisa acontecer hoje para vender mais"
+      />
+
+      <div className="mt-6">
+        <OnboardingChecklist />
+      </div>
+
+      {/* Saúde geral + plano do dia lado a lado em telas largas */}
+      <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
+        <BusinessHealthCard />
+        <NextActionBlock surface="dashboard" title="Plano do dia" showRegenerate />
+      </div>
+
+      {/* KPI strip — sempre acionável (cada um leva para o módulo correto) */}
+      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {kpis.map((k, i) => (
+          <Link
+            key={k.label}
+            to={k.href as any}
+            className="group block"
+          >
             <Card
-              key={s.label}
-              className="group relative overflow-hidden p-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)] animate-in fade-in slide-in-from-bottom-2"
+              className="relative h-full overflow-hidden p-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)] animate-in fade-in slide-in-from-bottom-2"
               style={{ animationDelay: `${i * 60}ms`, animationFillMode: "backwards" }}
             >
               <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-[var(--gradient-subtle)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
               <div className="relative flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">{s.label}</span>
-                <span className={`flex h-8 w-8 items-center justify-center rounded-md bg-accent/60 ${s.accent}`}>
-                  <s.icon className="h-4 w-4" />
+                <span className="text-sm text-muted-foreground">{k.label}</span>
+                <span className={`flex h-8 w-8 items-center justify-center rounded-md bg-accent/60 ${k.tone}`}>
+                  <k.icon className="h-4 w-4" />
                 </span>
               </div>
-              <p className="relative mt-3 text-2xl font-semibold tracking-tight">{s.value}</p>
-              <p className="relative mt-1 text-xs text-muted-foreground">{s.sub}</p>
+              <p className="relative mt-3 text-2xl font-semibold tracking-tight">{k.value}</p>
+              <p className="relative mt-1 text-xs text-muted-foreground">{k.sub}</p>
             </Card>
-          ))}
-        </div>
-      )}
+          </Link>
+        ))}
+      </div>
 
+      {/* Oportunidades prioritárias + Representantes */}
       <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <Card className="p-6">
-          <h3 className="font-semibold">Valor por estágio</h3>
-          <div className="mt-4 h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={stageData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-                <XAxis dataKey="stage" stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} />
-                <YAxis stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `R$${(v / 1000).toFixed(0)}k`} />
-                <Tooltip
-                  contentStyle={{ background: "var(--popover)", border: "1px solid var(--border)", borderRadius: 8, fontSize: 12 }}
-                  formatter={(v: any) => fmtBRL(Number(v))}
-                />
-                <Bar dataKey="total" fill="var(--primary)" radius={[6, 6, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Target className="h-4 w-4 text-primary" />
+              <h3 className="font-semibold">Oportunidades prioritárias</h3>
+            </div>
+            <Button asChild size="sm" variant="ghost">
+              <Link to="/pipeline">
+                Pipeline <ArrowRight className="ml-1 h-3 w-3" />
+              </Link>
+            </Button>
+          </div>
+          <div className="mt-4 space-y-2">
+            {dashQuery.isLoading && (
+              <>
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-12 w-full" />
+              </>
+            )}
+            {!dashQuery.isLoading && (dashQuery.data?.topOpen ?? []).length === 0 && (
+              <p className="text-sm text-muted-foreground">
+                Sem oportunidades abertas. Bora prospectar — comece em{" "}
+                <Link to="/marketing" className="underline">Leads</Link>.
+              </p>
+            )}
+            {(dashQuery.data?.topOpen ?? []).map((d) => {
+              const company = d.companies?.name ?? "Sem empresa";
+              const close = d.expected_close
+                ? new Date(d.expected_close).toLocaleDateString("pt-BR", { day: "2-digit", month: "short" })
+                : "—";
+              return (
+                <div key={d.id} className="flex items-center justify-between gap-3 rounded-md border p-3">
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium">{d.title}</p>
+                    <p className="truncate text-xs text-muted-foreground">
+                      {company} · fechamento {close}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-semibold">{fmtBRL(Number(d.value || 0))}</p>
+                    <Badge variant="outline" className="mt-0.5 text-[10px]">
+                      {STAGE_LABEL[d.stage] ?? d.stage}
+                    </Badge>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </Card>
 
         <Card className="p-6">
-          <h3 className="font-semibold">Atividades — últimas 8 semanas</h3>
-          <div className="mt-4 h-64">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={weeks}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-                <XAxis dataKey="label" stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} />
-                <YAxis stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} allowDecimals={false} />
-                <Tooltip contentStyle={{ background: "var(--popover)", border: "1px solid var(--border)", borderRadius: 8, fontSize: 12 }} />
-                <Bar dataKey="criadas" fill="var(--primary)" radius={[6, 6, 0, 0]} name="Criadas" />
-                <Bar dataKey="concluidas" fill="var(--success)" radius={[6, 6, 0, 0]} name="Concluídas" />
-              </BarChart>
-            </ResponsiveContainer>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Award className="h-4 w-4 text-primary" />
+              <h3 className="font-semibold">Cobertura de representantes</h3>
+            </div>
+            <Button asChild size="sm" variant="ghost">
+              <Link to="/goals">
+                Detalhes <ArrowRight className="ml-1 h-3 w-3" />
+              </Link>
+            </Button>
+          </div>
+          <div className="mt-4 space-y-3">
+            {forecastQuery.isLoading && (
+              <>
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-12 w-full" />
+              </>
+            )}
+            {!forecastQuery.isLoading && reps.length === 0 && (
+              <p className="text-sm text-muted-foreground">
+                Nenhuma meta atribuída no mês.{" "}
+                <Link to="/goals" className="underline">Definir metas</Link>.
+              </p>
+            )}
+            {reps.map((r) => {
+              const pct = Math.min(100, r.attainment);
+              const tone =
+                pct >= 90 ? "bg-emerald-500" : pct >= 60 ? "bg-amber-500" : "bg-destructive";
+              return (
+                <div key={r.user_id} className="space-y-1.5">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="truncate font-medium">{r.name}</span>
+                    <span className="text-muted-foreground">
+                      {fmtBRL(r.won)} <span className="text-xs">/ {fmtBRL(r.target)}</span>
+                    </span>
+                  </div>
+                  <div className="h-1.5 overflow-hidden rounded bg-muted">
+                    <div className={`h-full ${tone}`} style={{ width: `${pct}%` }} />
+                  </div>
+                  <p className="text-[11px] text-muted-foreground">
+                    {pct}% projetado · gap {fmtBRL(r.gap)}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         </Card>
       </div>
 
+      {/* Clientes em risco — call-to-action de retenção */}
       <Card className="mt-6 p-6">
-        <h3 className="font-semibold">Próximas atividades</h3>
-        <div className="mt-4 space-y-3">
-          {(data?.upcoming ?? []).length === 0 && (
-            <p className="text-sm text-muted-foreground">Nenhuma atividade pendente.</p>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <HeartPulse className="h-4 w-4 text-destructive" />
+            <h3 className="font-semibold">Clientes em risco</h3>
+          </div>
+          <Button asChild size="sm" variant="ghost">
+            <Link to="/retention">
+              Retenção & churn <ArrowRight className="ml-1 h-3 w-3" />
+            </Link>
+          </Button>
+        </div>
+        <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
+          {retentionQuery.isLoading && (
+            <>
+              <Skeleton className="h-20 w-full" />
+              <Skeleton className="h-20 w-full" />
+              <Skeleton className="h-20 w-full" />
+            </>
           )}
-          {(data?.upcoming ?? []).map((a) => {
-            const due = a.due_date ? new Date(a.due_date) : null;
-            const now = new Date();
-            const startOfToday = new Date(now); startOfToday.setHours(0, 0, 0, 0);
-            const startOfTomorrow = new Date(startOfToday); startOfTomorrow.setDate(startOfTomorrow.getDate() + 1);
-            const overdue = due && due < startOfToday;
-            const today = due && due >= startOfToday && due < startOfTomorrow;
-            const badge = overdue
-              ? { label: "Atrasada", cls: "bg-destructive/15 text-destructive" }
-              : today
-                ? { label: "Hoje", cls: "bg-warning/20 text-warning" }
-                : null;
-            return (
-              <div key={a.id} className="flex items-start gap-3 rounded-md border p-3">
-                <div className="mt-0.5 flex h-7 w-7 items-center justify-center rounded-md bg-accent text-accent-foreground">
-                  <Building2 className="h-3.5 w-3.5" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <p className="truncate text-sm font-medium">{a.title}</p>
-                    {badge && (
-                      <span className={`shrink-0 rounded px-1.5 py-0.5 text-[10px] font-medium ${badge.cls}`}>{badge.label}</span>
-                    )}
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    {a.type} {due ? `· ${due.toLocaleString("pt-BR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}` : ""}
-                  </p>
-                </div>
+          {!retentionQuery.isLoading && riskRows.length === 0 && (
+            <p className="text-sm text-muted-foreground">
+              Nenhum cliente sinalizado como risco agora. 🎉
+            </p>
+          )}
+          {riskRows.map((r) => (
+            <Link
+              key={r.company_id}
+              to={`/companies/${r.company_id}` as any}
+              className="rounded-md border p-3 transition-colors hover:bg-accent/40"
+            >
+              <div className="flex items-center justify-between gap-2">
+                <p className="truncate text-sm font-medium">{r.name}</p>
+                <Badge variant="destructive" className="text-[10px]">
+                  risco {r.risk}
+                </Badge>
               </div>
-            );
-          })}
+              <p className="mt-1 text-xs text-muted-foreground">
+                {r.days_silent != null ? `${r.days_silent}d sem contato · ` : ""}
+                {fmtBRL(Number(r.won_value || 0))} histórico
+              </p>
+              {r.reasons[0] && (
+                <p className="mt-1 truncate text-[11px] text-muted-foreground">{r.reasons[0]}</p>
+              )}
+            </Link>
+          ))}
         </div>
       </Card>
+
+      {/* Cobertura de base — contadores leves */}
+      <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <CountTile label="Contatos" value={dashQuery.data?.contacts ?? 0} icon={Users} href="/contacts" />
+        <CountTile label="Empresas" value={dashQuery.data?.companies ?? 0} icon={Users} href="/companies" />
+        <CountTile
+          label="Clientes ativos"
+          value={(ret?.rows ?? []).filter((r) => r.deals_won > 0).length}
+          icon={HeartPulse}
+          href="/carteira"
+        />
+        <CountTile
+          label="Sem compra 30d+"
+          value={noPurchaseCount}
+          icon={AlertTriangle}
+          href="/carteira"
+        />
+      </div>
     </div>
+  );
+}
+
+function CountTile({
+  label, value, icon: Icon, href,
+}: { label: string; value: number; icon: typeof Users; href: string }) {
+  return (
+    <Link to={href as any} className="group block">
+      <Card className="flex items-center gap-3 p-4 transition-colors group-hover:bg-accent/40">
+        <span className="flex h-9 w-9 items-center justify-center rounded-md bg-accent/60 text-primary">
+          <Icon className="h-4 w-4" />
+        </span>
+        <div className="min-w-0">
+          <p className="text-lg font-semibold leading-tight">{value}</p>
+          <p className="truncate text-xs text-muted-foreground">{label}</p>
+        </div>
+      </Card>
+    </Link>
   );
 }
