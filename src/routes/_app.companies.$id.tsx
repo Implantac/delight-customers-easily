@@ -6,12 +6,13 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { PageHeader } from "@/components/page-header";
 import { HealthScore } from "@/components/health-score";
 import { Timeline, type TimelineItem } from "@/components/timeline";
 import {
   ArrowLeft, Globe, Trash2, Users, KanbanSquare, Clock, History as HistoryIcon,
-  Plug, TrendingUp, Receipt, Package, MessageCircle, Mail, Phone, Sparkles,
+  Plug, TrendingUp, Receipt, Package, MessageCircle, Mail, Phone, Sparkles, LayoutGrid,
 } from "lucide-react";
 import { Attachments } from "@/components/attachments";
 import { TagPicker } from "@/components/tag-picker";
@@ -318,184 +319,240 @@ function CompanyDetail() {
           <Attachments entityType="company" entityId={company.id} />
         </div>
 
-        {/* ============ Coluna direita: ação comercial ============ */}
-        <div className="space-y-6 lg:col-span-2">
-          {/* Zona 6 — AI panel comercial */}
-          {primaryContact ? (
-            <AIInsights contactId={primaryContact.id} actions={["next_action", "summarize_contact"]} />
-          ) : (
-            <Card className="p-5 border-dashed">
-              <h3 className="flex items-center gap-2 text-sm font-semibold">
-                <Sparkles className="h-4 w-4 text-primary" />
-                IA comercial
-              </h3>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Adicione um contato a esta empresa para receber sugestões de próxima ação geradas por IA.
-              </p>
-            </Card>
-          )}
+        {/* ============ Coluna direita: ação comercial (em abas) ============ */}
+        <div className="lg:col-span-2">
+          <Tabs defaultValue="overview" className="w-full">
+            <TabsList className="w-full justify-start overflow-x-auto">
+              <TabsTrigger value="overview" className="gap-1.5"><LayoutGrid className="h-3.5 w-3.5" />Visão geral</TabsTrigger>
+              <TabsTrigger value="deals" className="gap-1.5"><KanbanSquare className="h-3.5 w-3.5" />Oportunidades{deals?.length ? ` · ${deals.length}` : ""}</TabsTrigger>
+              <TabsTrigger value="products" className="gap-1.5"><Package className="h-3.5 w-3.5" />Produtos</TabsTrigger>
+              <TabsTrigger value="invoices" className="gap-1.5"><Receipt className="h-3.5 w-3.5" />Faturas{invoices?.length ? ` · ${invoices.length}` : ""}</TabsTrigger>
+              <TabsTrigger value="timeline" className="gap-1.5"><Clock className="h-3.5 w-3.5" />Timeline</TabsTrigger>
+              <TabsTrigger value="ai" className="gap-1.5"><Sparkles className="h-3.5 w-3.5" />IA</TabsTrigger>
+              <TabsTrigger value="history" className="gap-1.5"><HistoryIcon className="h-3.5 w-3.5" />Histórico</TabsTrigger>
+            </TabsList>
 
-          {/* Zona 4 — Oportunidades */}
-          <Card className="p-5">
-            <div className="flex items-center justify-between">
-              <h3 className="flex items-center gap-2 text-sm font-semibold">
-                <KanbanSquare className="h-4 w-4" />Oportunidades ({deals?.length ?? 0})
-              </h3>
-              <Button variant="ghost" size="sm" asChild>
-                <Link to="/pipeline">Ver pipeline →</Link>
-              </Button>
-            </div>
-            <div className="mt-3 space-y-2">
-              {(deals ?? []).length === 0 && <p className="text-sm text-muted-foreground">Sem oportunidades registradas.</p>}
-              {deals?.map((d) => (
-                <div key={d.id} className="flex items-center justify-between rounded-md border p-3 text-sm">
-                  <div className="min-w-0">
-                    <p className="font-medium truncate">{d.title}</p>
-                    {d.expected_close && (
-                      <p className="text-xs text-muted-foreground">
-                        prev. {new Date(d.expected_close).toLocaleDateString("pt-BR")}
-                      </p>
-                    )}
+            <TabsContent value="overview" className="mt-4 space-y-6">
+              {primaryContact ? (
+                <AIInsights contactId={primaryContact.id} actions={["next_action", "summarize_contact"]} />
+              ) : (
+                <Card className="p-5 border-dashed">
+                  <h3 className="flex items-center gap-2 text-sm font-semibold">
+                    <Sparkles className="h-4 w-4 text-primary" />
+                    IA comercial
+                  </h3>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    Adicione um contato a esta empresa para receber sugestões de próxima ação geradas por IA.
+                  </p>
+                </Card>
+              )}
+              {(deals ?? []).length > 0 && (
+                <Card className="p-5">
+                  <div className="flex items-center justify-between">
+                    <h3 className="flex items-center gap-2 text-sm font-semibold">
+                      <KanbanSquare className="h-4 w-4" />Oportunidades recentes
+                    </h3>
+                    <Button variant="ghost" size="sm" asChild><Link to="/pipeline">Pipeline →</Link></Button>
                   </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    <Badge variant={d.stage === "won" ? "default" : d.stage === "lost" ? "destructive" : "secondary"}>
-                      {d.stage}
-                    </Badge>
-                    <span className="text-muted-foreground tabular-nums">{BRL(Number(d.value))}</span>
+                  <div className="mt-3 space-y-2">
+                    {(deals ?? []).slice(0, 3).map((d) => (
+                      <div key={d.id} className="flex items-center justify-between rounded-md border p-3 text-sm">
+                        <p className="font-medium truncate">{d.title}</p>
+                        <div className="flex items-center gap-2 shrink-0">
+                          <Badge variant={d.stage === "won" ? "default" : d.stage === "lost" ? "destructive" : "secondary"}>{d.stage}</Badge>
+                          <span className="text-muted-foreground tabular-nums">{BRL(Number(d.value))}</span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
+                </Card>
+              )}
+            </TabsContent>
+
+            <TabsContent value="deals" className="mt-4">
+              <Card className="p-5">
+                <div className="flex items-center justify-between">
+                  <h3 className="flex items-center gap-2 text-sm font-semibold">
+                    <KanbanSquare className="h-4 w-4" />Oportunidades ({deals?.length ?? 0})
+                  </h3>
+                  <Button variant="ghost" size="sm" asChild>
+                    <Link to="/pipeline">Ver pipeline →</Link>
+                  </Button>
                 </div>
-              ))}
-            </div>
-          </Card>
-
-          {/* Zona 5 — Curva ABC de produtos */}
-          {kpis.products.length > 0 && (
-            <Card className="p-5">
-              <h3 className="flex items-center gap-2 text-sm font-semibold">
-                <Package className="h-4 w-4" />Produtos comprados (top 5)
-              </h3>
-              <div className="mt-3 space-y-2">
-                {kpis.products.map((p, i) => {
-                  const pct = kpis.productsTotal ? (p.total / kpis.productsTotal) * 100 : 0;
-                  return (
-                    <div key={i}>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="truncate">{p.name}</span>
-                        <span className="text-muted-foreground tabular-nums">{BRL(p.total)}</span>
+                <div className="mt-3 space-y-2">
+                  {(deals ?? []).length === 0 && <p className="text-sm text-muted-foreground">Sem oportunidades registradas.</p>}
+                  {deals?.map((d) => (
+                    <div key={d.id} className="flex items-center justify-between rounded-md border p-3 text-sm">
+                      <div className="min-w-0">
+                        <p className="font-medium truncate">{d.title}</p>
+                        {d.expected_close && (
+                          <p className="text-xs text-muted-foreground">
+                            prev. {new Date(d.expected_close).toLocaleDateString("pt-BR")}
+                          </p>
+                        )}
                       </div>
-                      <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-muted">
-                        <div
-                          className="h-full rounded-full bg-[var(--gradient-primary)] transition-all"
-                          style={{ width: `${Math.max(2, pct)}%` }}
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </Card>
-          )}
-
-          {/* Faturas (leitura ERP) */}
-          {(invoices ?? []).length > 0 && (
-            <Card className="p-5">
-              <h3 className="flex items-center gap-2 text-sm font-semibold">
-                <Receipt className="h-4 w-4" />Faturamento recente
-              </h3>
-              <div className="mt-3 space-y-2 text-sm">
-                {invoices!.slice(0, 5).map((inv) => {
-                  const overdue = inv.status !== "paid" && new Date(inv.due_date) < new Date();
-                  return (
-                    <div key={inv.id} className="flex items-center justify-between rounded-md border p-3">
-                      <div>
-                        <p className="font-medium">
-                          {inv.number ? `#${inv.number}` : "Fatura"}
-                          <span className="ml-2 text-xs text-muted-foreground">
-                            vence {new Date(inv.due_date).toLocaleDateString("pt-BR")}
-                          </span>
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Badge variant={inv.status === "paid" ? "default" : overdue ? "destructive" : "secondary"}>
-                          {inv.status === "paid" ? "paga" : overdue ? "vencida" : inv.status}
+                      <div className="flex items-center gap-2 shrink-0">
+                        <Badge variant={d.stage === "won" ? "default" : d.stage === "lost" ? "destructive" : "secondary"}>
+                          {d.stage}
                         </Badge>
-                        <span className="tabular-nums text-muted-foreground">{BRL(Number(inv.amount))}</span>
+                        <span className="text-muted-foreground tabular-nums">{BRL(Number(d.value))}</span>
                       </div>
                     </div>
-                  );
-                })}
-              </div>
-            </Card>
-          )}
+                  ))}
+                </div>
+              </Card>
+            </TabsContent>
 
-          {/* Zona 3 — Timeline omnichannel */}
-          <Card className="p-5">
-            <h3 className="flex items-center gap-2 text-sm font-semibold"><Clock className="h-4 w-4" />Timeline omnichannel</h3>
-            <div className="mt-4">
-              <Timeline
-                emptyLabel="Sem eventos vinculados a este cliente."
-                items={[
-                  ...(activities ?? []).map<TimelineItem>((a) => ({
-                    id: a.id,
-                    kind: "activity",
-                    type: a.type,
-                    title: a.title,
-                    completed: a.completed,
-                    date: a.due_date ?? new Date().toISOString(),
-                    meta: a.type,
-                  })),
-                  ...(deals ?? [])
-                    .filter((d) => d.stage === "won" && d.closed_at)
-                    .map<TimelineItem>((d) => ({
-                      id: `won-${d.id}`,
-                      kind: "won",
-                      title: `Ganhou: ${d.title}`,
-                      date: d.closed_at!,
-                      meta: BRL(Number(d.value || 0)),
-                    })),
-                  ...(deals ?? [])
-                    .filter((d) => d.stage === "lost" && d.closed_at)
-                    .map<TimelineItem>((d) => ({
-                      id: `lost-${d.id}`,
-                      kind: "lost",
-                      title: `Perdeu: ${d.title}`,
-                      date: d.closed_at!,
-                      meta: BRL(Number(d.value || 0)),
-                    })),
-                  ...(invoices ?? []).map<TimelineItem>((inv) => {
-                    const overdue = inv.status !== "paid" && new Date(inv.due_date) < new Date();
-                    const isPaid = inv.status === "paid" && inv.paid_at;
-                    return {
-                      id: `inv-${inv.id}`,
-                      kind: "invoice",
-                      title: isPaid
-                        ? `Fatura paga ${inv.number ? `#${inv.number}` : ""}`
-                        : overdue
-                        ? `Fatura em atraso ${inv.number ? `#${inv.number}` : ""}`
-                        : `Fatura emitida ${inv.number ? `#${inv.number}` : ""}`,
-                      date: isPaid ? inv.paid_at! : (inv.issued_at ?? inv.due_date),
-                      meta: BRL(Number(inv.amount || 0)),
-                    };
-                  }),
-                  ...(waMessages ?? []).map<TimelineItem>((m) => ({
-                    id: `wa-${m.id}`,
-                    kind: "whatsapp",
-                    title: `${m.direction === "outbound" ? "Você → cliente" : "Cliente → você"}: ${m.body.slice(0, 80)}${m.body.length > 80 ? "…" : ""}`,
-                    date: m.created_at,
-                    meta: "WhatsApp",
-                  })),
-                ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 60)}
-              />
-            </div>
-          </Card>
+            <TabsContent value="products" className="mt-4">
+              {kpis.products.length > 0 ? (
+                <Card className="p-5">
+                  <h3 className="flex items-center gap-2 text-sm font-semibold">
+                    <Package className="h-4 w-4" />Produtos comprados (top 5)
+                  </h3>
+                  <div className="mt-3 space-y-2">
+                    {kpis.products.map((p, i) => {
+                      const pct = kpis.productsTotal ? (p.total / kpis.productsTotal) * 100 : 0;
+                      return (
+                        <div key={i}>
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="truncate">{p.name}</span>
+                            <span className="text-muted-foreground tabular-nums">{BRL(p.total)}</span>
+                          </div>
+                          <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-muted">
+                            <div className="h-full rounded-full bg-[var(--gradient-primary)] transition-all" style={{ width: `${Math.max(2, pct)}%` }} />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </Card>
+              ) : (
+                <Card className="p-5 border-dashed text-sm text-muted-foreground">
+                  Nenhum pedido registrado para esta empresa.
+                </Card>
+              )}
+            </TabsContent>
 
+            <TabsContent value="invoices" className="mt-4">
+              {(invoices ?? []).length > 0 ? (
+                <Card className="p-5">
+                  <h3 className="flex items-center gap-2 text-sm font-semibold">
+                    <Receipt className="h-4 w-4" />Faturamento
+                  </h3>
+                  <div className="mt-3 space-y-2 text-sm">
+                    {invoices!.map((inv) => {
+                      const overdue = inv.status !== "paid" && new Date(inv.due_date) < new Date();
+                      return (
+                        <div key={inv.id} className="flex items-center justify-between rounded-md border p-3">
+                          <div>
+                            <p className="font-medium">
+                              {inv.number ? `#${inv.number}` : "Fatura"}
+                              <span className="ml-2 text-xs text-muted-foreground">
+                                vence {new Date(inv.due_date).toLocaleDateString("pt-BR")}
+                              </span>
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Badge variant={inv.status === "paid" ? "default" : overdue ? "destructive" : "secondary"}>
+                              {inv.status === "paid" ? "paga" : overdue ? "vencida" : inv.status}
+                            </Badge>
+                            <span className="tabular-nums text-muted-foreground">{BRL(Number(inv.amount))}</span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </Card>
+              ) : (
+                <Card className="p-5 border-dashed text-sm text-muted-foreground">
+                  Nenhuma fatura registrada.
+                </Card>
+              )}
+            </TabsContent>
 
-          <Card className="p-5">
-            <h3 className="flex items-center gap-2 text-sm font-semibold mb-4">
-              <HistoryIcon className="h-4 w-4" />Histórico de alterações
-            </h3>
-            <AuditHistory entityType="companies" entityId={company.id} />
-          </Card>
+            <TabsContent value="timeline" className="mt-4">
+              <Card className="p-5">
+                <h3 className="flex items-center gap-2 text-sm font-semibold"><Clock className="h-4 w-4" />Timeline omnichannel</h3>
+                <div className="mt-4">
+                  <Timeline
+                    emptyLabel="Sem eventos vinculados a este cliente."
+                    items={[
+                      ...(activities ?? []).map<TimelineItem>((a) => ({
+                        id: a.id,
+                        kind: "activity",
+                        type: a.type,
+                        title: a.title,
+                        completed: a.completed,
+                        date: a.due_date ?? new Date().toISOString(),
+                        meta: a.type,
+                      })),
+                      ...(deals ?? [])
+                        .filter((d) => d.stage === "won" && d.closed_at)
+                        .map<TimelineItem>((d) => ({
+                          id: `won-${d.id}`,
+                          kind: "won",
+                          title: `Ganhou: ${d.title}`,
+                          date: d.closed_at!,
+                          meta: BRL(Number(d.value || 0)),
+                        })),
+                      ...(deals ?? [])
+                        .filter((d) => d.stage === "lost" && d.closed_at)
+                        .map<TimelineItem>((d) => ({
+                          id: `lost-${d.id}`,
+                          kind: "lost",
+                          title: `Perdeu: ${d.title}`,
+                          date: d.closed_at!,
+                          meta: BRL(Number(d.value || 0)),
+                        })),
+                      ...(invoices ?? []).map<TimelineItem>((inv) => {
+                        const overdue = inv.status !== "paid" && new Date(inv.due_date) < new Date();
+                        const isPaid = inv.status === "paid" && inv.paid_at;
+                        return {
+                          id: `inv-${inv.id}`,
+                          kind: "invoice",
+                          title: isPaid
+                            ? `Fatura paga ${inv.number ? `#${inv.number}` : ""}`
+                            : overdue
+                            ? `Fatura em atraso ${inv.number ? `#${inv.number}` : ""}`
+                            : `Fatura emitida ${inv.number ? `#${inv.number}` : ""}`,
+                          date: isPaid ? inv.paid_at! : (inv.issued_at ?? inv.due_date),
+                          meta: BRL(Number(inv.amount || 0)),
+                        };
+                      }),
+                      ...(waMessages ?? []).map<TimelineItem>((m) => ({
+                        id: `wa-${m.id}`,
+                        kind: "whatsapp",
+                        title: `${m.direction === "outbound" ? "Você → cliente" : "Cliente → você"}: ${m.body.slice(0, 80)}${m.body.length > 80 ? "…" : ""}`,
+                        date: m.created_at,
+                        meta: "WhatsApp",
+                      })),
+                    ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 60)}
+                  />
+                </div>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="ai" className="mt-4">
+              {primaryContact ? (
+                <AIInsights contactId={primaryContact.id} actions={["next_action", "summarize_contact"]} />
+              ) : (
+                <Card className="p-5 border-dashed">
+                  <p className="text-sm text-muted-foreground">
+                    Adicione um contato a esta empresa para gerar insights de IA.
+                  </p>
+                </Card>
+              )}
+            </TabsContent>
+
+            <TabsContent value="history" className="mt-4">
+              <Card className="p-5">
+                <h3 className="flex items-center gap-2 text-sm font-semibold mb-4">
+                  <HistoryIcon className="h-4 w-4" />Histórico de alterações
+                </h3>
+                <AuditHistory entityType="companies" entityId={company.id} />
+              </Card>
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </div>
