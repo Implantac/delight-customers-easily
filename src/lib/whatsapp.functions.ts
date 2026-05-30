@@ -239,7 +239,8 @@ export const updateWAConversation = createServerFn({ method: "POST" })
     }
     if (data.priority !== undefined) patch.priority = data.priority;
     if (data.assigned_to !== undefined) patch.assigned_to = data.assigned_to;
-    const { error } = await supabase.from("whatsapp_conversations").update(patch).eq("id", data.id);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await supabase.from("whatsapp_conversations").update(patch as any).eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
