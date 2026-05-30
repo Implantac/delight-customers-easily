@@ -462,6 +462,7 @@ export type Database = {
       }
       deals: {
         Row: {
+          closed_at: string | null
           company_id: string | null
           contact_id: string | null
           created_at: string
@@ -470,6 +471,8 @@ export type Database = {
           id: string
           notes: string | null
           organization_id: string
+          outcome_notes: string | null
+          outcome_reason: string | null
           position: number
           stage: Database["public"]["Enums"]["deal_stage"]
           title: string
@@ -478,6 +481,7 @@ export type Database = {
           value: number
         }
         Insert: {
+          closed_at?: string | null
           company_id?: string | null
           contact_id?: string | null
           created_at?: string
@@ -486,6 +490,8 @@ export type Database = {
           id?: string
           notes?: string | null
           organization_id: string
+          outcome_notes?: string | null
+          outcome_reason?: string | null
           position?: number
           stage?: Database["public"]["Enums"]["deal_stage"]
           title: string
@@ -494,6 +500,7 @@ export type Database = {
           value?: number
         }
         Update: {
+          closed_at?: string | null
           company_id?: string | null
           contact_id?: string | null
           created_at?: string
@@ -502,6 +509,8 @@ export type Database = {
           id?: string
           notes?: string | null
           organization_id?: string
+          outcome_notes?: string | null
+          outcome_reason?: string | null
           position?: number
           stage?: Database["public"]["Enums"]["deal_stage"]
           title?: string

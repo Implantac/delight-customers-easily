@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppWinLossRouteImport } from './routes/_app.win-loss'
 import { Route as AppRetentionRouteImport } from './routes/_app.retention'
 import { Route as AppReportsRouteImport } from './routes/_app.reports'
 import { Route as AppProductsRouteImport } from './routes/_app.products'
@@ -52,6 +53,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppWinLossRoute = AppWinLossRouteImport.update({
+  id: '/win-loss',
+  path: '/win-loss',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppRetentionRoute = AppRetentionRouteImport.update({
   id: '/retention',
@@ -204,6 +210,7 @@ export interface FileRoutesByFullPath {
   '/products': typeof AppProductsRoute
   '/reports': typeof AppReportsRoute
   '/retention': typeof AppRetentionRoute
+  '/win-loss': typeof AppWinLossRoute
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
   '/invite/$token': typeof AppInviteTokenRoute
@@ -234,6 +241,7 @@ export interface FileRoutesByTo {
   '/products': typeof AppProductsRoute
   '/reports': typeof AppReportsRoute
   '/retention': typeof AppRetentionRoute
+  '/win-loss': typeof AppWinLossRoute
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
   '/invite/$token': typeof AppInviteTokenRoute
@@ -266,6 +274,7 @@ export interface FileRoutesById {
   '/_app/products': typeof AppProductsRoute
   '/_app/reports': typeof AppReportsRoute
   '/_app/retention': typeof AppRetentionRoute
+  '/_app/win-loss': typeof AppWinLossRoute
   '/_app/companies/$id': typeof AppCompaniesIdRoute
   '/_app/contacts/$id': typeof AppContactsIdRoute
   '/_app/invite/$token': typeof AppInviteTokenRoute
@@ -298,6 +307,7 @@ export interface FileRouteTypes {
     | '/products'
     | '/reports'
     | '/retention'
+    | '/win-loss'
     | '/companies/$id'
     | '/contacts/$id'
     | '/invite/$token'
@@ -328,6 +338,7 @@ export interface FileRouteTypes {
     | '/products'
     | '/reports'
     | '/retention'
+    | '/win-loss'
     | '/companies/$id'
     | '/contacts/$id'
     | '/invite/$token'
@@ -359,6 +370,7 @@ export interface FileRouteTypes {
     | '/_app/products'
     | '/_app/reports'
     | '/_app/retention'
+    | '/_app/win-loss'
     | '/_app/companies/$id'
     | '/_app/contacts/$id'
     | '/_app/invite/$token'
@@ -403,6 +415,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_app/win-loss': {
+      id: '/_app/win-loss'
+      path: '/win-loss'
+      fullPath: '/win-loss'
+      preLoaderRoute: typeof AppWinLossRouteImport
+      parentRoute: typeof AppRoute
     }
     '/_app/retention': {
       id: '/_app/retention'
@@ -629,6 +648,7 @@ interface AppRouteChildren {
   AppProductsRoute: typeof AppProductsRoute
   AppReportsRoute: typeof AppReportsRoute
   AppRetentionRoute: typeof AppRetentionRoute
+  AppWinLossRoute: typeof AppWinLossRoute
   AppInviteTokenRoute: typeof AppInviteTokenRoute
   AppSettingsAutomationsRoute: typeof AppSettingsAutomationsRoute
   AppSettingsFieldsRoute: typeof AppSettingsFieldsRoute
@@ -653,6 +673,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppProductsRoute: AppProductsRoute,
   AppReportsRoute: AppReportsRoute,
   AppRetentionRoute: AppRetentionRoute,
+  AppWinLossRoute: AppWinLossRoute,
   AppInviteTokenRoute: AppInviteTokenRoute,
   AppSettingsAutomationsRoute: AppSettingsAutomationsRoute,
   AppSettingsFieldsRoute: AppSettingsFieldsRoute,
