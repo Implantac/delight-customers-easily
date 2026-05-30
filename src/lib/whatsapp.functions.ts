@@ -332,7 +332,6 @@ export const listOrgMembers = createServerFn({ method: "POST" })
       full_name: profMap.get(m.user_id) ?? null,
     }));
   });
-  });
 
 export const listWATemplates = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
