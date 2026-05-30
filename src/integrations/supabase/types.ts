@@ -81,6 +81,63 @@ export type Database = {
           },
         ]
       }
+      approvals: {
+        Row: {
+          amount: number | null
+          approver_id: string | null
+          created_at: string
+          currency: string | null
+          decided_at: string | null
+          decision_note: string | null
+          description: string | null
+          id: string
+          organization_id: string
+          reference_id: string | null
+          reference_type: string | null
+          requester_id: string
+          status: string
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          amount?: number | null
+          approver_id?: string | null
+          created_at?: string
+          currency?: string | null
+          decided_at?: string | null
+          decision_note?: string | null
+          description?: string | null
+          id?: string
+          organization_id: string
+          reference_id?: string | null
+          reference_type?: string | null
+          requester_id: string
+          status?: string
+          title: string
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number | null
+          approver_id?: string | null
+          created_at?: string
+          currency?: string | null
+          decided_at?: string | null
+          decision_note?: string | null
+          description?: string | null
+          id?: string
+          organization_id?: string
+          reference_id?: string | null
+          reference_type?: string | null
+          requester_id?: string
+          status?: string
+          title?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       attachments: {
         Row: {
           created_at: string
