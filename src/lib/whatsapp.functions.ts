@@ -192,13 +192,31 @@ export const createWAConversation = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
+
+    // Auto-link to existing contact by phone (last 8 digits match) when not provided.
+    let contactId = data.contact_id ?? null;
+    if (!contactId) {
+      const digits = data.contact_phone.replace(/\D+/g, "");
+      if (digits.length >= 8) {
+        const suffix = digits.slice(-8);
+        const { data: matches } = await supabase
+          .from("contacts")
+          .select("id, phone")
+          .eq("organization_id", data.organization_id)
+          .ilike("phone", `%${suffix}%`)
+          .limit(5);
+        const hit = (matches ?? []).find((c) => (c.phone ?? "").replace(/\D+/g, "").endsWith(suffix));
+        if (hit) contactId = hit.id;
+      }
+    }
+
     const { data: conv, error } = await supabase
       .from("whatsapp_conversations")
       .insert({
         organization_id: data.organization_id,
         contact_name: data.contact_name,
         contact_phone: data.contact_phone,
-        contact_id: data.contact_id ?? null,
+        contact_id: contactId,
         assigned_to: userId,
         status: "open",
       })
@@ -214,8 +232,9 @@ export const createWAConversation = createServerFn({ method: "POST" })
         status: "delivered",
       });
     }
-    return { id: conv.id };
+    return { id: conv.id, contact_id: contactId };
   });
+
 
 export const updateWAConversation = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])

@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -34,7 +34,7 @@ import {
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MessageCircle, Plus, Send, Check, CheckCheck, Clock, AlertTriangle, MoreVertical, UserPlus, FileText } from "lucide-react";
+import { MessageCircle, Plus, Send, Check, CheckCheck, Clock, AlertTriangle, MoreVertical, UserPlus, FileText, User } from "lucide-react";
 import { toast } from "sonner";
 import { WhatsAppSlaPanel } from "@/components/whatsapp-sla-panel";
 
@@ -326,6 +326,14 @@ function WhatsAppPage() {
                   <div className="font-medium truncate">{selected.contact_name}</div>
                   <div className="text-xs text-muted-foreground truncate">{selected.contact_phone}</div>
                 </div>
+                {selected.contact_id && (
+                  <Button asChild variant="outline" size="sm" className="h-8">
+                    <Link to="/contacts/$id" params={{ id: selected.contact_id }}>
+                      <User className="w-3.5 h-3.5 mr-1" />Abrir contato
+                    </Link>
+                  </Button>
+                )}
+
                 <Select
                   value={selected.status}
                   onValueChange={(v) => updateMut.mutate({ status: v as "open" | "pending" | "resolved" })}
