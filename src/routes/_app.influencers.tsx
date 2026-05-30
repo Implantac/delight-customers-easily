@@ -90,6 +90,8 @@ function InfluencersPage() {
       />
 
       <InfluencerMetricsPanel />
+
+      {isLoading ? (
         <div className="space-y-2">{Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-20 w-full" />)}</div>
       ) : !data?.rows.length ? (
         <Card className="p-10 text-center text-sm text-muted-foreground">
