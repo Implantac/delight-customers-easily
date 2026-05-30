@@ -88,6 +88,7 @@ const navSections: NavSection[] = [
     label: "Inteligência",
     items: [
       { to: "/geo", label: "Geointeligência", icon: MapPin, shortcut: "G M" },
+      { to: "/marketing-intel", label: "Marketing Intel", icon: Megaphone, managerOnly: true },
       { to: "/ia-comercial", label: "IA Comercial", icon: Sparkles, shortcut: "G I" },
       { to: "/reports", label: "Relatórios", icon: BarChart3, shortcut: "G R", managerOnly: true },
     ],
