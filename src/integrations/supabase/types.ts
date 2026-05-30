@@ -675,6 +675,51 @@ export type Database = {
           },
         ]
       }
+      message_templates: {
+        Row: {
+          body: string
+          category: string | null
+          channel: string
+          created_at: string
+          created_by: string | null
+          id: string
+          is_shared: boolean
+          name: string
+          organization_id: string
+          subject: string | null
+          updated_at: string
+          usage_count: number
+        }
+        Insert: {
+          body: string
+          category?: string | null
+          channel?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_shared?: boolean
+          name: string
+          organization_id: string
+          subject?: string | null
+          updated_at?: string
+          usage_count?: number
+        }
+        Update: {
+          body?: string
+          category?: string | null
+          channel?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_shared?: boolean
+          name?: string
+          organization_id?: string
+          subject?: string | null
+          updated_at?: string
+          usage_count?: number
+        }
+        Relationships: []
+      }
       messages: {
         Row: {
           attachment_url: string | null
