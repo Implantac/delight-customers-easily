@@ -34,6 +34,8 @@ function AlertsPage() {
   const qc = useQueryClient();
   const listFn = useServerFn(listAlerts);
   const generateFn = useServerFn(generateAlertNotifications);
+  const [sevFilter, setSevFilter] = useState<"all" | "high" | "medium" | "low">("all");
+  const [kindFilter, setKindFilter] = useState<string>("all");
 
   const { data, isLoading, refetch, isFetching } = useQuery({
     queryKey: ["alerts", orgId],
@@ -51,11 +53,21 @@ function AlertsPage() {
   });
 
   const counts = data?.counts ?? { high: 0, medium: 0, low: 0, total: 0 };
-  const alerts = data?.alerts ?? [];
+  const allAlerts = data?.alerts ?? [];
+  const alerts = useMemo(
+    () =>
+      allAlerts.filter(
+        (a) =>
+          (sevFilter === "all" || a.severity === sevFilter) &&
+          (kindFilter === "all" || a.kind === kindFilter),
+      ),
+    [allAlerts, sevFilter, kindFilter],
+  );
   const grouped = alerts.reduce<Record<string, typeof alerts>>((acc, a) => {
     (acc[a.kind] ??= []).push(a);
     return acc;
   }, {});
+  const kindsPresent = Array.from(new Set(allAlerts.map((a) => a.kind)));
 
   return (
     <div className="p-4 md:p-8">
