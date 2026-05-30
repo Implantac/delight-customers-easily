@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useCurrentOrg } from "@/lib/org";
@@ -16,7 +16,9 @@ import {
 } from "@/components/ui/select";
 import {
   Megaphone, TrendingUp, Users, Flame, Sparkles, ArrowRight, Mail, Eye, MousePointerClick,
+  Trophy, Download,
 } from "lucide-react";
+import { toCSV, downloadCSV } from "@/lib/csv-export";
 
 export const Route = createFileRoute("/_app/marketing-intel")({
   component: MarketingIntelPage,
