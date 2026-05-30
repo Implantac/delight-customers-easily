@@ -48,6 +48,7 @@ import { Route as AppMeuDiaRouteImport } from './routes/_app.meu-dia'
 import { Route as AppMarketingIntelRouteImport } from './routes/_app.marketing-intel'
 import { Route as AppMarketingRouteImport } from './routes/_app.marketing'
 import { Route as AppLoyaltyRouteImport } from './routes/_app.loyalty'
+import { Route as AppLeadsRouteImport } from './routes/_app.leads'
 import { Route as AppLeadScoringRouteImport } from './routes/_app.lead-scoring'
 import { Route as AppLeadFormsRouteImport } from './routes/_app.lead-forms'
 import { Route as AppKbRouteImport } from './routes/_app.kb'
@@ -298,6 +299,11 @@ const AppMarketingRoute = AppMarketingRouteImport.update({
 const AppLoyaltyRoute = AppLoyaltyRouteImport.update({
   id: '/loyalty',
   path: '/loyalty',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLeadsRoute = AppLeadsRouteImport.update({
+  id: '/leads',
+  path: '/leads',
   getParentRoute: () => AppRoute,
 } as any)
 const AppLeadScoringRoute = AppLeadScoringRouteImport.update({
@@ -628,6 +634,7 @@ export interface FileRoutesByFullPath {
   '/kb': typeof AppKbRouteWithChildren
   '/lead-forms': typeof AppLeadFormsRoute
   '/lead-scoring': typeof AppLeadScoringRoute
+  '/leads': typeof AppLeadsRoute
   '/loyalty': typeof AppLoyaltyRoute
   '/marketing': typeof AppMarketingRoute
   '/marketing-intel': typeof AppMarketingIntelRoute
@@ -725,6 +732,7 @@ export interface FileRoutesByTo {
   '/kb': typeof AppKbRouteWithChildren
   '/lead-forms': typeof AppLeadFormsRoute
   '/lead-scoring': typeof AppLeadScoringRoute
+  '/leads': typeof AppLeadsRoute
   '/loyalty': typeof AppLoyaltyRoute
   '/marketing': typeof AppMarketingRoute
   '/marketing-intel': typeof AppMarketingIntelRoute
@@ -824,6 +832,7 @@ export interface FileRoutesById {
   '/_app/kb': typeof AppKbRouteWithChildren
   '/_app/lead-forms': typeof AppLeadFormsRoute
   '/_app/lead-scoring': typeof AppLeadScoringRoute
+  '/_app/leads': typeof AppLeadsRoute
   '/_app/loyalty': typeof AppLoyaltyRoute
   '/_app/marketing': typeof AppMarketingRoute
   '/_app/marketing-intel': typeof AppMarketingIntelRoute
@@ -923,6 +932,7 @@ export interface FileRouteTypes {
     | '/kb'
     | '/lead-forms'
     | '/lead-scoring'
+    | '/leads'
     | '/loyalty'
     | '/marketing'
     | '/marketing-intel'
@@ -1020,6 +1030,7 @@ export interface FileRouteTypes {
     | '/kb'
     | '/lead-forms'
     | '/lead-scoring'
+    | '/leads'
     | '/loyalty'
     | '/marketing'
     | '/marketing-intel'
@@ -1118,6 +1129,7 @@ export interface FileRouteTypes {
     | '/_app/kb'
     | '/_app/lead-forms'
     | '/_app/lead-scoring'
+    | '/_app/leads'
     | '/_app/loyalty'
     | '/_app/marketing'
     | '/_app/marketing-intel'
@@ -1468,6 +1480,13 @@ declare module '@tanstack/react-router' {
       path: '/loyalty'
       fullPath: '/loyalty'
       preLoaderRoute: typeof AppLoyaltyRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/leads': {
+      id: '/_app/leads'
+      path: '/leads'
+      fullPath: '/leads'
+      preLoaderRoute: typeof AppLeadsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/lead-scoring': {
@@ -1988,6 +2007,7 @@ interface AppRouteChildren {
   AppKbRoute: typeof AppKbRouteWithChildren
   AppLeadFormsRoute: typeof AppLeadFormsRoute
   AppLeadScoringRoute: typeof AppLeadScoringRoute
+  AppLeadsRoute: typeof AppLeadsRoute
   AppLoyaltyRoute: typeof AppLoyaltyRoute
   AppMarketingRoute: typeof AppMarketingRoute
   AppMarketingIntelRoute: typeof AppMarketingIntelRoute
@@ -2068,6 +2088,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppKbRoute: AppKbRouteWithChildren,
   AppLeadFormsRoute: AppLeadFormsRoute,
   AppLeadScoringRoute: AppLeadScoringRoute,
+  AppLeadsRoute: AppLeadsRoute,
   AppLoyaltyRoute: AppLoyaltyRoute,
   AppMarketingRoute: AppMarketingRoute,
   AppMarketingIntelRoute: AppMarketingIntelRoute,
