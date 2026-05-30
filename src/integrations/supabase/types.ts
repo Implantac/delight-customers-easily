@@ -646,6 +646,84 @@ export type Database = {
           },
         ]
       }
+      expenses: {
+        Row: {
+          amount: number
+          category: string
+          company_id: string | null
+          created_at: string
+          currency: string
+          deal_id: string | null
+          decided_at: string | null
+          decided_by: string | null
+          description: string
+          expense_date: string
+          id: string
+          notes: string | null
+          organization_id: string
+          payment_method: string | null
+          receipt_url: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          category?: string
+          company_id?: string | null
+          created_at?: string
+          currency?: string
+          deal_id?: string | null
+          decided_at?: string | null
+          decided_by?: string | null
+          description: string
+          expense_date?: string
+          id?: string
+          notes?: string | null
+          organization_id: string
+          payment_method?: string | null
+          receipt_url?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          category?: string
+          company_id?: string | null
+          created_at?: string
+          currency?: string
+          deal_id?: string | null
+          decided_at?: string | null
+          decided_by?: string | null
+          description?: string
+          expense_date?: string
+          id?: string
+          notes?: string | null
+          organization_id?: string
+          payment_method?: string | null
+          receipt_url?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "expenses_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "expenses_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       invoices: {
         Row: {
           amount: number
