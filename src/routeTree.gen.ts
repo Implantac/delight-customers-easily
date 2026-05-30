@@ -44,6 +44,7 @@ import { Route as AppOportunidadesRouteImport } from './routes/_app.oportunidade
 import { Route as AppOnboardingRouteImport } from './routes/_app.onboarding'
 import { Route as AppNotificationsRouteImport } from './routes/_app.notifications'
 import { Route as AppMytasksRouteImport } from './routes/_app.mytasks'
+import { Route as AppMeuDiaRouteImport } from './routes/_app.meu-dia'
 import { Route as AppMarketingIntelRouteImport } from './routes/_app.marketing-intel'
 import { Route as AppMarketingRouteImport } from './routes/_app.marketing'
 import { Route as AppLoyaltyRouteImport } from './routes/_app.loyalty'
@@ -277,6 +278,11 @@ const AppNotificationsRoute = AppNotificationsRouteImport.update({
 const AppMytasksRoute = AppMytasksRouteImport.update({
   id: '/mytasks',
   path: '/mytasks',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMeuDiaRoute = AppMeuDiaRouteImport.update({
+  id: '/meu-dia',
+  path: '/meu-dia',
   getParentRoute: () => AppRoute,
 } as any)
 const AppMarketingIntelRoute = AppMarketingIntelRouteImport.update({
@@ -625,6 +631,7 @@ export interface FileRoutesByFullPath {
   '/loyalty': typeof AppLoyaltyRoute
   '/marketing': typeof AppMarketingRoute
   '/marketing-intel': typeof AppMarketingIntelRoute
+  '/meu-dia': typeof AppMeuDiaRoute
   '/mytasks': typeof AppMytasksRoute
   '/notifications': typeof AppNotificationsRoute
   '/onboarding': typeof AppOnboardingRoute
@@ -721,6 +728,7 @@ export interface FileRoutesByTo {
   '/loyalty': typeof AppLoyaltyRoute
   '/marketing': typeof AppMarketingRoute
   '/marketing-intel': typeof AppMarketingIntelRoute
+  '/meu-dia': typeof AppMeuDiaRoute
   '/mytasks': typeof AppMytasksRoute
   '/notifications': typeof AppNotificationsRoute
   '/onboarding': typeof AppOnboardingRoute
@@ -819,6 +827,7 @@ export interface FileRoutesById {
   '/_app/loyalty': typeof AppLoyaltyRoute
   '/_app/marketing': typeof AppMarketingRoute
   '/_app/marketing-intel': typeof AppMarketingIntelRoute
+  '/_app/meu-dia': typeof AppMeuDiaRoute
   '/_app/mytasks': typeof AppMytasksRoute
   '/_app/notifications': typeof AppNotificationsRoute
   '/_app/onboarding': typeof AppOnboardingRoute
@@ -917,6 +926,7 @@ export interface FileRouteTypes {
     | '/loyalty'
     | '/marketing'
     | '/marketing-intel'
+    | '/meu-dia'
     | '/mytasks'
     | '/notifications'
     | '/onboarding'
@@ -1013,6 +1023,7 @@ export interface FileRouteTypes {
     | '/loyalty'
     | '/marketing'
     | '/marketing-intel'
+    | '/meu-dia'
     | '/mytasks'
     | '/notifications'
     | '/onboarding'
@@ -1110,6 +1121,7 @@ export interface FileRouteTypes {
     | '/_app/loyalty'
     | '/_app/marketing'
     | '/_app/marketing-intel'
+    | '/_app/meu-dia'
     | '/_app/mytasks'
     | '/_app/notifications'
     | '/_app/onboarding'
@@ -1428,6 +1440,13 @@ declare module '@tanstack/react-router' {
       path: '/mytasks'
       fullPath: '/mytasks'
       preLoaderRoute: typeof AppMytasksRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/meu-dia': {
+      id: '/_app/meu-dia'
+      path: '/meu-dia'
+      fullPath: '/meu-dia'
+      preLoaderRoute: typeof AppMeuDiaRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/marketing-intel': {
@@ -1972,6 +1991,7 @@ interface AppRouteChildren {
   AppLoyaltyRoute: typeof AppLoyaltyRoute
   AppMarketingRoute: typeof AppMarketingRoute
   AppMarketingIntelRoute: typeof AppMarketingIntelRoute
+  AppMeuDiaRoute: typeof AppMeuDiaRoute
   AppMytasksRoute: typeof AppMytasksRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppOnboardingRoute: typeof AppOnboardingRoute
@@ -2051,6 +2071,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppLoyaltyRoute: AppLoyaltyRoute,
   AppMarketingRoute: AppMarketingRoute,
   AppMarketingIntelRoute: AppMarketingIntelRoute,
+  AppMeuDiaRoute: AppMeuDiaRoute,
   AppMytasksRoute: AppMytasksRoute,
   AppNotificationsRoute: AppNotificationsRoute,
   AppOnboardingRoute: AppOnboardingRoute,
