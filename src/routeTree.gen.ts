@@ -21,6 +21,7 @@ import { Route as AppTemplatesRouteImport } from './routes/_app.templates'
 import { Route as AppTagsRouteImport } from './routes/_app.tags'
 import { Route as AppSurveysRouteImport } from './routes/_app.surveys'
 import { Route as AppSubscriptionsRouteImport } from './routes/_app.subscriptions'
+import { Route as AppStockRouteImport } from './routes/_app.stock'
 import { Route as AppSignaturesRouteImport } from './routes/_app.signatures'
 import { Route as AppSequencesRouteImport } from './routes/_app.sequences'
 import { Route as AppSegmentsRouteImport } from './routes/_app.segments'
@@ -141,6 +142,11 @@ const AppSurveysRoute = AppSurveysRouteImport.update({
 const AppSubscriptionsRoute = AppSubscriptionsRouteImport.update({
   id: '/subscriptions',
   path: '/subscriptions',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppStockRoute = AppStockRouteImport.update({
+  id: '/stock',
+  path: '/stock',
   getParentRoute: () => AppRoute,
 } as any)
 const AppSignaturesRoute = AppSignaturesRouteImport.update({
@@ -505,6 +511,7 @@ export interface FileRoutesByFullPath {
   '/segments': typeof AppSegmentsRoute
   '/sequences': typeof AppSequencesRouteWithChildren
   '/signatures': typeof AppSignaturesRoute
+  '/stock': typeof AppStockRoute
   '/subscriptions': typeof AppSubscriptionsRoute
   '/surveys': typeof AppSurveysRoute
   '/tags': typeof AppTagsRoute
@@ -580,6 +587,7 @@ export interface FileRoutesByTo {
   '/segments': typeof AppSegmentsRoute
   '/sequences': typeof AppSequencesRouteWithChildren
   '/signatures': typeof AppSignaturesRoute
+  '/stock': typeof AppStockRoute
   '/subscriptions': typeof AppSubscriptionsRoute
   '/surveys': typeof AppSurveysRoute
   '/tags': typeof AppTagsRoute
@@ -657,6 +665,7 @@ export interface FileRoutesById {
   '/_app/segments': typeof AppSegmentsRoute
   '/_app/sequences': typeof AppSequencesRouteWithChildren
   '/_app/signatures': typeof AppSignaturesRoute
+  '/_app/stock': typeof AppStockRoute
   '/_app/subscriptions': typeof AppSubscriptionsRoute
   '/_app/surveys': typeof AppSurveysRoute
   '/_app/tags': typeof AppTagsRoute
@@ -734,6 +743,7 @@ export interface FileRouteTypes {
     | '/segments'
     | '/sequences'
     | '/signatures'
+    | '/stock'
     | '/subscriptions'
     | '/surveys'
     | '/tags'
@@ -809,6 +819,7 @@ export interface FileRouteTypes {
     | '/segments'
     | '/sequences'
     | '/signatures'
+    | '/stock'
     | '/subscriptions'
     | '/surveys'
     | '/tags'
@@ -885,6 +896,7 @@ export interface FileRouteTypes {
     | '/_app/segments'
     | '/_app/sequences'
     | '/_app/signatures'
+    | '/_app/stock'
     | '/_app/subscriptions'
     | '/_app/surveys'
     | '/_app/tags'
@@ -1006,6 +1018,13 @@ declare module '@tanstack/react-router' {
       path: '/subscriptions'
       fullPath: '/subscriptions'
       preLoaderRoute: typeof AppSubscriptionsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/stock': {
+      id: '/_app/stock'
+      path: '/stock'
+      fullPath: '/stock'
+      preLoaderRoute: typeof AppStockRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/signatures': {
@@ -1562,6 +1581,7 @@ interface AppRouteChildren {
   AppSegmentsRoute: typeof AppSegmentsRoute
   AppSequencesRoute: typeof AppSequencesRouteWithChildren
   AppSignaturesRoute: typeof AppSignaturesRoute
+  AppStockRoute: typeof AppStockRoute
   AppSubscriptionsRoute: typeof AppSubscriptionsRoute
   AppSurveysRoute: typeof AppSurveysRoute
   AppTagsRoute: typeof AppTagsRoute
@@ -1626,6 +1646,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSegmentsRoute: AppSegmentsRoute,
   AppSequencesRoute: AppSequencesRouteWithChildren,
   AppSignaturesRoute: AppSignaturesRoute,
+  AppStockRoute: AppStockRoute,
   AppSubscriptionsRoute: AppSubscriptionsRoute,
   AppSurveysRoute: AppSurveysRoute,
   AppTagsRoute: AppTagsRoute,

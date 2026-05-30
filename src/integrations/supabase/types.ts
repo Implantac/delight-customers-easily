@@ -3277,6 +3277,51 @@ export type Database = {
           },
         ]
       }
+      stock_movements: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          kind: Database["public"]["Enums"]["stock_movement_kind"]
+          occurred_at: string
+          organization_id: string
+          product_id: string | null
+          product_name: string
+          quantity: number
+          reason: string | null
+          reference: string | null
+          unit_cost: number
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          kind: Database["public"]["Enums"]["stock_movement_kind"]
+          occurred_at?: string
+          organization_id: string
+          product_id?: string | null
+          product_name: string
+          quantity: number
+          reason?: string | null
+          reference?: string | null
+          unit_cost?: number
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          kind?: Database["public"]["Enums"]["stock_movement_kind"]
+          occurred_at?: string
+          organization_id?: string
+          product_id?: string | null
+          product_name?: string
+          quantity?: number
+          reason?: string | null
+          reference?: string | null
+          unit_cost?: number
+        }
+        Relationships: []
+      }
       subscriptions: {
         Row: {
           billing_cycle: string
@@ -3847,6 +3892,7 @@ export type Database = {
         | "expired"
         | "cancelled"
       signer_status: "pending" | "viewed" | "signed" | "declined"
+      stock_movement_kind: "in" | "out" | "adjust"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -4010,6 +4056,7 @@ export const Constants = {
         "cancelled",
       ],
       signer_status: ["pending", "viewed", "signed", "declined"],
+      stock_movement_kind: ["in", "out", "adjust"],
     },
   },
 } as const
