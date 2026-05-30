@@ -51,7 +51,7 @@ export const createView = createServerFn({ method: "POST" })
         user_id: userId!,
         entity: data.entity,
         name: data.name.trim(),
-        filters: data.filters,
+        filters: data.filters as any,
         is_shared: data.is_shared,
       })
       .select()
@@ -74,11 +74,11 @@ export const updateView = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const { supabase } = context;
-    const patch: { name?: string; filters?: Record<string, unknown>; is_shared?: boolean } = {};
+    const patch: Record<string, any> = {};
     if (data.name !== undefined) patch.name = data.name.trim();
     if (data.filters !== undefined) patch.filters = data.filters;
     if (data.is_shared !== undefined) patch.is_shared = data.is_shared;
-    const { error } = await supabase.from("saved_views").update(patch).eq("id", data.id);
+    const { error } = await supabase.from("saved_views").update(patch as any).eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
