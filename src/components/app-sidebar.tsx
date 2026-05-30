@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Users, Building2, KanbanSquare, CheckSquare, Briefcase, Check, ChevronsUpDown, LogOut, Settings, Upload, BarChart3, Sliders, Webhook, Zap, Sparkles, AlertTriangle, Target, HeartPulse, DollarSign, Map, Package, MessageSquare, ShieldCheck, Trophy, Coins, Flame, Activity, Compass, PieChart, FileText, FileSignature, Grid3x3, History, Medal, Tag, Bookmark, Bell, Calendar as CalendarIcon, BookOpen, LifeBuoy } from "lucide-react";
+import { LayoutDashboard, Users, Building2, KanbanSquare, CheckSquare, Briefcase, Check, ChevronsUpDown, LogOut, Settings, Upload, BarChart3, Sliders, Webhook, Zap, Sparkles, AlertTriangle, Target, HeartPulse, DollarSign, Map, Package, MessageSquare, ShieldCheck, Trophy, Coins, Flame, Activity, Compass, PieChart, FileText, FileSignature, Grid3x3, History, Medal, Tag, Bookmark, Bell, Calendar as CalendarIcon, BookOpen, LifeBuoy, Inbox } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useCurrentOrg, switchOrganization } from "@/lib/org";
 import { useCanManage } from "@/lib/permissions";
@@ -23,6 +23,7 @@ const nav = [
   { to: "/lead-scoring", label: "Lead Scoring", icon: Flame, shortcut: "", managerOnly: false },
   { to: "/companies", label: "Empresas", icon: Building2, shortcut: "G E", managerOnly: false },
   { to: "/activities", label: "Atividades", icon: CheckSquare, shortcut: "G A", managerOnly: false },
+  { to: "/mytasks", label: "Minhas Tarefas", icon: Inbox, shortcut: "G T", managerOnly: false },
   { to: "/calendar", label: "Agenda", icon: CalendarIcon, shortcut: "", managerOnly: false },
   { to: "/alerts", label: "Alertas", icon: AlertTriangle, shortcut: "G L", managerOnly: false },
   { to: "/forecast", label: "Previsão", icon: Target, shortcut: "G F", managerOnly: false },
