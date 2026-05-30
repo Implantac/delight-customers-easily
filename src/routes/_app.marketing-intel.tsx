@@ -82,6 +82,40 @@ function MarketingIntelPage() {
         </TabsList>
 
         <TabsContent value="canais">
+          {(data?.channels?.length ?? 0) > 0 && (
+            <div className="flex justify-end mb-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  const csv = toCSV(
+                    data!.channels.map((c) => ({
+                      canal: c.channel,
+                      leads: c.leads,
+                      convertidos: c.converted,
+                      taxa_pct: c.conversion_rate.toFixed(2),
+                      pipeline_aberto: c.open_pipeline,
+                      receita_ganha: c.won_revenue,
+                      receita_por_lead: c.leads > 0 ? (c.won_revenue / c.leads).toFixed(2) : "0",
+                    })),
+                    [
+                      { key: "canal", label: "Canal" },
+                      { key: "leads", label: "Leads" },
+                      { key: "convertidos", label: "Convertidos" },
+                      { key: "taxa_pct", label: "Conversão %" },
+                      { key: "pipeline_aberto", label: "Pipeline (BRL)" },
+                      { key: "receita_ganha", label: "Receita (BRL)" },
+                      { key: "receita_por_lead", label: "Receita por lead (BRL)" },
+                    ],
+                  );
+                  const date = new Date().toISOString().slice(0, 10);
+                  downloadCSV(`marketing-canais-${windowDays}d-${date}.csv`, csv);
+                }}
+              >
+                <Download className="h-4 w-4 mr-2" /> Exportar CSV
+              </Button>
+            </div>
+          )}
           {isLoading ? <Skeleton className="h-60 w-full" /> : (
             <Card className="overflow-hidden">
               <table className="w-full text-sm">
