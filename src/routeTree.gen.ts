@@ -46,6 +46,7 @@ import { Route as AppCoachingRouteImport } from './routes/_app.coaching'
 import { Route as AppChatRouteImport } from './routes/_app.chat'
 import { Route as AppCalendarRouteImport } from './routes/_app.calendar'
 import { Route as AppAuditRouteImport } from './routes/_app.audit'
+import { Route as AppApprovalsRouteImport } from './routes/_app.approvals'
 import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
 import { Route as AppActivitiesRouteImport } from './routes/_app.activities'
 import { Route as ApiPublicInboundEmailRouteImport } from './routes/api/public/inbound-email'
@@ -248,6 +249,11 @@ const AppAuditRoute = AppAuditRouteImport.update({
   path: '/audit',
   getParentRoute: () => AppRoute,
 } as any)
+const AppApprovalsRoute = AppApprovalsRouteImport.update({
+  id: '/approvals',
+  path: '/approvals',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppAlertsRoute = AppAlertsRouteImport.update({
   id: '/alerts',
   path: '/alerts',
@@ -341,6 +347,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/activities': typeof AppActivitiesRoute
   '/alerts': typeof AppAlertsRoute
+  '/approvals': typeof AppApprovalsRoute
   '/audit': typeof AppAuditRoute
   '/calendar': typeof AppCalendarRoute
   '/chat': typeof AppChatRoute
@@ -396,6 +403,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/activities': typeof AppActivitiesRoute
   '/alerts': typeof AppAlertsRoute
+  '/approvals': typeof AppApprovalsRoute
   '/audit': typeof AppAuditRoute
   '/calendar': typeof AppCalendarRoute
   '/chat': typeof AppChatRoute
@@ -453,6 +461,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/_app/activities': typeof AppActivitiesRoute
   '/_app/alerts': typeof AppAlertsRoute
+  '/_app/approvals': typeof AppApprovalsRoute
   '/_app/audit': typeof AppAuditRoute
   '/_app/calendar': typeof AppCalendarRoute
   '/_app/chat': typeof AppChatRoute
@@ -510,6 +519,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/activities'
     | '/alerts'
+    | '/approvals'
     | '/audit'
     | '/calendar'
     | '/chat'
@@ -565,6 +575,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/activities'
     | '/alerts'
+    | '/approvals'
     | '/audit'
     | '/calendar'
     | '/chat'
@@ -621,6 +632,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/_app/activities'
     | '/_app/alerts'
+    | '/_app/approvals'
     | '/_app/audit'
     | '/_app/calendar'
     | '/_app/chat'
@@ -942,6 +954,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAuditRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/approvals': {
+      id: '/_app/approvals'
+      path: '/approvals'
+      fullPath: '/approvals'
+      preLoaderRoute: typeof AppApprovalsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/alerts': {
       id: '/_app/alerts'
       path: '/alerts'
@@ -1137,6 +1156,7 @@ const AppTicketsRouteWithChildren = AppTicketsRoute._addFileChildren(
 interface AppRouteChildren {
   AppActivitiesRoute: typeof AppActivitiesRoute
   AppAlertsRoute: typeof AppAlertsRoute
+  AppApprovalsRoute: typeof AppApprovalsRoute
   AppAuditRoute: typeof AppAuditRoute
   AppCalendarRoute: typeof AppCalendarRoute
   AppChatRoute: typeof AppChatRoute
@@ -1182,6 +1202,7 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppActivitiesRoute: AppActivitiesRoute,
   AppAlertsRoute: AppAlertsRoute,
+  AppApprovalsRoute: AppApprovalsRoute,
   AppAuditRoute: AppAuditRoute,
   AppCalendarRoute: AppCalendarRoute,
   AppChatRoute: AppChatRoute,
@@ -1237,3 +1258,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

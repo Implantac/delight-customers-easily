@@ -36,6 +36,7 @@ const nav = [
   { to: "/finance", label: "Financeiro", icon: DollarSign, shortcut: "", managerOnly: false },
   { to: "/subscriptions", label: "Assinaturas", icon: Repeat, shortcut: "", managerOnly: false },
   { to: "/invoices", label: "Faturas", icon: Receipt, shortcut: "", managerOnly: false },
+  { to: "/approvals", label: "Aprovações", icon: ShieldCheck, shortcut: "", managerOnly: false },
   { to: "/opportunity-map", label: "Mapa de Oportunidades", icon: Map, shortcut: "", managerOnly: false },
   { to: "/products", label: "Produtos", icon: Package, shortcut: "", managerOnly: false },
   { to: "/proposals", label: "Propostas", icon: FileSignature, shortcut: "", managerOnly: false },
