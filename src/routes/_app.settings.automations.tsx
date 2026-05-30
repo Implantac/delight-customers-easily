@@ -41,6 +41,9 @@ const STAGES = ["lead", "qualified", "proposal", "negotiation", "won", "lost"] a
 const ACTION_TYPES = [
   { id: "create_activity", label: "Criar atividade" },
   { id: "create_notification", label: "Notificar usuário" },
+  { id: "change_deal_stage", label: "Mover negócio de estágio" },
+  { id: "assign_owner", label: "Atribuir responsável" },
+  { id: "create_recommendation", label: "Gerar recomendação" },
 ];
 
 const ACTIVITY_TYPES = ["task", "call", "email", "meeting", "note"] as const;
