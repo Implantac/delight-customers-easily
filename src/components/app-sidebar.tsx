@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Users, Building2, KanbanSquare, CheckSquare, Briefcase, Check, ChevronsUpDown, LogOut, Settings, Upload, BarChart3, Sliders, Webhook, Zap, Sparkles, AlertTriangle, Target, HeartPulse, DollarSign, Map, Package, MessageSquare, ShieldCheck, Trophy, Coins, Flame, Activity, Compass, PieChart, FileText, FileSignature } from "lucide-react";
+import { LayoutDashboard, Users, Building2, KanbanSquare, CheckSquare, Briefcase, Check, ChevronsUpDown, LogOut, Settings, Upload, BarChart3, Sliders, Webhook, Zap, Sparkles, AlertTriangle, Target, HeartPulse, DollarSign, Map, Package, MessageSquare, ShieldCheck, Trophy, Coins, Flame, Activity, Compass, PieChart, FileText, FileSignature, Grid3x3 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useCurrentOrg, switchOrganization } from "@/lib/org";
 import { useCanManage } from "@/lib/permissions";
@@ -29,6 +29,7 @@ const nav = [
   { to: "/commissions", label: "Comissões", icon: Coins, shortcut: "", managerOnly: false },
   { to: "/retention", label: "Retenção", icon: HeartPulse, shortcut: "", managerOnly: false },
   { to: "/segments", label: "Segmentação RFM", icon: PieChart, shortcut: "", managerOnly: false },
+  { to: "/cohorts", label: "Cohorts", icon: Grid3x3, shortcut: "", managerOnly: true },
   { to: "/finance", label: "Financeiro", icon: DollarSign, shortcut: "", managerOnly: false },
   { to: "/opportunity-map", label: "Mapa de Oportunidades", icon: Map, shortcut: "", managerOnly: false },
   { to: "/products", label: "Produtos", icon: Package, shortcut: "", managerOnly: false },
