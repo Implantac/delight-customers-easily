@@ -17,8 +17,9 @@ export function MobileBottomNav() {
   const path = useRouterState({ select: (s) => s.location.pathname });
   return (
     <nav
-      className="md:hidden fixed bottom-0 inset-x-0 z-40 border-t bg-background/95 backdrop-blur"
+      className="md:hidden fixed bottom-0 inset-x-0 z-40 border-t border-border/60 bg-background/85 backdrop-blur-xl shadow-[0_-4px_20px_-8px_rgb(0_0_0/0.08)]"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+      aria-label="Navegação principal"
     >
       <ul className="grid grid-cols-5">
         {items.map(({ to, label, icon: Icon }) => {
@@ -28,12 +29,20 @@ export function MobileBottomNav() {
               <Link
                 to={to}
                 className={cn(
-                  "flex flex-col items-center justify-center gap-0.5 py-2 text-[10px] font-medium transition-colors",
-                  active ? "text-primary" : "text-muted-foreground hover:text-foreground",
+                  "relative flex flex-col items-center justify-center gap-1 py-2.5 text-[10px] font-medium transition-all duration-200 ease-out min-h-12",
+                  active
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-foreground active:scale-95",
                 )}
               >
-                <Icon className="h-5 w-5" />
-                <span>{label}</span>
+                {active && (
+                  <span
+                    aria-hidden
+                    className="absolute top-0 left-1/2 -translate-x-1/2 h-0.5 w-8 rounded-full bg-[var(--gradient-primary)]"
+                  />
+                )}
+                <Icon className={cn("h-5 w-5 transition-transform", active && "scale-110")} />
+                <span className="leading-none">{label}</span>
               </Link>
             </li>
           );
