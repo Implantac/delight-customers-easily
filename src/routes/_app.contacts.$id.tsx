@@ -5,10 +5,14 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { PageHeader } from "@/components/page-header";
 import { HealthScore } from "@/components/health-score";
 import { Timeline, type TimelineItem } from "@/components/timeline";
-import { ArrowLeft, Mail, Phone, Briefcase, Trash2, Building2, KanbanSquare, Clock, MessageCircle, History as HistoryIcon } from "lucide-react";
+import {
+  ArrowLeft, Mail, Phone, Briefcase, Trash2, Building2, KanbanSquare,
+  Clock, MessageCircle, History as HistoryIcon, Sparkles, Paperclip, LayoutGrid,
+} from "lucide-react";
 import { AuditHistory } from "@/components/audit-history";
 import { SendEmailDialog } from "@/components/send-email-dialog";
 import { AIInsights } from "@/components/ai-insights";
