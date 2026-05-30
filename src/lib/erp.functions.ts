@@ -83,7 +83,7 @@ export const getErpIntegration = createServerFn({ method: "POST" })
     const provider = data.provider ?? "omie";
     const { data: row, error } = await context.supabase
       .from("erp_integrations")
-      .select("*")
+      .select(INTEG_COLS)
       .eq("organization_id", data.organization_id)
       .eq("provider", provider)
       .maybeSingle();
@@ -118,7 +118,7 @@ export const saveErpIntegration = createServerFn({ method: "POST" })
         },
         { onConflict: "organization_id,provider" },
       )
-      .select("*")
+      .select(INTEG_COLS)
       .single();
     if (error) throw new Error(error.message);
     return { integration: row as ErpIntegration };
@@ -144,7 +144,7 @@ export const testErpConnection = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { data: integ, error } = await context.supabase
       .from("erp_integrations")
-      .select("*")
+      .select(INTEG_COLS)
       .eq("organization_id", data.organization_id)
       .eq("provider", "omie")
       .maybeSingle();
@@ -168,7 +168,7 @@ export const testErpConnection = createServerFn({ method: "POST" })
 async function loadIntegration(supabase: any, orgId: string) {
   const { data: integ, error } = await supabase
     .from("erp_integrations")
-    .select("*")
+    .select(INTEG_COLS)
     .eq("organization_id", orgId)
     .eq("provider", "omie")
     .maybeSingle();
