@@ -56,7 +56,7 @@ export const getSalesAgents = createServerFn({ method: "POST" })
         .eq("organization_id", org),
       supabase
         .from("activities")
-        .select("id, deal_id, company_id:contact_id, completed, due_date, created_at, user_id")
+        .select("id, deal_id, completed, due_date, created_at, user_id")
         .eq("organization_id", org)
         .gte("created_at", new Date(now - 90 * DAY).toISOString()),
       supabase
