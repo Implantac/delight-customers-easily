@@ -162,6 +162,10 @@
   }
   body {
     background-color: var(--color-background);
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -10%, color-mix(in oklab, var(--primary) 8%, transparent), transparent 70%),
+      radial-gradient(ellipse 60% 40% at 100% 0%, color-mix(in oklab, var(--primary-glow) 6%, transparent), transparent 60%);
+    background-attachment: fixed;
     color: var(--color-foreground);
     /* Recursos tipográficos: ligaturas, números proporcionais, melhor leitura */
     font-feature-settings: "cv11", "ss01", "ss03", "cv02";
@@ -268,7 +272,19 @@
     border-color: color-mix(in oklab, var(--primary) 20%, var(--border));
   }
 
-  /* Surface elevada genérica */
+  /* Card interativo (clicável) — opt-in: aplica lift + glow no hover */
+  .interactive-card {
+    cursor: pointer;
+    transition: transform 200ms var(--ease-out), box-shadow 200ms var(--ease-out), border-color 200ms var(--ease-out);
+  }
+  .interactive-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: color-mix(in oklab, var(--primary) 25%, var(--border));
+  }
+  .interactive-card:active {
+    transform: translateY(0);
+  }
   .surface-elevated {
     background: var(--card);
     border: 1px solid var(--border);
