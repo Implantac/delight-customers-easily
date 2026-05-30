@@ -52,6 +52,7 @@ import { Route as AppCommandRouteImport } from './routes/_app.command'
 import { Route as AppCohortsRouteImport } from './routes/_app.cohorts'
 import { Route as AppCoachingRouteImport } from './routes/_app.coaching'
 import { Route as AppChatRouteImport } from './routes/_app.chat'
+import { Route as AppCampaignsRouteImport } from './routes/_app.campaigns'
 import { Route as AppCalendarRouteImport } from './routes/_app.calendar'
 import { Route as AppAuditRouteImport } from './routes/_app.audit'
 import { Route as AppApprovalsRouteImport } from './routes/_app.approvals'
@@ -288,6 +289,11 @@ const AppChatRoute = AppChatRouteImport.update({
   path: '/chat',
   getParentRoute: () => AppRoute,
 } as any)
+const AppCampaignsRoute = AppCampaignsRouteImport.update({
+  id: '/campaigns',
+  path: '/campaigns',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppCalendarRoute = AppCalendarRouteImport.update({
   id: '/calendar',
   path: '/calendar',
@@ -404,6 +410,7 @@ export interface FileRoutesByFullPath {
   '/approvals': typeof AppApprovalsRoute
   '/audit': typeof AppAuditRoute
   '/calendar': typeof AppCalendarRoute
+  '/campaigns': typeof AppCampaignsRoute
   '/chat': typeof AppChatRoute
   '/coaching': typeof AppCoachingRoute
   '/cohorts': typeof AppCohortsRoute
@@ -469,6 +476,7 @@ export interface FileRoutesByTo {
   '/approvals': typeof AppApprovalsRoute
   '/audit': typeof AppAuditRoute
   '/calendar': typeof AppCalendarRoute
+  '/campaigns': typeof AppCampaignsRoute
   '/chat': typeof AppChatRoute
   '/coaching': typeof AppCoachingRoute
   '/cohorts': typeof AppCohortsRoute
@@ -536,6 +544,7 @@ export interface FileRoutesById {
   '/_app/approvals': typeof AppApprovalsRoute
   '/_app/audit': typeof AppAuditRoute
   '/_app/calendar': typeof AppCalendarRoute
+  '/_app/campaigns': typeof AppCampaignsRoute
   '/_app/chat': typeof AppChatRoute
   '/_app/coaching': typeof AppCoachingRoute
   '/_app/cohorts': typeof AppCohortsRoute
@@ -603,6 +612,7 @@ export interface FileRouteTypes {
     | '/approvals'
     | '/audit'
     | '/calendar'
+    | '/campaigns'
     | '/chat'
     | '/coaching'
     | '/cohorts'
@@ -668,6 +678,7 @@ export interface FileRouteTypes {
     | '/approvals'
     | '/audit'
     | '/calendar'
+    | '/campaigns'
     | '/chat'
     | '/coaching'
     | '/cohorts'
@@ -734,6 +745,7 @@ export interface FileRouteTypes {
     | '/_app/approvals'
     | '/_app/audit'
     | '/_app/calendar'
+    | '/_app/campaigns'
     | '/_app/chat'
     | '/_app/coaching'
     | '/_app/cohorts'
@@ -1105,6 +1117,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppChatRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/campaigns': {
+      id: '/_app/campaigns'
+      path: '/campaigns'
+      fullPath: '/campaigns'
+      preLoaderRoute: typeof AppCampaignsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/calendar': {
       id: '/_app/calendar'
       path: '/calendar'
@@ -1331,6 +1350,7 @@ interface AppRouteChildren {
   AppApprovalsRoute: typeof AppApprovalsRoute
   AppAuditRoute: typeof AppAuditRoute
   AppCalendarRoute: typeof AppCalendarRoute
+  AppCampaignsRoute: typeof AppCampaignsRoute
   AppChatRoute: typeof AppChatRoute
   AppCoachingRoute: typeof AppCoachingRoute
   AppCohortsRoute: typeof AppCohortsRoute
@@ -1385,6 +1405,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppApprovalsRoute: AppApprovalsRoute,
   AppAuditRoute: AppAuditRoute,
   AppCalendarRoute: AppCalendarRoute,
+  AppCampaignsRoute: AppCampaignsRoute,
   AppChatRoute: AppChatRoute,
   AppCoachingRoute: AppCoachingRoute,
   AppCohortsRoute: AppCohortsRoute,
@@ -1447,3 +1468,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
