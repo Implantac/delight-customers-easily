@@ -252,7 +252,7 @@ export const generateRecommendations = createServerFn({ method: "POST" })
         user_id: d.user_id ?? null,
         priority: 88,
         impact_brl: Number(d.value ?? 0),
-        title: `Fechar ${d.title} em ${Math.max(1, Math.ceil((new Date(d.expected_close).getTime() - now) / DAY))}d`,
+        title: `Fechar ${d.title} em ${Math.max(1, Math.ceil((new Date(d.expected_close as string).getTime() - now) / DAY))}d`,
         reason: `Previsão de fechamento próxima. ${compName.get(d.company_id) ?? ""}`.trim(),
         action_label: "Acelerar negociação",
         action_href: `/deals/${d.id}`,
