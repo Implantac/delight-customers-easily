@@ -63,6 +63,7 @@ import { Route as AppCommandRouteImport } from './routes/_app.command'
 import { Route as AppCohortsRouteImport } from './routes/_app.cohorts'
 import { Route as AppCoachingRouteImport } from './routes/_app.coaching'
 import { Route as AppChatRouteImport } from './routes/_app.chat'
+import { Route as AppCarteiraRouteImport } from './routes/_app.carteira'
 import { Route as AppCampaignsRouteImport } from './routes/_app.campaigns'
 import { Route as AppCalendarRouteImport } from './routes/_app.calendar'
 import { Route as AppBankingRouteImport } from './routes/_app.banking'
@@ -357,6 +358,11 @@ const AppChatRoute = AppChatRouteImport.update({
   path: '/chat',
   getParentRoute: () => AppRoute,
 } as any)
+const AppCarteiraRoute = AppCarteiraRouteImport.update({
+  id: '/carteira',
+  path: '/carteira',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppCampaignsRoute = AppCampaignsRouteImport.update({
   id: '/campaigns',
   path: '/campaigns',
@@ -491,6 +497,7 @@ export interface FileRoutesByFullPath {
   '/banking': typeof AppBankingRoute
   '/calendar': typeof AppCalendarRoute
   '/campaigns': typeof AppCampaignsRoute
+  '/carteira': typeof AppCarteiraRoute
   '/chat': typeof AppChatRoute
   '/coaching': typeof AppCoachingRoute
   '/cohorts': typeof AppCohortsRoute
@@ -570,6 +577,7 @@ export interface FileRoutesByTo {
   '/banking': typeof AppBankingRoute
   '/calendar': typeof AppCalendarRoute
   '/campaigns': typeof AppCampaignsRoute
+  '/carteira': typeof AppCarteiraRoute
   '/chat': typeof AppChatRoute
   '/coaching': typeof AppCoachingRoute
   '/cohorts': typeof AppCohortsRoute
@@ -651,6 +659,7 @@ export interface FileRoutesById {
   '/_app/banking': typeof AppBankingRoute
   '/_app/calendar': typeof AppCalendarRoute
   '/_app/campaigns': typeof AppCampaignsRoute
+  '/_app/carteira': typeof AppCarteiraRoute
   '/_app/chat': typeof AppChatRoute
   '/_app/coaching': typeof AppCoachingRoute
   '/_app/cohorts': typeof AppCohortsRoute
@@ -732,6 +741,7 @@ export interface FileRouteTypes {
     | '/banking'
     | '/calendar'
     | '/campaigns'
+    | '/carteira'
     | '/chat'
     | '/coaching'
     | '/cohorts'
@@ -811,6 +821,7 @@ export interface FileRouteTypes {
     | '/banking'
     | '/calendar'
     | '/campaigns'
+    | '/carteira'
     | '/chat'
     | '/coaching'
     | '/cohorts'
@@ -891,6 +902,7 @@ export interface FileRouteTypes {
     | '/_app/banking'
     | '/_app/calendar'
     | '/_app/campaigns'
+    | '/_app/carteira'
     | '/_app/chat'
     | '/_app/coaching'
     | '/_app/cohorts'
@@ -1350,6 +1362,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppChatRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/carteira': {
+      id: '/_app/carteira'
+      path: '/carteira'
+      fullPath: '/carteira'
+      preLoaderRoute: typeof AppCarteiraRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/campaigns': {
       id: '/_app/campaigns'
       path: '/campaigns'
@@ -1600,6 +1619,7 @@ interface AppRouteChildren {
   AppBankingRoute: typeof AppBankingRoute
   AppCalendarRoute: typeof AppCalendarRoute
   AppCampaignsRoute: typeof AppCampaignsRoute
+  AppCarteiraRoute: typeof AppCarteiraRoute
   AppChatRoute: typeof AppChatRoute
   AppCoachingRoute: typeof AppCoachingRoute
   AppCohortsRoute: typeof AppCohortsRoute
@@ -1668,6 +1688,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppBankingRoute: AppBankingRoute,
   AppCalendarRoute: AppCalendarRoute,
   AppCampaignsRoute: AppCampaignsRoute,
+  AppCarteiraRoute: AppCarteiraRoute,
   AppChatRoute: AppChatRoute,
   AppCoachingRoute: AppCoachingRoute,
   AppCohortsRoute: AppCohortsRoute,

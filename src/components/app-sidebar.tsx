@@ -59,6 +59,7 @@ const navSections: NavSection[] = [
     id: "wallet",
     label: "Carteira comercial",
     items: [
+      { to: "/carteira", label: "Carteira 360", icon: Briefcase, shortcut: "G W" },
       { to: "/contacts", label: "Clientes", icon: Users, shortcut: "G C" },
       { to: "/companies", label: "Grupos / Filiais", icon: Building, shortcut: "G E" },
       { to: "/lead-scoring", label: "Lead scoring", icon: Flame },
