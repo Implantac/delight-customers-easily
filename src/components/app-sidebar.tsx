@@ -64,18 +64,16 @@ const navSections: NavSection[] = [
     label: "Comercial",
     items: [
       { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, shortcut: "G D" },
-      { to: "/carteira", label: "Carteira", icon: Briefcase, shortcut: "G W" },
+      { to: "/carteira", label: "Carteira Comercial", icon: Briefcase, shortcut: "G W" },
       { to: "/marketing", label: "Leads", icon: Flame, shortcut: "G L" },
       { to: "/contacts", label: "Clientes", icon: Users, shortcut: "G C" },
       { to: "/oportunidades", label: "Oportunidades", icon: Target },
-      { to: "/opportunity-map", label: "Mapa territorial", icon: Target },
       { to: "/representantes", label: "Representantes", icon: Award, managerOnly: true },
-      { to: "/goals", label: "Metas & ranking", icon: Award, managerOnly: true },
     ],
   },
   {
-    id: "engajamento",
-    label: "Engajamento",
+    id: "relacionamento",
+    label: "Relacionamento",
     items: [
       { to: "/calendar", label: "Agenda", icon: CalendarIcon },
       { to: "/whatsapp", label: "WhatsApp", icon: MessageSquare },
@@ -88,17 +86,17 @@ const navSections: NavSection[] = [
     label: "Inteligência",
     items: [
       { to: "/geo", label: "Geointeligência", icon: MapPin, shortcut: "G M" },
-      { to: "/marketing-intel", label: "Marketing Intel", icon: Megaphone, managerOnly: true },
       { to: "/ia-comercial", label: "IA Comercial", icon: Sparkles, shortcut: "G I" },
       { to: "/reports", label: "Relatórios", icon: BarChart3, shortcut: "G R", managerOnly: true },
     ],
   },
   {
-    id: "configuracao",
-    label: "Configuração",
+    id: "administracao",
+    label: "Administração",
     items: [
       { to: "/integrations", label: "Integrações ERP", icon: Plug, managerOnly: true },
       { to: "/companies", label: "Empresas", icon: Building },
+      { to: "/settings/organization", label: "Usuários", icon: Users, managerOnly: true },
       { to: "/settings/organization", label: "Configurações", icon: Settings },
     ],
   },
@@ -107,6 +105,7 @@ const navSections: NavSection[] = [
     label: "Comercial — aprofundar",
     defaultCollapsed: true,
     items: [
+      { to: "/opportunity-map", label: "Mapa territorial", icon: Target },
       { to: "/pipeline", label: "Pipeline", icon: KanbanSquare, shortcut: "G P" },
       { to: "/forecast", label: "Previsão", icon: Target, shortcut: "G F" },
       { to: "/win-loss", label: "Win / Loss", icon: Trophy },
@@ -118,16 +117,18 @@ const navSections: NavSection[] = [
       { to: "/benchmark", label: "Benchmark do grupo", icon: GitBranch, managerOnly: true },
       { to: "/productivity", label: "Produtividade", icon: Activity, managerOnly: true },
       { to: "/commissions", label: "Comissões", icon: Receipt },
+      { to: "/goals", label: "Metas & ranking", icon: Award, managerOnly: true },
     ],
   },
   {
-    id: "engajamento-extra",
-    label: "Engajamento — aprofundar",
+    id: "relacionamento-extra",
+    label: "Relacionamento — aprofundar",
     defaultCollapsed: true,
     items: [
       { to: "/activities", label: "Atividades", icon: CheckSquare, shortcut: "G A" },
       { to: "/mytasks", label: "Minhas tarefas", icon: Inbox, shortcut: "G T" },
       { to: "/chat", label: "Chat interno", icon: MessageSquare },
+      { to: "/marketing-intel", label: "Marketing Intel", icon: Megaphone, managerOnly: true },
       { to: "/templates", label: "Templates", icon: FileText },
       { to: "/sequences", label: "Sequências", icon: Workflow },
       { to: "/lead-forms", label: "Formulários / LPs", icon: FormInput },
@@ -152,12 +153,12 @@ const navSections: NavSection[] = [
     ],
   },
   /**
-   * ERP (consulta) — módulos herdados que pertencem ao ERP.
-   * Mantidos para não quebrar links, mas escondidos para reforçar o foco do CRM.
+   * ERP — somente consulta. Tudo aqui pertence ao ERP de origem.
+   * O CRM apenas LÊ. Não criar telas de cadastro, edição ou fluxo fiscal aqui.
    */
   {
     id: "erp-readonly",
-    label: "Integrações ERP (consulta)",
+    label: "ERP — somente consulta",
     defaultCollapsed: true,
     items: [
       { to: "/products", label: "Produtos", icon: Package },
@@ -191,6 +192,7 @@ const navSections: NavSection[] = [
     ],
   },
 ];
+
 
 export function AppSidebar() {
   const { user, signOut } = useAuth();
