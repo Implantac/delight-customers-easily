@@ -207,20 +207,18 @@ export const generateRecommendations = createServerFn({ method: "POST" })
       });
     }
 
-    // 3) Leads quentes não trabalhados (marketing + dashboard)
+    // 3) Leads novos não convertidos (marketing + dashboard)
     const hotLeads = leads
-      .filter((l) => Number(l.score ?? 0) >= 70 && l.status !== "won" && l.status !== "lost")
-      .sort((a, b) => Number(b.score ?? 0) - Number(a.score ?? 0))
+      .filter((l) => !l.converted_deal_id && l.status !== "lost" && l.status !== "won")
       .slice(0, 6);
     for (const l of hotLeads) {
       drafts.push({
         surface: "marketing",
         entity_type: "lead",
         entity_id: l.id,
-        user_id: l.owner_id ?? null,
         priority: 80,
-        title: `Lead quente: ${l.name}`,
-        reason: `Score ${l.score} • status ${l.status}. Velocidade é tudo aqui.`,
+        title: `Lead novo: ${l.name ?? "sem nome"}`,
+        reason: `Canal ${l.channel} • status ${l.status}. Velocidade é tudo aqui.`,
         action_label: "Qualificar agora",
         action_href: `/leads`,
         source: "heuristic",
@@ -231,10 +229,9 @@ export const generateRecommendations = createServerFn({ method: "POST" })
         surface: "dashboard",
         entity_type: "lead",
         entity_id: l.id,
-        user_id: l.owner_id ?? null,
         priority: 75,
-        title: `Atacar lead ${l.name}`,
-        reason: `Score ${l.score}`,
+        title: `Atacar lead ${l.name ?? "novo"}`,
+        reason: `Canal ${l.channel}`,
         action_label: "Abrir lead",
         action_href: `/leads`,
         source: "heuristic",
