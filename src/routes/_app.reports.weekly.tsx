@@ -26,7 +26,7 @@ const STAGE_LABEL: Record<string, string> = {
 };
 
 function WeeklyExec() {
-  const { orgId, organization } = useCurrentOrg();
+  const { orgId, org } = useCurrentOrg();
   const since = useMemo(() => new Date(Date.now() - 7 * 86400000).toISOString(), []);
   const listRecs = useServerFn(listRecommendations);
 
