@@ -2,11 +2,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { Trophy, Medal, Award, Target as TargetIcon } from "lucide-react";
+import { Trophy, Medal, Award, Target as TargetIcon, TrendingUp, Users, DollarSign } from "lucide-react";
 import { useCurrentOrg } from "@/lib/org";
 import { useCanManage } from "@/lib/permissions";
 import { supabase } from "@/integrations/supabase/client";
 import { getLeaderboard, upsertGoal } from "@/lib/goals.functions";
+import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -86,116 +87,100 @@ function GoalsPage() {
 
   return (
     <div className="flex flex-col gap-6 p-6">
-      <div className="flex items-center justify-between gap-4 flex-wrap">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Metas & Leaderboard</h1>
-          <p className="text-sm text-muted-foreground">
-            Acompanhe o progresso da equipe contra metas mensais.
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Input
-            type="month"
-            value={month}
-            onChange={(e) => setMonth(e.target.value)}
-            className="w-[180px]"
-          />
-          {canManage && (
-            <Dialog open={open} onOpenChange={setOpen}>
-              <DialogTrigger asChild>
-                <Button>
-                  <TargetIcon className="mr-2 h-4 w-4" /> Definir meta
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Definir meta para {month}</DialogTitle>
-                </DialogHeader>
-                <div className="grid gap-4 py-2">
-                  <div className="grid gap-2">
-                    <Label>Vendedor</Label>
-                    <Select value={selectedUser} onValueChange={setSelectedUser}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione um vendedor" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {rows.map((r) => (
-                          <SelectItem key={r.user_id} value={r.user_id}>
-                            {r.user_name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="grid gap-2">
-                    <Label>Meta (R$)</Label>
-                    <Input
-                      type="number"
-                      min="0"
-                      step="100"
-                      value={target}
-                      onChange={(e) => setTarget(e.target.value)}
-                      placeholder="50000"
-                    />
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button variant="outline" onClick={() => setOpen(false)}>
-                    Cancelar
+      <PageHeader
+        title="Metas & Leaderboard"
+        subtitle="Acompanhe o progresso da equipe contra metas mensais."
+        icon={Trophy}
+        action={
+          <div className="flex items-center gap-2">
+            <Input
+              type="month"
+              value={month}
+              onChange={(e) => setMonth(e.target.value)}
+              className="w-[180px]"
+            />
+            {canManage && (
+              <Dialog open={open} onOpenChange={setOpen}>
+                <DialogTrigger asChild>
+                  <Button>
+                    <TargetIcon className="mr-2 h-4 w-4" /> Definir meta
                   </Button>
-                  <Button
-                    disabled={!selectedUser || !target || mutation.isPending}
-                    onClick={() =>
-                      mutation.mutate({
-                        user_id: selectedUser,
-                        target_value: Number(target),
-                      })
-                    }
-                  >
-                    Salvar
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          )}
-        </div>
-      </div>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Definir meta para {month}</DialogTitle>
+                  </DialogHeader>
+                  <div className="grid gap-4 py-2">
+                    <div className="grid gap-2">
+                      <Label>Vendedor</Label>
+                      <Select value={selectedUser} onValueChange={setSelectedUser}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione um vendedor" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {rows.map((r) => (
+                            <SelectItem key={r.user_id} value={r.user_id}>
+                              {r.user_name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="grid gap-2">
+                      <Label>Meta (R$)</Label>
+                      <Input
+                        type="number"
+                        min="0"
+                        step="100"
+                        value={target}
+                        onChange={(e) => setTarget(e.target.value)}
+                        placeholder="50000"
+                      />
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setOpen(false)}>
+                      Cancelar
+                    </Button>
+                    <Button
+                      disabled={!selectedUser || !target || mutation.isPending}
+                      onClick={() =>
+                        mutation.mutate({
+                          user_id: selectedUser,
+                          target_value: Number(target),
+                        })
+                      }
+                    >
+                      Salvar
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            )}
+          </div>
+        }
+      />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Meta total
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{fmtBRL(totals.target)}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Realizado
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{fmtBRL(totals.achieved)}</div>
-            <Progress value={Math.min(totals.progress, 100)} className="mt-2" />
-            <p className="text-xs text-muted-foreground mt-1">
-              {totals.progress.toFixed(1)}% da meta
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Negócios fechados
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{totals.deals}</div>
-          </CardContent>
-        </Card>
+        <GoalKpi
+          label="Meta total"
+          value={fmtBRL(totals.target)}
+          icon={DollarSign}
+          tone="primary"
+        />
+        <GoalKpi
+          label="Realizado"
+          value={fmtBRL(totals.achieved)}
+          icon={TrendingUp}
+          tone={totals.progress >= 100 ? "ok" : totals.progress >= 70 ? "warn" : "danger"}
+          sub={`${totals.progress.toFixed(1)}% da meta`}
+        />
+        <GoalKpi
+          label="Negócios fechados"
+          value={totals.deals}
+          icon={Users}
+          tone="ok"
+        />
       </div>
 
       {top.length > 0 && (
@@ -291,5 +276,38 @@ function GoalsPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+function GoalKpi({
+  label,
+  value,
+  icon: Icon,
+  tone,
+  sub,
+}: {
+  label: string;
+  value: string | number;
+  icon: React.ComponentType<{ className?: string }>;
+  tone?: "primary" | "ok" | "warn" | "danger";
+  sub?: string;
+}) {
+  const color =
+    tone === "danger"
+      ? "text-destructive"
+      : tone === "warn"
+        ? "text-amber-600"
+        : tone === "ok"
+          ? "text-emerald-600"
+          : "text-primary";
+  return (
+    <Card className="p-4">
+      <div className="flex items-center justify-between">
+        <span className="text-xs text-muted-foreground">{label}</span>
+        <Icon className={`h-3.5 w-3.5 ${color}`} />
+      </div>
+      <div className={`text-2xl font-semibold mt-2 tabular-nums ${color}`}>{value}</div>
+      {sub && <p className="text-xs text-muted-foreground mt-1">{sub}</p>}
+    </Card>
   );
 }

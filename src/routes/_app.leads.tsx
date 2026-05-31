@@ -69,16 +69,17 @@ function LeadsInboxPage() {
       <PageHeader
         title="Caixa de Leads"
         subtitle="Tudo que chegou — formulários, indicações, contatos novos. Aja direto daqui."
+        icon={Inbox}
       />
 
       {q.isLoading || !summary ? (
         <div className="grid gap-3 md:grid-cols-4">{[0,1,2,3].map((i) => <Skeleton key={i} className="h-24" />)}</div>
       ) : (
         <div className="grid gap-3 md:grid-cols-4">
-          <SummaryCard label="Novos" value={summary.new} hot />
-          <SummaryCard label="Contatados" value={summary.contacted} />
-          <SummaryCard label="Convertidos" value={summary.converted} />
-          <SummaryCard label="Total no inbox" value={summary.total} />
+          <SummaryCard label="Novos" value={summary.new} hot icon={Flame} />
+          <SummaryCard label="Contatados" value={summary.contacted} icon={Mail} />
+          <SummaryCard label="Convertidos" value={summary.converted} icon={Sparkles} />
+          <SummaryCard label="Total no inbox" value={summary.total} icon={Inbox} />
         </div>
       )}
 
@@ -167,12 +168,15 @@ function LeadsInboxPage() {
   );
 }
 
-function SummaryCard({ label, value, hot }: { label: string; value: number; hot?: boolean }) {
+function SummaryCard({ label, value, hot, icon: Icon }: { label: string; value: number; hot?: boolean; icon?: React.ComponentType<{ className?: string }> }) {
   return (
     <Card className={hot ? "border-primary/40" : ""}>
       <CardContent className="p-4">
-        <div className="text-xs uppercase tracking-wide text-muted-foreground">{label}</div>
-        <div className="mt-2 text-3xl font-semibold">{value}</div>
+        <div className="flex items-center justify-between">
+          <span className="text-xs text-muted-foreground">{label}</span>
+          {Icon && <Icon className="h-3.5 w-3.5 text-muted-foreground" />}
+        </div>
+        <div className="mt-2 text-2xl font-semibold tabular-nums">{value}</div>
       </CardContent>
     </Card>
   );
