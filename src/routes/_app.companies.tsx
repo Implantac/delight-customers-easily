@@ -220,3 +220,27 @@ function CompaniesPage() {
     </div>
   );
 }
+
+function KpiCell({
+  label, value, icon: Icon, tone, loading,
+}: {
+  label: string; value: number; icon: any;
+  tone?: "primary" | "ok" | "danger"; loading?: boolean;
+}) {
+  const color =
+    tone === "danger" ? "text-destructive"
+    : tone === "ok" ? "text-emerald-600 dark:text-emerald-400"
+    : tone === "primary" ? "text-primary"
+    : "text-foreground";
+  return (
+    <Card className="p-3">
+      <div className="flex items-center justify-between">
+        <span className="text-xs text-muted-foreground">{label}</span>
+        <Icon className={`h-4 w-4 ${color}`} />
+      </div>
+      {loading ? <Skeleton className="h-6 w-16 mt-1" /> : (
+        <div className={`text-2xl font-semibold mt-1 tracking-tight ${color}`}>{value}</div>
+      )}
+    </Card>
+  );
+}
