@@ -19,7 +19,7 @@ import { BusinessHealthCard } from "@/components/business-health-card";
 import { NextActionBlock } from "@/components/next-action-block";
 import {
   AlertTriangle, TrendingUp, Target, Clock, Users, ArrowRight,
-  Sparkles, Flame, Calendar, DollarSign, HeartPulse, Receipt, Gauge, Zap,
+  Sparkles, Flame, Calendar, DollarSign, HeartPulse, Gauge, Zap,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/command")({ component: CommandCenter });
