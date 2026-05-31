@@ -15,8 +15,10 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Briefcase, Search, ArrowRight, TrendingUp, AlertTriangle, Clock, Flame, Receipt, Download,
+  Megaphone, Workflow, X,
 } from "lucide-react";
 import { toCSV, downloadCSV } from "@/lib/csv-export";
 
@@ -60,6 +62,14 @@ function CarteiraPage() {
   const [bucket, setBucket] = useState<Bucket>("todos");
   const [q, setQ] = useState("");
   const [industry, setIndustry] = useState<string>("all");
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const toggle = (id: string) =>
+    setSelected((s) => {
+      const n = new Set(s);
+      n.has(id) ? n.delete(id) : n.add(id);
+      return n;
+    });
+  const clearSelection = () => setSelected(new Set());
 
   const { data, isLoading } = useQuery({
     queryKey: ["wallet", orgId],
@@ -181,6 +191,66 @@ function CarteiraPage() {
         </div>
       </Card>
 
+      {/* Barra de ações em lote — aparece quando há clientes selecionados */}
+      {selected.size > 0 && (
+        <Card className="p-3 flex flex-wrap items-center gap-2 border-primary/40 bg-primary/5">
+          <span className="text-sm font-medium pr-2">
+            {selected.size} cliente{selected.size === 1 ? "" : "s"} selecionado{selected.size === 1 ? "" : "s"}
+          </span>
+          <Button size="sm" variant="outline" className="gap-1.5" asChild>
+            <Link
+              to="/campaigns"
+              search={{ companies: Array.from(selected).join(",") } as any}
+            >
+              <Megaphone className="h-3.5 w-3.5" /> Criar campanha
+            </Link>
+          </Button>
+          <Button size="sm" variant="outline" className="gap-1.5" asChild>
+            <Link
+              to="/sequences"
+              search={{ companies: Array.from(selected).join(",") } as any}
+            >
+              <Workflow className="h-3.5 w-3.5" /> Inscrever em sequência
+            </Link>
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            className="gap-1.5"
+            onClick={() => {
+              const sel = filtered.filter((r) => selected.has(r.company_id));
+              const csv = toCSV(
+                sel.map((r) => ({
+                  cliente: r.name,
+                  segmento: r.industry ?? "",
+                  status: r.status,
+                  score: r.score,
+                  faturado: r.wonRevenue,
+                  pipeline_aberto: r.openPipeline,
+                  buckets: r.buckets.join("|"),
+                })),
+                [
+                  { key: "cliente", label: "Cliente" },
+                  { key: "segmento", label: "Segmento" },
+                  { key: "status", label: "Status" },
+                  { key: "score", label: "Score" },
+                  { key: "faturado", label: "Faturado" },
+                  { key: "pipeline_aberto", label: "Pipeline aberto" },
+                  { key: "buckets", label: "Lentes" },
+                ],
+              );
+              downloadCSV(`carteira-selecionados-${new Date().toISOString().slice(0, 10)}.csv`, csv);
+            }}
+          >
+            <Download className="h-3.5 w-3.5" /> Exportar selecionados
+          </Button>
+          <Button size="sm" variant="ghost" className="ml-auto gap-1.5" onClick={clearSelection}>
+            <X className="h-3.5 w-3.5" /> Limpar
+          </Button>
+        </Card>
+      )}
+
+
 
       {isLoading ? (
         <div className="space-y-2">
@@ -196,6 +266,24 @@ function CarteiraPage() {
             <table className="w-full text-sm">
               <thead className="bg-muted/30 text-xs uppercase tracking-wide text-muted-foreground">
                 <tr>
+                  <th className="px-3 py-2 w-8">
+                    <Checkbox
+                      checked={
+                        filtered.length > 0 &&
+                        filtered.slice(0, 200).every((r) => selected.has(r.company_id))
+                      }
+                      onCheckedChange={(v) => {
+                        const ids = filtered.slice(0, 200).map((r) => r.company_id);
+                        setSelected((s) => {
+                          const n = new Set(s);
+                          if (v) ids.forEach((id) => n.add(id));
+                          else ids.forEach((id) => n.delete(id));
+                          return n;
+                        });
+                      }}
+                      aria-label="Selecionar todos"
+                    />
+                  </th>
                   <th className="text-left px-3 py-2">Cliente</th>
                   <th className="text-right px-3 py-2">Score</th>
                   <th className="text-left px-3 py-2">Status</th>
@@ -212,6 +300,13 @@ function CarteiraPage() {
               <tbody>
                 {filtered.slice(0, 200).map((r) => (
                   <tr key={r.company_id} className="border-t hover:bg-accent/30">
+                    <td className="px-3 py-2">
+                      <Checkbox
+                        checked={selected.has(r.company_id)}
+                        onCheckedChange={() => toggle(r.company_id)}
+                        aria-label={`Selecionar ${r.name}`}
+                      />
+                    </td>
                     <td className="px-3 py-2">
                       <div className="font-medium truncate max-w-[240px]">{r.name}</div>
                       {r.industry && <div className="text-xs text-muted-foreground truncate">{r.industry}</div>}
