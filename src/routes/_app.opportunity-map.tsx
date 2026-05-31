@@ -131,7 +131,7 @@ function OpportunityMapPage() {
   );
 }
 
-function Kpi({ icon: Icon, label, value, tone }: any) {
+function Kpi({ icon: Icon, label, value, tone }: { icon: any; label: string; value: any; tone?: string }) {
   const tones: Record<string, string> = {
     primary: "text-primary", emerald: "text-emerald-500",
   };
