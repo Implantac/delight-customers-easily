@@ -63,7 +63,9 @@ function RepsPage() {
         </Card>
       ) : (
         <div className="space-y-3">
-          {data.rows.map((r) => <RepCard key={r.user_id} r={r} />)}
+          {[...data.rows]
+            .sort((a, b) => b.attainment - a.attainment)
+            .map((r, i) => <RepCard key={r.user_id} r={r} rank={i + 1} />)}
         </div>
       )}
     </div>
