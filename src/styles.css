@@ -9,6 +9,12 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  /* === Tipografia: Geometric Tech (Linear / Attio) === */
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Space Grotesk", "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -47,111 +53,138 @@
   --color-chart-5: var(--chart-5);
 }
 
+/* =========================================================
+   MIDNIGHT INDIGO — Light mode
+   Inspirado em Attio / Linear / Notion. Branco crisp + indigo elétrico.
+   ========================================================= */
 :root {
-  --radius: 0.75rem;
-  /* Neutros mais quentes e suaves — menos clínico, mais premium */
-  --background: oklch(0.995 0.003 250);
-  --foreground: oklch(0.18 0.03 260);
+  --radius: 0.625rem; /* mais discreto, estilo Linear */
+
+  --background: oklch(0.992 0.003 260);
+  --foreground: oklch(0.18 0.04 265);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.03 260);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.03 260);
-  --primary: oklch(0.55 0.20 260);
+  --card-foreground: oklch(0.18 0.04 265);
+  --popover: oklch(0.998 0.002 260);
+  --popover-foreground: oklch(0.18 0.04 265);
+
+  /* Indigo elétrico — assinatura Midnight Indigo */
+  --primary: oklch(0.52 0.24 268);
   --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.97 0.008 250);
-  --secondary-foreground: oklch(0.25 0.04 260);
-  --muted: oklch(0.965 0.008 250);
-  --muted-foreground: oklch(0.48 0.025 257);
-  --accent: oklch(0.955 0.025 255);
-  --accent-foreground: oklch(0.28 0.10 260);
+
+  --secondary: oklch(0.965 0.01 260);
+  --secondary-foreground: oklch(0.22 0.05 265);
+  --muted: oklch(0.97 0.008 260);
+  --muted-foreground: oklch(0.50 0.03 262);
+  --accent: oklch(0.955 0.03 268);
+  --accent-foreground: oklch(0.30 0.14 268);
+
   --destructive: oklch(0.60 0.22 25);
   --destructive-foreground: oklch(0.99 0 0);
   --success: oklch(0.65 0.16 155);
   --success-foreground: oklch(0.99 0 0);
-  --warning: oklch(0.75 0.15 75);
+  --warning: oklch(0.78 0.16 75);
   --warning-foreground: oklch(0.20 0.04 260);
-  --border: oklch(0.93 0.006 255);
-  --input: oklch(0.93 0.006 255);
-  --ring: oklch(0.55 0.20 260);
-  --sidebar: oklch(0.985 0.005 250);
-  --sidebar-foreground: oklch(0.25 0.04 260);
-  --sidebar-primary: oklch(0.55 0.20 260);
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.95 0.02 255);
-  --sidebar-accent-foreground: oklch(0.30 0.10 260);
-  --sidebar-border: oklch(0.93 0.006 255);
-  --sidebar-ring: oklch(0.55 0.20 260);
-  --chart-1: oklch(0.65 0.18 260);
-  --chart-2: oklch(0.65 0.16 155);
-  --chart-3: oklch(0.75 0.15 75);
-  --chart-4: oklch(0.65 0.20 300);
-  --chart-5: oklch(0.60 0.22 25);
 
-  --primary-glow: oklch(0.70 0.18 270);
+  --border: oklch(0.925 0.008 262);
+  --input: oklch(0.93 0.008 262);
+  --ring: oklch(0.52 0.24 268);
+
+  /* Sidebar minimal — fundo sutilmente mais escuro que o canvas */
+  --sidebar: oklch(0.97 0.008 262);
+  --sidebar-foreground: oklch(0.30 0.04 265);
+  --sidebar-primary: oklch(0.52 0.24 268);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent: oklch(0.93 0.025 268);
+  --sidebar-accent-foreground: oklch(0.28 0.14 268);
+  --sidebar-border: oklch(0.92 0.008 262);
+  --sidebar-ring: oklch(0.52 0.24 268);
+
+  --chart-1: oklch(0.58 0.22 268);
+  --chart-2: oklch(0.68 0.16 195);
+  --chart-3: oklch(0.72 0.18 155);
+  --chart-4: oklch(0.65 0.20 305);
+  --chart-5: oklch(0.72 0.18 50);
+
+  --primary-glow: oklch(0.72 0.20 280);
   --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-glow));
   --gradient-subtle: linear-gradient(180deg, color-mix(in oklab, var(--primary) 5%, transparent), transparent);
-  --gradient-mesh: radial-gradient(ellipse at top, color-mix(in oklab, var(--primary) 8%, transparent), transparent 60%);
+  --gradient-mesh:
+    radial-gradient(ellipse 90% 60% at 50% -10%, color-mix(in oklab, var(--primary) 10%, transparent), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 100% 0%, color-mix(in oklab, var(--primary-glow) 7%, transparent), transparent 55%);
 
-  /* Escala de sombras refinada (5 níveis) */
-  --shadow-xs: 0 1px 2px 0 color-mix(in oklab, var(--foreground) 5%, transparent);
-  --shadow-sm: 0 1px 3px 0 color-mix(in oklab, var(--foreground) 7%, transparent), 0 1px 2px -1px color-mix(in oklab, var(--foreground) 5%, transparent);
-  --shadow-md: 0 4px 12px -2px color-mix(in oklab, var(--foreground) 10%, transparent), 0 2px 4px -2px color-mix(in oklab, var(--foreground) 6%, transparent);
-  --shadow-lg: 0 12px 24px -6px color-mix(in oklab, var(--foreground) 14%, transparent), 0 4px 8px -4px color-mix(in oklab, var(--foreground) 8%, transparent);
-  --shadow-glow: 0 8px 32px -8px color-mix(in oklab, var(--primary) 35%, transparent);
+  /* Sombras refinadas — mais sutis no light mode */
+  --shadow-xs: 0 1px 1px 0 color-mix(in oklab, var(--foreground) 4%, transparent);
+  --shadow-sm: 0 1px 2px 0 color-mix(in oklab, var(--foreground) 6%, transparent), 0 1px 1px -0.5px color-mix(in oklab, var(--foreground) 4%, transparent);
+  --shadow-md: 0 4px 12px -3px color-mix(in oklab, var(--foreground) 10%, transparent), 0 2px 4px -2px color-mix(in oklab, var(--foreground) 6%, transparent);
+  --shadow-lg: 0 16px 32px -8px color-mix(in oklab, var(--foreground) 14%, transparent), 0 4px 10px -4px color-mix(in oklab, var(--foreground) 8%, transparent);
+  --shadow-glow: 0 8px 28px -6px color-mix(in oklab, var(--primary) 32%, transparent);
 
-  /* Curvas de animação consistentes */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+/* =========================================================
+   MIDNIGHT INDIGO — Dark mode (modo nativo do produto)
+   Navy profundo, quase preto, com indigo elétrico nos accents.
+   Estilo Linear / Vercel.
+   ========================================================= */
 .dark {
-  --background: oklch(0.155 0.018 260);
-  --foreground: oklch(0.96 0.01 250);
-  --card: oklch(0.195 0.02 260);
-  --card-foreground: oklch(0.96 0.01 250);
-  --popover: oklch(0.195 0.02 260);
-  --popover-foreground: oklch(0.96 0.01 250);
-  --primary: oklch(0.72 0.17 265);
-  --primary-foreground: oklch(0.15 0.03 260);
-  --secondary: oklch(0.235 0.02 260);
-  --secondary-foreground: oklch(0.96 0.01 250);
-  --muted: oklch(0.235 0.02 260);
-  --muted-foreground: oklch(0.68 0.02 257);
-  --accent: oklch(0.28 0.04 265);
-  --accent-foreground: oklch(0.95 0.02 255);
-  --destructive: oklch(0.65 0.22 25);
-  --destructive-foreground: oklch(0.98 0 0);
-  --success: oklch(0.70 0.16 155);
-  --success-foreground: oklch(0.15 0.03 260);
-  --warning: oklch(0.78 0.16 75);
-  --warning-foreground: oklch(0.15 0.03 260);
-  --border: oklch(0.275 0.02 260);
-  --input: oklch(0.275 0.02 260);
-  --ring: oklch(0.72 0.17 265);
-  --sidebar: oklch(0.175 0.02 260);
-  --sidebar-foreground: oklch(0.92 0.01 250);
-  --sidebar-primary: oklch(0.72 0.17 265);
-  --sidebar-primary-foreground: oklch(0.15 0.03 260);
-  --sidebar-accent: oklch(0.26 0.03 265);
-  --sidebar-accent-foreground: oklch(0.96 0.01 250);
-  --sidebar-border: oklch(0.265 0.02 260);
-  --sidebar-ring: oklch(0.72 0.17 265);
-  --chart-1: oklch(0.72 0.17 265);
-  --chart-2: oklch(0.70 0.16 155);
-  --chart-3: oklch(0.78 0.16 75);
-  --chart-4: oklch(0.72 0.18 300);
-  --chart-5: oklch(0.68 0.20 25);
+  --background: oklch(0.12 0.022 265);          /* navy quase-preto */
+  --foreground: oklch(0.96 0.012 255);
+  --card: oklch(0.155 0.025 265);                /* card eleva-se sutilmente */
+  --card-foreground: oklch(0.96 0.012 255);
+  --popover: oklch(0.175 0.028 265);
+  --popover-foreground: oklch(0.96 0.012 255);
 
-  --primary-glow: oklch(0.78 0.15 275);
+  --primary: oklch(0.70 0.20 270);               /* indigo elétrico vibrante */
+  --primary-foreground: oklch(0.12 0.022 265);
+
+  --secondary: oklch(0.20 0.025 265);
+  --secondary-foreground: oklch(0.95 0.012 255);
+  --muted: oklch(0.195 0.025 265);
+  --muted-foreground: oklch(0.66 0.025 260);
+  --accent: oklch(0.26 0.06 270);
+  --accent-foreground: oklch(0.92 0.04 268);
+
+  --destructive: oklch(0.68 0.22 25);
+  --destructive-foreground: oklch(0.99 0 0);
+  --success: oklch(0.72 0.17 155);
+  --success-foreground: oklch(0.12 0.022 265);
+  --warning: oklch(0.80 0.16 75);
+  --warning-foreground: oklch(0.12 0.022 265);
+
+  --border: oklch(0.245 0.025 265);
+  --input: oklch(0.225 0.025 265);
+  --ring: oklch(0.70 0.20 270);
+
+  --sidebar: oklch(0.105 0.022 265);            /* sidebar mais escura que canvas */
+  --sidebar-foreground: oklch(0.78 0.02 258);
+  --sidebar-primary: oklch(0.70 0.20 270);
+  --sidebar-primary-foreground: oklch(0.12 0.022 265);
+  --sidebar-accent: oklch(0.20 0.04 268);
+  --sidebar-accent-foreground: oklch(0.95 0.03 268);
+  --sidebar-border: oklch(0.20 0.022 265);
+  --sidebar-ring: oklch(0.70 0.20 270);
+
+  --chart-1: oklch(0.72 0.20 270);
+  --chart-2: oklch(0.74 0.16 195);
+  --chart-3: oklch(0.76 0.18 155);
+  --chart-4: oklch(0.72 0.20 305);
+  --chart-5: oklch(0.78 0.18 50);
+
+  --primary-glow: oklch(0.80 0.16 285);
   --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-glow));
-  --gradient-subtle: linear-gradient(180deg, color-mix(in oklab, var(--primary) 12%, transparent), transparent);
-  --gradient-mesh: radial-gradient(ellipse at top, color-mix(in oklab, var(--primary) 15%, transparent), transparent 60%);
+  --gradient-subtle: linear-gradient(180deg, color-mix(in oklab, var(--primary) 14%, transparent), transparent);
+  --gradient-mesh:
+    radial-gradient(ellipse 90% 60% at 50% -10%, color-mix(in oklab, var(--primary) 18%, transparent), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 100% 0%, color-mix(in oklab, var(--primary-glow) 14%, transparent), transparent 55%);
 
-  --shadow-xs: 0 1px 2px 0 color-mix(in oklab, #000 30%, transparent);
-  --shadow-sm: 0 1px 3px 0 color-mix(in oklab, #000 40%, transparent), 0 1px 2px -1px color-mix(in oklab, #000 30%, transparent);
-  --shadow-md: 0 4px 12px -2px color-mix(in oklab, #000 45%, transparent), 0 2px 4px -2px color-mix(in oklab, #000 35%, transparent);
-  --shadow-lg: 0 12px 24px -6px color-mix(in oklab, #000 55%, transparent), 0 4px 8px -4px color-mix(in oklab, #000 40%, transparent);
-  --shadow-glow: 0 8px 32px -8px color-mix(in oklab, var(--primary) 45%, transparent);
+  --shadow-xs: 0 1px 2px 0 color-mix(in oklab, #000 35%, transparent);
+  --shadow-sm: 0 1px 3px 0 color-mix(in oklab, #000 45%, transparent), 0 1px 2px -1px color-mix(in oklab, #000 35%, transparent);
+  --shadow-md: 0 6px 16px -4px color-mix(in oklab, #000 55%, transparent), 0 2px 5px -2px color-mix(in oklab, #000 40%, transparent);
+  --shadow-lg: 0 18px 36px -8px color-mix(in oklab, #000 65%, transparent), 0 6px 12px -4px color-mix(in oklab, #000 45%, transparent);
+  --shadow-glow: 0 8px 32px -6px color-mix(in oklab, var(--primary) 45%, transparent);
 }
 
 @layer base {
@@ -159,46 +192,52 @@
   html {
     -webkit-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
+    font-family: var(--font-sans);
   }
   body {
     background-color: var(--color-background);
-    background-image:
-      radial-gradient(ellipse 80% 50% at 50% -10%, color-mix(in oklab, var(--primary) 8%, transparent), transparent 70%),
-      radial-gradient(ellipse 60% 40% at 100% 0%, color-mix(in oklab, var(--primary-glow) 6%, transparent), transparent 60%);
+    background-image: var(--gradient-mesh);
     background-attachment: fixed;
     color: var(--color-foreground);
-    /* Recursos tipográficos: ligaturas, números proporcionais, melhor leitura */
-    font-feature-settings: "cv11", "ss01", "ss03", "cv02";
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "ss02", "cv11";
     font-optical-sizing: auto;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overscroll-behavior-y: none;
     text-wrap: pretty;
   }
-  /* Títulos com leve aperto e balanceamento moderno */
+  /* Headings em Space Grotesk — assinatura Geometric Tech */
   h1, h2, h3, h4, h5, h6 {
-    letter-spacing: -0.015em;
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
     text-wrap: balance;
+    font-weight: 600;
   }
-  /* Números sempre tabulares (essencial em CRM/dashboards) */
-  .tabular-nums, table, .font-mono, [data-tabular] {
+  h1 { letter-spacing: -0.03em; }
+  /* Números tabulares em todo lugar que importa (CRM/dashboards) */
+  .tabular-nums, table, .font-mono, [data-tabular],
+  [data-slot="kpi-value"], [data-metric] {
     font-variant-numeric: tabular-nums;
   }
-  /* Foco visível premium — anel suave, sem cortar */
+  code, pre, kbd, samp { font-family: var(--font-mono); }
+
+  /* Focus visível premium */
   :focus-visible {
     outline: 2px solid var(--ring);
     outline-offset: 2px;
     border-radius: var(--radius-sm);
   }
   ::selection {
-    background-color: color-mix(in oklab, var(--primary) 25%, transparent);
+    background-color: color-mix(in oklab, var(--primary) 30%, transparent);
     color: var(--foreground);
   }
-  /* Scrollbar discreta e moderna */
+
+  /* Scrollbar discreta */
   ::-webkit-scrollbar { width: 10px; height: 10px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb {
-    background: color-mix(in oklab, var(--foreground) 15%, transparent);
+    background: color-mix(in oklab, var(--foreground) 14%, transparent);
     border-radius: 999px;
     border: 2px solid transparent;
     background-clip: padding-box;
@@ -208,14 +247,13 @@
     background-clip: padding-box;
     border: 2px solid transparent;
   }
-  /* Scroll suave em containers principais sem afetar acessibilidade */
   main, [data-radix-scroll-area-viewport] {
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
   }
   img, svg, video { display: block; max-width: 100%; }
   img { content-visibility: auto; }
-  /* Respeita preferência por menos movimento — UX e bateria */
+
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.01ms !important;
@@ -226,9 +264,13 @@
   }
 }
 
-/* === Utilitários reutilizáveis em qualquer página === */
+/* =========================================================
+   Utilitários reutilizáveis
+   ========================================================= */
 @layer utilities {
-  /* Container padrão de página com gutter consistente desktop/mobile */
+  .font-display { font-family: var(--font-display); }
+  .font-sans    { font-family: var(--font-sans); }
+
   .page-container {
     width: 100%;
     margin-inline: auto;
@@ -241,18 +283,18 @@
     .page-container { padding: 2rem 2.5rem; max-width: 1600px; }
   }
 
-  /* Cabeçalho de página padrão */
   .page-header {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.375rem;
     margin-bottom: 1.5rem;
   }
   .page-title {
+    font-family: var(--font-display);
     font-size: 1.5rem;
-    line-height: 1.2;
+    line-height: 1.15;
     font-weight: 600;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.025em;
   }
   @media (min-width: 768px) {
     .page-title { font-size: 1.75rem; }
@@ -262,29 +304,27 @@
     color: var(--muted-foreground);
   }
 
-  /* Card de KPI com hover sutil */
+  /* Card KPI — lift + ring de marca no hover */
   .kpi-card {
-    transition: transform 200ms var(--ease-out), box-shadow 200ms var(--ease-out), border-color 200ms var(--ease-out);
+    transition: transform 220ms var(--ease-out), box-shadow 220ms var(--ease-out), border-color 220ms var(--ease-out);
   }
   .kpi-card:hover {
-    transform: translateY(-1px);
+    transform: translateY(-2px);
     box-shadow: var(--shadow-md);
-    border-color: color-mix(in oklab, var(--primary) 20%, var(--border));
+    border-color: color-mix(in oklab, var(--primary) 22%, var(--border));
   }
 
-  /* Card interativo (clicável) — opt-in: aplica lift + glow no hover */
   .interactive-card {
     cursor: pointer;
-    transition: transform 200ms var(--ease-out), box-shadow 200ms var(--ease-out), border-color 200ms var(--ease-out);
+    transition: transform 220ms var(--ease-out), box-shadow 220ms var(--ease-out), border-color 220ms var(--ease-out);
   }
   .interactive-card:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
-    border-color: color-mix(in oklab, var(--primary) 25%, var(--border));
+    border-color: color-mix(in oklab, var(--primary) 28%, var(--border));
   }
-  .interactive-card:active {
-    transform: translateY(0);
-  }
+  .interactive-card:active { transform: translateY(0); }
+
   .surface-elevated {
     background: var(--card);
     border: 1px solid var(--border);
@@ -292,13 +332,40 @@
     box-shadow: var(--shadow-sm);
   }
 
-  /* Animações de entrada suaves */
-  .animate-in-page {
-    animation: fade-up 280ms var(--ease-out) both;
+  /* Painel glass premium */
+  .glass-panel {
+    background: color-mix(in oklab, var(--card) 75%, transparent);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border: 1px solid color-mix(in oklab, var(--border) 80%, transparent);
+    border-radius: var(--radius-lg);
   }
 
+  .text-gradient {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
 
-  /* Link com sublinhado animado */
+  .divider-soft {
+    height: 1px;
+    background: linear-gradient(to right, transparent, color-mix(in oklab, var(--border) 100%, transparent), transparent);
+  }
+
+  /* Anel de marca no hover de cards genéricos */
+  .ring-brand-hover {
+    transition: box-shadow 220ms var(--ease-out), border-color 220ms var(--ease-out);
+  }
+  .ring-brand-hover:hover {
+    border-color: color-mix(in oklab, var(--primary) 30%, var(--border));
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--primary) 10%, transparent);
+  }
+
+  .animate-in-page {
+    animation: fade-up 320ms var(--ease-out) both;
+  }
+
   .link-underline {
     position: relative;
     color: var(--primary);
@@ -318,30 +385,6 @@
     transform-origin: left;
   }
 
-  /* Painel "glass" para destacar áreas premium sem peso visual */
-  .glass-panel {
-    background: color-mix(in oklab, var(--card) 80%, transparent);
-    backdrop-filter: blur(12px) saturate(140%);
-    -webkit-backdrop-filter: blur(12px) saturate(140%);
-    border: 1px solid color-mix(in oklab, var(--border) 80%, transparent);
-    border-radius: var(--radius-lg);
-  }
-
-  /* Texto com gradiente da marca — para títulos de destaque pontuais */
-  .text-gradient {
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-
-  /* Linha divisória sutil com gradiente — substitui borders duras */
-  .divider-soft {
-    height: 1px;
-    background: linear-gradient(to right, transparent, color-mix(in oklab, var(--border) 100%, transparent), transparent);
-  }
-
-  /* Shimmer para skeletons mais vivos */
   .shimmer {
     position: relative;
     overflow: hidden;
@@ -353,41 +396,74 @@
     background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--foreground) 6%, transparent), transparent);
     animation: shimmer 1.6s var(--ease-in-out) infinite;
   }
+
+  /* Grid pattern decorativo — para hero/empty states premium */
+  .bg-grid-pattern {
+    background-image:
+      linear-gradient(to right, color-mix(in oklab, var(--foreground) 5%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in oklab, var(--foreground) 5%, transparent) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
 }
 
-/* === Refinamentos globais (sem mexer em componentes) === */
+/* =========================================================
+   Refinamentos globais
+   ========================================================= */
 @layer base {
-  /* Cards do shadcn ganham hover sutil quando dentro de um link/botão */
+  /* Cards do shadcn dentro de links/botões ganham lift */
   a [data-slot="card"], button [data-slot="card"] {
-    transition: transform 200ms var(--ease-out), box-shadow 200ms var(--ease-out), border-color 200ms var(--ease-out);
+    transition: transform 220ms var(--ease-out), box-shadow 220ms var(--ease-out), border-color 220ms var(--ease-out);
   }
   a:hover [data-slot="card"], button:hover [data-slot="card"] {
-    transform: translateY(-1px);
+    transform: translateY(-2px);
     box-shadow: var(--shadow-md);
-    border-color: color-mix(in oklab, var(--primary) 18%, var(--border));
+    border-color: color-mix(in oklab, var(--primary) 22%, var(--border));
   }
 
-  /* Botões: feedback tátil leve no clique (não afeta variantes existentes) */
-  button:not(:disabled):active {
-    transform: translateY(0.5px);
-  }
+  /* Botão: feedback tátil leve */
+  button:not(:disabled):active { transform: translateY(0.5px); }
 
-  /* Inputs: foco com glow sutil da cor primária */
+  /* Inputs: glow indigo no foco */
   input:focus-visible, textarea:focus-visible, select:focus-visible {
-    box-shadow: 0 0 0 4px color-mix(in oklab, var(--primary) 12%, transparent);
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--primary) 14%, transparent);
+    border-color: color-mix(in oklab, var(--primary) 50%, var(--input));
   }
 
-  /* Tabelas: linhas com hover discreto para melhor leitura */
+  /* Linhas de tabela com hover sutil */
   tbody tr {
-    transition: background-color 120ms var(--ease-out);
+    transition: background-color 140ms var(--ease-out);
   }
   tbody tr:hover {
-    background-color: color-mix(in oklab, var(--primary) 4%, transparent);
+    background-color: color-mix(in oklab, var(--primary) 5%, transparent);
   }
 
+  /* Sidebar minimal — Linear/Attio style */
+  [data-sidebar="menu-button"] {
+    border-radius: var(--radius-md);
+    transition: background-color 140ms var(--ease-out), color 140ms var(--ease-out);
+  }
+  [data-sidebar="menu-button"][data-active="true"] {
+    background: color-mix(in oklab, var(--primary) 14%, transparent);
+    color: color-mix(in oklab, var(--primary) 75%, var(--sidebar-foreground));
+    font-weight: 500;
+    position: relative;
+  }
+  [data-sidebar="menu-button"][data-active="true"]::before {
+    content: "";
+    position: absolute;
+    left: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 60%;
+    width: 2px;
+    border-radius: 2px;
+    background: var(--primary);
+    box-shadow: 0 0 8px color-mix(in oklab, var(--primary) 60%, transparent);
+  }
+}
 
 @keyframes fade-up {
-  from { opacity: 0; transform: translateY(6px); }
+  from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
@@ -398,4 +474,3 @@
 #lovable-badge {
   display: none !important;
 }
-
