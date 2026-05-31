@@ -131,7 +131,8 @@ function PipelinePage() {
     <div className="p-4 md:p-8">
       <PageHeader
         title="Pipeline"
-        subtitle={`${deals?.length ?? 0} negócios · ${fmtBRL((deals ?? []).reduce((s, d) => s + Number(d.value), 0))} total`}
+        subtitle="Arraste para mover de estágio. Negócios quentes no topo de cada coluna."
+        icon={Target}
         action={
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild><Button><Plus className="mr-2 h-4 w-4" />Novo negócio</Button></DialogTrigger>
@@ -173,6 +174,8 @@ function PipelinePage() {
           </Dialog>
         }
       />
+
+      <PipelineKpis loading={isLoading} deals={deals ?? []} />
 
       <div className="mt-4"><NextActionBlock surface="pipeline" /></div>
 
