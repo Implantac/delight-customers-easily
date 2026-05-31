@@ -130,7 +130,10 @@ function ContactDetail() {
           {contact.notes && <><h3 className="mt-5 text-sm font-semibold">Notas</h3><p className="mt-2 whitespace-pre-wrap text-sm text-muted-foreground">{contact.notes}</p></>}
         </Card>
 
-        <div className="md:col-span-2">
+        <div className="md:col-span-2 space-y-6">
+          {/* IA Comercial — sempre visível (briefing Fase 3: 3 próximas ações à vista) */}
+          <NextActionBlock surface="contact" title="Próxima ação sugerida" limit={3} showRegenerate />
+
           <Tabs defaultValue="overview" className="w-full">
             <TabsList className="w-full justify-start overflow-x-auto">
               <TabsTrigger value="overview" className="gap-1.5"><LayoutGrid className="h-3.5 w-3.5" />Visão geral</TabsTrigger>
@@ -142,7 +145,6 @@ function ContactDetail() {
             </TabsList>
 
             <TabsContent value="overview" className="mt-4 space-y-6">
-              <NextActionBlock surface="contact" title="Próxima ação sugerida" limit={3} />
               <HealthScore contactId={contact.id} />
               <Card className="p-5">
 
