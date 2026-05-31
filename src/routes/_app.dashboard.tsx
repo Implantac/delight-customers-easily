@@ -164,24 +164,27 @@ function DashboardPage() {
       {/* KPI strip — sempre acionável (cada um leva para o módulo correto) */}
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {kpis.map((k, i) => (
-          <Link
-            key={k.label}
-            to={k.href as any}
-            className="group block"
-          >
+          <Link key={k.label} to={k.href as any} className="group block">
             <Card
-              className="relative h-full overflow-hidden p-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)] animate-in fade-in slide-in-from-bottom-2"
+              className="kpi-card relative h-full overflow-hidden p-5 animate-in fade-in slide-in-from-bottom-2"
               style={{ animationDelay: `${i * 60}ms`, animationFillMode: "backwards" }}
             >
-              <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-[var(--gradient-subtle)] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
               <div className="relative flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">{k.label}</span>
-                <span className={`flex h-8 w-8 items-center justify-center rounded-md bg-accent/60 ${k.tone}`}>
-                  <k.icon className="h-4 w-4" />
+                <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                  {k.label}
+                </span>
+                <span className={`flex h-7 w-7 items-center justify-center rounded-md border border-border/60 bg-card ${k.tone}`}>
+                  <k.icon className="h-3.5 w-3.5" />
                 </span>
               </div>
-              <p className="relative mt-3 text-2xl font-semibold tracking-tight">{k.value}</p>
-              <p className="relative mt-1 text-xs text-muted-foreground">{k.sub}</p>
+              <p
+                data-slot="kpi-value"
+                className="relative mt-3 font-display text-[1.75rem] font-semibold leading-none tracking-[-0.03em]"
+              >
+                {k.value}
+              </p>
+              <p className="relative mt-2 text-xs text-muted-foreground">{k.sub}</p>
             </Card>
           </Link>
         ))}
