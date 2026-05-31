@@ -35,8 +35,7 @@ function statusBadge(s: string) {
 }
 
 function HealthCenterPage() {
-  const { currentOrg } = useOrg();
-  const orgId = currentOrg?.id;
+  const { orgId } = useCurrentOrg();
   const qc = useQueryClient();
   const healthFn = useServerFn(listErpHealth);
   const conflictsFn = useServerFn(listErpConflicts);
