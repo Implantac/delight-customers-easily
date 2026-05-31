@@ -107,6 +107,8 @@ const navSections: NavSection[] = [
       { to: "/integrations", label: "Integrações ERP", icon: Plug, managerOnly: true },
       { to: "/integrations/apps", label: "Integrações Apps", icon: Plug, managerOnly: true },
       { to: "/integrations/health", label: "ERP Health Center", icon: Activity, managerOnly: true },
+      { to: "/integrations/templates", label: "Templates de Mapeamento", icon: Files, managerOnly: true },
+      { to: "/integrations/outbox", label: "Fila CRM → ERP", icon: Repeat, managerOnly: true },
       { to: "/settings/organization", label: "Empresas (workspaces)", icon: Building, managerOnly: true },
       { to: "/settings/organization", label: "Usuários", icon: Users, managerOnly: true },
       { to: "/settings/organization", label: "Configurações", icon: Settings },
