@@ -14,7 +14,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { PageHeader } from "@/components/page-header";
 import { EmptyState } from "@/components/empty-state";
-import { Plus, Globe, Trash2, Building2, Download, X, Search } from "lucide-react";
+import { Plus, Globe, Trash2, Building2, Download, X, Search, Layers, FileText, Link2 } from "lucide-react";
 import { toast } from "sonner";
 import { companySchema, fromForm } from "@/lib/validation";
 import { CompanyDuplicateWarning } from "@/components/duplicate-warning";
@@ -74,11 +74,20 @@ function CompaniesPage() {
     onError: (e: any) => toast.error(e.message),
   });
 
+  const list = companies ?? [];
+  const kpi = {
+    total: list.length,
+    industries: new Set(list.map((c) => (c.industry ?? "").trim()).filter(Boolean)).size,
+    withSite: list.filter((c) => !!c.website).length,
+    withNotes: list.filter((c) => !!c.notes).length,
+  };
+
   return (
-    <div className="p-4 md:p-8">
+    <div className="space-y-6 p-4 md:p-8">
       <PageHeader
         title="Empresas"
-        subtitle={`${companies?.length ?? 0} empresas cadastradas`}
+        subtitle="Sua carteira B2B — quem você atende, em que setor e onde mora o contexto comercial."
+        icon={Building2}
         action={
           <div className="flex gap-2">
             <Button variant="outline" size="sm" disabled={!companies?.length} onClick={() => {
@@ -109,7 +118,14 @@ function CompaniesPage() {
         }
       />
 
-      <div className="mt-6 mb-4 flex flex-wrap items-center gap-2">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <KpiCell label="Empresas" value={kpi.total} icon={Building2} loading={isLoading} />
+        <KpiCell label="Setores distintos" value={kpi.industries} icon={Layers} loading={isLoading} tone="primary" />
+        <KpiCell label="Com website" value={kpi.withSite} icon={Link2} loading={isLoading} />
+        <KpiCell label="Com contexto" value={kpi.withNotes} icon={FileText} loading={isLoading} />
+      </div>
+
+      <div className="flex flex-wrap items-center gap-2">
         <div className="relative flex-1 min-w-[200px] max-w-sm">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input placeholder="Buscar empresas…" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
@@ -202,5 +218,29 @@ function CompaniesPage() {
       );
       })()}
     </div>
+  );
+}
+
+function KpiCell({
+  label, value, icon: Icon, tone, loading,
+}: {
+  label: string; value: number; icon: any;
+  tone?: "primary" | "ok" | "danger"; loading?: boolean;
+}) {
+  const color =
+    tone === "danger" ? "text-destructive"
+    : tone === "ok" ? "text-emerald-600 dark:text-emerald-400"
+    : tone === "primary" ? "text-primary"
+    : "text-foreground";
+  return (
+    <Card className="p-3">
+      <div className="flex items-center justify-between">
+        <span className="text-xs text-muted-foreground">{label}</span>
+        <Icon className={`h-4 w-4 ${color}`} />
+      </div>
+      {loading ? <Skeleton className="h-6 w-16 mt-1" /> : (
+        <div className={`text-2xl font-semibold mt-1 tracking-tight ${color}`}>{value}</div>
+      )}
+    </Card>
   );
 }
