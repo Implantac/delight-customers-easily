@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { PageHeader } from "@/components/page-header";
 import { HealthScore } from "@/components/health-score";
+import { NextActionBlock } from "@/components/next-action-block";
 import { Timeline, type TimelineItem } from "@/components/timeline";
 import {
   ArrowLeft, Globe, Trash2, Users, KanbanSquare, Clock, History as HistoryIcon,
@@ -320,7 +321,12 @@ function CompanyDetail() {
         </div>
 
         {/* ============ Coluna direita: ação comercial (em abas) ============ */}
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 space-y-6">
+          {/* IA Comercial — sempre visível (briefing Fase 3) */}
+          {primaryContact && (
+            <NextActionBlock surface="contact" title="Próxima ação sugerida" limit={3} showRegenerate />
+          )}
+
           <Tabs defaultValue="overview" className="w-full">
             <TabsList className="w-full justify-start overflow-x-auto">
               <TabsTrigger value="overview" className="gap-1.5"><LayoutGrid className="h-3.5 w-3.5" />Visão geral</TabsTrigger>
