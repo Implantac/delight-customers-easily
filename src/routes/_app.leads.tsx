@@ -168,12 +168,15 @@ function LeadsInboxPage() {
   );
 }
 
-function SummaryCard({ label, value, hot }: { label: string; value: number; hot?: boolean }) {
+function SummaryCard({ label, value, hot, icon: Icon }: { label: string; value: number; hot?: boolean; icon?: React.ComponentType<{ className?: string }> }) {
   return (
     <Card className={hot ? "border-primary/40" : ""}>
       <CardContent className="p-4">
-        <div className="text-xs uppercase tracking-wide text-muted-foreground">{label}</div>
-        <div className="mt-2 text-3xl font-semibold">{value}</div>
+        <div className="flex items-center justify-between">
+          <span className="text-xs text-muted-foreground">{label}</span>
+          {Icon && <Icon className="h-3.5 w-3.5 text-muted-foreground" />}
+        </div>
+        <div className="mt-2 text-2xl font-semibold tabular-nums">{value}</div>
       </CardContent>
     </Card>
   );
