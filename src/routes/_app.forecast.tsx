@@ -62,6 +62,7 @@ function ForecastPage() {
       <PageHeader
         title="Previsão de Vendas"
         subtitle="Forecast ponderado pelo pipeline e progresso vs. meta deste mês."
+        icon={TrendingUp}
         action={canManage ? <GoalsDialog orgId={orgId!} /> : null}
       />
 
