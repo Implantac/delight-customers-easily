@@ -304,3 +304,22 @@ function CalendarPage() {
     </div>
   );
 }
+
+function KpiCell({
+  label, value, icon: Icon, tone,
+}: { label: string; value: number; icon: any; tone?: "primary" | "ok" | "danger" }) {
+  const color =
+    tone === "danger" ? "text-destructive"
+    : tone === "ok" ? "text-emerald-600 dark:text-emerald-400"
+    : tone === "primary" ? "text-primary"
+    : "text-foreground";
+  return (
+    <Card className="p-3">
+      <div className="flex items-center justify-between">
+        <span className="text-xs text-muted-foreground">{label}</span>
+        <Icon className={`h-4 w-4 ${color}`} />
+      </div>
+      <div className={`text-2xl font-semibold mt-1 tracking-tight ${color}`}>{value}</div>
+    </Card>
+  );
+}
