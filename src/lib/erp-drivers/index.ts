@@ -9,6 +9,7 @@
  */
 import type { ErpDriver } from "./types";
 import { blingDriver } from "./bling-driver";
+import { omieDriver } from "./omie-driver";
 import { postgresDirectDriver } from "./postgres-direct";
 import {
   mysqlAgentDriver,
@@ -30,6 +31,7 @@ export type DriverKey =
 
 const REGISTRY: Partial<Record<DriverKey, ErpDriver>> = {
   bling: blingDriver,
+  omie: omieDriver,
   "postgres-direct": postgresDirectDriver,
   "mysql-agent": mysqlAgentDriver,
   "sqlserver-agent": sqlserverAgentDriver,
@@ -70,7 +72,7 @@ export const DRIVER_CAPABILITIES: Record<DriverKey, { mode: "cloud" | "agent" | 
   "sqlserver-agent":  { mode: "agent", label: "SQL Server (via Agent)", note: "Requer ERP Connect Agent instalado on-premise." },
   "firebird-agent":   { mode: "agent", label: "Firebird (via Agent)",   note: "Requer ERP Connect Agent instalado on-premise." },
   "oracle-agent":     { mode: "agent", label: "Oracle (via Agent)",     note: "Requer ERP Connect Agent instalado on-premise." },
-  "omie":             { mode: "todo",  label: "Omie (REST)",            note: "Adapter REST em backlog." },
+  "omie":             { mode: "cloud", label: "Omie (REST)",            note: "Pull direto via API REST (app_key + app_secret)." },
   "tiny":             { mode: "todo",  label: "Tiny (REST)",            note: "Adapter REST em backlog." },
 };
 
