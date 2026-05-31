@@ -126,36 +126,58 @@ function CalendarPage() {
     setCursor((c) => (c.m === 11 ? { y: c.y + 1, m: 0 } : { y: c.y, m: c.m + 1 }));
   const goToday = () => setCursor({ y: today.getFullYear(), m: today.getMonth() });
 
+  const stats = useMemo(() => {
+    const acts = data?.activities ?? [];
+    const now = new Date();
+    const todayK = now.toISOString().slice(0, 10);
+    let today = 0, overdue = 0, done = 0, week = 0;
+    const weekEnd = new Date(now); weekEnd.setDate(now.getDate() + 7);
+    for (const a of acts) {
+      const d = new Date(a.due_date);
+      const k = a.due_date.slice(0, 10);
+      if (a.completed) { done++; continue; }
+      if (k === todayK) today++;
+      if (d < now && k !== todayK) overdue++;
+      if (d >= now && d <= weekEnd) week++;
+    }
+    return { today, overdue, done, week };
+  }, [data]);
+
   return (
-    <div className="flex flex-col gap-4 p-6">
-      <div className="flex items-center justify-between flex-wrap gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Agenda</h1>
-          <p className="text-sm text-muted-foreground">
-            Visualize suas atividades em formato de calendário.
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            <Switch id="mine" checked={mineOnly} onCheckedChange={setMineOnly} />
-            <Label htmlFor="mine" className="text-sm">Só minhas</Label>
-          </div>
-          <Button variant="outline" size="sm" onClick={goToday}>
-            Hoje
-          </Button>
-          <div className="flex items-center gap-1">
-            <Button variant="ghost" size="icon" onClick={goPrev}>
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <div className="text-sm font-medium min-w-[160px] text-center">
-              {MONTHS[cursor.m]} {cursor.y}
+    <div className="space-y-6">
+      <PageHeader
+        title="Agenda Comercial"
+        subtitle="Onde estão suas ações de hoje, da semana e o que ficou para trás."
+        icon={CalIcon}
+        actions={
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <Switch id="mine" checked={mineOnly} onCheckedChange={setMineOnly} />
+              <Label htmlFor="mine" className="text-sm">Só minhas</Label>
             </div>
-            <Button variant="ghost" size="icon" onClick={goNext}>
-              <ChevronRight className="h-4 w-4" />
-            </Button>
+            <Button variant="outline" size="sm" onClick={goToday}>Hoje</Button>
+            <div className="flex items-center gap-1">
+              <Button variant="ghost" size="icon" onClick={goPrev}>
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <div className="text-sm font-medium min-w-[160px] text-center">
+                {MONTHS[cursor.m]} {cursor.y}
+              </div>
+              <Button variant="ghost" size="icon" onClick={goNext}>
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
-        </div>
+        }
+      />
+
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <KpiCell label="Para hoje" value={stats.today} icon={Clock} tone="primary" />
+        <KpiCell label="Próximos 7 dias" value={stats.week} icon={CalIcon} />
+        <KpiCell label="Atrasadas" value={stats.overdue} icon={AlertCircle} tone="danger" />
+        <KpiCell label="Concluídas" value={stats.done} icon={CheckCircle2} tone="ok" />
       </div>
+
 
       <Card>
         <CardContent className="p-2">
