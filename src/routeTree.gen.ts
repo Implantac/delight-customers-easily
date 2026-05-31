@@ -109,6 +109,7 @@ import { Route as ApiPublicHooksDailyBriefingRouteImport } from './routes/api/pu
 import { Route as ApiPublicHooksCustomer360RefreshRouteImport } from './routes/api/public/hooks/customer-360-refresh'
 import { Route as ApiPublicHooksAiPurgeExpiredRouteImport } from './routes/api/public/hooks/ai-purge-expired'
 import { Route as ApiPublicHooksActivityRemindersRouteImport } from './routes/api/public/hooks/activity-reminders'
+import { Route as AppSettingsAutomationsRunsRouteImport } from './routes/_app.settings.automations.runs'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -619,6 +620,12 @@ const ApiPublicHooksActivityRemindersRoute =
     path: '/api/public/hooks/activity-reminders',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AppSettingsAutomationsRunsRoute =
+  AppSettingsAutomationsRunsRouteImport.update({
+    id: '/runs',
+    path: '/runs',
+    getParentRoute: () => AppSettingsAutomationsRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -699,7 +706,7 @@ export interface FileRoutesByFullPath {
   '/proposals/$id': typeof AppProposalsIdRoute
   '/reports/weekly': typeof AppReportsWeeklyRoute
   '/sequences/$id': typeof AppSequencesIdRoute
-  '/settings/automations': typeof AppSettingsAutomationsRoute
+  '/settings/automations': typeof AppSettingsAutomationsRouteWithChildren
   '/settings/erp-agent': typeof AppSettingsErpAgentRoute
   '/settings/fields': typeof AppSettingsFieldsRoute
   '/settings/import': typeof AppSettingsImportRoute
@@ -711,6 +718,7 @@ export interface FileRoutesByFullPath {
   '/api/public/influencer-visit': typeof ApiPublicInfluencerVisitRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/i/$org/$slug': typeof IOrgSlugRoute
+  '/settings/automations/runs': typeof AppSettingsAutomationsRunsRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
   '/api/public/hooks/ai-purge-expired': typeof ApiPublicHooksAiPurgeExpiredRoute
   '/api/public/hooks/customer-360-refresh': typeof ApiPublicHooksCustomer360RefreshRoute
@@ -800,7 +808,7 @@ export interface FileRoutesByTo {
   '/proposals/$id': typeof AppProposalsIdRoute
   '/reports/weekly': typeof AppReportsWeeklyRoute
   '/sequences/$id': typeof AppSequencesIdRoute
-  '/settings/automations': typeof AppSettingsAutomationsRoute
+  '/settings/automations': typeof AppSettingsAutomationsRouteWithChildren
   '/settings/erp-agent': typeof AppSettingsErpAgentRoute
   '/settings/fields': typeof AppSettingsFieldsRoute
   '/settings/import': typeof AppSettingsImportRoute
@@ -812,6 +820,7 @@ export interface FileRoutesByTo {
   '/api/public/influencer-visit': typeof ApiPublicInfluencerVisitRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/i/$org/$slug': typeof IOrgSlugRoute
+  '/settings/automations/runs': typeof AppSettingsAutomationsRunsRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
   '/api/public/hooks/ai-purge-expired': typeof ApiPublicHooksAiPurgeExpiredRoute
   '/api/public/hooks/customer-360-refresh': typeof ApiPublicHooksCustomer360RefreshRoute
@@ -903,7 +912,7 @@ export interface FileRoutesById {
   '/_app/proposals/$id': typeof AppProposalsIdRoute
   '/_app/reports/weekly': typeof AppReportsWeeklyRoute
   '/_app/sequences/$id': typeof AppSequencesIdRoute
-  '/_app/settings/automations': typeof AppSettingsAutomationsRoute
+  '/_app/settings/automations': typeof AppSettingsAutomationsRouteWithChildren
   '/_app/settings/erp-agent': typeof AppSettingsErpAgentRoute
   '/_app/settings/fields': typeof AppSettingsFieldsRoute
   '/_app/settings/import': typeof AppSettingsImportRoute
@@ -915,6 +924,7 @@ export interface FileRoutesById {
   '/api/public/influencer-visit': typeof ApiPublicInfluencerVisitRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/i/$org/$slug': typeof IOrgSlugRoute
+  '/_app/settings/automations/runs': typeof AppSettingsAutomationsRunsRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
   '/api/public/hooks/ai-purge-expired': typeof ApiPublicHooksAiPurgeExpiredRoute
   '/api/public/hooks/customer-360-refresh': typeof ApiPublicHooksCustomer360RefreshRoute
@@ -1018,6 +1028,7 @@ export interface FileRouteTypes {
     | '/api/public/influencer-visit'
     | '/api/public/lead-form'
     | '/i/$org/$slug'
+    | '/settings/automations/runs'
     | '/api/public/hooks/activity-reminders'
     | '/api/public/hooks/ai-purge-expired'
     | '/api/public/hooks/customer-360-refresh'
@@ -1119,6 +1130,7 @@ export interface FileRouteTypes {
     | '/api/public/influencer-visit'
     | '/api/public/lead-form'
     | '/i/$org/$slug'
+    | '/settings/automations/runs'
     | '/api/public/hooks/activity-reminders'
     | '/api/public/hooks/ai-purge-expired'
     | '/api/public/hooks/customer-360-refresh'
@@ -1221,6 +1233,7 @@ export interface FileRouteTypes {
     | '/api/public/influencer-visit'
     | '/api/public/lead-form'
     | '/i/$org/$slug'
+    | '/_app/settings/automations/runs'
     | '/api/public/hooks/activity-reminders'
     | '/api/public/hooks/ai-purge-expired'
     | '/api/public/hooks/customer-360-refresh'
@@ -1954,6 +1967,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksActivityRemindersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/settings/automations/runs': {
+      id: '/_app/settings/automations/runs'
+      path: '/runs'
+      fullPath: '/settings/automations/runs'
+      preLoaderRoute: typeof AppSettingsAutomationsRunsRouteImport
+      parentRoute: typeof AppSettingsAutomationsRoute
+    }
   }
 }
 
@@ -2057,6 +2077,20 @@ const AppTicketsRouteWithChildren = AppTicketsRoute._addFileChildren(
   AppTicketsRouteChildren,
 )
 
+interface AppSettingsAutomationsRouteChildren {
+  AppSettingsAutomationsRunsRoute: typeof AppSettingsAutomationsRunsRoute
+}
+
+const AppSettingsAutomationsRouteChildren: AppSettingsAutomationsRouteChildren =
+  {
+    AppSettingsAutomationsRunsRoute: AppSettingsAutomationsRunsRoute,
+  }
+
+const AppSettingsAutomationsRouteWithChildren =
+  AppSettingsAutomationsRoute._addFileChildren(
+    AppSettingsAutomationsRouteChildren,
+  )
+
 interface AppRouteChildren {
   AppActivitiesRoute: typeof AppActivitiesRoute
   AppAlertsRoute: typeof AppAlertsRoute
@@ -2123,7 +2157,7 @@ interface AppRouteChildren {
   AppWhatsappRoute: typeof AppWhatsappRoute
   AppWinLossRoute: typeof AppWinLossRoute
   AppInviteTokenRoute: typeof AppInviteTokenRoute
-  AppSettingsAutomationsRoute: typeof AppSettingsAutomationsRoute
+  AppSettingsAutomationsRoute: typeof AppSettingsAutomationsRouteWithChildren
   AppSettingsErpAgentRoute: typeof AppSettingsErpAgentRoute
   AppSettingsFieldsRoute: typeof AppSettingsFieldsRoute
   AppSettingsImportRoute: typeof AppSettingsImportRoute
@@ -2198,7 +2232,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppWhatsappRoute: AppWhatsappRoute,
   AppWinLossRoute: AppWinLossRoute,
   AppInviteTokenRoute: AppInviteTokenRoute,
-  AppSettingsAutomationsRoute: AppSettingsAutomationsRoute,
+  AppSettingsAutomationsRoute: AppSettingsAutomationsRouteWithChildren,
   AppSettingsErpAgentRoute: AppSettingsErpAgentRoute,
   AppSettingsFieldsRoute: AppSettingsFieldsRoute,
   AppSettingsImportRoute: AppSettingsImportRoute,
