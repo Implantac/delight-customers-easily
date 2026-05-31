@@ -113,8 +113,8 @@ function CommandCenter() {
             <Kpi icon={Target} label="Suas tarefas atrasadas" value={String(data.kpi.my_overdue)} hint={`${data.kpi.my_open_deals} negócios seus em aberto`} accent="rose" />
           </div>
 
-          {/* Cockpit Executivo: Meta · Inadimplência · Churn */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {/* Cockpit Executivo: Meta · Churn */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <Card className="p-5">
               <div className="flex items-center gap-2 mb-3">
                 <Gauge className="h-4 w-4 text-primary" />
@@ -145,36 +145,6 @@ function CommandCenter() {
               ) : <Skeleton className="h-32" />}
             </Card>
 
-            <Card className="p-5">
-              <div className="flex items-center gap-2 mb-3">
-                <Receipt className="h-4 w-4 text-rose-500" />
-                <h3 className="font-semibold">Inadimplência</h3>
-                {finance && finance.totals.count_overdue > 0 && (
-                  <Badge variant="destructive" className="ml-auto">{finance.totals.count_overdue}</Badge>
-                )}
-              </div>
-              {finance ? (
-                <>
-                  <p className="text-2xl font-bold tracking-tight text-rose-600">{fmt(finance.totals.overdue)}</p>
-                  <p className="text-xs text-muted-foreground">vencidos · {fmt(finance.totals.open)} em aberto</p>
-                  {finance.topDebtors.length > 0 ? (
-                    <ul className="mt-3 space-y-1.5">
-                      {finance.topDebtors.slice(0, 3).map((d) => (
-                        <li key={d.company_id} className="flex items-center justify-between text-xs rounded-md border border-border/50 p-2">
-                          <span className="truncate">{d.name}</span>
-                          <span className="font-semibold shrink-0 ml-2">{fmt(d.amount)}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="mt-3 text-xs text-muted-foreground">Nenhum devedor identificado.</p>
-                  )}
-                  <Button asChild variant="outline" size="sm" className="mt-3 w-full">
-                    <Link to="/finance">Abrir financeiro <ArrowRight className="ml-1 h-3 w-3" /></Link>
-                  </Button>
-                </>
-              ) : <Skeleton className="h-32" />}
-            </Card>
 
             <Card className="p-5">
               <div className="flex items-center gap-2 mb-3">
