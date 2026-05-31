@@ -38,7 +38,7 @@ function CommandCenter() {
   const { orgId } = useCurrentOrg();
   const run = useServerFn(computeCommandCenter);
   const runForecast = useServerFn(getForecast);
-  const runFinance = useServerFn(getFinanceOverview);
+  
   const runRetention = useServerFn(getRetentionInsights);
 
   const { data, isLoading } = useQuery({
