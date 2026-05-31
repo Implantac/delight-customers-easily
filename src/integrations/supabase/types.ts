@@ -5927,13 +5927,107 @@ export type Database = {
           },
         ]
       }
+      sales_forecast_snapshots: {
+        Row: {
+          computed_at: string
+          created_at: string
+          id: string
+          open_deals_count: number
+          open_pipeline_value: number
+          organization_id: string
+          period_end: string
+          period_start: string
+          scope: string
+          user_id: string | null
+          weighted_forecast: number
+          weights: Json
+          won_value_period: number
+        }
+        Insert: {
+          computed_at?: string
+          created_at?: string
+          id?: string
+          open_deals_count?: number
+          open_pipeline_value?: number
+          organization_id: string
+          period_end: string
+          period_start: string
+          scope?: string
+          user_id?: string | null
+          weighted_forecast?: number
+          weights?: Json
+          won_value_period?: number
+        }
+        Update: {
+          computed_at?: string
+          created_at?: string
+          id?: string
+          open_deals_count?: number
+          open_pipeline_value?: number
+          organization_id?: string
+          period_end?: string
+          period_start?: string
+          scope?: string
+          user_id?: string | null
+          weighted_forecast?: number
+          weights?: Json
+          won_value_period?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sales_forecast_snapshots_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["branch_org_id"]
+          },
+          {
+            foreignKeyName: "sales_forecast_snapshots_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "sales_forecast_snapshots_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "sales_forecast_snapshots_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "sales_forecast_snapshots_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "sales_forecast_snapshots_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       sales_goals: {
         Row: {
           created_at: string
           created_by: string | null
+          currency: string
           id: string
+          notes: string | null
           organization_id: string
           period_month: string
+          target_deals_count: number
           target_value: number
           updated_at: string
           user_id: string | null
@@ -5941,9 +6035,12 @@ export type Database = {
         Insert: {
           created_at?: string
           created_by?: string | null
+          currency?: string
           id?: string
+          notes?: string | null
           organization_id: string
           period_month: string
+          target_deals_count?: number
           target_value: number
           updated_at?: string
           user_id?: string | null
@@ -5951,9 +6048,12 @@ export type Database = {
         Update: {
           created_at?: string
           created_by?: string | null
+          currency?: string
           id?: string
+          notes?: string | null
           organization_id?: string
           period_month?: string
+          target_deals_count?: number
           target_value?: number
           updated_at?: string
           user_id?: string | null
@@ -7345,6 +7445,15 @@ export type Database = {
     }
     Functions: {
       accept_org_invite: { Args: { _token: string }; Returns: string }
+      compute_sales_forecast: {
+        Args: {
+          _org: string
+          _period_end: string
+          _period_start: string
+          _weights?: Json
+        }
+        Returns: string
+      }
       find_opportunities_in_radius: {
         Args: {
           _lat: number
@@ -7362,6 +7471,19 @@ export type Database = {
           state: string
           subject_id: string
           subject_type: string
+        }[]
+      }
+      get_goal_attainment_v2: {
+        Args: { _goal_id: string }
+        Returns: {
+          attainment_pct: number
+          goal_id: string
+          period_end: string
+          period_start: string
+          realized_deals_count: number
+          realized_value: number
+          target_deals_count: number
+          target_value: number
         }[]
       }
       get_influencer_lp: {
