@@ -1207,6 +1207,147 @@ export type Database = {
         }
         Relationships: []
       }
+      customer_360_snapshot: {
+        Row: {
+          activities_30d: number
+          cnpj: string | null
+          company_id: string | null
+          computed_at: string
+          created_at: string
+          display_name: string | null
+          erp_customer_id: string | null
+          frequency: number | null
+          has_email: boolean
+          has_whatsapp: boolean
+          id: string
+          last_activity_at: string | null
+          last_purchase_at: string | null
+          monetary: number | null
+          open_deals_count: number
+          open_deals_value: number
+          organization_id: string
+          primary_email: string | null
+          primary_phone: string | null
+          recency_days: number | null
+          rfm_segment: string | null
+          trend: string | null
+          updated_at: string
+          won_deals_count_365d: number
+          won_deals_value_365d: number
+        }
+        Insert: {
+          activities_30d?: number
+          cnpj?: string | null
+          company_id?: string | null
+          computed_at?: string
+          created_at?: string
+          display_name?: string | null
+          erp_customer_id?: string | null
+          frequency?: number | null
+          has_email?: boolean
+          has_whatsapp?: boolean
+          id?: string
+          last_activity_at?: string | null
+          last_purchase_at?: string | null
+          monetary?: number | null
+          open_deals_count?: number
+          open_deals_value?: number
+          organization_id: string
+          primary_email?: string | null
+          primary_phone?: string | null
+          recency_days?: number | null
+          rfm_segment?: string | null
+          trend?: string | null
+          updated_at?: string
+          won_deals_count_365d?: number
+          won_deals_value_365d?: number
+        }
+        Update: {
+          activities_30d?: number
+          cnpj?: string | null
+          company_id?: string | null
+          computed_at?: string
+          created_at?: string
+          display_name?: string | null
+          erp_customer_id?: string | null
+          frequency?: number | null
+          has_email?: boolean
+          has_whatsapp?: boolean
+          id?: string
+          last_activity_at?: string | null
+          last_purchase_at?: string | null
+          monetary?: number | null
+          open_deals_count?: number
+          open_deals_value?: number
+          organization_id?: string
+          primary_email?: string | null
+          primary_phone?: string | null
+          recency_days?: number | null
+          rfm_segment?: string | null
+          trend?: string | null
+          updated_at?: string
+          won_deals_count_365d?: number
+          won_deals_value_365d?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_360_snapshot_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customer_360_snapshot_erp_customer_id_fkey"
+            columns: ["erp_customer_id"]
+            isOneToOne: false
+            referencedRelation: "erp_customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customer_360_snapshot_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["branch_org_id"]
+          },
+          {
+            foreignKeyName: "customer_360_snapshot_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "customer_360_snapshot_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "customer_360_snapshot_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "customer_360_snapshot_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "customer_360_snapshot_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       deal_events: {
         Row: {
           created_at: string
@@ -6579,6 +6720,7 @@ export type Database = {
         }[]
       }
       org_tenant_root: { Args: { _org: string }; Returns: string }
+      refresh_customer_360: { Args: { _org: string }; Returns: number }
     }
     Enums: {
       activity_type: "call" | "email" | "meeting" | "task" | "note"
