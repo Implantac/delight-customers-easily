@@ -100,6 +100,7 @@ import { Route as AppContactsIdRouteImport } from './routes/_app.contacts.$id'
 import { Route as AppCompaniesIdRouteImport } from './routes/_app.companies.$id'
 import { Route as ApiPublicHooksRefreshRecommendationsRouteImport } from './routes/api/public/hooks/refresh-recommendations'
 import { Route as ApiPublicHooksGenerateAlertsRouteImport } from './routes/api/public/hooks/generate-alerts'
+import { Route as ApiPublicHooksErpSyncTickRouteImport } from './routes/api/public/hooks/erp-sync-tick'
 import { Route as ApiPublicHooksErpInboundRouteImport } from './routes/api/public/hooks/erp-inbound'
 import { Route as ApiPublicHooksErpAgentPushRouteImport } from './routes/api/public/hooks/erp-agent-push'
 import { Route as ApiPublicHooksDailyBriefingRouteImport } from './routes/api/public/hooks/daily-briefing'
@@ -562,6 +563,12 @@ const ApiPublicHooksGenerateAlertsRoute =
     path: '/api/public/hooks/generate-alerts',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicHooksErpSyncTickRoute =
+  ApiPublicHooksErpSyncTickRouteImport.update({
+    id: '/api/public/hooks/erp-sync-tick',
+    path: '/api/public/hooks/erp-sync-tick',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHooksErpInboundRoute =
   ApiPublicHooksErpInboundRouteImport.update({
     id: '/api/public/hooks/erp-inbound',
@@ -680,6 +687,7 @@ export interface FileRoutesByFullPath {
   '/api/public/hooks/daily-briefing': typeof ApiPublicHooksDailyBriefingRoute
   '/api/public/hooks/erp-agent-push': typeof ApiPublicHooksErpAgentPushRoute
   '/api/public/hooks/erp-inbound': typeof ApiPublicHooksErpInboundRoute
+  '/api/public/hooks/erp-sync-tick': typeof ApiPublicHooksErpSyncTickRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
   '/api/public/hooks/refresh-recommendations': typeof ApiPublicHooksRefreshRecommendationsRoute
 }
@@ -776,6 +784,7 @@ export interface FileRoutesByTo {
   '/api/public/hooks/daily-briefing': typeof ApiPublicHooksDailyBriefingRoute
   '/api/public/hooks/erp-agent-push': typeof ApiPublicHooksErpAgentPushRoute
   '/api/public/hooks/erp-inbound': typeof ApiPublicHooksErpInboundRoute
+  '/api/public/hooks/erp-sync-tick': typeof ApiPublicHooksErpSyncTickRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
   '/api/public/hooks/refresh-recommendations': typeof ApiPublicHooksRefreshRecommendationsRoute
 }
@@ -874,6 +883,7 @@ export interface FileRoutesById {
   '/api/public/hooks/daily-briefing': typeof ApiPublicHooksDailyBriefingRoute
   '/api/public/hooks/erp-agent-push': typeof ApiPublicHooksErpAgentPushRoute
   '/api/public/hooks/erp-inbound': typeof ApiPublicHooksErpInboundRoute
+  '/api/public/hooks/erp-sync-tick': typeof ApiPublicHooksErpSyncTickRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
   '/api/public/hooks/refresh-recommendations': typeof ApiPublicHooksRefreshRecommendationsRoute
 }
@@ -972,6 +982,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/daily-briefing'
     | '/api/public/hooks/erp-agent-push'
     | '/api/public/hooks/erp-inbound'
+    | '/api/public/hooks/erp-sync-tick'
     | '/api/public/hooks/generate-alerts'
     | '/api/public/hooks/refresh-recommendations'
   fileRoutesByTo: FileRoutesByTo
@@ -1068,6 +1079,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/daily-briefing'
     | '/api/public/hooks/erp-agent-push'
     | '/api/public/hooks/erp-inbound'
+    | '/api/public/hooks/erp-sync-tick'
     | '/api/public/hooks/generate-alerts'
     | '/api/public/hooks/refresh-recommendations'
   id:
@@ -1165,6 +1177,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/daily-briefing'
     | '/api/public/hooks/erp-agent-push'
     | '/api/public/hooks/erp-inbound'
+    | '/api/public/hooks/erp-sync-tick'
     | '/api/public/hooks/generate-alerts'
     | '/api/public/hooks/refresh-recommendations'
   fileRoutesById: FileRoutesById
@@ -1181,6 +1194,7 @@ export interface RootRouteChildren {
   ApiPublicHooksDailyBriefingRoute: typeof ApiPublicHooksDailyBriefingRoute
   ApiPublicHooksErpAgentPushRoute: typeof ApiPublicHooksErpAgentPushRoute
   ApiPublicHooksErpInboundRoute: typeof ApiPublicHooksErpInboundRoute
+  ApiPublicHooksErpSyncTickRoute: typeof ApiPublicHooksErpSyncTickRoute
   ApiPublicHooksGenerateAlertsRoute: typeof ApiPublicHooksGenerateAlertsRoute
   ApiPublicHooksRefreshRecommendationsRoute: typeof ApiPublicHooksRefreshRecommendationsRoute
 }
@@ -1824,6 +1838,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksGenerateAlertsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/erp-sync-tick': {
+      id: '/api/public/hooks/erp-sync-tick'
+      path: '/api/public/hooks/erp-sync-tick'
+      fullPath: '/api/public/hooks/erp-sync-tick'
+      preLoaderRoute: typeof ApiPublicHooksErpSyncTickRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/erp-inbound': {
       id: '/api/public/hooks/erp-inbound'
       path: '/api/public/hooks/erp-inbound'
@@ -2117,6 +2138,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicHooksDailyBriefingRoute: ApiPublicHooksDailyBriefingRoute,
   ApiPublicHooksErpAgentPushRoute: ApiPublicHooksErpAgentPushRoute,
   ApiPublicHooksErpInboundRoute: ApiPublicHooksErpInboundRoute,
+  ApiPublicHooksErpSyncTickRoute: ApiPublicHooksErpSyncTickRoute,
   ApiPublicHooksGenerateAlertsRoute: ApiPublicHooksGenerateAlertsRoute,
   ApiPublicHooksRefreshRecommendationsRoute:
     ApiPublicHooksRefreshRecommendationsRoute,

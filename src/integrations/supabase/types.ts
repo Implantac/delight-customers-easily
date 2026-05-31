@@ -1583,6 +1583,54 @@ export type Database = {
           },
         ]
       }
+      erp_health_checks: {
+        Row: {
+          checked_at: string
+          details: Json
+          error_message: string | null
+          id: string
+          integration_id: string
+          latency_ms: number | null
+          organization_id: string
+          status: string
+        }
+        Insert: {
+          checked_at?: string
+          details?: Json
+          error_message?: string | null
+          id?: string
+          integration_id: string
+          latency_ms?: number | null
+          organization_id: string
+          status: string
+        }
+        Update: {
+          checked_at?: string
+          details?: Json
+          error_message?: string | null
+          id?: string
+          integration_id?: string
+          latency_ms?: number | null
+          organization_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "erp_health_checks_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "erp_integrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "erp_health_checks_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       erp_inbound_log: {
         Row: {
           created_at: string
@@ -1631,6 +1679,7 @@ export type Database = {
         Row: {
           app_key: string
           app_secret: string
+          connector_type: string
           created_at: string
           id: string
           is_active: boolean
@@ -1638,12 +1687,16 @@ export type Database = {
           last_sync_at: string | null
           organization_id: string
           provider: string
+          resources: string[]
           settings: Json
+          sync_cron: string | null
+          sync_mode: string
           updated_at: string
         }
         Insert: {
           app_key: string
           app_secret: string
+          connector_type?: string
           created_at?: string
           id?: string
           is_active?: boolean
@@ -1651,12 +1704,16 @@ export type Database = {
           last_sync_at?: string | null
           organization_id: string
           provider: string
+          resources?: string[]
           settings?: Json
+          sync_cron?: string | null
+          sync_mode?: string
           updated_at?: string
         }
         Update: {
           app_key?: string
           app_secret?: string
+          connector_type?: string
           created_at?: string
           id?: string
           is_active?: boolean
@@ -1664,7 +1721,10 @@ export type Database = {
           last_sync_at?: string | null
           organization_id?: string
           provider?: string
+          resources?: string[]
           settings?: Json
+          sync_cron?: string | null
+          sync_mode?: string
           updated_at?: string
         }
         Relationships: [
@@ -1875,6 +1935,144 @@ export type Database = {
           },
           {
             foreignKeyName: "erp_sales_reps_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      erp_sync_conflicts: {
+        Row: {
+          crm_value: Json | null
+          detected_at: string
+          erp_value: Json | null
+          external_id: string
+          field: string | null
+          id: string
+          integration_id: string
+          notes: string | null
+          organization_id: string
+          resolution: string | null
+          resolved_at: string | null
+          resolved_by: string | null
+          resource: string
+        }
+        Insert: {
+          crm_value?: Json | null
+          detected_at?: string
+          erp_value?: Json | null
+          external_id: string
+          field?: string | null
+          id?: string
+          integration_id: string
+          notes?: string | null
+          organization_id: string
+          resolution?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          resource: string
+        }
+        Update: {
+          crm_value?: Json | null
+          detected_at?: string
+          erp_value?: Json | null
+          external_id?: string
+          field?: string | null
+          id?: string
+          integration_id?: string
+          notes?: string | null
+          organization_id?: string
+          resolution?: string | null
+          resolved_at?: string | null
+          resolved_by?: string | null
+          resource?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "erp_sync_conflicts_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "erp_integrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "erp_sync_conflicts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      erp_sync_jobs: {
+        Row: {
+          attempts: number
+          created_at: string
+          cursor: Json | null
+          direction: string
+          error_message: string | null
+          finished_at: string | null
+          id: string
+          integration_id: string
+          max_attempts: number
+          organization_id: string
+          records_failed: number
+          records_processed: number
+          resource: string
+          scheduled_at: string
+          started_at: string | null
+          status: string
+          triggered_by: string | null
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          cursor?: Json | null
+          direction?: string
+          error_message?: string | null
+          finished_at?: string | null
+          id?: string
+          integration_id: string
+          max_attempts?: number
+          organization_id: string
+          records_failed?: number
+          records_processed?: number
+          resource: string
+          scheduled_at?: string
+          started_at?: string | null
+          status?: string
+          triggered_by?: string | null
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          cursor?: Json | null
+          direction?: string
+          error_message?: string | null
+          finished_at?: string | null
+          id?: string
+          integration_id?: string
+          max_attempts?: number
+          organization_id?: string
+          records_failed?: number
+          records_processed?: number
+          resource?: string
+          scheduled_at?: string
+          started_at?: string | null
+          status?: string
+          triggered_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "erp_sync_jobs_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "erp_integrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "erp_sync_jobs_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
