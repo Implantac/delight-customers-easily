@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { useOrg } from "@/lib/org";
+import { useCurrentOrg } from "@/lib/org";
 import { listErpHealth, listErpConflicts, resolveErpConflict } from "@/lib/erp-health.functions";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
