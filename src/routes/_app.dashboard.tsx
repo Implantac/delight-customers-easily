@@ -141,7 +141,15 @@ function DashboardPage() {
       <PageHeader
         title="Revenue Command Center"
         subtitle="O que precisa acontecer hoje para vender mais"
+        action={
+          <Button asChild size="sm" variant="outline">
+            <Link to="/meu-dia">
+              <Flame className="mr-1 h-4 w-4" /> Meu dia
+            </Link>
+          </Button>
+        }
       />
+
 
       <div className="mt-6">
         <OnboardingChecklist />

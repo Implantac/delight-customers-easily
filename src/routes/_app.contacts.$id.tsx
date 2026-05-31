@@ -8,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { PageHeader } from "@/components/page-header";
 import { HealthScore } from "@/components/health-score";
+import { NextActionBlock } from "@/components/next-action-block";
 import { Timeline, type TimelineItem } from "@/components/timeline";
 import {
   ArrowLeft, Mail, Phone, Briefcase, Trash2, Building2, KanbanSquare,
@@ -141,8 +142,10 @@ function ContactDetail() {
             </TabsList>
 
             <TabsContent value="overview" className="mt-4 space-y-6">
+              <NextActionBlock surface="contact" title="Próxima ação sugerida" limit={3} />
               <HealthScore contactId={contact.id} />
               <Card className="p-5">
+
                 <h3 className="flex items-center gap-2 text-sm font-semibold"><KanbanSquare className="h-4 w-4" />Negócios recentes</h3>
                 <div className="mt-3 space-y-2">
                   {(deals ?? []).length === 0 && <p className="text-sm text-muted-foreground">Nenhum negócio vinculado.</p>}
