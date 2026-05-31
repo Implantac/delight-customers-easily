@@ -34,9 +34,11 @@ import {
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MessageCircle, Plus, Send, Check, CheckCheck, Clock, AlertTriangle, MoreVertical, UserPlus, FileText, User } from "lucide-react";
+import { MessageCircle, Plus, Send, Check, CheckCheck, Clock, AlertTriangle, MoreVertical, UserPlus, FileText, User, Building2, Phone, Mail, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { WhatsAppSlaPanel } from "@/components/whatsapp-sla-panel";
+import { NextActionBlock } from "@/components/next-action-block";
+import { whatsappLink } from "@/lib/wa";
 
 export const Route = createFileRoute("/_app/whatsapp")({ component: WhatsAppPage });
 
