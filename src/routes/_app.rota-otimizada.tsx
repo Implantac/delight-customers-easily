@@ -43,7 +43,7 @@ function VRPPage() {
     <div className="space-y-6">
       <PageHeader
         title="Rota otimizada (VRP)"
-        description="Solver nearest-neighbor + 2-opt sobre coordenadas reais. Pega oportunidades em raio do depot e gera a melhor sequência."
+        subtitle="Solver nearest-neighbor + 2-opt sobre coordenadas reais. Pega oportunidades em raio do depot e gera a melhor sequência."
         icon={RouteIcon}
       />
 

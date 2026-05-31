@@ -29,12 +29,14 @@ import { Route as AppSequencesRouteImport } from './routes/_app.sequences'
 import { Route as AppSegmentsRouteImport } from './routes/_app.segments'
 import { Route as AppSalesOrdersRouteImport } from './routes/_app.sales-orders'
 import { Route as AppRoutingRouteImport } from './routes/_app.routing'
+import { Route as AppRotaOtimizadaRouteImport } from './routes/_app.rota-otimizada'
 import { Route as AppRetentionRouteImport } from './routes/_app.retention'
 import { Route as AppRepresentantesRouteImport } from './routes/_app.representantes'
 import { Route as AppReportsRouteImport } from './routes/_app.reports'
 import { Route as AppReferralsRouteImport } from './routes/_app.referrals'
 import { Route as AppQuotesRouteImport } from './routes/_app.quotes'
 import { Route as AppProposalsRouteImport } from './routes/_app.proposals'
+import { Route as AppPropensaoRouteImport } from './routes/_app.propensao'
 import { Route as AppProductsRouteImport } from './routes/_app.products'
 import { Route as AppProductivityRouteImport } from './routes/_app.productivity'
 import { Route as AppPlaybooksRouteImport } from './routes/_app.playbooks'
@@ -44,6 +46,7 @@ import { Route as AppOportunidadesRouteImport } from './routes/_app.oportunidade
 import { Route as AppOnboardingRouteImport } from './routes/_app.onboarding'
 import { Route as AppNotificationsRouteImport } from './routes/_app.notifications'
 import { Route as AppMytasksRouteImport } from './routes/_app.mytasks'
+import { Route as AppMultiEmpresaRouteImport } from './routes/_app.multi-empresa'
 import { Route as AppMeuDiaRouteImport } from './routes/_app.meu-dia'
 import { Route as AppMarketingIntelRouteImport } from './routes/_app.marketing-intel'
 import { Route as AppMarketingRouteImport } from './routes/_app.marketing'
@@ -217,6 +220,11 @@ const AppRoutingRoute = AppRoutingRouteImport.update({
   path: '/routing',
   getParentRoute: () => AppRoute,
 } as any)
+const AppRotaOtimizadaRoute = AppRotaOtimizadaRouteImport.update({
+  id: '/rota-otimizada',
+  path: '/rota-otimizada',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppRetentionRoute = AppRetentionRouteImport.update({
   id: '/retention',
   path: '/retention',
@@ -245,6 +253,11 @@ const AppQuotesRoute = AppQuotesRouteImport.update({
 const AppProposalsRoute = AppProposalsRouteImport.update({
   id: '/proposals',
   path: '/proposals',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPropensaoRoute = AppPropensaoRouteImport.update({
+  id: '/propensao',
+  path: '/propensao',
   getParentRoute: () => AppRoute,
 } as any)
 const AppProductsRoute = AppProductsRouteImport.update({
@@ -290,6 +303,11 @@ const AppNotificationsRoute = AppNotificationsRouteImport.update({
 const AppMytasksRoute = AppMytasksRouteImport.update({
   id: '/mytasks',
   path: '/mytasks',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMultiEmpresaRoute = AppMultiEmpresaRouteImport.update({
+  id: '/multi-empresa',
+  path: '/multi-empresa',
   getParentRoute: () => AppRoute,
 } as any)
 const AppMeuDiaRoute = AppMeuDiaRouteImport.update({
@@ -706,6 +724,7 @@ export interface FileRoutesByFullPath {
   '/marketing': typeof AppMarketingRoute
   '/marketing-intel': typeof AppMarketingIntelRoute
   '/meu-dia': typeof AppMeuDiaRoute
+  '/multi-empresa': typeof AppMultiEmpresaRoute
   '/mytasks': typeof AppMytasksRoute
   '/notifications': typeof AppNotificationsRoute
   '/onboarding': typeof AppOnboardingRoute
@@ -715,12 +734,14 @@ export interface FileRoutesByFullPath {
   '/playbooks': typeof AppPlaybooksRoute
   '/productivity': typeof AppProductivityRoute
   '/products': typeof AppProductsRoute
+  '/propensao': typeof AppPropensaoRoute
   '/proposals': typeof AppProposalsRouteWithChildren
   '/quotes': typeof AppQuotesRoute
   '/referrals': typeof AppReferralsRoute
   '/reports': typeof AppReportsRouteWithChildren
   '/representantes': typeof AppRepresentantesRoute
   '/retention': typeof AppRetentionRoute
+  '/rota-otimizada': typeof AppRotaOtimizadaRoute
   '/routing': typeof AppRoutingRoute
   '/sales-orders': typeof AppSalesOrdersRoute
   '/segments': typeof AppSegmentsRoute
@@ -815,6 +836,7 @@ export interface FileRoutesByTo {
   '/marketing': typeof AppMarketingRoute
   '/marketing-intel': typeof AppMarketingIntelRoute
   '/meu-dia': typeof AppMeuDiaRoute
+  '/multi-empresa': typeof AppMultiEmpresaRoute
   '/mytasks': typeof AppMytasksRoute
   '/notifications': typeof AppNotificationsRoute
   '/onboarding': typeof AppOnboardingRoute
@@ -824,12 +846,14 @@ export interface FileRoutesByTo {
   '/playbooks': typeof AppPlaybooksRoute
   '/productivity': typeof AppProductivityRoute
   '/products': typeof AppProductsRoute
+  '/propensao': typeof AppPropensaoRoute
   '/proposals': typeof AppProposalsRouteWithChildren
   '/quotes': typeof AppQuotesRoute
   '/referrals': typeof AppReferralsRoute
   '/reports': typeof AppReportsRouteWithChildren
   '/representantes': typeof AppRepresentantesRoute
   '/retention': typeof AppRetentionRoute
+  '/rota-otimizada': typeof AppRotaOtimizadaRoute
   '/routing': typeof AppRoutingRoute
   '/sales-orders': typeof AppSalesOrdersRoute
   '/segments': typeof AppSegmentsRoute
@@ -926,6 +950,7 @@ export interface FileRoutesById {
   '/_app/marketing': typeof AppMarketingRoute
   '/_app/marketing-intel': typeof AppMarketingIntelRoute
   '/_app/meu-dia': typeof AppMeuDiaRoute
+  '/_app/multi-empresa': typeof AppMultiEmpresaRoute
   '/_app/mytasks': typeof AppMytasksRoute
   '/_app/notifications': typeof AppNotificationsRoute
   '/_app/onboarding': typeof AppOnboardingRoute
@@ -935,12 +960,14 @@ export interface FileRoutesById {
   '/_app/playbooks': typeof AppPlaybooksRoute
   '/_app/productivity': typeof AppProductivityRoute
   '/_app/products': typeof AppProductsRoute
+  '/_app/propensao': typeof AppPropensaoRoute
   '/_app/proposals': typeof AppProposalsRouteWithChildren
   '/_app/quotes': typeof AppQuotesRoute
   '/_app/referrals': typeof AppReferralsRoute
   '/_app/reports': typeof AppReportsRouteWithChildren
   '/_app/representantes': typeof AppRepresentantesRoute
   '/_app/retention': typeof AppRetentionRoute
+  '/_app/rota-otimizada': typeof AppRotaOtimizadaRoute
   '/_app/routing': typeof AppRoutingRoute
   '/_app/sales-orders': typeof AppSalesOrdersRoute
   '/_app/segments': typeof AppSegmentsRoute
@@ -1037,6 +1064,7 @@ export interface FileRouteTypes {
     | '/marketing'
     | '/marketing-intel'
     | '/meu-dia'
+    | '/multi-empresa'
     | '/mytasks'
     | '/notifications'
     | '/onboarding'
@@ -1046,12 +1074,14 @@ export interface FileRouteTypes {
     | '/playbooks'
     | '/productivity'
     | '/products'
+    | '/propensao'
     | '/proposals'
     | '/quotes'
     | '/referrals'
     | '/reports'
     | '/representantes'
     | '/retention'
+    | '/rota-otimizada'
     | '/routing'
     | '/sales-orders'
     | '/segments'
@@ -1146,6 +1176,7 @@ export interface FileRouteTypes {
     | '/marketing'
     | '/marketing-intel'
     | '/meu-dia'
+    | '/multi-empresa'
     | '/mytasks'
     | '/notifications'
     | '/onboarding'
@@ -1155,12 +1186,14 @@ export interface FileRouteTypes {
     | '/playbooks'
     | '/productivity'
     | '/products'
+    | '/propensao'
     | '/proposals'
     | '/quotes'
     | '/referrals'
     | '/reports'
     | '/representantes'
     | '/retention'
+    | '/rota-otimizada'
     | '/routing'
     | '/sales-orders'
     | '/segments'
@@ -1256,6 +1289,7 @@ export interface FileRouteTypes {
     | '/_app/marketing'
     | '/_app/marketing-intel'
     | '/_app/meu-dia'
+    | '/_app/multi-empresa'
     | '/_app/mytasks'
     | '/_app/notifications'
     | '/_app/onboarding'
@@ -1265,12 +1299,14 @@ export interface FileRouteTypes {
     | '/_app/playbooks'
     | '/_app/productivity'
     | '/_app/products'
+    | '/_app/propensao'
     | '/_app/proposals'
     | '/_app/quotes'
     | '/_app/referrals'
     | '/_app/reports'
     | '/_app/representantes'
     | '/_app/retention'
+    | '/_app/rota-otimizada'
     | '/_app/routing'
     | '/_app/sales-orders'
     | '/_app/segments'
@@ -1494,6 +1530,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRoutingRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/rota-otimizada': {
+      id: '/_app/rota-otimizada'
+      path: '/rota-otimizada'
+      fullPath: '/rota-otimizada'
+      preLoaderRoute: typeof AppRotaOtimizadaRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/retention': {
       id: '/_app/retention'
       path: '/retention'
@@ -1534,6 +1577,13 @@ declare module '@tanstack/react-router' {
       path: '/proposals'
       fullPath: '/proposals'
       preLoaderRoute: typeof AppProposalsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/propensao': {
+      id: '/_app/propensao'
+      path: '/propensao'
+      fullPath: '/propensao'
+      preLoaderRoute: typeof AppPropensaoRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/products': {
@@ -1597,6 +1647,13 @@ declare module '@tanstack/react-router' {
       path: '/mytasks'
       fullPath: '/mytasks'
       preLoaderRoute: typeof AppMytasksRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/multi-empresa': {
+      id: '/_app/multi-empresa'
+      path: '/multi-empresa'
+      fullPath: '/multi-empresa'
+      preLoaderRoute: typeof AppMultiEmpresaRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/meu-dia': {
@@ -2280,6 +2337,7 @@ interface AppRouteChildren {
   AppMarketingRoute: typeof AppMarketingRoute
   AppMarketingIntelRoute: typeof AppMarketingIntelRoute
   AppMeuDiaRoute: typeof AppMeuDiaRoute
+  AppMultiEmpresaRoute: typeof AppMultiEmpresaRoute
   AppMytasksRoute: typeof AppMytasksRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppOnboardingRoute: typeof AppOnboardingRoute
@@ -2289,12 +2347,14 @@ interface AppRouteChildren {
   AppPlaybooksRoute: typeof AppPlaybooksRoute
   AppProductivityRoute: typeof AppProductivityRoute
   AppProductsRoute: typeof AppProductsRoute
+  AppPropensaoRoute: typeof AppPropensaoRoute
   AppProposalsRoute: typeof AppProposalsRouteWithChildren
   AppQuotesRoute: typeof AppQuotesRoute
   AppReferralsRoute: typeof AppReferralsRoute
   AppReportsRoute: typeof AppReportsRouteWithChildren
   AppRepresentantesRoute: typeof AppRepresentantesRoute
   AppRetentionRoute: typeof AppRetentionRoute
+  AppRotaOtimizadaRoute: typeof AppRotaOtimizadaRoute
   AppRoutingRoute: typeof AppRoutingRoute
   AppSalesOrdersRoute: typeof AppSalesOrdersRoute
   AppSegmentsRoute: typeof AppSegmentsRoute
@@ -2355,6 +2415,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppMarketingRoute: AppMarketingRoute,
   AppMarketingIntelRoute: AppMarketingIntelRoute,
   AppMeuDiaRoute: AppMeuDiaRoute,
+  AppMultiEmpresaRoute: AppMultiEmpresaRoute,
   AppMytasksRoute: AppMytasksRoute,
   AppNotificationsRoute: AppNotificationsRoute,
   AppOnboardingRoute: AppOnboardingRoute,
@@ -2364,12 +2425,14 @@ const AppRouteChildren: AppRouteChildren = {
   AppPlaybooksRoute: AppPlaybooksRoute,
   AppProductivityRoute: AppProductivityRoute,
   AppProductsRoute: AppProductsRoute,
+  AppPropensaoRoute: AppPropensaoRoute,
   AppProposalsRoute: AppProposalsRouteWithChildren,
   AppQuotesRoute: AppQuotesRoute,
   AppReferralsRoute: AppReferralsRoute,
   AppReportsRoute: AppReportsRouteWithChildren,
   AppRepresentantesRoute: AppRepresentantesRoute,
   AppRetentionRoute: AppRetentionRoute,
+  AppRotaOtimizadaRoute: AppRotaOtimizadaRoute,
   AppRoutingRoute: AppRoutingRoute,
   AppSalesOrdersRoute: AppSalesOrdersRoute,
   AppSegmentsRoute: AppSegmentsRoute,

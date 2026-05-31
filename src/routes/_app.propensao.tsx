@@ -58,7 +58,7 @@ function PropensaoPage() {
     <div className="space-y-6">
       <PageHeader
         title="Propensão & churn (IA vetorial)"
-        description="Embeddings de clientes via pgvector + Lovable AI. Encontra similares e estima propensão de recompra e risco de churn."
+        subtitle="Embeddings de clientes via pgvector + Lovable AI. Encontra similares e estima propensão de recompra e risco de churn."
         icon={Brain}
       />
 

@@ -48,9 +48,9 @@ function MultiEmpresaPage() {
     <div className="space-y-6">
       <PageHeader
         title="Comparativo multiempresa"
-        description="Compare receita, ticket médio, conversão e pipeline entre empresas e filiais da hierarquia."
+        subtitle="Compare receita, ticket médio, conversão e pipeline entre empresas e filiais da hierarquia."
         icon={Building2}
-        actions={
+        action={
           <Select value={days} onValueChange={setDays}>
             <SelectTrigger className="w-32"><SelectValue /></SelectTrigger>
             <SelectContent>
