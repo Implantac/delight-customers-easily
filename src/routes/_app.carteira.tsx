@@ -266,6 +266,24 @@ function CarteiraPage() {
             <table className="w-full text-sm">
               <thead className="bg-muted/30 text-xs uppercase tracking-wide text-muted-foreground">
                 <tr>
+                  <th className="px-3 py-2 w-8">
+                    <Checkbox
+                      checked={
+                        filtered.length > 0 &&
+                        filtered.slice(0, 200).every((r) => selected.has(r.company_id))
+                      }
+                      onCheckedChange={(v) => {
+                        const ids = filtered.slice(0, 200).map((r) => r.company_id);
+                        setSelected((s) => {
+                          const n = new Set(s);
+                          if (v) ids.forEach((id) => n.add(id));
+                          else ids.forEach((id) => n.delete(id));
+                          return n;
+                        });
+                      }}
+                      aria-label="Selecionar todos"
+                    />
+                  </th>
                   <th className="text-left px-3 py-2">Cliente</th>
                   <th className="text-right px-3 py-2">Score</th>
                   <th className="text-left px-3 py-2">Status</th>
@@ -283,6 +301,12 @@ function CarteiraPage() {
                 {filtered.slice(0, 200).map((r) => (
                   <tr key={r.company_id} className="border-t hover:bg-accent/30">
                     <td className="px-3 py-2">
+                      <Checkbox
+                        checked={selected.has(r.company_id)}
+                        onCheckedChange={() => toggle(r.company_id)}
+                        aria-label={`Selecionar ${r.name}`}
+                      />
+                    </td>
                       <div className="font-medium truncate max-w-[240px]">{r.name}</div>
                       {r.industry && <div className="text-xs text-muted-foreground truncate">{r.industry}</div>}
                     </td>
