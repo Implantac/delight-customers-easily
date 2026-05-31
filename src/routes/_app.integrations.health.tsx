@@ -73,8 +73,8 @@ function HealthCenterPage() {
     <div className="space-y-6 p-4 md:p-6">
       <PageHeader
         title="ERP Health Center"
-        description="Status das integrações comerciais com o ERP e resolução de conflitos."
-        actions={
+        subtitle="Status das integrações comerciais com o ERP e resolução de conflitos."
+        action={
           <Button variant="outline" size="sm" onClick={() => { health.refetch(); conflicts.refetch(); }}>
             <RefreshCw className="h-4 w-4 mr-2" /> Atualizar
           </Button>
