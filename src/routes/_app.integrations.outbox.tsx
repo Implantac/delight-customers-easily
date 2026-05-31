@@ -30,8 +30,7 @@ function statusVariant(s: string): "default" | "secondary" | "destructive" | "ou
 }
 
 function OutboxPage() {
-  const { organization } = useCurrentOrg();
-  const orgId = organization?.id;
+  const { orgId } = useCurrentOrg();
   const router = useRouter();
   const listFn = useServerFn(listOutbox);
   const resolveFn = useServerFn(resolveOutbox);
@@ -63,7 +62,7 @@ function OutboxPage() {
       <div className="p-6 space-y-6">
         <PageHeader
           title="Fila CRM → ERP"
-          description="Mutações comerciais aguardando propagação ao ERP. Itens em 'needs_manual' requerem revisão."
+          subtitle="Mutações comerciais aguardando propagação ao ERP. Itens em 'needs_manual' requerem revisão."
         />
 
         <Tabs value={tab} onValueChange={(v) => setTab(v as Status)}>

@@ -20,8 +20,7 @@ export const Route = createFileRoute("/_app/integrations/templates")({
 });
 
 function TemplatesPage() {
-  const { organization } = useCurrentOrg();
-  const orgId = organization?.id;
+  const { orgId } = useCurrentOrg();
   const router = useRouter();
   const listFn = useServerFn(listMappingTemplates);
   const applyFn = useServerFn(applyMappingTemplate);
@@ -50,7 +49,7 @@ function TemplatesPage() {
   return (
     <RequireManager>
       <div className="p-6 space-y-6">
-        <PageHeader title="Templates de Mapeamento" description="Aplique mapeamentos prontos para ERPs conhecidos. Apenas dados comerciais." />
+        <PageHeader title="Templates de Mapeamento" subtitle="Aplique mapeamentos prontos para ERPs conhecidos. Apenas dados comerciais." />
 
         <div className="flex items-center gap-2">
           <Checkbox id="ow" checked={overwrite} onCheckedChange={(v) => setOverwrite(Boolean(v))} />
