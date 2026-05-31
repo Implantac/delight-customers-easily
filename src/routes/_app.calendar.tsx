@@ -86,7 +86,7 @@ function CalendarPage() {
 
   const toggle = useMutation({
     mutationFn: (p: { id: string; completed: boolean }) =>
-      toggleFn({ data: p }),
+      toggleFn({ data: { ...p, organization_id: orgId! } }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["calendar", orgId] }),
     onError: (e: any) => toast.error(e?.message ?? "Erro"),
   });
