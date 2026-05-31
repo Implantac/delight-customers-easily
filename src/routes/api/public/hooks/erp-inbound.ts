@@ -115,10 +115,22 @@ export const Route = createFileRoute("/api/public/hooks/erp-inbound")({
             return json({ error: "no name/email after mapping" }, 400);
           }
 
-          // Upsert por external_id (via custom_values->>external_id) ou email
+          // Resolve org owner to satisfy user_id NOT NULL em contacts/companies
+          if (parsed.entity !== "products" && !mapped.user_id) {
+            const { data: owner } = await supabaseAdmin
+              .from("memberships")
+              .select("user_id")
+              .eq("organization_id", tok.organization_id)
+              .eq("role", "owner")
+              .limit(1).maybeSingle();
+            if (owner?.user_id) mapped.user_id = owner.user_id;
+          }
+
+          const db = supabaseAdmin as any;
+          // Upsert por external_id (via custom_values->>external_id) ou email (contacts)
           let existingId: string | null = null;
           if (parsed.external_id) {
-            const { data: ex } = await supabaseAdmin
+            const { data: ex } = await db
               .from(parsed.entity)
               .select("id")
               .eq("organization_id", tok.organization_id)
@@ -126,9 +138,9 @@ export const Route = createFileRoute("/api/public/hooks/erp-inbound")({
               .maybeSingle();
             existingId = ex?.id ?? null;
           }
-          if (!existingId && mapped.email) {
-            const { data: ex } = await supabaseAdmin
-              .from(parsed.entity)
+          if (!existingId && mapped.email && parsed.entity === "contacts") {
+            const { data: ex } = await db
+              .from("contacts")
               .select("id")
               .eq("organization_id", tok.organization_id)
               .eq("email", mapped.email)
@@ -138,12 +150,12 @@ export const Route = createFileRoute("/api/public/hooks/erp-inbound")({
 
           let action = "inserted";
           if (existingId) {
-            const { error: upErr } = await supabaseAdmin
+            const { error: upErr } = await db
               .from(parsed.entity).update(mapped).eq("id", existingId);
             if (upErr) throw upErr;
             action = "updated";
           } else {
-            const { error: insErr } = await supabaseAdmin
+            const { error: insErr } = await db
               .from(parsed.entity).insert(mapped);
             if (insErr) throw insErr;
           }

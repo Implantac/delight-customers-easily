@@ -89,6 +89,9 @@ export const runCsvImport = createServerFn({ method: "POST" })
       // o resto cai em custom_values.
       const known = TARGET_FIELDS[data.entity];
       const direct: Record<string, any> = { organization_id: data.organization_id };
+      if (data.entity === "contacts" || data.entity === "companies") {
+        direct.user_id = context.userId;
+      }
       const custom: Record<string, any> = {};
       for (const [k, v] of Object.entries(row)) {
         if (known.includes(k) && k !== "document" && k !== "cnpj") direct[k] = v;
@@ -103,9 +106,10 @@ export const runCsvImport = createServerFn({ method: "POST" })
         direct.custom_values = custom;
       }
 
-      // Dedup
-      if (row[dedup]) {
-        const { data: existing } = await supabase
+      // Dedup (companies não tem coluna email — pula)
+      const canDedup = row[dedup] && !(data.entity === "companies" && dedup === "email");
+      if (canDedup) {
+        const { data: existing } = await (supabase as any)
           .from(data.entity)
           .select("id")
           .eq("organization_id", data.organization_id)
@@ -114,7 +118,7 @@ export const runCsvImport = createServerFn({ method: "POST" })
         if (existing) { duplicates++; continue; }
       }
 
-      const { error } = await supabase.from(data.entity).insert(direct);
+      const { error } = await (supabase as any).from(data.entity).insert(direct);
       if (error) {
         errors++;
         if (errorSamples.length < 3) errorSamples.push(error.message);

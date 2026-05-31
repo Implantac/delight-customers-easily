@@ -122,8 +122,9 @@ export const importContactsFromBling = createServerFn({ method: "POST" })
           .eq("name", name)
           .maybeSingle();
         if (existing) { skipped++; continue; }
-        const { error: insErr } = await supabase.from("contacts").insert({
+        const { error: insErr } = await (supabase as any).from("contacts").insert({
           organization_id: data.organization_id,
+          user_id: context.userId,
           name,
           email: r.email ?? null,
           phone: r.telefone ?? null,
