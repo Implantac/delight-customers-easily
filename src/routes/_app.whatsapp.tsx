@@ -240,7 +240,7 @@ function WhatsAppPage() {
 
       <div className="flex-1 grid grid-cols-12 gap-4 px-6 pb-6 min-h-0">
         {/* List */}
-        <Card className="col-span-12 md:col-span-4 flex flex-col min-h-0">
+        <Card className="col-span-12 md:col-span-4 xl:col-span-3 flex flex-col min-h-0">
           <div className="p-3 border-b">
             <Tabs value={filter} onValueChange={(v) => setFilter(v as typeof filter)}>
               <TabsList className="grid grid-cols-3 w-full">
