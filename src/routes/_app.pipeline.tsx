@@ -24,6 +24,8 @@ import { Attachments } from "@/components/attachments";
 import { TagPicker } from "@/components/tag-picker";
 import { DealHistory } from "@/components/deal-history";
 import { DealPlaybook } from "@/components/deal-playbook";
+import { DealInsightPanel } from "@/components/deal-insight-panel";
+import { DraftEmailButton } from "@/components/draft-email-button";
 import { useServerFn } from "@tanstack/react-start";
 import { triggerWebhooks } from "@/lib/webhooks.functions";
 import { runAutomations } from "@/lib/automations.functions";
@@ -374,6 +376,14 @@ function DealDrawer({
             </div>
 
             <AIInsights dealId={deal.id} actions={["score_deal"]} />
+
+            <DealInsightPanel dealId={deal.id} />
+
+            {orgId && (
+              <div className="flex justify-end">
+                <DraftEmailButton organizationId={orgId} dealId={deal.id} contactId={deal.contact_id ?? undefined} />
+              </div>
+            )}
 
             <DealPlaybook
               stage={form.stage ?? deal.stage}
