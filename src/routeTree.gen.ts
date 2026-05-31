@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PTokenRouteImport } from './routes/p.$token'
 import { Route as AppWinLossRouteImport } from './routes/_app.win-loss'
 import { Route as AppWhatsappRouteImport } from './routes/_app.whatsapp'
 import { Route as AppWelcomeRouteImport } from './routes/_app.welcome'
@@ -120,6 +121,11 @@ const AppRoute = AppRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PTokenRoute = PTokenRouteImport.update({
+  id: '/p/$token',
+  path: '/p/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppWinLossRoute = AppWinLossRouteImport.update({
@@ -675,6 +681,7 @@ export interface FileRoutesByFullPath {
   '/welcome': typeof AppWelcomeRoute
   '/whatsapp': typeof AppWhatsappRoute
   '/win-loss': typeof AppWinLossRoute
+  '/p/$token': typeof PTokenRoute
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
   '/integrations/advanced': typeof AppIntegrationsAdvancedRoute
@@ -774,6 +781,7 @@ export interface FileRoutesByTo {
   '/welcome': typeof AppWelcomeRoute
   '/whatsapp': typeof AppWhatsappRoute
   '/win-loss': typeof AppWinLossRoute
+  '/p/$token': typeof PTokenRoute
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
   '/integrations/advanced': typeof AppIntegrationsAdvancedRoute
@@ -875,6 +883,7 @@ export interface FileRoutesById {
   '/_app/welcome': typeof AppWelcomeRoute
   '/_app/whatsapp': typeof AppWhatsappRoute
   '/_app/win-loss': typeof AppWinLossRoute
+  '/p/$token': typeof PTokenRoute
   '/_app/companies/$id': typeof AppCompaniesIdRoute
   '/_app/contacts/$id': typeof AppContactsIdRoute
   '/_app/integrations/advanced': typeof AppIntegrationsAdvancedRoute
@@ -976,6 +985,7 @@ export interface FileRouteTypes {
     | '/welcome'
     | '/whatsapp'
     | '/win-loss'
+    | '/p/$token'
     | '/companies/$id'
     | '/contacts/$id'
     | '/integrations/advanced'
@@ -1075,6 +1085,7 @@ export interface FileRouteTypes {
     | '/welcome'
     | '/whatsapp'
     | '/win-loss'
+    | '/p/$token'
     | '/companies/$id'
     | '/contacts/$id'
     | '/integrations/advanced'
@@ -1175,6 +1186,7 @@ export interface FileRouteTypes {
     | '/_app/welcome'
     | '/_app/whatsapp'
     | '/_app/win-loss'
+    | '/p/$token'
     | '/_app/companies/$id'
     | '/_app/contacts/$id'
     | '/_app/integrations/advanced'
@@ -1212,6 +1224,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   LoginRoute: typeof LoginRoute
+  PTokenRoute: typeof PTokenRoute
   ApiPublicInboundEmailRoute: typeof ApiPublicInboundEmailRoute
   ApiPublicInfluencerVisitRoute: typeof ApiPublicInfluencerVisitRoute
   ApiPublicLeadFormRoute: typeof ApiPublicLeadFormRoute
@@ -1248,6 +1261,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/p/$token': {
+      id: '/p/$token'
+      path: '/p/$token'
+      fullPath: '/p/$token'
+      preLoaderRoute: typeof PTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app/win-loss': {
@@ -2172,6 +2192,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   LoginRoute: LoginRoute,
+  PTokenRoute: PTokenRoute,
   ApiPublicInboundEmailRoute: ApiPublicInboundEmailRoute,
   ApiPublicInfluencerVisitRoute: ApiPublicInfluencerVisitRoute,
   ApiPublicLeadFormRoute: ApiPublicLeadFormRoute,

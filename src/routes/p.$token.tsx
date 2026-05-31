@@ -90,7 +90,7 @@ function PublicProposalPage() {
       _token: token,
       _action: action,
       _name: name.trim(),
-      _email: email.trim() || null,
+      _email: email.trim() || "",
     });
     setBusy(null);
     if (error || data === false) {
