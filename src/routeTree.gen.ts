@@ -95,6 +95,8 @@ import { Route as AppReportsDashboardsRouteImport } from './routes/_app.reports.
 import { Route as AppProposalsIdRouteImport } from './routes/_app.proposals.$id'
 import { Route as AppKbIdRouteImport } from './routes/_app.kb.$id'
 import { Route as AppInviteTokenRouteImport } from './routes/_app.invite.$token'
+import { Route as AppIntegrationsTemplatesRouteImport } from './routes/_app.integrations.templates'
+import { Route as AppIntegrationsOutboxRouteImport } from './routes/_app.integrations.outbox'
 import { Route as AppIntegrationsHelpRouteImport } from './routes/_app.integrations.help'
 import { Route as AppIntegrationsHealthRouteImport } from './routes/_app.integrations.health'
 import { Route as AppIntegrationsConnectRouteImport } from './routes/_app.integrations.connect'
@@ -546,6 +548,17 @@ const AppInviteTokenRoute = AppInviteTokenRouteImport.update({
   path: '/invite/$token',
   getParentRoute: () => AppRoute,
 } as any)
+const AppIntegrationsTemplatesRoute =
+  AppIntegrationsTemplatesRouteImport.update({
+    id: '/templates',
+    path: '/templates',
+    getParentRoute: () => AppIntegrationsRoute,
+  } as any)
+const AppIntegrationsOutboxRoute = AppIntegrationsOutboxRouteImport.update({
+  id: '/outbox',
+  path: '/outbox',
+  getParentRoute: () => AppIntegrationsRoute,
+} as any)
 const AppIntegrationsHelpRoute = AppIntegrationsHelpRouteImport.update({
   id: '/help',
   path: '/help',
@@ -732,6 +745,8 @@ export interface FileRoutesByFullPath {
   '/integrations/connect': typeof AppIntegrationsConnectRoute
   '/integrations/health': typeof AppIntegrationsHealthRoute
   '/integrations/help': typeof AppIntegrationsHelpRoute
+  '/integrations/outbox': typeof AppIntegrationsOutboxRoute
+  '/integrations/templates': typeof AppIntegrationsTemplatesRoute
   '/invite/$token': typeof AppInviteTokenRoute
   '/kb/$id': typeof AppKbIdRoute
   '/proposals/$id': typeof AppProposalsIdRoute
@@ -839,6 +854,8 @@ export interface FileRoutesByTo {
   '/integrations/connect': typeof AppIntegrationsConnectRoute
   '/integrations/health': typeof AppIntegrationsHealthRoute
   '/integrations/help': typeof AppIntegrationsHelpRoute
+  '/integrations/outbox': typeof AppIntegrationsOutboxRoute
+  '/integrations/templates': typeof AppIntegrationsTemplatesRoute
   '/invite/$token': typeof AppInviteTokenRoute
   '/kb/$id': typeof AppKbIdRoute
   '/proposals/$id': typeof AppProposalsIdRoute
@@ -948,6 +965,8 @@ export interface FileRoutesById {
   '/_app/integrations/connect': typeof AppIntegrationsConnectRoute
   '/_app/integrations/health': typeof AppIntegrationsHealthRoute
   '/_app/integrations/help': typeof AppIntegrationsHelpRoute
+  '/_app/integrations/outbox': typeof AppIntegrationsOutboxRoute
+  '/_app/integrations/templates': typeof AppIntegrationsTemplatesRoute
   '/_app/invite/$token': typeof AppInviteTokenRoute
   '/_app/kb/$id': typeof AppKbIdRoute
   '/_app/proposals/$id': typeof AppProposalsIdRoute
@@ -1057,6 +1076,8 @@ export interface FileRouteTypes {
     | '/integrations/connect'
     | '/integrations/health'
     | '/integrations/help'
+    | '/integrations/outbox'
+    | '/integrations/templates'
     | '/invite/$token'
     | '/kb/$id'
     | '/proposals/$id'
@@ -1164,6 +1185,8 @@ export interface FileRouteTypes {
     | '/integrations/connect'
     | '/integrations/health'
     | '/integrations/help'
+    | '/integrations/outbox'
+    | '/integrations/templates'
     | '/invite/$token'
     | '/kb/$id'
     | '/proposals/$id'
@@ -1272,6 +1295,8 @@ export interface FileRouteTypes {
     | '/_app/integrations/connect'
     | '/_app/integrations/health'
     | '/_app/integrations/help'
+    | '/_app/integrations/outbox'
+    | '/_app/integrations/templates'
     | '/_app/invite/$token'
     | '/_app/kb/$id'
     | '/_app/proposals/$id'
@@ -1931,6 +1956,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppInviteTokenRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/integrations/templates': {
+      id: '/_app/integrations/templates'
+      path: '/templates'
+      fullPath: '/integrations/templates'
+      preLoaderRoute: typeof AppIntegrationsTemplatesRouteImport
+      parentRoute: typeof AppIntegrationsRoute
+    }
+    '/_app/integrations/outbox': {
+      id: '/_app/integrations/outbox'
+      path: '/outbox'
+      fullPath: '/integrations/outbox'
+      preLoaderRoute: typeof AppIntegrationsOutboxRouteImport
+      parentRoute: typeof AppIntegrationsRoute
+    }
     '/_app/integrations/help': {
       id: '/_app/integrations/help'
       path: '/help'
@@ -2104,6 +2143,8 @@ interface AppIntegrationsRouteChildren {
   AppIntegrationsConnectRoute: typeof AppIntegrationsConnectRoute
   AppIntegrationsHealthRoute: typeof AppIntegrationsHealthRoute
   AppIntegrationsHelpRoute: typeof AppIntegrationsHelpRoute
+  AppIntegrationsOutboxRoute: typeof AppIntegrationsOutboxRoute
+  AppIntegrationsTemplatesRoute: typeof AppIntegrationsTemplatesRoute
 }
 
 const AppIntegrationsRouteChildren: AppIntegrationsRouteChildren = {
@@ -2112,6 +2153,8 @@ const AppIntegrationsRouteChildren: AppIntegrationsRouteChildren = {
   AppIntegrationsConnectRoute: AppIntegrationsConnectRoute,
   AppIntegrationsHealthRoute: AppIntegrationsHealthRoute,
   AppIntegrationsHelpRoute: AppIntegrationsHelpRoute,
+  AppIntegrationsOutboxRoute: AppIntegrationsOutboxRoute,
+  AppIntegrationsTemplatesRoute: AppIntegrationsTemplatesRoute,
 }
 
 const AppIntegrationsRouteWithChildren = AppIntegrationsRoute._addFileChildren(

@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { createClient } from '@supabase/supabase-js';
 import { requireCronApiKey } from '@/lib/cron-auth.server';
 import { executeJob } from '@/lib/erp-sync-engine.server';
+import { processOutbox } from '@/lib/erp-outbox-processor.server';
 
 /**
  * Cron tick do Connect Hub. Cron sugerido: a cada 5 minutos.
@@ -134,12 +135,16 @@ export const Route = createFileRoute('/api/public/hooks/erp-sync-tick')({
           await supabase.from('erp_health_checks').insert(healthRows);
         }
 
+        // 4) Processa fila CRM→ERP (outbox)
+        const outboxResult = await processOutbox(supabase);
+
         return Response.json({
           stuckRecovered: stuck?.length ?? 0,
           executed,
           processed: processedTotal,
           conflicts: conflictsTotal,
           healthLogged: healthRows.length,
+          outbox: outboxResult,
         });
       },
     },
