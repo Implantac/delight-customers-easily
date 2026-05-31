@@ -114,7 +114,7 @@ function KbPage() {
   });
 
   const delMut = useMutation({
-    mutationFn: (id: string) => del({ data: { id } }),
+    mutationFn: (id: string) => del({ data: { id, organization_id: orgId! } }),
     onSuccess: () => {
       toast.success("Artigo removido");
       invalidate();
