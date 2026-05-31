@@ -110,6 +110,8 @@ import { Route as ApiPublicHooksDailyBriefingRouteImport } from './routes/api/pu
 import { Route as ApiPublicHooksCustomer360RefreshRouteImport } from './routes/api/public/hooks/customer-360-refresh'
 import { Route as ApiPublicHooksAiPurgeExpiredRouteImport } from './routes/api/public/hooks/ai-purge-expired'
 import { Route as ApiPublicHooksActivityRemindersRouteImport } from './routes/api/public/hooks/activity-reminders'
+import { Route as ApiOauthGoogleInitiateRouteImport } from './routes/api.oauth.google.initiate'
+import { Route as ApiOauthGoogleCallbackRouteImport } from './routes/api.oauth.google.callback'
 import { Route as AppSettingsAutomationsRunsRouteImport } from './routes/_app.settings.automations.runs'
 import { Route as AppReportsDashboardsIdRouteImport } from './routes/_app.reports.dashboards.$id'
 
@@ -627,6 +629,16 @@ const ApiPublicHooksActivityRemindersRoute =
     path: '/api/public/hooks/activity-reminders',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiOauthGoogleInitiateRoute = ApiOauthGoogleInitiateRouteImport.update({
+  id: '/api/oauth/google/initiate',
+  path: '/api/oauth/google/initiate',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiOauthGoogleCallbackRoute = ApiOauthGoogleCallbackRouteImport.update({
+  id: '/api/oauth/google/callback',
+  path: '/api/oauth/google/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppSettingsAutomationsRunsRoute =
   AppSettingsAutomationsRunsRouteImport.update({
     id: '/runs',
@@ -733,6 +745,8 @@ export interface FileRoutesByFullPath {
   '/i/$org/$slug': typeof IOrgSlugRoute
   '/reports/dashboards/$id': typeof AppReportsDashboardsIdRoute
   '/settings/automations/runs': typeof AppSettingsAutomationsRunsRoute
+  '/api/oauth/google/callback': typeof ApiOauthGoogleCallbackRoute
+  '/api/oauth/google/initiate': typeof ApiOauthGoogleInitiateRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
   '/api/public/hooks/ai-purge-expired': typeof ApiPublicHooksAiPurgeExpiredRoute
   '/api/public/hooks/customer-360-refresh': typeof ApiPublicHooksCustomer360RefreshRoute
@@ -837,6 +851,8 @@ export interface FileRoutesByTo {
   '/i/$org/$slug': typeof IOrgSlugRoute
   '/reports/dashboards/$id': typeof AppReportsDashboardsIdRoute
   '/settings/automations/runs': typeof AppSettingsAutomationsRunsRoute
+  '/api/oauth/google/callback': typeof ApiOauthGoogleCallbackRoute
+  '/api/oauth/google/initiate': typeof ApiOauthGoogleInitiateRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
   '/api/public/hooks/ai-purge-expired': typeof ApiPublicHooksAiPurgeExpiredRoute
   '/api/public/hooks/customer-360-refresh': typeof ApiPublicHooksCustomer360RefreshRoute
@@ -943,6 +959,8 @@ export interface FileRoutesById {
   '/i/$org/$slug': typeof IOrgSlugRoute
   '/_app/reports/dashboards/$id': typeof AppReportsDashboardsIdRoute
   '/_app/settings/automations/runs': typeof AppSettingsAutomationsRunsRoute
+  '/api/oauth/google/callback': typeof ApiOauthGoogleCallbackRoute
+  '/api/oauth/google/initiate': typeof ApiOauthGoogleInitiateRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
   '/api/public/hooks/ai-purge-expired': typeof ApiPublicHooksAiPurgeExpiredRoute
   '/api/public/hooks/customer-360-refresh': typeof ApiPublicHooksCustomer360RefreshRoute
@@ -1049,6 +1067,8 @@ export interface FileRouteTypes {
     | '/i/$org/$slug'
     | '/reports/dashboards/$id'
     | '/settings/automations/runs'
+    | '/api/oauth/google/callback'
+    | '/api/oauth/google/initiate'
     | '/api/public/hooks/activity-reminders'
     | '/api/public/hooks/ai-purge-expired'
     | '/api/public/hooks/customer-360-refresh'
@@ -1153,6 +1173,8 @@ export interface FileRouteTypes {
     | '/i/$org/$slug'
     | '/reports/dashboards/$id'
     | '/settings/automations/runs'
+    | '/api/oauth/google/callback'
+    | '/api/oauth/google/initiate'
     | '/api/public/hooks/activity-reminders'
     | '/api/public/hooks/ai-purge-expired'
     | '/api/public/hooks/customer-360-refresh'
@@ -1258,6 +1280,8 @@ export interface FileRouteTypes {
     | '/i/$org/$slug'
     | '/_app/reports/dashboards/$id'
     | '/_app/settings/automations/runs'
+    | '/api/oauth/google/callback'
+    | '/api/oauth/google/initiate'
     | '/api/public/hooks/activity-reminders'
     | '/api/public/hooks/ai-purge-expired'
     | '/api/public/hooks/customer-360-refresh'
@@ -1278,6 +1302,8 @@ export interface RootRouteChildren {
   ApiPublicInfluencerVisitRoute: typeof ApiPublicInfluencerVisitRoute
   ApiPublicLeadFormRoute: typeof ApiPublicLeadFormRoute
   IOrgSlugRoute: typeof IOrgSlugRoute
+  ApiOauthGoogleCallbackRoute: typeof ApiOauthGoogleCallbackRoute
+  ApiOauthGoogleInitiateRoute: typeof ApiOauthGoogleInitiateRoute
   ApiPublicHooksActivityRemindersRoute: typeof ApiPublicHooksActivityRemindersRoute
   ApiPublicHooksAiPurgeExpiredRoute: typeof ApiPublicHooksAiPurgeExpiredRoute
   ApiPublicHooksCustomer360RefreshRoute: typeof ApiPublicHooksCustomer360RefreshRoute
@@ -1998,6 +2024,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksActivityRemindersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/oauth/google/initiate': {
+      id: '/api/oauth/google/initiate'
+      path: '/api/oauth/google/initiate'
+      fullPath: '/api/oauth/google/initiate'
+      preLoaderRoute: typeof ApiOauthGoogleInitiateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/oauth/google/callback': {
+      id: '/api/oauth/google/callback'
+      path: '/api/oauth/google/callback'
+      fullPath: '/api/oauth/google/callback'
+      preLoaderRoute: typeof ApiOauthGoogleCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_app/settings/automations/runs': {
       id: '/_app/settings/automations/runs'
       path: '/runs'
@@ -2303,6 +2343,8 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicInfluencerVisitRoute: ApiPublicInfluencerVisitRoute,
   ApiPublicLeadFormRoute: ApiPublicLeadFormRoute,
   IOrgSlugRoute: IOrgSlugRoute,
+  ApiOauthGoogleCallbackRoute: ApiOauthGoogleCallbackRoute,
+  ApiOauthGoogleInitiateRoute: ApiOauthGoogleInitiateRoute,
   ApiPublicHooksActivityRemindersRoute: ApiPublicHooksActivityRemindersRoute,
   ApiPublicHooksAiPurgeExpiredRoute: ApiPublicHooksAiPurgeExpiredRoute,
   ApiPublicHooksCustomer360RefreshRoute: ApiPublicHooksCustomer360RefreshRoute,
