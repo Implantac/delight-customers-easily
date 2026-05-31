@@ -54,7 +54,8 @@ function CommissionsPage() {
     <div className="space-y-6 p-6">
       <PageHeader
         title="Comissões"
-        subtitle="Cálculo automático baseado em deals ganhos e metas batidas."
+        subtitle="Cálculo automático baseado em negócios ganhos e metas batidas — escolha o mês para auditar."
+        icon={Coins}
         action={
           <Input
             type="month"
