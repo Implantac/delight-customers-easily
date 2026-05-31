@@ -988,6 +988,122 @@ export type Database = {
         }
         Relationships: []
       }
+      commission_payouts: {
+        Row: {
+          accelerator: number
+          base_commission: number
+          bonus: number
+          created_at: string
+          created_by: string | null
+          deals_count: number
+          goal_value: number
+          id: string
+          locked_at: string | null
+          notes: string | null
+          organization_id: string
+          paid_at: string | null
+          period_month: string
+          rule_id: string | null
+          sold_value: number
+          status: string
+          total: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          accelerator?: number
+          base_commission?: number
+          bonus?: number
+          created_at?: string
+          created_by?: string | null
+          deals_count?: number
+          goal_value?: number
+          id?: string
+          locked_at?: string | null
+          notes?: string | null
+          organization_id: string
+          paid_at?: string | null
+          period_month: string
+          rule_id?: string | null
+          sold_value?: number
+          status?: string
+          total?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          accelerator?: number
+          base_commission?: number
+          bonus?: number
+          created_at?: string
+          created_by?: string | null
+          deals_count?: number
+          goal_value?: number
+          id?: string
+          locked_at?: string | null
+          notes?: string | null
+          organization_id?: string
+          paid_at?: string | null
+          period_month?: string
+          rule_id?: string | null
+          sold_value?: number
+          status?: string
+          total?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commission_payouts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["branch_org_id"]
+          },
+          {
+            foreignKeyName: "commission_payouts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "commission_payouts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "commission_payouts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "commission_payouts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "commission_payouts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commission_payouts_rule_id_fkey"
+            columns: ["rule_id"]
+            isOneToOne: false
+            referencedRelation: "commission_rules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       commission_rules: {
         Row: {
           accelerator_percent: number
@@ -5553,6 +5669,9 @@ export type Database = {
       }
       proposals: {
         Row: {
+          accepted_at: string | null
+          accepted_by_email: string | null
+          accepted_by_name: string | null
           company_id: string | null
           contact_id: string | null
           created_at: string
@@ -5562,6 +5681,7 @@ export type Database = {
           id: string
           notes: string | null
           organization_id: string
+          rejected_at: string | null
           share_token: string
           status: string
           subtotal: number
@@ -5571,6 +5691,9 @@ export type Database = {
           valid_until: string | null
         }
         Insert: {
+          accepted_at?: string | null
+          accepted_by_email?: string | null
+          accepted_by_name?: string | null
           company_id?: string | null
           contact_id?: string | null
           created_at?: string
@@ -5580,6 +5703,7 @@ export type Database = {
           id?: string
           notes?: string | null
           organization_id: string
+          rejected_at?: string | null
           share_token?: string
           status?: string
           subtotal?: number
@@ -5589,6 +5713,9 @@ export type Database = {
           valid_until?: string | null
         }
         Update: {
+          accepted_at?: string | null
+          accepted_by_email?: string | null
+          accepted_by_name?: string | null
           company_id?: string | null
           contact_id?: string | null
           created_at?: string
@@ -5598,6 +5725,7 @@ export type Database = {
           id?: string
           notes?: string | null
           organization_id?: string
+          rejected_at?: string | null
           share_token?: string
           status?: string
           subtotal?: number
@@ -7513,6 +7641,7 @@ export type Database = {
           revenue: number
         }[]
       }
+      get_public_proposal: { Args: { _token: string }; Returns: Json }
       get_regional_sales_rollup: {
         Args: { _days?: number; _org: string }
         Returns: {
@@ -7563,6 +7692,10 @@ export type Database = {
         }[]
       }
       refresh_customer_360: { Args: { _org: string }; Returns: number }
+      respond_public_proposal: {
+        Args: { _action: string; _email: string; _name: string; _token: string }
+        Returns: boolean
+      }
     }
     Enums: {
       activity_type: "call" | "email" | "meeting" | "task" | "note"
