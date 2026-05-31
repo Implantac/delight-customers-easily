@@ -51,20 +51,24 @@ export const listArticles = createServerFn({ method: "POST" })
 
 export const getArticle = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((i) => z.object({ id: z.string().uuid() }).parse(i))
+  .inputValidator((i) =>
+    z.object({ id: z.string().uuid(), organization_id: z.string().uuid() }).parse(i),
+  )
   .handler(async ({ data, context }) => {
     const { supabase } = context;
     const { data: row, error } = await supabase
       .from("kb_articles")
       .select("*")
       .eq("id", data.id)
+      .eq("organization_id", data.organization_id)
       .maybeSingle();
     if (error) throw new Error(error.message);
     if (!row) throw new Error("Artigo não encontrado");
     await supabase
       .from("kb_articles")
       .update({ views: (row.views ?? 0) + 1 })
-      .eq("id", data.id);
+      .eq("id", data.id)
+      .eq("organization_id", data.organization_id);
     return { article: row };
   });
 
