@@ -560,6 +560,61 @@ function CompanyDetail() {
             </TabsContent>
           </Tabs>
         </div>
+
+        {/* ====== Coluna direita: painel de inteligência sticky ====== */}
+        <aside className="space-y-4 lg:sticky lg:top-20 lg:self-start">
+          <HealthScore companyId={company.id} />
+
+          <Card className="p-4">
+            <div className="flex items-center justify-between">
+              <h3 className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+                <Users className="h-3.5 w-3.5" />
+                Contatos · {contacts?.length ?? 0}
+              </h3>
+            </div>
+            <div className="mt-3 space-y-1.5">
+              {(contacts ?? []).length === 0 && (
+                <p className="text-xs text-muted-foreground">Sem contatos vinculados.</p>
+              )}
+              {(contacts ?? []).slice(0, 5).map((c) => (
+                <Link
+                  key={c.id}
+                  to="/contacts/$id"
+                  params={{ id: c.id }}
+                  className="group flex items-center justify-between rounded-md border border-transparent p-2 text-sm transition-colors hover:border-border hover:bg-accent/40"
+                >
+                  <div className="min-w-0">
+                    <p className="truncate font-medium leading-tight">{c.name}</p>
+                    {c.position && (
+                      <p className="truncate text-[11px] text-muted-foreground">{c.position}</p>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </Card>
+
+          <Card className="p-4">
+            <h3 className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+              Etiquetas
+            </h3>
+            <div className="mt-2">
+              <TagPicker entityType="company" entityId={company.id} />
+            </div>
+            {company.notes && (
+              <>
+                <h3 className="mt-4 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+                  Notas
+                </h3>
+                <p className="mt-2 whitespace-pre-wrap text-[13px] leading-relaxed text-muted-foreground">
+                  {company.notes}
+                </p>
+              </>
+            )}
+          </Card>
+
+          <Attachments entityType="company" entityId={company.id} />
+        </aside>
       </div>
     </div>
   );
@@ -575,17 +630,27 @@ type KpiProps = {
 
 function Kpi({ icon, label, value, hint, tone }: KpiProps) {
   return (
-    <Card className="p-4">
-      <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-        <span className="text-primary">{icon}</span>
-        {label}
+    <Card className="kpi-card p-4">
+      <div className="flex items-center justify-between">
+        <span className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+          {label}
+        </span>
+        <span className="flex h-6 w-6 items-center justify-center rounded-md border border-border/60 bg-card text-primary">
+          {icon}
+        </span>
       </div>
-      <p className="mt-2 text-2xl font-semibold tabular-nums tracking-tight">{value}</p>
+      <p
+        data-slot="kpi-value"
+        className="mt-3 font-display text-[1.5rem] font-semibold leading-none tracking-[-0.025em]"
+      >
+        {value}
+      </p>
       {hint && (
-        <p className={`mt-1 text-xs ${tone === "warn" ? "text-destructive font-medium" : "text-muted-foreground"}`}>
+        <p className={`mt-2 text-[11px] ${tone === "warn" ? "text-destructive font-medium" : "text-muted-foreground"}`}>
           {hint}
         </p>
       )}
     </Card>
   );
 }
+
