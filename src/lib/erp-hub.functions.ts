@@ -28,9 +28,9 @@ export const ERP_CATALOG: ErpProviderCatalog[] = [
   {
     id: "bling",
     name: "Bling",
-    description: "ERP cloud com API REST. Sincroniza clientes, produtos e pedidos.",
+    description: "ERP cloud com API REST. Sincroniza contatos, produtos e pedidos.",
     methods: ["api"],
-    status: "soon",
+    status: "active",
     docsUrl: "https://developer.bling.com.br/",
     category: "cloud",
   },
