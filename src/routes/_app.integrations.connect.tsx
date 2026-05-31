@@ -19,6 +19,7 @@ import {
   Cloud, Database, Shield, FileSpreadsheet, Sparkles, PartyPopper,
   HelpCircle, Lock, MessageCircle, ChevronDown,
 } from "lucide-react";
+import { PageHeader } from "@/components/page-header";
 import { toast } from "sonner";
 
 const STEP_LABELS = ["Seu ERP", "Como conectar", "Acesso", "Teste", "Dados", "Pronto"];

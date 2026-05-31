@@ -34,6 +34,7 @@ import {
   Activity, Database, Cloud, Server, FileText, Sparkles, ArrowRight,
   Wifi, WifiOff, Loader2, Upload, Webhook, Copy,
 } from "lucide-react";
+import { PageHeader } from "@/components/page-header";
 
 export const Route = createFileRoute("/_app/integrations/advanced")({ component: ErpHubPage });
 

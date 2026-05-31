@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Bookmark, Trash2, Users as UsersIcon, Building2, Briefcase, CheckSquare, Globe, Lock } from "lucide-react";
+import { PageHeader } from "@/components/page-header";
 import { useCurrentOrg } from "@/lib/org";
 import { listViews, deleteView, updateView } from "@/lib/views.functions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

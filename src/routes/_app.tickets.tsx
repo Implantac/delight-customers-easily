@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { LifeBuoy, Plus, Search, AlertCircle, Clock, CheckCircle2, XCircle, Loader2 } from "lucide-react";
+import { PageHeader } from "@/components/page-header";
 import { useCurrentOrg } from "@/lib/org";
 import { listTickets, createTicket } from "@/lib/tickets.functions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
