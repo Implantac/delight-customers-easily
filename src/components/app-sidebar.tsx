@@ -232,20 +232,20 @@ export function AppSidebar() {
 
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader className="border-b">
+      <SidebarHeader className="border-b border-sidebar-border/60">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton size="lg" className="data-[state=open]:bg-sidebar-accent">
-              <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[var(--gradient-primary)] text-sidebar-primary-foreground shadow-[var(--shadow-glow)]">
+              <div className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--gradient-primary)] text-sidebar-primary-foreground shadow-[var(--shadow-glow)] ring-1 ring-white/10">
                 <Briefcase className="h-4 w-4" />
               </div>
               {!collapsed && (
                 <>
                   <div className="flex-1 text-left text-sm leading-tight min-w-0">
-                    <p className="truncate font-semibold">{org?.name ?? "Lovable CRM"}</p>
-                    <p className="truncate text-xs text-muted-foreground">Workspace</p>
+                    <p className="truncate font-display font-semibold tracking-tight">{org?.name ?? "Lovable CRM"}</p>
+                    <p className="truncate text-[11px] text-muted-foreground">Workspace</p>
                   </div>
-                  <ChevronsUpDown className="h-4 w-4 text-muted-foreground" />
+                  <ChevronsUpDown className="h-3.5 w-3.5 text-muted-foreground" />
                 </>
               )}
             </SidebarMenuButton>
