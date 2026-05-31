@@ -15,8 +15,10 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Briefcase, Search, ArrowRight, TrendingUp, AlertTriangle, Clock, Flame, Receipt, Download,
+  Megaphone, Workflow, X,
 } from "lucide-react";
 import { toCSV, downloadCSV } from "@/lib/csv-export";
 
