@@ -42,14 +42,20 @@ export const listMyTasks = createServerFn({ method: "POST" })
 export const setTaskCompleted = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((i) =>
-    z.object({ id: z.string().uuid(), completed: z.boolean() }).parse(i),
+    z.object({
+      id: z.string().uuid(),
+      organization_id: z.string().uuid(),
+      completed: z.boolean(),
+    }).parse(i),
   )
   .handler(async ({ data, context }) => {
-    const { supabase } = context;
+    const { supabase, userId } = context;
     const { error } = await supabase
       .from("activities")
       .update({ completed: data.completed })
-      .eq("id", data.id);
+      .eq("id", data.id)
+      .eq("organization_id", data.organization_id)
+      .eq("user_id", userId!);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
@@ -57,14 +63,20 @@ export const setTaskCompleted = createServerFn({ method: "POST" })
 export const snoozeTask = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((i) =>
-    z.object({ id: z.string().uuid(), due_date: z.string() }).parse(i),
+    z.object({
+      id: z.string().uuid(),
+      organization_id: z.string().uuid(),
+      due_date: z.string(),
+    }).parse(i),
   )
   .handler(async ({ data, context }) => {
-    const { supabase } = context;
+    const { supabase, userId } = context;
     const { error } = await supabase
       .from("activities")
       .update({ due_date: data.due_date })
-      .eq("id", data.id);
+      .eq("id", data.id)
+      .eq("organization_id", data.organization_id)
+      .eq("user_id", userId!);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
