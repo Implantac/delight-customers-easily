@@ -1373,6 +1373,172 @@ export type Database = {
           },
         ]
       }
+      erp_customer_metrics: {
+        Row: {
+          avg_ticket: number | null
+          computed_at: string
+          erp_customer_id: string
+          frequency_365d: number
+          frequency_90d: number
+          id: string
+          last_order_at: string | null
+          monetary_365d: number
+          monetary_90d: number
+          organization_id: string
+          recency_days: number | null
+          rfm_segment: string | null
+          trend_90d: number | null
+        }
+        Insert: {
+          avg_ticket?: number | null
+          computed_at?: string
+          erp_customer_id: string
+          frequency_365d?: number
+          frequency_90d?: number
+          id?: string
+          last_order_at?: string | null
+          monetary_365d?: number
+          monetary_90d?: number
+          organization_id: string
+          recency_days?: number | null
+          rfm_segment?: string | null
+          trend_90d?: number | null
+        }
+        Update: {
+          avg_ticket?: number | null
+          computed_at?: string
+          erp_customer_id?: string
+          frequency_365d?: number
+          frequency_90d?: number
+          id?: string
+          last_order_at?: string | null
+          monetary_365d?: number
+          monetary_90d?: number
+          organization_id?: string
+          recency_days?: number | null
+          rfm_segment?: string | null
+          trend_90d?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "erp_customer_metrics_erp_customer_id_fkey"
+            columns: ["erp_customer_id"]
+            isOneToOne: false
+            referencedRelation: "erp_customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "erp_customer_metrics_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      erp_customers: {
+        Row: {
+          city: string | null
+          commercial_status: string | null
+          company_id: string | null
+          created_at: string
+          credit_limit: number | null
+          credit_status: string | null
+          document: string | null
+          email: string | null
+          external_id: string
+          first_purchase_at: string | null
+          id: string
+          integration_id: string | null
+          last_purchase_at: string | null
+          legal_name: string | null
+          organization_id: string
+          phone: string | null
+          raw: Json
+          sales_rep_external_id: string | null
+          segment: string | null
+          state: string | null
+          synced_at: string
+          trade_name: string | null
+          updated_at: string
+          zip: string | null
+        }
+        Insert: {
+          city?: string | null
+          commercial_status?: string | null
+          company_id?: string | null
+          created_at?: string
+          credit_limit?: number | null
+          credit_status?: string | null
+          document?: string | null
+          email?: string | null
+          external_id: string
+          first_purchase_at?: string | null
+          id?: string
+          integration_id?: string | null
+          last_purchase_at?: string | null
+          legal_name?: string | null
+          organization_id: string
+          phone?: string | null
+          raw?: Json
+          sales_rep_external_id?: string | null
+          segment?: string | null
+          state?: string | null
+          synced_at?: string
+          trade_name?: string | null
+          updated_at?: string
+          zip?: string | null
+        }
+        Update: {
+          city?: string | null
+          commercial_status?: string | null
+          company_id?: string | null
+          created_at?: string
+          credit_limit?: number | null
+          credit_status?: string | null
+          document?: string | null
+          email?: string | null
+          external_id?: string
+          first_purchase_at?: string | null
+          id?: string
+          integration_id?: string | null
+          last_purchase_at?: string | null
+          legal_name?: string | null
+          organization_id?: string
+          phone?: string | null
+          raw?: Json
+          sales_rep_external_id?: string | null
+          segment?: string | null
+          state?: string | null
+          synced_at?: string
+          trade_name?: string | null
+          updated_at?: string
+          zip?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "erp_customers_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "erp_customers_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "erp_integrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "erp_customers_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       erp_field_mappings: {
         Row: {
           created_at: string
@@ -1504,6 +1670,211 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "erp_integrations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      erp_product_catalog_lite: {
+        Row: {
+          brand: string | null
+          category: string | null
+          created_at: string
+          external_id: string
+          id: string
+          integration_id: string | null
+          is_active: boolean
+          name: string
+          organization_id: string
+          sku: string | null
+          synced_at: string
+          updated_at: string
+        }
+        Insert: {
+          brand?: string | null
+          category?: string | null
+          created_at?: string
+          external_id: string
+          id?: string
+          integration_id?: string | null
+          is_active?: boolean
+          name: string
+          organization_id: string
+          sku?: string | null
+          synced_at?: string
+          updated_at?: string
+        }
+        Update: {
+          brand?: string | null
+          category?: string | null
+          created_at?: string
+          external_id?: string
+          id?: string
+          integration_id?: string | null
+          is_active?: boolean
+          name?: string
+          organization_id?: string
+          sku?: string | null
+          synced_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "erp_product_catalog_lite_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "erp_integrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "erp_product_catalog_lite_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      erp_sales_history: {
+        Row: {
+          channel: string | null
+          created_at: string
+          customer_external_id: string | null
+          erp_customer_id: string | null
+          external_id: string
+          id: string
+          integration_id: string | null
+          item_count: number | null
+          order_date: string
+          organization_id: string
+          raw: Json
+          sales_rep_external_id: string | null
+          status: string | null
+          synced_at: string
+          total_value: number
+        }
+        Insert: {
+          channel?: string | null
+          created_at?: string
+          customer_external_id?: string | null
+          erp_customer_id?: string | null
+          external_id: string
+          id?: string
+          integration_id?: string | null
+          item_count?: number | null
+          order_date: string
+          organization_id: string
+          raw?: Json
+          sales_rep_external_id?: string | null
+          status?: string | null
+          synced_at?: string
+          total_value?: number
+        }
+        Update: {
+          channel?: string | null
+          created_at?: string
+          customer_external_id?: string | null
+          erp_customer_id?: string | null
+          external_id?: string
+          id?: string
+          integration_id?: string | null
+          item_count?: number | null
+          order_date?: string
+          organization_id?: string
+          raw?: Json
+          sales_rep_external_id?: string | null
+          status?: string | null
+          synced_at?: string
+          total_value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "erp_sales_history_erp_customer_id_fkey"
+            columns: ["erp_customer_id"]
+            isOneToOne: false
+            referencedRelation: "erp_customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "erp_sales_history_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "erp_integrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "erp_sales_history_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      erp_sales_reps: {
+        Row: {
+          commission_rate: number | null
+          created_at: string
+          email: string | null
+          external_id: string
+          id: string
+          integration_id: string | null
+          is_active: boolean
+          name: string
+          organization_id: string
+          phone: string | null
+          raw: Json
+          region: string | null
+          synced_at: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          commission_rate?: number | null
+          created_at?: string
+          email?: string | null
+          external_id: string
+          id?: string
+          integration_id?: string | null
+          is_active?: boolean
+          name: string
+          organization_id: string
+          phone?: string | null
+          raw?: Json
+          region?: string | null
+          synced_at?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          commission_rate?: number | null
+          created_at?: string
+          email?: string | null
+          external_id?: string
+          id?: string
+          integration_id?: string | null
+          is_active?: boolean
+          name?: string
+          organization_id?: string
+          phone?: string | null
+          raw?: Json
+          region?: string | null
+          synced_at?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "erp_sales_reps_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "erp_integrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "erp_sales_reps_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
