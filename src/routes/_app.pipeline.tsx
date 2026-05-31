@@ -16,7 +16,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "@/components/page-header";
 import { NextActionBlock } from "@/components/next-action-block";
 import { EmptyState } from "@/components/empty-state";
-import { Plus, Trash2, Target } from "lucide-react";
+import { Plus, Trash2, Target, TrendingUp, Trophy, Flame, DollarSign } from "lucide-react";
 import { toast } from "sonner";
 import { dealSchema, fromForm } from "@/lib/validation";
 import { AIInsights } from "@/components/ai-insights";
@@ -131,7 +131,8 @@ function PipelinePage() {
     <div className="p-4 md:p-8">
       <PageHeader
         title="Pipeline"
-        subtitle={`${deals?.length ?? 0} negócios · ${fmtBRL((deals ?? []).reduce((s, d) => s + Number(d.value), 0))} total`}
+        subtitle="Arraste para mover de estágio. Negócios quentes no topo de cada coluna."
+        icon={Target}
         action={
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild><Button><Plus className="mr-2 h-4 w-4" />Novo negócio</Button></DialogTrigger>
@@ -173,6 +174,8 @@ function PipelinePage() {
           </Dialog>
         }
       />
+
+      <PipelineKpis loading={isLoading} deals={deals ?? []} />
 
       <div className="mt-4"><NextActionBlock surface="pipeline" /></div>
 
@@ -416,5 +419,48 @@ function DealDrawer({
         )}
       </SheetContent>
     </Sheet>
+  );
+}
+
+function PipelineKpis({ loading, deals }: { loading: boolean; deals: any[] }) {
+  const open = deals.filter((d) => d.stage !== "won" && d.stage !== "lost");
+  const won = deals.filter((d) => d.stage === "won");
+  const openValue = open.reduce((s, d) => s + Number(d.value || 0), 0);
+  const wonValue = won.reduce((s, d) => s + Number(d.value || 0), 0);
+  const avg = open.length ? openValue / open.length : 0;
+  const hot = open.filter((d) => scoreDeal(d).probability >= 70).length;
+  return (
+    <div className="mt-6 grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <PKpi loading={loading} label="Pipeline aberto" value={fmtBRL(openValue)} sub={`${open.length} negócios`} icon={TrendingUp} tone="primary" />
+      <PKpi loading={loading} label="Ticket médio" value={fmtBRL(avg)} icon={DollarSign} />
+      <PKpi loading={loading} label="Negócios quentes" value={hot} sub="prob. ≥ 70%" icon={Flame} tone="warn" />
+      <PKpi loading={loading} label="Ganho acumulado" value={fmtBRL(wonValue)} sub={`${won.length} ganhos`} icon={Trophy} tone="ok" />
+    </div>
+  );
+}
+
+function PKpi({
+  loading, label, value, sub, icon: Icon, tone,
+}: {
+  loading: boolean; label: string; value: number | string; sub?: string;
+  icon: React.ComponentType<{ className?: string }>;
+  tone?: "ok" | "warn" | "primary";
+}) {
+  const color =
+    tone === "ok" ? "text-emerald-600 dark:text-emerald-400"
+    : tone === "warn" ? "text-amber-600 dark:text-amber-400"
+    : tone === "primary" ? "text-primary"
+    : "text-foreground";
+  return (
+    <Card className="p-4">
+      <div className="flex items-center justify-between text-xs text-muted-foreground">
+        <span>{label}</span>
+        <Icon className="h-3.5 w-3.5" />
+      </div>
+      <div className={`mt-1 text-2xl font-semibold tabular-nums ${color}`}>
+        {loading ? <Skeleton className="h-7 w-24" /> : value}
+      </div>
+      {sub && <div className="text-xs text-muted-foreground mt-0.5">{sub}</div>}
+    </Card>
   );
 }

@@ -130,14 +130,17 @@ function MarketingPage() {
 }
 
 function KPI({ label, value, icon: Icon, tone, loading }: { label: string; value: string | number; icon: typeof Inbox; tone?: "ok" | "warn"; loading?: boolean }) {
-  const color = tone === "ok" ? "text-emerald-600" : tone === "warn" ? "text-amber-600" : "text-primary";
+  const color =
+    tone === "ok" ? "text-emerald-600 dark:text-emerald-400"
+    : tone === "warn" ? "text-amber-600 dark:text-amber-400"
+    : "text-primary";
   return (
-    <Card className="p-3">
-      <div className="flex items-center justify-between">
-        <span className="text-xs text-muted-foreground">{label}</span>
-        <Icon className={`h-4 w-4 ${color}`} />
+    <Card className="p-4">
+      <div className="flex items-center justify-between text-xs text-muted-foreground">
+        <span>{label}</span>
+        <Icon className={`h-3.5 w-3.5 ${color}`} />
       </div>
-      {loading ? <Skeleton className="h-6 w-16 mt-1" /> : <div className={`text-xl font-semibold mt-1 ${color}`}>{value}</div>}
+      {loading ? <Skeleton className="h-7 w-16 mt-1" /> : <div className={`mt-1 text-2xl font-semibold tabular-nums ${color}`}>{value}</div>}
     </Card>
   );
 }
