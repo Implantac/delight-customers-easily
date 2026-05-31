@@ -87,7 +87,7 @@ const navSections: NavSection[] = [
     items: [
       { to: "/geo", label: "Mapa Comercial", icon: MapPin, shortcut: "G M" },
       { to: "/geo-prospeccao", label: "Prospecção Inteligente", icon: Compass },
-      { to: "/geo", label: "Oportunidades na Rota", icon: RouteIcon },
+      { to: "/opportunity-map", label: "Oportunidades na Rota", icon: RouteIcon },
       { to: "/geo-cobertura", label: "Cobertura Territorial", icon: Map },
     ],
   },
