@@ -7,6 +7,7 @@ import { suggestRoute } from "@/lib/geo-routes.functions";
 import { getRepsOverview } from "@/lib/reps.functions";
 import { addProspectAsLead } from "@/lib/geo-prospect.functions";
 import { optimizeRouteWithAI } from "@/lib/geo-ai.functions";
+import { autoSolveFromRadius } from "@/lib/vrp.functions";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
