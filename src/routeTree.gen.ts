@@ -96,6 +96,7 @@ import { Route as AppKbIdRouteImport } from './routes/_app.kb.$id'
 import { Route as AppInviteTokenRouteImport } from './routes/_app.invite.$token'
 import { Route as AppIntegrationsHelpRouteImport } from './routes/_app.integrations.help'
 import { Route as AppIntegrationsConnectRouteImport } from './routes/_app.integrations.connect'
+import { Route as AppIntegrationsAppsRouteImport } from './routes/_app.integrations.apps'
 import { Route as AppIntegrationsAdvancedRouteImport } from './routes/_app.integrations.advanced'
 import { Route as AppContactsIdRouteImport } from './routes/_app.contacts.$id'
 import { Route as AppCompaniesIdRouteImport } from './routes/_app.companies.$id'
@@ -544,6 +545,11 @@ const AppIntegrationsConnectRoute = AppIntegrationsConnectRouteImport.update({
   path: '/connect',
   getParentRoute: () => AppIntegrationsRoute,
 } as any)
+const AppIntegrationsAppsRoute = AppIntegrationsAppsRouteImport.update({
+  id: '/apps',
+  path: '/apps',
+  getParentRoute: () => AppIntegrationsRoute,
+} as any)
 const AppIntegrationsAdvancedRoute = AppIntegrationsAdvancedRouteImport.update({
   id: '/advanced',
   path: '/advanced',
@@ -685,6 +691,7 @@ export interface FileRoutesByFullPath {
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
   '/integrations/advanced': typeof AppIntegrationsAdvancedRoute
+  '/integrations/apps': typeof AppIntegrationsAppsRoute
   '/integrations/connect': typeof AppIntegrationsConnectRoute
   '/integrations/help': typeof AppIntegrationsHelpRoute
   '/invite/$token': typeof AppInviteTokenRoute
@@ -785,6 +792,7 @@ export interface FileRoutesByTo {
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
   '/integrations/advanced': typeof AppIntegrationsAdvancedRoute
+  '/integrations/apps': typeof AppIntegrationsAppsRoute
   '/integrations/connect': typeof AppIntegrationsConnectRoute
   '/integrations/help': typeof AppIntegrationsHelpRoute
   '/invite/$token': typeof AppInviteTokenRoute
@@ -887,6 +895,7 @@ export interface FileRoutesById {
   '/_app/companies/$id': typeof AppCompaniesIdRoute
   '/_app/contacts/$id': typeof AppContactsIdRoute
   '/_app/integrations/advanced': typeof AppIntegrationsAdvancedRoute
+  '/_app/integrations/apps': typeof AppIntegrationsAppsRoute
   '/_app/integrations/connect': typeof AppIntegrationsConnectRoute
   '/_app/integrations/help': typeof AppIntegrationsHelpRoute
   '/_app/invite/$token': typeof AppInviteTokenRoute
@@ -989,6 +998,7 @@ export interface FileRouteTypes {
     | '/companies/$id'
     | '/contacts/$id'
     | '/integrations/advanced'
+    | '/integrations/apps'
     | '/integrations/connect'
     | '/integrations/help'
     | '/invite/$token'
@@ -1089,6 +1099,7 @@ export interface FileRouteTypes {
     | '/companies/$id'
     | '/contacts/$id'
     | '/integrations/advanced'
+    | '/integrations/apps'
     | '/integrations/connect'
     | '/integrations/help'
     | '/invite/$token'
@@ -1190,6 +1201,7 @@ export interface FileRouteTypes {
     | '/_app/companies/$id'
     | '/_app/contacts/$id'
     | '/_app/integrations/advanced'
+    | '/_app/integrations/apps'
     | '/_app/integrations/connect'
     | '/_app/integrations/help'
     | '/_app/invite/$token'
@@ -1851,6 +1863,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIntegrationsConnectRouteImport
       parentRoute: typeof AppIntegrationsRoute
     }
+    '/_app/integrations/apps': {
+      id: '/_app/integrations/apps'
+      path: '/apps'
+      fullPath: '/integrations/apps'
+      preLoaderRoute: typeof AppIntegrationsAppsRouteImport
+      parentRoute: typeof AppIntegrationsRoute
+    }
     '/_app/integrations/advanced': {
       id: '/_app/integrations/advanced'
       path: '/advanced'
@@ -1964,12 +1983,14 @@ const AppContactsRouteWithChildren = AppContactsRoute._addFileChildren(
 
 interface AppIntegrationsRouteChildren {
   AppIntegrationsAdvancedRoute: typeof AppIntegrationsAdvancedRoute
+  AppIntegrationsAppsRoute: typeof AppIntegrationsAppsRoute
   AppIntegrationsConnectRoute: typeof AppIntegrationsConnectRoute
   AppIntegrationsHelpRoute: typeof AppIntegrationsHelpRoute
 }
 
 const AppIntegrationsRouteChildren: AppIntegrationsRouteChildren = {
   AppIntegrationsAdvancedRoute: AppIntegrationsAdvancedRoute,
+  AppIntegrationsAppsRoute: AppIntegrationsAppsRoute,
   AppIntegrationsConnectRoute: AppIntegrationsConnectRoute,
   AppIntegrationsHelpRoute: AppIntegrationsHelpRoute,
 }
