@@ -429,12 +429,35 @@
     border-color: color-mix(in oklab, var(--primary) 50%, var(--input));
   }
 
-  /* Linhas de tabela com hover sutil */
+  /* Linhas de tabela — zebra sutil + hover acento da marca */
   tbody tr {
     transition: background-color 140ms var(--ease-out);
   }
+  tbody tr:nth-child(even) {
+    background-color: color-mix(in oklab, var(--muted) 35%, transparent);
+  }
   tbody tr:hover {
-    background-color: color-mix(in oklab, var(--primary) 5%, transparent);
+    background-color: color-mix(in oklab, var(--primary) 6%, transparent);
+  }
+
+  /* Scrollbar discreto, estilo macOS/Linear */
+  *::-webkit-scrollbar { width: 10px; height: 10px; }
+  *::-webkit-scrollbar-track { background: transparent; }
+  *::-webkit-scrollbar-thumb {
+    background: color-mix(in oklab, var(--foreground) 14%, transparent);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    border-radius: 999px;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background: color-mix(in oklab, var(--foreground) 24%, transparent);
+    background-clip: padding-box;
+  }
+
+  /* Seleção de texto com cor da marca */
+  ::selection {
+    background: color-mix(in oklab, var(--primary) 22%, transparent);
+    color: var(--foreground);
   }
 
   /* Sidebar minimal — Linear/Attio style */
