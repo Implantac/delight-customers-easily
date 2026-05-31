@@ -19,6 +19,7 @@ import { Attachments } from "@/components/attachments";
 import { TagPicker } from "@/components/tag-picker";
 import { AuditHistory } from "@/components/audit-history";
 import { AIInsights } from "@/components/ai-insights";
+import { PropensityPanel } from "@/components/propensity-panel";
 import { whatsappLink } from "@/lib/wa";
 import { toast } from "sonner";
 
@@ -35,6 +36,16 @@ function CompanyDetail() {
   const { data: company, isLoading } = useQuery({
     queryKey: ["company", id],
     queryFn: async () => (await supabase.from("companies").select("*").eq("id", id).maybeSingle()).data,
+  });
+
+  const { data: erpLink } = useQuery({
+    queryKey: ["company-erp-link", id],
+    queryFn: async () =>
+      (await supabase
+        .from("erp_customers")
+        .select("id, organization_id")
+        .eq("company_id", id)
+        .maybeSingle()).data,
   });
 
   const { data: contacts } = useQuery({
@@ -351,6 +362,12 @@ function CompanyDetail() {
                     Adicione um contato a esta empresa para receber sugestões de próxima ação geradas por IA.
                   </p>
                 </Card>
+              )}
+              {erpLink && (
+                <PropensityPanel
+                  organizationId={erpLink.organization_id}
+                  erpCustomerId={erpLink.id}
+                />
               )}
               {(deals ?? []).length > 0 && (
                 <Card className="p-5">
