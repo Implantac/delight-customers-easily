@@ -58,6 +58,31 @@ function ProposalsPage() {
     } catch (e: any) { toast.error(e.message); }
   };
 
+  const items: any[] = data?.items ?? [];
+  const kpis = useMemo(() => {
+    const k = { total: items.length, draft: 0, sent: 0, accepted: 0, rejected: 0, accepted_value: 0, open_value: 0 };
+    for (const p of items) {
+      k[p.status as "draft" | "sent" | "accepted" | "rejected"] = (k[p.status as "draft"] ?? 0) + 1;
+      const v = Number(p.total ?? 0);
+      if (p.status === "accepted") k.accepted_value += v;
+      else if (p.status === "sent" || p.status === "draft") k.open_value += v;
+    }
+    return k;
+  }, [items]);
+
+  const filtered = useMemo(() => {
+    const needle = q.trim().toLowerCase();
+    return items.filter((p) => {
+      if (status !== "all" && p.status !== status) return false;
+      if (!needle) return true;
+      return (
+        (p.title ?? "").toLowerCase().includes(needle) ||
+        (p.companies?.name ?? "").toLowerCase().includes(needle) ||
+        (p.contacts?.name ?? "").toLowerCase().includes(needle)
+      );
+    });
+  }, [items, status, q]);
+
   return (
     <div className="space-y-6 p-6">
       <PageHeader
@@ -66,12 +91,33 @@ function ProposalsPage() {
         action={<Button onClick={() => setOpen(true)}><Plus className="mr-2 h-4 w-4" />Nova proposta</Button>}
       />
 
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <Card className="p-4"><p className="text-xs text-muted-foreground">Total</p><p className="text-2xl font-bold">{kpis.total}</p></Card>
+        <Card className="p-4"><p className="text-xs text-muted-foreground">Enviadas</p><p className="text-2xl font-bold text-blue-600">{kpis.sent}</p></Card>
+        <Card className="p-4"><p className="text-xs text-muted-foreground">Aceitas</p><p className="text-2xl font-bold text-emerald-600">{BRL(kpis.accepted_value)}</p></Card>
+        <Card className="p-4"><p className="text-xs text-muted-foreground">Em aberto</p><p className="text-2xl font-bold">{BRL(kpis.open_value)}</p></Card>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-2">
+        {(["all", "draft", "sent", "accepted", "rejected"] as const).map((s) => (
+          <Button key={s} size="sm" variant={status === s ? "default" : "outline"} onClick={() => setStatus(s)}>
+            {s === "all" ? "Todas" : s === "draft" ? "Rascunho" : s === "sent" ? "Enviadas" : s === "accepted" ? "Aceitas" : "Rejeitadas"}
+          </Button>
+        ))}
+        <div className="relative ml-auto w-full sm:w-72">
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Buscar título ou cliente…" className="pl-8" />
+        </div>
+      </div>
+
       {isLoading ? (
         <Skeleton className="h-64" />
-      ) : (data?.items.length ?? 0) === 0 ? (
+      ) : filtered.length === 0 ? (
         <Card className="p-12 text-center">
           <FileText className="mx-auto h-10 w-10 text-muted-foreground" />
-          <p className="mt-3 text-sm text-muted-foreground">Sem propostas ainda. Crie a primeira.</p>
+          <p className="mt-3 text-sm text-muted-foreground">
+            {items.length === 0 ? "Sem propostas ainda. Crie a primeira." : "Nenhuma proposta encontrada com esses filtros."}
+          </p>
         </Card>
       ) : (
         <Card>
