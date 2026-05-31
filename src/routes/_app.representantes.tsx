@@ -72,18 +72,27 @@ function RepsPage() {
   );
 }
 
-function RepCard({ r }: { r: RepRow }) {
+function RepCard({ r, rank }: { r: RepRow; rank: number }) {
   const progressPct = Math.min(100, Math.round(r.attainment));
+  const medal = rank === 1 ? "bg-amber-500/15 text-amber-600 border-amber-500/30"
+    : rank === 2 ? "bg-zinc-400/15 text-zinc-600 border-zinc-400/30"
+    : rank === 3 ? "bg-orange-700/15 text-orange-700 border-orange-700/30"
+    : "bg-muted text-muted-foreground border-border";
   return (
     <Card className="p-4">
       <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
-        <div className="min-w-0 lg:w-64">
-          <div className="flex items-center gap-2">
-            <div className="font-semibold truncate">{r.user_name}</div>
-            {statusBadge(r.status)}
+        <div className="min-w-0 lg:w-64 flex items-start gap-3">
+          <div className={`h-9 w-9 shrink-0 rounded-full border flex items-center justify-center text-sm font-bold ${medal}`}>
+            #{rank}
           </div>
-          <div className="text-xs text-muted-foreground mt-0.5">
-            {r.deals_open} deals abertos · {r.deals_won_month} ganhos no mês
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2">
+              <div className="font-semibold truncate">{r.user_name}</div>
+              {statusBadge(r.status)}
+            </div>
+            <div className="text-xs text-muted-foreground mt-0.5">
+              {r.deals_open} deals abertos · {r.deals_won_month} ganhos no mês
+            </div>
           </div>
         </div>
 
