@@ -27,8 +27,8 @@ function OpportunityMapPage() {
     return <div className="p-4 md:p-8 space-y-4"><Skeleton className="h-10 w-64" /><Skeleton className="h-96" /></div>;
   }
 
-  const { territories, industries, summary } = data;
-  const maxOpen = Math.max(1, ...territories.map((t) => t.open_value));
+  const { territories, industries, summary } = data as any;
+  const maxOpen = Math.max(1, ...territories.map((t: any) => t.open_value));
 
   return (
     <div className="p-4 md:p-8 space-y-6">
