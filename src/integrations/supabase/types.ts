@@ -3526,6 +3526,116 @@ export type Database = {
           },
         ]
       }
+      erp_outbox: {
+        Row: {
+          action: string
+          attempts: number
+          created_at: string
+          created_by: string | null
+          entity: string
+          external_id: string | null
+          finished_at: string | null
+          id: string
+          integration_id: string
+          last_error: string | null
+          max_attempts: number
+          organization_id: string
+          payload: Json
+          scheduled_at: string
+          started_at: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          action: string
+          attempts?: number
+          created_at?: string
+          created_by?: string | null
+          entity: string
+          external_id?: string | null
+          finished_at?: string | null
+          id?: string
+          integration_id: string
+          last_error?: string | null
+          max_attempts?: number
+          organization_id: string
+          payload?: Json
+          scheduled_at?: string
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          action?: string
+          attempts?: number
+          created_at?: string
+          created_by?: string | null
+          entity?: string
+          external_id?: string | null
+          finished_at?: string | null
+          id?: string
+          integration_id?: string
+          last_error?: string | null
+          max_attempts?: number
+          organization_id?: string
+          payload?: Json
+          scheduled_at?: string
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "erp_outbox_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "erp_integrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "erp_outbox_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["branch_org_id"]
+          },
+          {
+            foreignKeyName: "erp_outbox_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "erp_outbox_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "erp_outbox_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "erp_outbox_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "erp_outbox_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       erp_product_catalog_lite: {
         Row: {
           brand: string | null
