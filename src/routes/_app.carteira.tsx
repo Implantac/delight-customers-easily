@@ -191,6 +191,66 @@ function CarteiraPage() {
         </div>
       </Card>
 
+      {/* Barra de ações em lote — aparece quando há clientes selecionados */}
+      {selected.size > 0 && (
+        <Card className="p-3 flex flex-wrap items-center gap-2 border-primary/40 bg-primary/5">
+          <span className="text-sm font-medium pr-2">
+            {selected.size} cliente{selected.size === 1 ? "" : "s"} selecionado{selected.size === 1 ? "" : "s"}
+          </span>
+          <Button size="sm" variant="outline" className="gap-1.5" asChild>
+            <Link
+              to="/campaigns"
+              search={{ companies: Array.from(selected).join(",") } as any}
+            >
+              <Megaphone className="h-3.5 w-3.5" /> Criar campanha
+            </Link>
+          </Button>
+          <Button size="sm" variant="outline" className="gap-1.5" asChild>
+            <Link
+              to="/sequences"
+              search={{ companies: Array.from(selected).join(",") } as any}
+            >
+              <Workflow className="h-3.5 w-3.5" /> Inscrever em sequência
+            </Link>
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            className="gap-1.5"
+            onClick={() => {
+              const sel = filtered.filter((r) => selected.has(r.company_id));
+              const csv = toCSV(
+                sel.map((r) => ({
+                  cliente: r.name,
+                  segmento: r.industry ?? "",
+                  status: r.status,
+                  score: r.score,
+                  faturado: r.wonRevenue,
+                  pipeline_aberto: r.openPipeline,
+                  buckets: r.buckets.join("|"),
+                })),
+                [
+                  { key: "cliente", label: "Cliente" },
+                  { key: "segmento", label: "Segmento" },
+                  { key: "status", label: "Status" },
+                  { key: "score", label: "Score" },
+                  { key: "faturado", label: "Faturado" },
+                  { key: "pipeline_aberto", label: "Pipeline aberto" },
+                  { key: "buckets", label: "Lentes" },
+                ],
+              );
+              downloadCSV(`carteira-selecionados-${new Date().toISOString().slice(0, 10)}.csv`, csv);
+            }}
+          >
+            <Download className="h-3.5 w-3.5" /> Exportar selecionados
+          </Button>
+          <Button size="sm" variant="ghost" className="ml-auto gap-1.5" onClick={clearSelection}>
+            <X className="h-3.5 w-3.5" /> Limpar
+          </Button>
+        </Card>
+      )}
+
+
 
       {isLoading ? (
         <div className="space-y-2">
