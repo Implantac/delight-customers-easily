@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { BookOpen, Plus, Search, Eye, Pencil, Trash2 } from "lucide-react";
+import { PageHeader } from "@/components/page-header";
 import { useCurrentOrg } from "@/lib/org";
 import { listArticles, upsertArticle, deleteArticle } from "@/lib/kb.functions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -127,17 +128,16 @@ function KbPage() {
 
   return (
     <div className="flex flex-col gap-6 p-6">
-      <div className="flex items-center justify-between gap-4 flex-wrap">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Base de Conhecimento</h1>
-          <p className="text-sm text-muted-foreground">
-            Documente processos, playbooks e respostas frequentes da equipe.
-          </p>
-        </div>
-        <Button onClick={openCreate}>
-          <Plus className="mr-2 h-4 w-4" /> Novo artigo
-        </Button>
-      </div>
+      <PageHeader
+        icon={BookOpen}
+        title="Base de Conhecimento"
+        subtitle="Documente processos, playbooks e respostas frequentes da equipe."
+        action={
+          <Button onClick={openCreate}>
+            <Plus className="mr-2 h-4 w-4" /> Novo artigo
+          </Button>
+        }
+      />
 
       <div className="flex items-center gap-2 flex-wrap">
         <div className="relative flex-1 min-w-[200px] max-w-sm">
