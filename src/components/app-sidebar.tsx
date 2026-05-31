@@ -82,10 +82,19 @@ const navSections: NavSection[] = [
     ],
   },
   {
+    id: "geo",
+    label: "Geointeligência",
+    items: [
+      { to: "/geo", label: "Mapa Comercial", icon: MapPin, shortcut: "G M" },
+      { to: "/geo-prospeccao", label: "Prospecção Inteligente", icon: Compass },
+      { to: "/geo", label: "Oportunidades na Rota", icon: RouteIcon },
+      { to: "/geo-cobertura", label: "Cobertura Territorial", icon: Map },
+    ],
+  },
+  {
     id: "inteligencia",
     label: "Inteligência",
     items: [
-      { to: "/geo", label: "Geointeligência", icon: MapPin, shortcut: "G M" },
       { to: "/ia-comercial", label: "IA Comercial", icon: Sparkles, shortcut: "G I" },
       { to: "/reports", label: "Relatórios", icon: BarChart3, shortcut: "G R", managerOnly: true },
     ],
