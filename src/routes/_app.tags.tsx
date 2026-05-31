@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Tag as TagIcon, Plus, Trash2, GitMerge, Pencil } from "lucide-react";
+import { PageHeader } from "@/components/page-header";
 import { useCurrentOrg } from "@/lib/org";
 import { listTags, createTag, updateTag, deleteTag, mergeTags } from "@/lib/tags.functions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -117,13 +118,11 @@ function TagsPage() {
 
   return (
     <div className="flex flex-col gap-6 p-6">
-      <div className="flex items-center justify-between gap-4 flex-wrap">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Tags</h1>
-          <p className="text-sm text-muted-foreground">
-            Organize contatos, empresas e negócios com etiquetas.
-          </p>
-        </div>
+      <PageHeader
+        icon={TagIcon}
+        title="Tags"
+        subtitle="Organize contatos, empresas e negócios com etiquetas reutilizáveis."
+        action={
         <Dialog open={openNew} onOpenChange={setOpenNew}>
           <DialogTrigger asChild>
             <Button>
