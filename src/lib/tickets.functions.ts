@@ -67,15 +67,18 @@ export const listTickets = createServerFn({ method: "POST" })
 
 export const getTicket = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((i) => z.object({ id: z.string().uuid() }).parse(i))
+  .inputValidator((i) =>
+    z.object({ id: z.string().uuid(), organization_id: z.string().uuid() }).parse(i),
+  )
   .handler(async ({ data, context }) => {
     const { supabase } = context;
     const [ticketRes, commentsRes] = await Promise.all([
-      supabase.from("tickets").select("*").eq("id", data.id).maybeSingle(),
+      supabase.from("tickets").select("*").eq("id", data.id).eq("organization_id", data.organization_id).maybeSingle(),
       supabase
         .from("ticket_comments")
         .select("id, author_id, body, is_internal, created_at")
         .eq("ticket_id", data.id)
+        .eq("organization_id", data.organization_id)
         .order("created_at", { ascending: true }),
     ]);
     if (ticketRes.error) throw new Error(ticketRes.error.message);
@@ -141,6 +144,7 @@ export const updateTicket = createServerFn({ method: "POST" })
     z
       .object({
         id: z.string().uuid(),
+        organization_id: z.string().uuid(),
         status: STATUS.optional(),
         priority: PRIORITY.optional(),
         assignee_id: z.string().uuid().nullable().optional(),
@@ -159,7 +163,11 @@ export const updateTicket = createServerFn({ method: "POST" })
     if (data.priority !== undefined) patch.priority = data.priority;
     if (data.assignee_id !== undefined) patch.assignee_id = data.assignee_id;
     if (data.subject !== undefined) patch.subject = data.subject;
-    const { error } = await supabase.from("tickets").update(patch as any).eq("id", data.id);
+    const { error } = await supabase
+      .from("tickets")
+      .update(patch as any)
+      .eq("id", data.id)
+      .eq("organization_id", data.organization_id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
@@ -178,6 +186,14 @@ export const addComment = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
+    // verify the ticket belongs to the claimed organization
+    const { data: t } = await supabase
+      .from("tickets")
+      .select("id")
+      .eq("id", data.ticket_id)
+      .eq("organization_id", data.organization_id)
+      .maybeSingle();
+    if (!t) throw new Error("Ticket não encontrado");
     const { error } = await supabase.from("ticket_comments").insert({
       organization_id: data.organization_id,
       ticket_id: data.ticket_id,

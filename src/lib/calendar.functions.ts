@@ -44,14 +44,19 @@ export const getCalendarActivities = createServerFn({ method: "POST" })
 export const toggleActivityComplete = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((i) =>
-    z.object({ id: z.string().uuid(), completed: z.boolean() }).parse(i),
+    z.object({
+      id: z.string().uuid(),
+      organization_id: z.string().uuid(),
+      completed: z.boolean(),
+    }).parse(i),
   )
   .handler(async ({ data, context }) => {
     const { supabase } = context;
     const { error } = await supabase
       .from("activities")
       .update({ completed: data.completed })
-      .eq("id", data.id);
+      .eq("id", data.id)
+      .eq("organization_id", data.organization_id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });

@@ -82,15 +82,23 @@ export const listContracts = createServerFn({ method: "POST" })
 
 export const getContract = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((i) => z.object({ id: z.string().uuid() }).parse(i))
+  .inputValidator((i) =>
+    z.object({ id: z.string().uuid(), organization_id: z.string().uuid() }).parse(i),
+  )
   .handler(async ({ data, context }) => {
     const { supabase } = context;
-    const { data: c, error } = await supabase.from("contracts").select("*").eq("id", data.id).single();
+    const { data: c, error } = await supabase
+      .from("contracts")
+      .select("*")
+      .eq("id", data.id)
+      .eq("organization_id", data.organization_id)
+      .single();
     if (error) throw new Error(error.message);
     const { data: events } = await supabase
       .from("contract_events")
       .select("*")
       .eq("contract_id", data.id)
+      .eq("organization_id", data.organization_id)
       .order("created_at", { ascending: false });
     return { contract: c as Contract, events: (events ?? []) as ContractEvent[] };
   });
@@ -161,6 +169,14 @@ export const addContractEvent = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
+    // verify the contract belongs to the claimed organization
+    const { data: c } = await supabase
+      .from("contracts")
+      .select("id")
+      .eq("id", data.contract_id)
+      .eq("organization_id", data.organization_id)
+      .maybeSingle();
+    if (!c) throw new Error("Contrato não encontrado");
     const { error } = await supabase.from("contract_events").insert({
       organization_id: data.organization_id,
       contract_id: data.contract_id,
@@ -178,7 +194,11 @@ export const addContractEvent = createServerFn({ method: "POST" })
       if (newStatus) {
         const patch: any = { status: newStatus };
         if (data.event_type === "signed") patch.signed_at = new Date().toISOString();
-        await supabase.from("contracts").update(patch).eq("id", data.contract_id);
+        await supabase
+          .from("contracts")
+          .update(patch)
+          .eq("id", data.contract_id)
+          .eq("organization_id", data.organization_id);
       }
     }
     return { ok: true };
@@ -186,9 +206,15 @@ export const addContractEvent = createServerFn({ method: "POST" })
 
 export const deleteContract = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((i) => z.object({ id: z.string().uuid() }).parse(i))
+  .inputValidator((i) =>
+    z.object({ id: z.string().uuid(), organization_id: z.string().uuid() }).parse(i),
+  )
   .handler(async ({ data, context }) => {
-    const { error } = await context.supabase.from("contracts").delete().eq("id", data.id);
+    const { error } = await context.supabase
+      .from("contracts")
+      .delete()
+      .eq("id", data.id)
+      .eq("organization_id", data.organization_id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });

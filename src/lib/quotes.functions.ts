@@ -81,12 +81,14 @@ export const listQuotes = createServerFn({ method: "POST" })
 
 export const getQuote = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((i) => z.object({ id: z.string().uuid() }).parse(i))
+  .inputValidator((i) =>
+    z.object({ id: z.string().uuid(), organization_id: z.string().uuid() }).parse(i),
+  )
   .handler(async ({ data, context }) => {
     const { supabase } = context;
     const [q, items] = await Promise.all([
-      supabase.from("quotes").select("*").eq("id", data.id).single(),
-      supabase.from("quote_items").select("*").eq("quote_id", data.id).order("position", { ascending: true }),
+      supabase.from("quotes").select("*").eq("id", data.id).eq("organization_id", data.organization_id).single(),
+      supabase.from("quote_items").select("*").eq("quote_id", data.id).eq("organization_id", data.organization_id).order("position", { ascending: true }),
     ]);
     if (q.error) throw new Error(q.error.message);
     if (items.error) throw new Error(items.error.message);
@@ -179,20 +181,31 @@ export const setQuoteStatus = createServerFn({ method: "POST" })
   .inputValidator((i) =>
     z.object({
       id: z.string().uuid(),
+      organization_id: z.string().uuid(),
       status: z.enum(["draft", "sent", "accepted", "declined", "expired"]),
     }).parse(i),
   )
   .handler(async ({ data, context }) => {
-    const { error } = await context.supabase.from("quotes").update({ status: data.status }).eq("id", data.id);
+    const { error } = await context.supabase
+      .from("quotes")
+      .update({ status: data.status })
+      .eq("id", data.id)
+      .eq("organization_id", data.organization_id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
 
 export const deleteQuote = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((i) => z.object({ id: z.string().uuid() }).parse(i))
+  .inputValidator((i) =>
+    z.object({ id: z.string().uuid(), organization_id: z.string().uuid() }).parse(i),
+  )
   .handler(async ({ data, context }) => {
-    const { error } = await context.supabase.from("quotes").delete().eq("id", data.id);
+    const { error } = await context.supabase
+      .from("quotes")
+      .delete()
+      .eq("id", data.id)
+      .eq("organization_id", data.organization_id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });

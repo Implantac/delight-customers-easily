@@ -66,6 +66,7 @@ export const updateView = createServerFn({ method: "POST" })
     z
       .object({
         id: z.string().uuid(),
+        organization_id: z.string().uuid(),
         name: z.string().min(1).max(60).optional(),
         filters: z.record(z.string(), z.unknown()).optional(),
         is_shared: z.boolean().optional(),
@@ -78,17 +79,27 @@ export const updateView = createServerFn({ method: "POST" })
     if (data.name !== undefined) patch.name = data.name.trim();
     if (data.filters !== undefined) patch.filters = data.filters;
     if (data.is_shared !== undefined) patch.is_shared = data.is_shared;
-    const { error } = await supabase.from("saved_views").update(patch as any).eq("id", data.id);
+    const { error } = await supabase
+      .from("saved_views")
+      .update(patch as any)
+      .eq("id", data.id)
+      .eq("organization_id", data.organization_id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
 
 export const deleteView = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((i) => z.object({ id: z.string().uuid() }).parse(i))
+  .inputValidator((i) =>
+    z.object({ id: z.string().uuid(), organization_id: z.string().uuid() }).parse(i),
+  )
   .handler(async ({ data, context }) => {
     const { supabase } = context;
-    const { error } = await supabase.from("saved_views").delete().eq("id", data.id);
+    const { error } = await supabase
+      .from("saved_views")
+      .delete()
+      .eq("id", data.id)
+      .eq("organization_id", data.organization_id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
