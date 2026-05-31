@@ -21,9 +21,7 @@ import { Route as AppTerritoriesRouteImport } from './routes/_app.territories'
 import { Route as AppTemplatesRouteImport } from './routes/_app.templates'
 import { Route as AppTagsRouteImport } from './routes/_app.tags'
 import { Route as AppSurveysRouteImport } from './routes/_app.surveys'
-import { Route as AppSuppliersRouteImport } from './routes/_app.suppliers'
 import { Route as AppSubscriptionsRouteImport } from './routes/_app.subscriptions'
-import { Route as AppStockRouteImport } from './routes/_app.stock'
 import { Route as AppSignaturesRouteImport } from './routes/_app.signatures'
 import { Route as AppSequencesRouteImport } from './routes/_app.sequences'
 import { Route as AppSegmentsRouteImport } from './routes/_app.segments'
@@ -52,16 +50,12 @@ import { Route as AppLeadsRouteImport } from './routes/_app.leads'
 import { Route as AppLeadScoringRouteImport } from './routes/_app.lead-scoring'
 import { Route as AppLeadFormsRouteImport } from './routes/_app.lead-forms'
 import { Route as AppKbRouteImport } from './routes/_app.kb'
-import { Route as AppInvoicesRouteImport } from './routes/_app.invoices'
 import { Route as AppIntegrationsRouteImport } from './routes/_app.integrations'
 import { Route as AppInfluencersRouteImport } from './routes/_app.influencers'
 import { Route as AppIaComercialRouteImport } from './routes/_app.ia-comercial'
 import { Route as AppGoalsRouteImport } from './routes/_app.goals'
 import { Route as AppGeoRouteImport } from './routes/_app.geo'
 import { Route as AppForecastRouteImport } from './routes/_app.forecast'
-import { Route as AppFinanceRouteImport } from './routes/_app.finance'
-import { Route as AppExpensesRouteImport } from './routes/_app.expenses'
-import { Route as AppDocumentsRouteImport } from './routes/_app.documents'
 import { Route as AppDataQualityRouteImport } from './routes/_app.data-quality'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppContractsRouteImport } from './routes/_app.contracts'
@@ -76,10 +70,6 @@ import { Route as AppCarteiraRouteImport } from './routes/_app.carteira'
 import { Route as AppCampaignsRouteImport } from './routes/_app.campaigns'
 import { Route as AppCalendarRouteImport } from './routes/_app.calendar'
 import { Route as AppBenchmarkRouteImport } from './routes/_app.benchmark'
-import { Route as AppBankingRouteImport } from './routes/_app.banking'
-import { Route as AppAuditRouteImport } from './routes/_app.audit'
-import { Route as AppAssetsRouteImport } from './routes/_app.assets'
-import { Route as AppApprovalsRouteImport } from './routes/_app.approvals'
 import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
 import { Route as AppActivitiesRouteImport } from './routes/_app.activities'
 import { Route as IOrgSlugRouteImport } from './routes/i.$org.$slug'
@@ -166,19 +156,9 @@ const AppSurveysRoute = AppSurveysRouteImport.update({
   path: '/surveys',
   getParentRoute: () => AppRoute,
 } as any)
-const AppSuppliersRoute = AppSuppliersRouteImport.update({
-  id: '/suppliers',
-  path: '/suppliers',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppSubscriptionsRoute = AppSubscriptionsRouteImport.update({
   id: '/subscriptions',
   path: '/subscriptions',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppStockRoute = AppStockRouteImport.update({
-  id: '/stock',
-  path: '/stock',
   getParentRoute: () => AppRoute,
 } as any)
 const AppSignaturesRoute = AppSignaturesRouteImport.update({
@@ -321,11 +301,6 @@ const AppKbRoute = AppKbRouteImport.update({
   path: '/kb',
   getParentRoute: () => AppRoute,
 } as any)
-const AppInvoicesRoute = AppInvoicesRouteImport.update({
-  id: '/invoices',
-  path: '/invoices',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppIntegrationsRoute = AppIntegrationsRouteImport.update({
   id: '/integrations',
   path: '/integrations',
@@ -354,21 +329,6 @@ const AppGeoRoute = AppGeoRouteImport.update({
 const AppForecastRoute = AppForecastRouteImport.update({
   id: '/forecast',
   path: '/forecast',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppFinanceRoute = AppFinanceRouteImport.update({
-  id: '/finance',
-  path: '/finance',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppExpensesRoute = AppExpensesRouteImport.update({
-  id: '/expenses',
-  path: '/expenses',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppDocumentsRoute = AppDocumentsRouteImport.update({
-  id: '/documents',
-  path: '/documents',
   getParentRoute: () => AppRoute,
 } as any)
 const AppDataQualityRoute = AppDataQualityRouteImport.update({
@@ -439,26 +399,6 @@ const AppCalendarRoute = AppCalendarRouteImport.update({
 const AppBenchmarkRoute = AppBenchmarkRouteImport.update({
   id: '/benchmark',
   path: '/benchmark',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppBankingRoute = AppBankingRouteImport.update({
-  id: '/banking',
-  path: '/banking',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppAuditRoute = AppAuditRouteImport.update({
-  id: '/audit',
-  path: '/audit',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppAssetsRoute = AppAssetsRouteImport.update({
-  id: '/assets',
-  path: '/assets',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppApprovalsRoute = AppApprovalsRouteImport.update({
-  id: '/approvals',
-  path: '/approvals',
   getParentRoute: () => AppRoute,
 } as any)
 const AppAlertsRoute = AppAlertsRouteImport.update({
@@ -603,10 +543,6 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/activities': typeof AppActivitiesRoute
   '/alerts': typeof AppAlertsRoute
-  '/approvals': typeof AppApprovalsRoute
-  '/assets': typeof AppAssetsRoute
-  '/audit': typeof AppAuditRoute
-  '/banking': typeof AppBankingRoute
   '/benchmark': typeof AppBenchmarkRoute
   '/calendar': typeof AppCalendarRoute
   '/campaigns': typeof AppCampaignsRoute
@@ -621,16 +557,12 @@ export interface FileRoutesByFullPath {
   '/contracts': typeof AppContractsRoute
   '/dashboard': typeof AppDashboardRoute
   '/data-quality': typeof AppDataQualityRoute
-  '/documents': typeof AppDocumentsRoute
-  '/expenses': typeof AppExpensesRoute
-  '/finance': typeof AppFinanceRoute
   '/forecast': typeof AppForecastRoute
   '/geo': typeof AppGeoRoute
   '/goals': typeof AppGoalsRoute
   '/ia-comercial': typeof AppIaComercialRoute
   '/influencers': typeof AppInfluencersRoute
   '/integrations': typeof AppIntegrationsRoute
-  '/invoices': typeof AppInvoicesRoute
   '/kb': typeof AppKbRouteWithChildren
   '/lead-forms': typeof AppLeadFormsRoute
   '/lead-scoring': typeof AppLeadScoringRoute
@@ -659,9 +591,7 @@ export interface FileRoutesByFullPath {
   '/segments': typeof AppSegmentsRoute
   '/sequences': typeof AppSequencesRouteWithChildren
   '/signatures': typeof AppSignaturesRoute
-  '/stock': typeof AppStockRoute
   '/subscriptions': typeof AppSubscriptionsRoute
-  '/suppliers': typeof AppSuppliersRoute
   '/surveys': typeof AppSurveysRoute
   '/tags': typeof AppTagsRoute
   '/templates': typeof AppTemplatesRoute
@@ -701,10 +631,6 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/activities': typeof AppActivitiesRoute
   '/alerts': typeof AppAlertsRoute
-  '/approvals': typeof AppApprovalsRoute
-  '/assets': typeof AppAssetsRoute
-  '/audit': typeof AppAuditRoute
-  '/banking': typeof AppBankingRoute
   '/benchmark': typeof AppBenchmarkRoute
   '/calendar': typeof AppCalendarRoute
   '/campaigns': typeof AppCampaignsRoute
@@ -719,16 +645,12 @@ export interface FileRoutesByTo {
   '/contracts': typeof AppContractsRoute
   '/dashboard': typeof AppDashboardRoute
   '/data-quality': typeof AppDataQualityRoute
-  '/documents': typeof AppDocumentsRoute
-  '/expenses': typeof AppExpensesRoute
-  '/finance': typeof AppFinanceRoute
   '/forecast': typeof AppForecastRoute
   '/geo': typeof AppGeoRoute
   '/goals': typeof AppGoalsRoute
   '/ia-comercial': typeof AppIaComercialRoute
   '/influencers': typeof AppInfluencersRoute
   '/integrations': typeof AppIntegrationsRoute
-  '/invoices': typeof AppInvoicesRoute
   '/kb': typeof AppKbRouteWithChildren
   '/lead-forms': typeof AppLeadFormsRoute
   '/lead-scoring': typeof AppLeadScoringRoute
@@ -757,9 +679,7 @@ export interface FileRoutesByTo {
   '/segments': typeof AppSegmentsRoute
   '/sequences': typeof AppSequencesRouteWithChildren
   '/signatures': typeof AppSignaturesRoute
-  '/stock': typeof AppStockRoute
   '/subscriptions': typeof AppSubscriptionsRoute
-  '/suppliers': typeof AppSuppliersRoute
   '/surveys': typeof AppSurveysRoute
   '/tags': typeof AppTagsRoute
   '/templates': typeof AppTemplatesRoute
@@ -801,10 +721,6 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/_app/activities': typeof AppActivitiesRoute
   '/_app/alerts': typeof AppAlertsRoute
-  '/_app/approvals': typeof AppApprovalsRoute
-  '/_app/assets': typeof AppAssetsRoute
-  '/_app/audit': typeof AppAuditRoute
-  '/_app/banking': typeof AppBankingRoute
   '/_app/benchmark': typeof AppBenchmarkRoute
   '/_app/calendar': typeof AppCalendarRoute
   '/_app/campaigns': typeof AppCampaignsRoute
@@ -819,16 +735,12 @@ export interface FileRoutesById {
   '/_app/contracts': typeof AppContractsRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/data-quality': typeof AppDataQualityRoute
-  '/_app/documents': typeof AppDocumentsRoute
-  '/_app/expenses': typeof AppExpensesRoute
-  '/_app/finance': typeof AppFinanceRoute
   '/_app/forecast': typeof AppForecastRoute
   '/_app/geo': typeof AppGeoRoute
   '/_app/goals': typeof AppGoalsRoute
   '/_app/ia-comercial': typeof AppIaComercialRoute
   '/_app/influencers': typeof AppInfluencersRoute
   '/_app/integrations': typeof AppIntegrationsRoute
-  '/_app/invoices': typeof AppInvoicesRoute
   '/_app/kb': typeof AppKbRouteWithChildren
   '/_app/lead-forms': typeof AppLeadFormsRoute
   '/_app/lead-scoring': typeof AppLeadScoringRoute
@@ -857,9 +769,7 @@ export interface FileRoutesById {
   '/_app/segments': typeof AppSegmentsRoute
   '/_app/sequences': typeof AppSequencesRouteWithChildren
   '/_app/signatures': typeof AppSignaturesRoute
-  '/_app/stock': typeof AppStockRoute
   '/_app/subscriptions': typeof AppSubscriptionsRoute
-  '/_app/suppliers': typeof AppSuppliersRoute
   '/_app/surveys': typeof AppSurveysRoute
   '/_app/tags': typeof AppTagsRoute
   '/_app/templates': typeof AppTemplatesRoute
@@ -901,10 +811,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/activities'
     | '/alerts'
-    | '/approvals'
-    | '/assets'
-    | '/audit'
-    | '/banking'
     | '/benchmark'
     | '/calendar'
     | '/campaigns'
@@ -919,16 +825,12 @@ export interface FileRouteTypes {
     | '/contracts'
     | '/dashboard'
     | '/data-quality'
-    | '/documents'
-    | '/expenses'
-    | '/finance'
     | '/forecast'
     | '/geo'
     | '/goals'
     | '/ia-comercial'
     | '/influencers'
     | '/integrations'
-    | '/invoices'
     | '/kb'
     | '/lead-forms'
     | '/lead-scoring'
@@ -957,9 +859,7 @@ export interface FileRouteTypes {
     | '/segments'
     | '/sequences'
     | '/signatures'
-    | '/stock'
     | '/subscriptions'
-    | '/suppliers'
     | '/surveys'
     | '/tags'
     | '/templates'
@@ -999,10 +899,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/activities'
     | '/alerts'
-    | '/approvals'
-    | '/assets'
-    | '/audit'
-    | '/banking'
     | '/benchmark'
     | '/calendar'
     | '/campaigns'
@@ -1017,16 +913,12 @@ export interface FileRouteTypes {
     | '/contracts'
     | '/dashboard'
     | '/data-quality'
-    | '/documents'
-    | '/expenses'
-    | '/finance'
     | '/forecast'
     | '/geo'
     | '/goals'
     | '/ia-comercial'
     | '/influencers'
     | '/integrations'
-    | '/invoices'
     | '/kb'
     | '/lead-forms'
     | '/lead-scoring'
@@ -1055,9 +947,7 @@ export interface FileRouteTypes {
     | '/segments'
     | '/sequences'
     | '/signatures'
-    | '/stock'
     | '/subscriptions'
-    | '/suppliers'
     | '/surveys'
     | '/tags'
     | '/templates'
@@ -1098,10 +988,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/_app/activities'
     | '/_app/alerts'
-    | '/_app/approvals'
-    | '/_app/assets'
-    | '/_app/audit'
-    | '/_app/banking'
     | '/_app/benchmark'
     | '/_app/calendar'
     | '/_app/campaigns'
@@ -1116,16 +1002,12 @@ export interface FileRouteTypes {
     | '/_app/contracts'
     | '/_app/dashboard'
     | '/_app/data-quality'
-    | '/_app/documents'
-    | '/_app/expenses'
-    | '/_app/finance'
     | '/_app/forecast'
     | '/_app/geo'
     | '/_app/goals'
     | '/_app/ia-comercial'
     | '/_app/influencers'
     | '/_app/integrations'
-    | '/_app/invoices'
     | '/_app/kb'
     | '/_app/lead-forms'
     | '/_app/lead-scoring'
@@ -1154,9 +1036,7 @@ export interface FileRouteTypes {
     | '/_app/segments'
     | '/_app/sequences'
     | '/_app/signatures'
-    | '/_app/stock'
     | '/_app/subscriptions'
-    | '/_app/suppliers'
     | '/_app/surveys'
     | '/_app/tags'
     | '/_app/templates'
@@ -1293,25 +1173,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSurveysRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/suppliers': {
-      id: '/_app/suppliers'
-      path: '/suppliers'
-      fullPath: '/suppliers'
-      preLoaderRoute: typeof AppSuppliersRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/_app/subscriptions': {
       id: '/_app/subscriptions'
       path: '/subscriptions'
       fullPath: '/subscriptions'
       preLoaderRoute: typeof AppSubscriptionsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/stock': {
-      id: '/_app/stock'
-      path: '/stock'
-      fullPath: '/stock'
-      preLoaderRoute: typeof AppStockRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/signatures': {
@@ -1510,13 +1376,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppKbRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/invoices': {
-      id: '/_app/invoices'
-      path: '/invoices'
-      fullPath: '/invoices'
-      preLoaderRoute: typeof AppInvoicesRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/_app/integrations': {
       id: '/_app/integrations'
       path: '/integrations'
@@ -1557,27 +1416,6 @@ declare module '@tanstack/react-router' {
       path: '/forecast'
       fullPath: '/forecast'
       preLoaderRoute: typeof AppForecastRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/finance': {
-      id: '/_app/finance'
-      path: '/finance'
-      fullPath: '/finance'
-      preLoaderRoute: typeof AppFinanceRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/expenses': {
-      id: '/_app/expenses'
-      path: '/expenses'
-      fullPath: '/expenses'
-      preLoaderRoute: typeof AppExpensesRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/documents': {
-      id: '/_app/documents'
-      path: '/documents'
-      fullPath: '/documents'
-      preLoaderRoute: typeof AppDocumentsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/data-quality': {
@@ -1676,34 +1514,6 @@ declare module '@tanstack/react-router' {
       path: '/benchmark'
       fullPath: '/benchmark'
       preLoaderRoute: typeof AppBenchmarkRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/banking': {
-      id: '/_app/banking'
-      path: '/banking'
-      fullPath: '/banking'
-      preLoaderRoute: typeof AppBankingRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/audit': {
-      id: '/_app/audit'
-      path: '/audit'
-      fullPath: '/audit'
-      preLoaderRoute: typeof AppAuditRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/assets': {
-      id: '/_app/assets'
-      path: '/assets'
-      fullPath: '/assets'
-      preLoaderRoute: typeof AppAssetsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/approvals': {
-      id: '/_app/approvals'
-      path: '/approvals'
-      fullPath: '/approvals'
-      preLoaderRoute: typeof AppApprovalsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/alerts': {
@@ -1976,10 +1786,6 @@ const AppTicketsRouteWithChildren = AppTicketsRoute._addFileChildren(
 interface AppRouteChildren {
   AppActivitiesRoute: typeof AppActivitiesRoute
   AppAlertsRoute: typeof AppAlertsRoute
-  AppApprovalsRoute: typeof AppApprovalsRoute
-  AppAssetsRoute: typeof AppAssetsRoute
-  AppAuditRoute: typeof AppAuditRoute
-  AppBankingRoute: typeof AppBankingRoute
   AppBenchmarkRoute: typeof AppBenchmarkRoute
   AppCalendarRoute: typeof AppCalendarRoute
   AppCampaignsRoute: typeof AppCampaignsRoute
@@ -1994,16 +1800,12 @@ interface AppRouteChildren {
   AppContractsRoute: typeof AppContractsRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppDataQualityRoute: typeof AppDataQualityRoute
-  AppDocumentsRoute: typeof AppDocumentsRoute
-  AppExpensesRoute: typeof AppExpensesRoute
-  AppFinanceRoute: typeof AppFinanceRoute
   AppForecastRoute: typeof AppForecastRoute
   AppGeoRoute: typeof AppGeoRoute
   AppGoalsRoute: typeof AppGoalsRoute
   AppIaComercialRoute: typeof AppIaComercialRoute
   AppInfluencersRoute: typeof AppInfluencersRoute
   AppIntegrationsRoute: typeof AppIntegrationsRoute
-  AppInvoicesRoute: typeof AppInvoicesRoute
   AppKbRoute: typeof AppKbRouteWithChildren
   AppLeadFormsRoute: typeof AppLeadFormsRoute
   AppLeadScoringRoute: typeof AppLeadScoringRoute
@@ -2032,9 +1834,7 @@ interface AppRouteChildren {
   AppSegmentsRoute: typeof AppSegmentsRoute
   AppSequencesRoute: typeof AppSequencesRouteWithChildren
   AppSignaturesRoute: typeof AppSignaturesRoute
-  AppStockRoute: typeof AppStockRoute
   AppSubscriptionsRoute: typeof AppSubscriptionsRoute
-  AppSuppliersRoute: typeof AppSuppliersRoute
   AppSurveysRoute: typeof AppSurveysRoute
   AppTagsRoute: typeof AppTagsRoute
   AppTemplatesRoute: typeof AppTemplatesRoute
@@ -2057,10 +1857,6 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppActivitiesRoute: AppActivitiesRoute,
   AppAlertsRoute: AppAlertsRoute,
-  AppApprovalsRoute: AppApprovalsRoute,
-  AppAssetsRoute: AppAssetsRoute,
-  AppAuditRoute: AppAuditRoute,
-  AppBankingRoute: AppBankingRoute,
   AppBenchmarkRoute: AppBenchmarkRoute,
   AppCalendarRoute: AppCalendarRoute,
   AppCampaignsRoute: AppCampaignsRoute,
@@ -2075,16 +1871,12 @@ const AppRouteChildren: AppRouteChildren = {
   AppContractsRoute: AppContractsRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppDataQualityRoute: AppDataQualityRoute,
-  AppDocumentsRoute: AppDocumentsRoute,
-  AppExpensesRoute: AppExpensesRoute,
-  AppFinanceRoute: AppFinanceRoute,
   AppForecastRoute: AppForecastRoute,
   AppGeoRoute: AppGeoRoute,
   AppGoalsRoute: AppGoalsRoute,
   AppIaComercialRoute: AppIaComercialRoute,
   AppInfluencersRoute: AppInfluencersRoute,
   AppIntegrationsRoute: AppIntegrationsRoute,
-  AppInvoicesRoute: AppInvoicesRoute,
   AppKbRoute: AppKbRouteWithChildren,
   AppLeadFormsRoute: AppLeadFormsRoute,
   AppLeadScoringRoute: AppLeadScoringRoute,
@@ -2113,9 +1905,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSegmentsRoute: AppSegmentsRoute,
   AppSequencesRoute: AppSequencesRouteWithChildren,
   AppSignaturesRoute: AppSignaturesRoute,
-  AppStockRoute: AppStockRoute,
   AppSubscriptionsRoute: AppSubscriptionsRoute,
-  AppSuppliersRoute: AppSuppliersRoute,
   AppSurveysRoute: AppSurveysRoute,
   AppTagsRoute: AppTagsRoute,
   AppTemplatesRoute: AppTemplatesRoute,
