@@ -35,6 +35,7 @@ function OportunidadesPage() {
   const { orgId } = useCurrentOrg();
   const run = useServerFn(getOpportunitiesCentral);
   const [filter, setFilter] = useState<OppType | "all">("all");
+  const [sort, setSort] = useState<"score" | "value">("score");
 
   const { data, isLoading } = useQuery({
     queryKey: ["opp-central", orgId],
@@ -45,10 +46,14 @@ function OportunidadesPage() {
 
   const filtered = useMemo(() => {
     if (!data) return [];
-    return filter === "all"
+    const base = filter === "all"
       ? data.opportunities
       : data.opportunities.filter((o) => o.type === filter);
-  }, [data, filter]);
+    const sorted = [...base].sort((a, b) =>
+      sort === "value" ? b.value - a.value : b.score - a.score,
+    );
+    return sorted;
+  }, [data, filter, sort]);
 
   return (
     <div className="space-y-6">
@@ -67,8 +72,8 @@ function OportunidadesPage() {
         <Kpi label="Leads quentes" value={data?.summary.by_type.hot_lead ?? 0} icon={Flame} tone="ok" loading={isLoading} />
       </div>
 
-      <Card className="p-3">
-        <Tabs value={filter} onValueChange={(v) => setFilter(v as OppType | "all")}>
+      <Card className="p-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <Tabs value={filter} onValueChange={(v) => setFilter(v as OppType | "all")} className="flex-1">
           <TabsList className="flex flex-wrap h-auto">
             <TabsTrigger value="all" className="gap-2">
               Todas <span className="text-[10px] text-muted-foreground">{data?.summary.total ?? 0}</span>
@@ -81,6 +86,25 @@ function OportunidadesPage() {
             ))}
           </TabsList>
         </Tabs>
+        <div className="flex items-center gap-1 text-xs text-muted-foreground shrink-0">
+          <span className="pr-1">Ordenar:</span>
+          <Button
+            size="sm"
+            variant={sort === "score" ? "secondary" : "ghost"}
+            className="h-7 px-2"
+            onClick={() => setSort("score")}
+          >
+            Prioridade IA
+          </Button>
+          <Button
+            size="sm"
+            variant={sort === "value" ? "secondary" : "ghost"}
+            className="h-7 px-2"
+            onClick={() => setSort("value")}
+          >
+            Valor
+          </Button>
+        </div>
       </Card>
 
       {isLoading ? (
