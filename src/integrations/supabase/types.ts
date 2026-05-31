@@ -211,6 +211,352 @@ export type Database = {
           },
         ]
       }
+      ai_copilot_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          model: string | null
+          organization_id: string
+          role: string
+          thread_id: string
+          tokens_in: number | null
+          tokens_out: number | null
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          model?: string | null
+          organization_id: string
+          role: string
+          thread_id: string
+          tokens_in?: number | null
+          tokens_out?: number | null
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          model?: string | null
+          organization_id?: string
+          role?: string
+          thread_id?: string
+          tokens_in?: number | null
+          tokens_out?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_copilot_messages_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["branch_org_id"]
+          },
+          {
+            foreignKeyName: "ai_copilot_messages_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "ai_copilot_messages_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "ai_copilot_messages_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "ai_copilot_messages_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "ai_copilot_messages_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_copilot_messages_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "ai_copilot_threads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_copilot_threads: {
+        Row: {
+          context_id: string | null
+          context_type: string | null
+          created_at: string
+          id: string
+          organization_id: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          context_id?: string | null
+          context_type?: string | null
+          created_at?: string
+          id?: string
+          organization_id: string
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          context_id?: string | null
+          context_type?: string | null
+          created_at?: string
+          id?: string
+          organization_id?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_copilot_threads_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["branch_org_id"]
+          },
+          {
+            foreignKeyName: "ai_copilot_threads_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "ai_copilot_threads_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "ai_copilot_threads_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "ai_copilot_threads_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "ai_copilot_threads_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_deal_insights: {
+        Row: {
+          deal_id: string
+          expires_at: string
+          generated_at: string
+          id: string
+          model: string | null
+          next_actions: Json
+          organization_id: string
+          risk_level: string | null
+          risk_reason: string | null
+          summary: string | null
+          win_probability: number | null
+        }
+        Insert: {
+          deal_id: string
+          expires_at?: string
+          generated_at?: string
+          id?: string
+          model?: string | null
+          next_actions?: Json
+          organization_id: string
+          risk_level?: string | null
+          risk_reason?: string | null
+          summary?: string | null
+          win_probability?: number | null
+        }
+        Update: {
+          deal_id?: string
+          expires_at?: string
+          generated_at?: string
+          id?: string
+          model?: string | null
+          next_actions?: Json
+          organization_id?: string
+          risk_level?: string | null
+          risk_reason?: string | null
+          summary?: string | null
+          win_probability?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_deal_insights_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: true
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_deal_insights_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["branch_org_id"]
+          },
+          {
+            foreignKeyName: "ai_deal_insights_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "ai_deal_insights_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "ai_deal_insights_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "ai_deal_insights_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "ai_deal_insights_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_email_drafts: {
+        Row: {
+          body: string
+          contact_id: string | null
+          created_at: string
+          deal_id: string | null
+          id: string
+          model: string | null
+          organization_id: string
+          purpose: string | null
+          subject: string | null
+          tone: string | null
+          user_id: string
+        }
+        Insert: {
+          body: string
+          contact_id?: string | null
+          created_at?: string
+          deal_id?: string | null
+          id?: string
+          model?: string | null
+          organization_id: string
+          purpose?: string | null
+          subject?: string | null
+          tone?: string | null
+          user_id: string
+        }
+        Update: {
+          body?: string
+          contact_id?: string | null
+          created_at?: string
+          deal_id?: string | null
+          id?: string
+          model?: string | null
+          organization_id?: string
+          purpose?: string | null
+          subject?: string | null
+          tone?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_email_drafts_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_email_drafts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["branch_org_id"]
+          },
+          {
+            foreignKeyName: "ai_email_drafts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "ai_email_drafts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "ai_email_drafts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "ai_email_drafts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "ai_email_drafts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ai_lead_scores: {
         Row: {
           computed_at: string
