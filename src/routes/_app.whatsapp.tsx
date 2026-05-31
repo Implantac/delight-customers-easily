@@ -487,9 +487,9 @@ function WhatsAppPage() {
                     </div>
                   </div>
                   <div className="grid grid-cols-3 gap-1.5">
-                    <Button asChild variant="outline" size="sm" className="h-8 px-0">
+                    <Button asChild variant="outline" size="sm" className="h-8 px-0" disabled={!selected.contact_phone}>
                       <a
-                        href={whatsappLink(selected.contact_phone)}
+                        href={selected.contact_phone ? whatsappLink(selected.contact_phone) : "#"}
                         target="_blank"
                         rel="noreferrer"
                         title="Abrir no WhatsApp"
@@ -497,8 +497,8 @@ function WhatsAppPage() {
                         <MessageCircle className="h-3.5 w-3.5" />
                       </a>
                     </Button>
-                    <Button asChild variant="outline" size="sm" className="h-8 px-0">
-                      <a href={`tel:${selected.contact_phone}`} title="Ligar">
+                    <Button asChild variant="outline" size="sm" className="h-8 px-0" disabled={!selected.contact_phone}>
+                      <a href={selected.contact_phone ? `tel:${selected.contact_phone}` : "#"} title="Ligar">
                         <Phone className="h-3.5 w-3.5" />
                       </a>
                     </Button>
@@ -541,13 +541,6 @@ function WhatsAppPage() {
                     <p className="text-xs text-muted-foreground px-2">
                       Sem contato vinculado.
                     </p>
-                  )}
-                  {selected.company_id && (
-                    <Button asChild variant="ghost" size="sm" className="w-full justify-start h-8">
-                      <Link to="/companies/$id" params={{ id: selected.company_id }}>
-                        <Building2 className="h-3.5 w-3.5 mr-2" /> Customer 360
-                      </Link>
-                    </Button>
                   )}
                 </div>
 
