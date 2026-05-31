@@ -91,6 +91,7 @@ import { Route as AppSettingsErpAgentRouteImport } from './routes/_app.settings.
 import { Route as AppSettingsAutomationsRouteImport } from './routes/_app.settings.automations'
 import { Route as AppSequencesIdRouteImport } from './routes/_app.sequences.$id'
 import { Route as AppReportsWeeklyRouteImport } from './routes/_app.reports.weekly'
+import { Route as AppReportsDashboardsRouteImport } from './routes/_app.reports.dashboards'
 import { Route as AppProposalsIdRouteImport } from './routes/_app.proposals.$id'
 import { Route as AppKbIdRouteImport } from './routes/_app.kb.$id'
 import { Route as AppInviteTokenRouteImport } from './routes/_app.invite.$token'
@@ -110,6 +111,7 @@ import { Route as ApiPublicHooksCustomer360RefreshRouteImport } from './routes/a
 import { Route as ApiPublicHooksAiPurgeExpiredRouteImport } from './routes/api/public/hooks/ai-purge-expired'
 import { Route as ApiPublicHooksActivityRemindersRouteImport } from './routes/api/public/hooks/activity-reminders'
 import { Route as AppSettingsAutomationsRunsRouteImport } from './routes/_app.settings.automations.runs'
+import { Route as AppReportsDashboardsIdRouteImport } from './routes/_app.reports.dashboards.$id'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -521,6 +523,11 @@ const AppReportsWeeklyRoute = AppReportsWeeklyRouteImport.update({
   path: '/weekly',
   getParentRoute: () => AppReportsRoute,
 } as any)
+const AppReportsDashboardsRoute = AppReportsDashboardsRouteImport.update({
+  id: '/dashboards',
+  path: '/dashboards',
+  getParentRoute: () => AppReportsRoute,
+} as any)
 const AppProposalsIdRoute = AppProposalsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -626,6 +633,11 @@ const AppSettingsAutomationsRunsRoute =
     path: '/runs',
     getParentRoute: () => AppSettingsAutomationsRoute,
   } as any)
+const AppReportsDashboardsIdRoute = AppReportsDashboardsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppReportsDashboardsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -704,6 +716,7 @@ export interface FileRoutesByFullPath {
   '/invite/$token': typeof AppInviteTokenRoute
   '/kb/$id': typeof AppKbIdRoute
   '/proposals/$id': typeof AppProposalsIdRoute
+  '/reports/dashboards': typeof AppReportsDashboardsRouteWithChildren
   '/reports/weekly': typeof AppReportsWeeklyRoute
   '/sequences/$id': typeof AppSequencesIdRoute
   '/settings/automations': typeof AppSettingsAutomationsRouteWithChildren
@@ -718,6 +731,7 @@ export interface FileRoutesByFullPath {
   '/api/public/influencer-visit': typeof ApiPublicInfluencerVisitRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/i/$org/$slug': typeof IOrgSlugRoute
+  '/reports/dashboards/$id': typeof AppReportsDashboardsIdRoute
   '/settings/automations/runs': typeof AppSettingsAutomationsRunsRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
   '/api/public/hooks/ai-purge-expired': typeof ApiPublicHooksAiPurgeExpiredRoute
@@ -806,6 +820,7 @@ export interface FileRoutesByTo {
   '/invite/$token': typeof AppInviteTokenRoute
   '/kb/$id': typeof AppKbIdRoute
   '/proposals/$id': typeof AppProposalsIdRoute
+  '/reports/dashboards': typeof AppReportsDashboardsRouteWithChildren
   '/reports/weekly': typeof AppReportsWeeklyRoute
   '/sequences/$id': typeof AppSequencesIdRoute
   '/settings/automations': typeof AppSettingsAutomationsRouteWithChildren
@@ -820,6 +835,7 @@ export interface FileRoutesByTo {
   '/api/public/influencer-visit': typeof ApiPublicInfluencerVisitRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/i/$org/$slug': typeof IOrgSlugRoute
+  '/reports/dashboards/$id': typeof AppReportsDashboardsIdRoute
   '/settings/automations/runs': typeof AppSettingsAutomationsRunsRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
   '/api/public/hooks/ai-purge-expired': typeof ApiPublicHooksAiPurgeExpiredRoute
@@ -910,6 +926,7 @@ export interface FileRoutesById {
   '/_app/invite/$token': typeof AppInviteTokenRoute
   '/_app/kb/$id': typeof AppKbIdRoute
   '/_app/proposals/$id': typeof AppProposalsIdRoute
+  '/_app/reports/dashboards': typeof AppReportsDashboardsRouteWithChildren
   '/_app/reports/weekly': typeof AppReportsWeeklyRoute
   '/_app/sequences/$id': typeof AppSequencesIdRoute
   '/_app/settings/automations': typeof AppSettingsAutomationsRouteWithChildren
@@ -924,6 +941,7 @@ export interface FileRoutesById {
   '/api/public/influencer-visit': typeof ApiPublicInfluencerVisitRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/i/$org/$slug': typeof IOrgSlugRoute
+  '/_app/reports/dashboards/$id': typeof AppReportsDashboardsIdRoute
   '/_app/settings/automations/runs': typeof AppSettingsAutomationsRunsRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
   '/api/public/hooks/ai-purge-expired': typeof ApiPublicHooksAiPurgeExpiredRoute
@@ -1014,6 +1032,7 @@ export interface FileRouteTypes {
     | '/invite/$token'
     | '/kb/$id'
     | '/proposals/$id'
+    | '/reports/dashboards'
     | '/reports/weekly'
     | '/sequences/$id'
     | '/settings/automations'
@@ -1028,6 +1047,7 @@ export interface FileRouteTypes {
     | '/api/public/influencer-visit'
     | '/api/public/lead-form'
     | '/i/$org/$slug'
+    | '/reports/dashboards/$id'
     | '/settings/automations/runs'
     | '/api/public/hooks/activity-reminders'
     | '/api/public/hooks/ai-purge-expired'
@@ -1116,6 +1136,7 @@ export interface FileRouteTypes {
     | '/invite/$token'
     | '/kb/$id'
     | '/proposals/$id'
+    | '/reports/dashboards'
     | '/reports/weekly'
     | '/sequences/$id'
     | '/settings/automations'
@@ -1130,6 +1151,7 @@ export interface FileRouteTypes {
     | '/api/public/influencer-visit'
     | '/api/public/lead-form'
     | '/i/$org/$slug'
+    | '/reports/dashboards/$id'
     | '/settings/automations/runs'
     | '/api/public/hooks/activity-reminders'
     | '/api/public/hooks/ai-purge-expired'
@@ -1219,6 +1241,7 @@ export interface FileRouteTypes {
     | '/_app/invite/$token'
     | '/_app/kb/$id'
     | '/_app/proposals/$id'
+    | '/_app/reports/dashboards'
     | '/_app/reports/weekly'
     | '/_app/sequences/$id'
     | '/_app/settings/automations'
@@ -1233,6 +1256,7 @@ export interface FileRouteTypes {
     | '/api/public/influencer-visit'
     | '/api/public/lead-form'
     | '/i/$org/$slug'
+    | '/_app/reports/dashboards/$id'
     | '/_app/settings/automations/runs'
     | '/api/public/hooks/activity-reminders'
     | '/api/public/hooks/ai-purge-expired'
@@ -1841,6 +1865,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppReportsWeeklyRouteImport
       parentRoute: typeof AppReportsRoute
     }
+    '/_app/reports/dashboards': {
+      id: '/_app/reports/dashboards'
+      path: '/dashboards'
+      fullPath: '/reports/dashboards'
+      preLoaderRoute: typeof AppReportsDashboardsRouteImport
+      parentRoute: typeof AppReportsRoute
+    }
     '/_app/proposals/$id': {
       id: '/_app/proposals/$id'
       path: '/$id'
@@ -1974,6 +2005,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsAutomationsRunsRouteImport
       parentRoute: typeof AppSettingsAutomationsRoute
     }
+    '/_app/reports/dashboards/$id': {
+      id: '/_app/reports/dashboards/$id'
+      path: '/$id'
+      fullPath: '/reports/dashboards/$id'
+      preLoaderRoute: typeof AppReportsDashboardsIdRouteImport
+      parentRoute: typeof AppReportsDashboardsRoute
+    }
   }
 }
 
@@ -2041,11 +2079,24 @@ const AppProposalsRouteWithChildren = AppProposalsRoute._addFileChildren(
   AppProposalsRouteChildren,
 )
 
+interface AppReportsDashboardsRouteChildren {
+  AppReportsDashboardsIdRoute: typeof AppReportsDashboardsIdRoute
+}
+
+const AppReportsDashboardsRouteChildren: AppReportsDashboardsRouteChildren = {
+  AppReportsDashboardsIdRoute: AppReportsDashboardsIdRoute,
+}
+
+const AppReportsDashboardsRouteWithChildren =
+  AppReportsDashboardsRoute._addFileChildren(AppReportsDashboardsRouteChildren)
+
 interface AppReportsRouteChildren {
+  AppReportsDashboardsRoute: typeof AppReportsDashboardsRouteWithChildren
   AppReportsWeeklyRoute: typeof AppReportsWeeklyRoute
 }
 
 const AppReportsRouteChildren: AppReportsRouteChildren = {
+  AppReportsDashboardsRoute: AppReportsDashboardsRouteWithChildren,
   AppReportsWeeklyRoute: AppReportsWeeklyRoute,
 }
 
