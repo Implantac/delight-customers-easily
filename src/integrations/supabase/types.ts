@@ -2274,6 +2274,92 @@ export type Database = {
           },
         ]
       }
+      customer_embeddings: {
+        Row: {
+          computed_at: string
+          created_at: string
+          embedding: string
+          erp_customer_id: string
+          id: string
+          model: string
+          organization_id: string
+          source_text: string
+          updated_at: string
+        }
+        Insert: {
+          computed_at?: string
+          created_at?: string
+          embedding: string
+          erp_customer_id: string
+          id?: string
+          model?: string
+          organization_id: string
+          source_text: string
+          updated_at?: string
+        }
+        Update: {
+          computed_at?: string
+          created_at?: string
+          embedding?: string
+          erp_customer_id?: string
+          id?: string
+          model?: string
+          organization_id?: string
+          source_text?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_embeddings_erp_customer_id_fkey"
+            columns: ["erp_customer_id"]
+            isOneToOne: false
+            referencedRelation: "erp_customers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "customer_embeddings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["branch_org_id"]
+          },
+          {
+            foreignKeyName: "customer_embeddings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "customer_embeddings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "customer_embeddings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "customer_embeddings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "customer_embeddings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       dashboard_widgets: {
         Row: {
           config: Json
@@ -8634,6 +8720,13 @@ export type Database = {
       is_org_or_descendant_member: {
         Args: { _root: string; _user: string }
         Returns: boolean
+      }
+      match_similar_customers: {
+        Args: { _limit?: number; _org: string; _query_embedding: string }
+        Returns: {
+          erp_customer_id: string
+          similarity: number
+        }[]
       }
       org_ancestors: {
         Args: { _org: string }
