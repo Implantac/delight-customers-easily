@@ -11,6 +11,8 @@ import type { ErpDriver } from "./types";
 import { blingDriver } from "./bling-driver";
 import { omieDriver } from "./omie-driver";
 import { tinyDriver } from "./tiny-driver";
+import { sankhyaDriver } from "./sankhya-driver";
+import { contaAzulDriver } from "./contaazul-driver";
 import { postgresDirectDriver } from "./postgres-direct";
 import {
   mysqlAgentDriver,
@@ -26,14 +28,17 @@ export type DriverKey =
   | "sqlserver-agent"
   | "firebird-agent"
   | "oracle-agent"
-  // placeholders REST a implementar
   | "omie"
-  | "tiny";
+  | "tiny"
+  | "sankhya"
+  | "contaazul";
 
 const REGISTRY: Partial<Record<DriverKey, ErpDriver>> = {
   bling: blingDriver,
   omie: omieDriver,
   tiny: tinyDriver,
+  sankhya: sankhyaDriver,
+  contaazul: contaAzulDriver,
   "postgres-direct": postgresDirectDriver,
   "mysql-agent": mysqlAgentDriver,
   "sqlserver-agent": sqlserverAgentDriver,
@@ -45,7 +50,8 @@ export function resolveDriverKey(provider: string, connectorType: string | null)
   if (provider === "bling") return "bling";
   if (provider === "omie") return "omie";
   if (provider === "tiny") return "tiny";
-  // provider="custom" + connector_type → seleciona o adapter certo
+  if (provider === "sankhya") return "sankhya";
+  if (provider === "contaazul") return "contaazul";
   if (connectorType === "postgres") return "postgres-direct";
   if (connectorType === "mysql") return "mysql-agent";
   if (connectorType === "sqlserver") return "sqlserver-agent";
@@ -66,7 +72,6 @@ export function listImplementedDrivers(): DriverKey[] {
   return Object.keys(REGISTRY) as DriverKey[];
 }
 
-/** Metadados para UI: como cada driver opera. */
 export const DRIVER_CAPABILITIES: Record<DriverKey, { mode: "cloud" | "agent" | "todo"; label: string; note: string }> = {
   "bling":            { mode: "cloud", label: "Bling (REST)",           note: "Pull direto do cloud via API REST." },
   "postgres-direct":  { mode: "cloud", label: "Postgres direto",        note: "Conexão TCP direta. Apenas leitura." },
@@ -76,6 +81,8 @@ export const DRIVER_CAPABILITIES: Record<DriverKey, { mode: "cloud" | "agent" | 
   "oracle-agent":     { mode: "agent", label: "Oracle (via Agent)",     note: "Requer ERP Connect Agent instalado on-premise." },
   "omie":             { mode: "cloud", label: "Omie (REST)",            note: "Pull direto via API REST (app_key + app_secret)." },
   "tiny":             { mode: "cloud", label: "Tiny (REST v3)",         note: "Pull direto via API REST OAuth2 (access_token)." },
+  "sankhya":          { mode: "cloud", label: "Sankhya (Gateway)",      note: "REST via gateway /service.sbr (Bearer token)." },
+  "contaazul":        { mode: "cloud", label: "Conta Azul (REST v1)",   note: "Pull via OAuth2 access_token." },
 };
 
 export type { ErpDriver } from "./types";
