@@ -17,7 +17,7 @@ export function OnboardingChecklist() {
         supabase.from("deals").select("id", { count: "exact", head: true }),
         supabase.from("activities").select("id", { count: "exact", head: true }),
         supabase.from("whatsapp_conversations").select("id", { count: "exact", head: true }),
-        supabase.from("integrations").select("id", { count: "exact", head: true }),
+        supabase.from("erp_integrations").select("id", { count: "exact", head: true }),
       ]);
       return {
         contacts: c.count ?? 0,
