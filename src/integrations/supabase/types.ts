@@ -4711,6 +4711,7 @@ export type Database = {
       }
       integration_connections: {
         Row: {
+          access_token: string | null
           account_label: string | null
           config: Json
           created_at: string
@@ -4720,10 +4721,14 @@ export type Database = {
           last_error: string | null
           last_sync_at: string | null
           organization_id: string
+          refresh_token: string | null
+          scopes: string[] | null
           status: string
+          token_expires_at: string | null
           updated_at: string
         }
         Insert: {
+          access_token?: string | null
           account_label?: string | null
           config?: Json
           created_at?: string
@@ -4733,10 +4738,14 @@ export type Database = {
           last_error?: string | null
           last_sync_at?: string | null
           organization_id: string
+          refresh_token?: string | null
+          scopes?: string[] | null
           status?: string
+          token_expires_at?: string | null
           updated_at?: string
         }
         Update: {
+          access_token?: string | null
           account_label?: string | null
           config?: Json
           created_at?: string
@@ -4746,7 +4755,10 @@ export type Database = {
           last_error?: string | null
           last_sync_at?: string | null
           organization_id?: string
+          refresh_token?: string | null
+          scopes?: string[] | null
           status?: string
+          token_expires_at?: string | null
           updated_at?: string
         }
         Relationships: [
@@ -5703,6 +5715,79 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      oauth_states: {
+        Row: {
+          created_at: string
+          expires_at: string
+          kind: string
+          organization_id: string
+          redirect_uri: string
+          state: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string
+          kind: string
+          organization_id: string
+          redirect_uri: string
+          state: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          kind?: string
+          organization_id?: string
+          redirect_uri?: string
+          state?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "oauth_states_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["branch_org_id"]
+          },
+          {
+            foreignKeyName: "oauth_states_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "oauth_states_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "oauth_states_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "oauth_states_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "oauth_states_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       onboarding_projects: {
         Row: {
