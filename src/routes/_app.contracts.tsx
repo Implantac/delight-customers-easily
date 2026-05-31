@@ -96,7 +96,7 @@ function ContractsPage() {
   const { data: detail } = useQuery({
     queryKey: ["contract", detailId],
     enabled: !!detailId,
-    queryFn: () => detailFn({ data: { id: detailId! } }),
+    queryFn: () => detailFn({ data: { id: detailId!, organization_id: orgId! } }),
   });
 
   const { data: companies } = useQuery({
