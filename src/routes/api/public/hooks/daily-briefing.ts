@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { requireCronApiKey } from "@/lib/cron-auth.server";
 
 // Daily briefing — uma notificação por usuário às 07:30 BRT:
 // Pipeline, tarefas hoje, atrasadas, top oportunidade, top 3 riscos,
