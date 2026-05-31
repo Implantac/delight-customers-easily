@@ -80,12 +80,14 @@ function MyTasksPage() {
   });
 
   const toggle = useMutation({
-    mutationFn: (vars: { id: string; completed: boolean }) => toggleFn({ data: vars }),
+    mutationFn: (vars: { id: string; completed: boolean }) =>
+      toggleFn({ data: { ...vars, organization_id: orgId! } }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["mytasks"] }),
   });
 
   const snooze = useMutation({
-    mutationFn: (vars: { id: string; due_date: string }) => snoozeFn({ data: vars }),
+    mutationFn: (vars: { id: string; due_date: string }) =>
+      snoozeFn({ data: { ...vars, organization_id: orgId! } }),
     onSuccess: () => {
       toast.success("Tarefa adiada");
       qc.invalidateQueries({ queryKey: ["mytasks"] });
