@@ -2,12 +2,16 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { ChevronLeft, ChevronRight, Calendar as CalIcon, Phone, Mail, CheckSquare, Users as UsersIcon, FileText } from "lucide-react";
+import {
+  ChevronLeft, ChevronRight, Calendar as CalIcon, Phone, Mail,
+  CheckSquare, Users as UsersIcon, FileText, Clock, AlertCircle, CheckCircle2,
+} from "lucide-react";
 import { useCurrentOrg } from "@/lib/org";
 import {
   getCalendarActivities,
   toggleActivityComplete,
 } from "@/lib/calendar.functions";
+import { PageHeader } from "@/components/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -29,12 +33,13 @@ const TYPE_ICONS: Record<string, any> = {
   note: FileText,
 };
 
+// Semantic tokens via opacity — adaptam-se automaticamente ao tema claro/escuro
 const TYPE_COLORS: Record<string, string> = {
-  call: "bg-blue-100 text-blue-800 border-blue-200",
-  email: "bg-purple-100 text-purple-800 border-purple-200",
-  task: "bg-amber-100 text-amber-800 border-amber-200",
-  meeting: "bg-green-100 text-green-800 border-green-200",
-  note: "bg-slate-100 text-slate-800 border-slate-200",
+  call: "bg-primary/10 text-primary border-primary/20",
+  email: "bg-violet-500/10 text-violet-600 dark:text-violet-400 border-violet-500/20",
+  task: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
+  meeting: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+  note: "bg-muted text-muted-foreground border-border",
 };
 
 const WEEK_DAYS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
