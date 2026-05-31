@@ -74,11 +74,20 @@ function CompaniesPage() {
     onError: (e: any) => toast.error(e.message),
   });
 
+  const list = companies ?? [];
+  const kpi = {
+    total: list.length,
+    industries: new Set(list.map((c) => (c.industry ?? "").trim()).filter(Boolean)).size,
+    withSite: list.filter((c) => !!c.website).length,
+    withNotes: list.filter((c) => !!c.notes).length,
+  };
+
   return (
-    <div className="p-4 md:p-8">
+    <div className="space-y-6 p-4 md:p-8">
       <PageHeader
         title="Empresas"
-        subtitle={`${companies?.length ?? 0} empresas cadastradas`}
+        subtitle="Sua carteira B2B — quem você atende, em que setor e onde mora o contexto comercial."
+        icon={Building2}
         action={
           <div className="flex gap-2">
             <Button variant="outline" size="sm" disabled={!companies?.length} onClick={() => {
