@@ -128,7 +128,7 @@ export const resolveErpConflict = createServerFn({ method: "POST" })
       const crmVal = (conflict.crm_value as Record<string, unknown> | null)?.[conflict.field];
       if (crmVal !== undefined) patch[conflict.field] = crmVal;
       if (Object.keys(patch).length > 0) {
-        await supabase.from("erp_customers").update(patch)
+        await supabase.from("erp_customers").update(patch as never)
           .eq("organization_id", data.organization_id)
           .eq("integration_id", conflict.integration_id)
           .eq("external_id", conflict.external_id);
