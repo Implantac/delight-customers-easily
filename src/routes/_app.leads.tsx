@@ -76,10 +76,10 @@ function LeadsInboxPage() {
         <div className="grid gap-3 md:grid-cols-4">{[0,1,2,3].map((i) => <Skeleton key={i} className="h-24" />)}</div>
       ) : (
         <div className="grid gap-3 md:grid-cols-4">
-          <SummaryCard label="Novos" value={summary.new} hot />
-          <SummaryCard label="Contatados" value={summary.contacted} />
-          <SummaryCard label="Convertidos" value={summary.converted} />
-          <SummaryCard label="Total no inbox" value={summary.total} />
+          <SummaryCard label="Novos" value={summary.new} hot icon={Flame} />
+          <SummaryCard label="Contatados" value={summary.contacted} icon={Mail} />
+          <SummaryCard label="Convertidos" value={summary.converted} icon={Sparkles} />
+          <SummaryCard label="Total no inbox" value={summary.total} icon={Inbox} />
         </div>
       )}
 
