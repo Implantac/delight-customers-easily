@@ -17,8 +17,11 @@ import { Badge } from "@/components/ui/badge";
 import {
   ArrowLeft, ArrowRight, CheckCircle2, AlertCircle, Loader2, Plug,
   Cloud, Database, Shield, FileSpreadsheet, Sparkles, PartyPopper,
+  HelpCircle, Lock, MessageCircle, ChevronDown,
 } from "lucide-react";
 import { toast } from "sonner";
+
+const STEP_LABELS = ["Seu ERP", "Como conectar", "Acesso", "Teste", "Dados", "Pronto"];
 
 export const Route = createFileRoute("/_app/integrations/connect")({ component: ConnectWizard });
 
