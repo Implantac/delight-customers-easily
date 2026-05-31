@@ -166,7 +166,8 @@ function TagsPage() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
-      </div>
+        }
+      />
 
       <Input
         placeholder="Buscar tag..."
