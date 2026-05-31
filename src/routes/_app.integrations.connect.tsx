@@ -259,44 +259,66 @@ function ConnectWizard() {
         <Card>
           <CardHeader>
             <CardTitle>Dados de acesso do {erp.name}</CardTitle>
-            <CardDescription>Preencha os campos abaixo. Tudo fica guardado com segurança.</CardDescription>
+            <CardDescription>Preencha os campos abaixo. Nada disso é compartilhado.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
+            {/* Reforço de segurança */}
+            <div className="flex items-center gap-2 rounded-md border border-green-500/30 bg-green-500/5 px-3 py-2 text-xs text-green-700 dark:text-green-400">
+              <Lock className="h-4 w-4" />
+              Suas credenciais são criptografadas e ficam guardadas apenas na sua conta.
+            </div>
+
             <div className="space-y-2">
               <Label>Nome desta conexão</Label>
               <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder={`Meu ${erp.name}`} />
+              <p className="text-xs text-muted-foreground">Um apelido para você identificar depois. Ex: "Matriz" ou "Filial SP".</p>
             </div>
+
             {provider === "bling" ? (
               <div className="space-y-2">
-                <Label>Access Token</Label>
+                <Label>Access Token <span className="text-xs text-muted-foreground font-normal">(token de acesso)</span></Label>
                 <Input
                   type="password"
                   value={form.app_key}
                   onChange={(e) => setForm({ ...form, app_key: e.target.value })}
                   placeholder="Cole aqui o token do Bling"
                 />
-                <p className="text-xs text-muted-foreground">
-                  Encontre em: Preferências → Sistema → Integrações → API no painel do Bling.
-                </p>
+                <WhereToFind
+                  title="Onde encontro o Access Token do Bling?"
+                  steps={[
+                    "Acesse seu Bling em bling.com.br e faça login",
+                    'Clique no menu "Preferências" (canto superior direito)',
+                    'Vá em "Sistema" → "Integrações" → "API"',
+                    'Clique em "Gerar novo token" e copie o código',
+                    "Cole o código no campo acima",
+                  ]}
+                />
               </div>
             ) : (
               <>
                 <div className="space-y-2">
-                  <Label>App Key</Label>
+                  <Label>App Key <span className="text-xs text-muted-foreground font-normal">(chave do aplicativo)</span></Label>
                   <Input value={form.app_key} onChange={(e) => setForm({ ...form, app_key: e.target.value })} placeholder="Sua chave do Omie" />
                 </div>
                 <div className="space-y-2">
-                  <Label>App Secret</Label>
+                  <Label>App Secret <span className="text-xs text-muted-foreground font-normal">(segredo do aplicativo)</span></Label>
                   <Input
                     type="password"
                     value={form.app_secret}
                     onChange={(e) => setForm({ ...form, app_secret: e.target.value })}
-                    placeholder="Sua senha do Omie"
+                    placeholder="Senha do aplicativo Omie"
                   />
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Encontre em: Aplicativos → Meus Aplicativos no painel do Omie.
-                </p>
+                <WhereToFind
+                  title="Onde encontro App Key e App Secret do Omie?"
+                  steps={[
+                    "Acesse seu Omie em app.omie.com.br e faça login",
+                    'No menu, vá em "Aplicativos" → "Meus Aplicativos"',
+                    'Crie um novo app (ou abra um existente) com a permissão "Clientes"',
+                    'Copie o "App Key" e o "App Secret" mostrados na tela',
+                    "Cole os dois nos campos acima",
+                  ]}
+                />
               </>
             )}
 
