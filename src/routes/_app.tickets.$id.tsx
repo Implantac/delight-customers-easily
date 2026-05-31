@@ -49,14 +49,15 @@ function TicketDetail() {
   const [isInternal, setIsInternal] = useState(false);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["ticket", id],
-    queryFn: () => fetchOne({ data: { id } }),
+    queryKey: ["ticket", id, orgId],
+    enabled: !!orgId,
+    queryFn: () => fetchOne({ data: { id, organization_id: orgId! } }),
   });
 
   const invalidate = () => qc.invalidateQueries({ queryKey: ["ticket", id] });
 
   const updateMut = useMutation({
-    mutationFn: (p: any) => update({ data: { id, ...p } }),
+    mutationFn: (p: any) => update({ data: { id, organization_id: orgId!, ...p } }),
     onSuccess: invalidate,
     onError: (e: any) => toast.error(e?.message ?? "Erro"),
   });

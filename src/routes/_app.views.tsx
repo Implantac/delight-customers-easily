@@ -44,7 +44,7 @@ function ViewsPage() {
   const invalidate = () => qc.invalidateQueries({ queryKey: ["saved-views", orgId] });
 
   const delMut = useMutation({
-    mutationFn: (id: string) => del({ data: { id } }),
+    mutationFn: (id: string) => del({ data: { id, organization_id: orgId! } }),
     onSuccess: () => {
       toast.success("Visualização removida");
       invalidate();
@@ -54,7 +54,7 @@ function ViewsPage() {
 
   const toggleShareMut = useMutation({
     mutationFn: (p: { id: string; is_shared: boolean }) =>
-      update({ data: { id: p.id, is_shared: p.is_shared } }),
+      update({ data: { id: p.id, organization_id: orgId!, is_shared: p.is_shared } }),
     onSuccess: () => invalidate(),
     onError: (e: any) => toast.error(e?.message ?? "Erro"),
   });

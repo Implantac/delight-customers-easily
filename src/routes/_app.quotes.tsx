@@ -61,12 +61,13 @@ function QuotesPage() {
   const invalidate = () => qc.invalidateQueries({ queryKey: ["quotes", orgId] });
 
   const statusMut = useMutation({
-    mutationFn: (vars: { id: string; status: Quote["status"] }) => setStatus({ data: vars }),
+    mutationFn: (vars: { id: string; status: Quote["status"] }) =>
+      setStatus({ data: { ...vars, organization_id: orgId! } }),
     onSuccess: () => { invalidate(); toast.success("Status atualizado"); },
     onError: (e: any) => toast.error(e.message),
   });
   const delMut = useMutation({
-    mutationFn: (id: string) => del({ data: { id } }),
+    mutationFn: (id: string) => del({ data: { id, organization_id: orgId! } }),
     onSuccess: () => { invalidate(); toast.success("Orçamento excluído"); },
     onError: (e: any) => toast.error(e.message),
   });
@@ -234,8 +235,8 @@ function QuoteDialog({
   const [loading, setLoading] = useState(false);
 
   const { data: existing } = useQuery({
-    queryKey: ["quote", editingId],
-    queryFn: () => getOne({ data: { id: editingId! } }),
+    queryKey: ["quote", editingId, orgId],
+    queryFn: () => getOne({ data: { id: editingId!, organization_id: orgId } }),
     enabled: !!editingId,
   });
 

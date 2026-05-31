@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Eye, Calendar as CalIcon } from "lucide-react";
 import { getArticle } from "@/lib/kb.functions";
+import { useCurrentOrg } from "@/lib/org";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -16,10 +17,12 @@ export const Route = createFileRoute("/_app/kb/$id")({
 
 function ArticlePage() {
   const { id } = Route.useParams();
+  const { orgId } = useCurrentOrg();
   const fetchOne = useServerFn(getArticle);
   const { data, isLoading } = useQuery({
-    queryKey: ["kb-article", id],
-    queryFn: () => fetchOne({ data: { id } }),
+    queryKey: ["kb-article", id, orgId],
+    enabled: !!orgId,
+    queryFn: () => fetchOne({ data: { id, organization_id: orgId! } }),
   });
 
   const a = data?.article;

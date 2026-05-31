@@ -75,7 +75,7 @@ function TagsPage() {
   });
 
   const updateMut = useMutation({
-    mutationFn: () => update({ data: { id: editId!, name: editName, color: editColor as any } }),
+    mutationFn: () => update({ data: { id: editId!, organization_id: orgId!, name: editName, color: editColor as any } }),
     onSuccess: () => {
       toast.success("Tag atualizada");
       setEditId(null);
@@ -85,7 +85,7 @@ function TagsPage() {
   });
 
   const deleteMut = useMutation({
-    mutationFn: (id: string) => del({ data: { id } }),
+    mutationFn: (id: string) => del({ data: { id, organization_id: orgId! } }),
     onSuccess: () => {
       toast.success("Tag removida");
       invalidate();
