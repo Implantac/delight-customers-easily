@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useCurrentOrg } from "@/lib/org";
@@ -117,8 +117,12 @@ function MultiEmpresaPage() {
                 </TableHeader>
                 <TableBody>
                   {q.data.leaderboard.map((r) => (
-                    <TableRow key={r.org_id}>
-                      <TableCell className="font-medium">{r.org_name}</TableCell>
+                    <TableRow key={r.org_id} className="cursor-pointer hover:bg-muted/40">
+                      <TableCell className="font-medium">
+                        <Link to="/multi-empresa/$orgId" params={{ orgId: r.org_id }} className="hover:underline">
+                          {r.org_name}
+                        </Link>
+                      </TableCell>
                       <TableCell><Badge variant="outline">{r.org_type}</Badge></TableCell>
                       <TableCell className="text-right">{fmt(r.revenue)}</TableCell>
                       <TableCell className="text-right">{r.orders}</TableCell>

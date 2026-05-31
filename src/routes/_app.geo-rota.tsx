@@ -7,6 +7,7 @@ import { suggestRoute } from "@/lib/geo-routes.functions";
 import { getRepsOverview } from "@/lib/reps.functions";
 import { addProspectAsLead } from "@/lib/geo-prospect.functions";
 import { optimizeRouteWithAI } from "@/lib/geo-ai.functions";
+import { autoSolveFromRadius } from "@/lib/vrp.functions";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -76,6 +77,30 @@ function RotaPage() {
     onError: (e: any) => toast.error(e?.message ?? "Falha ao otimizar"),
   });
 
+  const vrpFn = useServerFn(autoSolveFromRadius);
+  const [depotLat, setDepotLat] = useState("");
+  const [depotLng, setDepotLng] = useState("");
+  const vrpM = useMutation({
+    mutationFn: async () => {
+      const lat = Number(depotLat);
+      const lng = Number(depotLng);
+      if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
+        throw new Error("Informe lat/lng do depot para o solver VRP.");
+      }
+      return vrpFn({
+        data: {
+          organization_id: orgId!,
+          depot_lat: lat,
+          depot_lng: lng,
+          radius_km: 25,
+          max_stops: 12,
+          avg_speed_kmh: 40,
+        },
+      });
+    },
+    onError: (e: any) => toast.error(e?.message ?? "VRP falhou"),
+  });
+
   const addM = useMutation({
     mutationFn: (company_id: string) =>
       addLead({ data: { organization_id: orgId!, company_id } }),
@@ -129,14 +154,47 @@ function RotaPage() {
             <Label className="text-xs">UF</Label>
             <Input maxLength={2} placeholder="PR" value={state} onChange={(e) => setState(e.target.value.toUpperCase())} />
           </div>
+          <div className="space-y-1">
+            <Label className="text-xs">Depot lat (VRP)</Label>
+            <Input placeholder="-23.5505" value={depotLat} onChange={(e) => setDepotLat(e.target.value)} />
+          </div>
+          <div className="space-y-1">
+            <Label className="text-xs">Depot lng (VRP)</Label>
+            <Input placeholder="-46.6333" value={depotLng} onChange={(e) => setDepotLng(e.target.value)} />
+          </div>
           <div className="md:col-span-4 flex justify-end gap-2">
             <Button variant="outline" onClick={() => suggestQ.refetch()}>Atualizar</Button>
+            <Button variant="outline" onClick={() => vrpM.mutate()} disabled={vrpM.isPending} className="gap-2">
+              <RouteIcon className="h-4 w-4" /> {vrpM.isPending ? "Resolvendo..." : "Solver VRP (geo)"}
+            </Button>
             <Button onClick={() => aiM.mutate()} disabled={aiM.isPending || !suggestQ.data?.route?.length} className="gap-2">
               <Sparkles className="h-4 w-4" /> {aiM.isPending ? "Otimizando..." : "Otimizar com IA"}
             </Button>
           </div>
         </CardContent>
       </Card>
+
+      {vrpM.data && (
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base">Rota VRP geográfica</CardTitle>
+            <CardDescription>
+              {vrpM.data.ordered.length} paradas · {vrpM.data.total_km.toFixed(2)} km ·
+              {" "}{vrpM.data.est_duration_min} min · 2-opt em {vrpM.data.iterations} iter
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ol className="space-y-1 text-sm">
+              {vrpM.data.ordered.map((s, i) => (
+                <li key={s.id} className="flex justify-between border-b pb-1">
+                  <span><Badge variant="outline" className="mr-2">{i + 1}</Badge>{s.label ?? s.id.slice(0, 8)}</span>
+                  <span className="text-xs text-muted-foreground">{s.lat.toFixed(3)}, {s.lng.toFixed(3)}</span>
+                </li>
+              ))}
+            </ol>
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader className="pb-2">

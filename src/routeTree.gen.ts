@@ -96,6 +96,7 @@ import { Route as AppSequencesIdRouteImport } from './routes/_app.sequences.$id'
 import { Route as AppReportsWeeklyRouteImport } from './routes/_app.reports.weekly'
 import { Route as AppReportsDashboardsRouteImport } from './routes/_app.reports.dashboards'
 import { Route as AppProposalsIdRouteImport } from './routes/_app.proposals.$id'
+import { Route as AppMultiEmpresaOrgIdRouteImport } from './routes/_app.multi-empresa.$orgId'
 import { Route as AppKbIdRouteImport } from './routes/_app.kb.$id'
 import { Route as AppInviteTokenRouteImport } from './routes/_app.invite.$token'
 import { Route as AppIntegrationsTemplatesRouteImport } from './routes/_app.integrations.templates'
@@ -108,6 +109,7 @@ import { Route as AppIntegrationsAdvancedRouteImport } from './routes/_app.integ
 import { Route as AppContactsIdRouteImport } from './routes/_app.contacts.$id'
 import { Route as AppCompaniesIdRouteImport } from './routes/_app.companies.$id'
 import { Route as ApiPublicHooksRefreshRecommendationsRouteImport } from './routes/api/public/hooks/refresh-recommendations'
+import { Route as ApiPublicHooksPropensityBatchTickRouteImport } from './routes/api/public/hooks/propensity-batch-tick'
 import { Route as ApiPublicHooksGenerateAlertsRouteImport } from './routes/api/public/hooks/generate-alerts'
 import { Route as ApiPublicHooksErpSyncTickRouteImport } from './routes/api/public/hooks/erp-sync-tick'
 import { Route as ApiPublicHooksErpInboundRouteImport } from './routes/api/public/hooks/erp-inbound'
@@ -556,6 +558,11 @@ const AppProposalsIdRoute = AppProposalsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AppProposalsRoute,
 } as any)
+const AppMultiEmpresaOrgIdRoute = AppMultiEmpresaOrgIdRouteImport.update({
+  id: '/$orgId',
+  path: '/$orgId',
+  getParentRoute: () => AppMultiEmpresaRoute,
+} as any)
 const AppKbIdRoute = AppKbIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -616,6 +623,12 @@ const ApiPublicHooksRefreshRecommendationsRoute =
   ApiPublicHooksRefreshRecommendationsRouteImport.update({
     id: '/api/public/hooks/refresh-recommendations',
     path: '/api/public/hooks/refresh-recommendations',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicHooksPropensityBatchTickRoute =
+  ApiPublicHooksPropensityBatchTickRouteImport.update({
+    id: '/api/public/hooks/propensity-batch-tick',
+    path: '/api/public/hooks/propensity-batch-tick',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ApiPublicHooksGenerateAlertsRoute =
@@ -724,7 +737,7 @@ export interface FileRoutesByFullPath {
   '/marketing': typeof AppMarketingRoute
   '/marketing-intel': typeof AppMarketingIntelRoute
   '/meu-dia': typeof AppMeuDiaRoute
-  '/multi-empresa': typeof AppMultiEmpresaRoute
+  '/multi-empresa': typeof AppMultiEmpresaRouteWithChildren
   '/mytasks': typeof AppMytasksRoute
   '/notifications': typeof AppNotificationsRoute
   '/onboarding': typeof AppOnboardingRoute
@@ -770,6 +783,7 @@ export interface FileRoutesByFullPath {
   '/integrations/templates': typeof AppIntegrationsTemplatesRoute
   '/invite/$token': typeof AppInviteTokenRoute
   '/kb/$id': typeof AppKbIdRoute
+  '/multi-empresa/$orgId': typeof AppMultiEmpresaOrgIdRoute
   '/proposals/$id': typeof AppProposalsIdRoute
   '/reports/dashboards': typeof AppReportsDashboardsRouteWithChildren
   '/reports/weekly': typeof AppReportsWeeklyRoute
@@ -798,6 +812,7 @@ export interface FileRoutesByFullPath {
   '/api/public/hooks/erp-inbound': typeof ApiPublicHooksErpInboundRoute
   '/api/public/hooks/erp-sync-tick': typeof ApiPublicHooksErpSyncTickRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
+  '/api/public/hooks/propensity-batch-tick': typeof ApiPublicHooksPropensityBatchTickRoute
   '/api/public/hooks/refresh-recommendations': typeof ApiPublicHooksRefreshRecommendationsRoute
 }
 export interface FileRoutesByTo {
@@ -836,7 +851,7 @@ export interface FileRoutesByTo {
   '/marketing': typeof AppMarketingRoute
   '/marketing-intel': typeof AppMarketingIntelRoute
   '/meu-dia': typeof AppMeuDiaRoute
-  '/multi-empresa': typeof AppMultiEmpresaRoute
+  '/multi-empresa': typeof AppMultiEmpresaRouteWithChildren
   '/mytasks': typeof AppMytasksRoute
   '/notifications': typeof AppNotificationsRoute
   '/onboarding': typeof AppOnboardingRoute
@@ -882,6 +897,7 @@ export interface FileRoutesByTo {
   '/integrations/templates': typeof AppIntegrationsTemplatesRoute
   '/invite/$token': typeof AppInviteTokenRoute
   '/kb/$id': typeof AppKbIdRoute
+  '/multi-empresa/$orgId': typeof AppMultiEmpresaOrgIdRoute
   '/proposals/$id': typeof AppProposalsIdRoute
   '/reports/dashboards': typeof AppReportsDashboardsRouteWithChildren
   '/reports/weekly': typeof AppReportsWeeklyRoute
@@ -910,6 +926,7 @@ export interface FileRoutesByTo {
   '/api/public/hooks/erp-inbound': typeof ApiPublicHooksErpInboundRoute
   '/api/public/hooks/erp-sync-tick': typeof ApiPublicHooksErpSyncTickRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
+  '/api/public/hooks/propensity-batch-tick': typeof ApiPublicHooksPropensityBatchTickRoute
   '/api/public/hooks/refresh-recommendations': typeof ApiPublicHooksRefreshRecommendationsRoute
 }
 export interface FileRoutesById {
@@ -950,7 +967,7 @@ export interface FileRoutesById {
   '/_app/marketing': typeof AppMarketingRoute
   '/_app/marketing-intel': typeof AppMarketingIntelRoute
   '/_app/meu-dia': typeof AppMeuDiaRoute
-  '/_app/multi-empresa': typeof AppMultiEmpresaRoute
+  '/_app/multi-empresa': typeof AppMultiEmpresaRouteWithChildren
   '/_app/mytasks': typeof AppMytasksRoute
   '/_app/notifications': typeof AppNotificationsRoute
   '/_app/onboarding': typeof AppOnboardingRoute
@@ -996,6 +1013,7 @@ export interface FileRoutesById {
   '/_app/integrations/templates': typeof AppIntegrationsTemplatesRoute
   '/_app/invite/$token': typeof AppInviteTokenRoute
   '/_app/kb/$id': typeof AppKbIdRoute
+  '/_app/multi-empresa/$orgId': typeof AppMultiEmpresaOrgIdRoute
   '/_app/proposals/$id': typeof AppProposalsIdRoute
   '/_app/reports/dashboards': typeof AppReportsDashboardsRouteWithChildren
   '/_app/reports/weekly': typeof AppReportsWeeklyRoute
@@ -1024,6 +1042,7 @@ export interface FileRoutesById {
   '/api/public/hooks/erp-inbound': typeof ApiPublicHooksErpInboundRoute
   '/api/public/hooks/erp-sync-tick': typeof ApiPublicHooksErpSyncTickRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
+  '/api/public/hooks/propensity-batch-tick': typeof ApiPublicHooksPropensityBatchTickRoute
   '/api/public/hooks/refresh-recommendations': typeof ApiPublicHooksRefreshRecommendationsRoute
 }
 export interface FileRouteTypes {
@@ -1110,6 +1129,7 @@ export interface FileRouteTypes {
     | '/integrations/templates'
     | '/invite/$token'
     | '/kb/$id'
+    | '/multi-empresa/$orgId'
     | '/proposals/$id'
     | '/reports/dashboards'
     | '/reports/weekly'
@@ -1138,6 +1158,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/erp-inbound'
     | '/api/public/hooks/erp-sync-tick'
     | '/api/public/hooks/generate-alerts'
+    | '/api/public/hooks/propensity-batch-tick'
     | '/api/public/hooks/refresh-recommendations'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -1222,6 +1243,7 @@ export interface FileRouteTypes {
     | '/integrations/templates'
     | '/invite/$token'
     | '/kb/$id'
+    | '/multi-empresa/$orgId'
     | '/proposals/$id'
     | '/reports/dashboards'
     | '/reports/weekly'
@@ -1250,6 +1272,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/erp-inbound'
     | '/api/public/hooks/erp-sync-tick'
     | '/api/public/hooks/generate-alerts'
+    | '/api/public/hooks/propensity-batch-tick'
     | '/api/public/hooks/refresh-recommendations'
   id:
     | '__root__'
@@ -1335,6 +1358,7 @@ export interface FileRouteTypes {
     | '/_app/integrations/templates'
     | '/_app/invite/$token'
     | '/_app/kb/$id'
+    | '/_app/multi-empresa/$orgId'
     | '/_app/proposals/$id'
     | '/_app/reports/dashboards'
     | '/_app/reports/weekly'
@@ -1363,6 +1387,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/erp-inbound'
     | '/api/public/hooks/erp-sync-tick'
     | '/api/public/hooks/generate-alerts'
+    | '/api/public/hooks/propensity-batch-tick'
     | '/api/public/hooks/refresh-recommendations'
   fileRoutesById: FileRoutesById
 }
@@ -1385,6 +1410,7 @@ export interface RootRouteChildren {
   ApiPublicHooksErpInboundRoute: typeof ApiPublicHooksErpInboundRoute
   ApiPublicHooksErpSyncTickRoute: typeof ApiPublicHooksErpSyncTickRoute
   ApiPublicHooksGenerateAlertsRoute: typeof ApiPublicHooksGenerateAlertsRoute
+  ApiPublicHooksPropensityBatchTickRoute: typeof ApiPublicHooksPropensityBatchTickRoute
   ApiPublicHooksRefreshRecommendationsRoute: typeof ApiPublicHooksRefreshRecommendationsRoute
 }
 
@@ -1999,6 +2025,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppProposalsIdRouteImport
       parentRoute: typeof AppProposalsRoute
     }
+    '/_app/multi-empresa/$orgId': {
+      id: '/_app/multi-empresa/$orgId'
+      path: '/$orgId'
+      fullPath: '/multi-empresa/$orgId'
+      preLoaderRoute: typeof AppMultiEmpresaOrgIdRouteImport
+      parentRoute: typeof AppMultiEmpresaRoute
+    }
     '/_app/kb/$id': {
       id: '/_app/kb/$id'
       path: '/$id'
@@ -2081,6 +2114,13 @@ declare module '@tanstack/react-router' {
       path: '/api/public/hooks/refresh-recommendations'
       fullPath: '/api/public/hooks/refresh-recommendations'
       preLoaderRoute: typeof ApiPublicHooksRefreshRecommendationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/hooks/propensity-batch-tick': {
+      id: '/api/public/hooks/propensity-batch-tick'
+      path: '/api/public/hooks/propensity-batch-tick'
+      fullPath: '/api/public/hooks/propensity-batch-tick'
+      preLoaderRoute: typeof ApiPublicHooksPropensityBatchTickRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/hooks/generate-alerts': {
@@ -2228,6 +2268,18 @@ const AppKbRouteChildren: AppKbRouteChildren = {
 
 const AppKbRouteWithChildren = AppKbRoute._addFileChildren(AppKbRouteChildren)
 
+interface AppMultiEmpresaRouteChildren {
+  AppMultiEmpresaOrgIdRoute: typeof AppMultiEmpresaOrgIdRoute
+}
+
+const AppMultiEmpresaRouteChildren: AppMultiEmpresaRouteChildren = {
+  AppMultiEmpresaOrgIdRoute: AppMultiEmpresaOrgIdRoute,
+}
+
+const AppMultiEmpresaRouteWithChildren = AppMultiEmpresaRoute._addFileChildren(
+  AppMultiEmpresaRouteChildren,
+)
+
 interface AppProposalsRouteChildren {
   AppProposalsIdRoute: typeof AppProposalsIdRoute
 }
@@ -2337,7 +2389,7 @@ interface AppRouteChildren {
   AppMarketingRoute: typeof AppMarketingRoute
   AppMarketingIntelRoute: typeof AppMarketingIntelRoute
   AppMeuDiaRoute: typeof AppMeuDiaRoute
-  AppMultiEmpresaRoute: typeof AppMultiEmpresaRoute
+  AppMultiEmpresaRoute: typeof AppMultiEmpresaRouteWithChildren
   AppMytasksRoute: typeof AppMytasksRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppOnboardingRoute: typeof AppOnboardingRoute
@@ -2415,7 +2467,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppMarketingRoute: AppMarketingRoute,
   AppMarketingIntelRoute: AppMarketingIntelRoute,
   AppMeuDiaRoute: AppMeuDiaRoute,
-  AppMultiEmpresaRoute: AppMultiEmpresaRoute,
+  AppMultiEmpresaRoute: AppMultiEmpresaRouteWithChildren,
   AppMytasksRoute: AppMytasksRoute,
   AppNotificationsRoute: AppNotificationsRoute,
   AppOnboardingRoute: AppOnboardingRoute,
@@ -2480,19 +2532,11 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicHooksErpInboundRoute: ApiPublicHooksErpInboundRoute,
   ApiPublicHooksErpSyncTickRoute: ApiPublicHooksErpSyncTickRoute,
   ApiPublicHooksGenerateAlertsRoute: ApiPublicHooksGenerateAlertsRoute,
+  ApiPublicHooksPropensityBatchTickRoute:
+    ApiPublicHooksPropensityBatchTickRoute,
   ApiPublicHooksRefreshRecommendationsRoute:
     ApiPublicHooksRefreshRecommendationsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
