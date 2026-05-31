@@ -27,8 +27,8 @@ function OpportunityMapPage() {
     return <div className="p-4 md:p-8 space-y-4"><Skeleton className="h-10 w-64" /><Skeleton className="h-96" /></div>;
   }
 
-  const { territories, industries, summary } = data;
-  const maxOpen = Math.max(1, ...territories.map((t) => t.open_value));
+  const { territories, industries, summary } = data as any;
+  const maxOpen = Math.max(1, ...territories.map((t: any) => t.open_value));
 
   return (
     <div className="p-4 md:p-8 space-y-6">
@@ -51,7 +51,7 @@ function OpportunityMapPage() {
           <p className="text-sm text-muted-foreground">Cadastre empresas com setor e porte para visualizar o mapa.</p>
         ) : (
           <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {territories.slice(0, 24).map((t, i) => {
+            {territories.slice(0, 24).map((t: any, i: number) => {
               const intensity = Math.max(0.08, t.open_value / maxOpen);
               return (
                 <div
@@ -79,8 +79,8 @@ function OpportunityMapPage() {
           <p className="text-sm text-muted-foreground">Sem dados.</p>
         ) : (
           <div className="space-y-2">
-            {industries.slice(0, 10).map((ind, i) => {
-              const max = Math.max(...industries.map((x) => x.open_value), 1);
+            {industries.slice(0, 10).map((ind: any, i: number) => {
+              const max = Math.max(...industries.map((x: any) => x.open_value), 1);
               const w = (ind.open_value / max) * 100;
               return (
                 <div key={i}>
@@ -102,7 +102,7 @@ function OpportunityMapPage() {
       <Card className="p-5">
         <h3 className="text-sm font-semibold mb-3">Top territórios — empresas-alvo</h3>
         <div className="space-y-4">
-          {territories.slice(0, 6).map((t, i) => (
+          {territories.slice(0, 6).map((t: any, i: number) => (
             <div key={i} className="border-b last:border-0 pb-3 last:pb-0">
               <div className="flex items-center justify-between mb-2">
                 <div>
@@ -112,7 +112,7 @@ function OpportunityMapPage() {
                 <Badge variant="outline">{fmt(t.won_value)} ganho</Badge>
               </div>
               <div className="flex flex-wrap gap-2">
-                {t.company_list.map((c) => (
+                {t.company_list.map((c: any) => (
                   <Link
                     key={c.id}
                     to="/companies/$id"
@@ -131,7 +131,7 @@ function OpportunityMapPage() {
   );
 }
 
-function Kpi({ icon: Icon, label, value, tone }: any) {
+function Kpi({ icon: Icon, label, value, tone }: { icon: any; label: string; value: any; tone?: string }) {
   const tones: Record<string, string> = {
     primary: "text-primary", emerald: "text-emerald-500",
   };
