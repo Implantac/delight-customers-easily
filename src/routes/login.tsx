@@ -21,7 +21,13 @@ function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (user) navigate({ to: "/dashboard", replace: true });
+    if (user) {
+      const wantsWelcome =
+        typeof window !== "undefined" &&
+        window.localStorage.getItem("lc-just-signed-up") === "1";
+      if (wantsWelcome) window.localStorage.removeItem("lc-just-signed-up");
+      navigate({ to: wantsWelcome ? "/welcome" : "/dashboard", replace: true });
+    }
   }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -31,9 +37,12 @@ function LoginPage() {
       if (mode === "signup") {
         const { error } = await supabase.auth.signUp({
           email, password,
-          options: { data: { full_name: name }, emailRedirectTo: `${window.location.origin}/` },
+          options: { data: { full_name: name }, emailRedirectTo: `${window.location.origin}/welcome` },
         });
         if (error) throw error;
+        if (typeof window !== "undefined") {
+          window.localStorage.setItem("lc-just-signed-up", "1");
+        }
         toast.success("Conta criada! Verifique seu email para confirmar.");
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
