@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { requireCronApiKey } from "@/lib/cron-auth.server";
 
 // Cron a cada 15min: detecta conversas de WhatsApp com SLA violado/em risco
 // em TODAS as orgs e marca a flag `sla_breached`, alimentando alertas e a
@@ -58,7 +59,9 @@ async function syncOrg(orgId: string): Promise<{ updated: number; breached: numb
 export const Route = createFileRoute("/api/public/hooks/refresh-recommendations")({
   server: {
     handlers: {
-      POST: async () => {
+      POST: async ({ request }) => {
+        const unauth = requireCronApiKey(request);
+        if (unauth) return unauth;
         const { data: orgs } = await supabaseAdmin.from("organizations").select("id");
         let totalUpdated = 0;
         let totalBreached = 0;

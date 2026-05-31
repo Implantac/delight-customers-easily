@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { requireCronApiKey } from "@/lib/cron-auth.server";
 
 // Daily briefing — uma notificação por usuário às 07:30 BRT:
 // Pipeline, tarefas hoje, atrasadas, top oportunidade, top 3 riscos,
@@ -125,7 +126,9 @@ async function dedupeToday(rows: Row[]): Promise<Row[]> {
 export const Route = createFileRoute("/api/public/hooks/daily-briefing")({
   server: {
     handlers: {
-      POST: async () => {
+      POST: async ({ request }) => {
+        const unauth = requireCronApiKey(request);
+        if (unauth) return unauth;
         try {
           const { data: orgs, error } = await supabaseAdmin.from("organizations").select("id");
           if (error) throw error;

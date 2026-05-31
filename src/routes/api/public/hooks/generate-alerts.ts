@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { requireCronApiKey } from "@/lib/cron-auth.server";
 
 const DAY = 86400000;
 const now = () => Date.now();
@@ -89,7 +90,9 @@ async function dedupeAgainstRecent(rows: AlertRow[]): Promise<AlertRow[]> {
 export const Route = createFileRoute("/api/public/hooks/generate-alerts")({
   server: {
     handlers: {
-      POST: async () => {
+      POST: async ({ request }) => {
+        const unauth = requireCronApiKey(request);
+        if (unauth) return unauth;
         try {
           const { data: orgs, error } = await supabaseAdmin.from("organizations").select("id");
           if (error) throw error;

@@ -1,12 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
+import { requireCronApiKey } from "@/lib/cron-auth.server";
 
 // Cron endpoint: creates notifications for activities due in the next hour
 // or already overdue. Idempotent per (activity_id, user_id) via dedup check.
 export const Route = createFileRoute("/api/public/hooks/activity-reminders")({
   server: {
     handlers: {
-      POST: async () => {
+      POST: async ({ request }) => {
+        const unauth = requireCronApiKey(request);
+        if (unauth) return unauth;
         try {
           const now = new Date();
           const horizon = new Date(now.getTime() + 60 * 60 * 1000); // +1h
