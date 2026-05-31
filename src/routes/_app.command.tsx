@@ -6,7 +6,7 @@ import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
 import { computeCommandCenter } from "@/lib/intelligence.functions";
 import { getForecast } from "@/lib/forecast.functions";
-import { getFinanceOverview } from "@/lib/finance.functions";
+
 import { getRetentionInsights } from "@/lib/churn.functions";
 import { PageHeader } from "@/components/page-header";
 import { Card } from "@/components/ui/card";
