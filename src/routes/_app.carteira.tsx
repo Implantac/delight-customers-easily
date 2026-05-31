@@ -138,8 +138,49 @@ function CarteiraPage() {
               ))}
             </SelectContent>
           </Select>
+          <Button
+            variant="outline"
+            className="gap-2 shrink-0"
+            disabled={filtered.length === 0}
+            onClick={() => {
+              const csv = toCSV(
+                filtered.map((r) => ({
+                  cliente: r.name,
+                  segmento: r.industry ?? "",
+                  status: r.status,
+                  score: r.score,
+                  faturado: r.wonRevenue,
+                  ticket_medio: r.ticketAvg,
+                  pipeline_aberto: r.openPipeline,
+                  dias_sem_compra: r.daysSinceLastPurchase ?? "",
+                  frequencia_12m: r.frequency,
+                  atividades_30d: r.activitiesLast30,
+                  em_atraso: r.overdueAmount,
+                  buckets: r.buckets.join("|"),
+                })),
+                [
+                  { key: "cliente", label: "Cliente" },
+                  { key: "segmento", label: "Segmento" },
+                  { key: "status", label: "Status" },
+                  { key: "score", label: "Score" },
+                  { key: "faturado", label: "Faturado" },
+                  { key: "ticket_medio", label: "Ticket médio" },
+                  { key: "pipeline_aberto", label: "Pipeline aberto" },
+                  { key: "dias_sem_compra", label: "Dias sem compra" },
+                  { key: "frequencia_12m", label: "Frequência 12m" },
+                  { key: "atividades_30d", label: "Atividades 30d" },
+                  { key: "em_atraso", label: "Em atraso" },
+                  { key: "buckets", label: "Lentes" },
+                ],
+              );
+              downloadCSV(`carteira-${bucket}-${new Date().toISOString().slice(0, 10)}.csv`, csv);
+            }}
+          >
+            <Download className="h-4 w-4" /> Exportar CSV
+          </Button>
         </div>
       </Card>
+
 
       {isLoading ? (
         <div className="space-y-2">
