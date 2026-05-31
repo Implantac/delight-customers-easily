@@ -104,6 +104,7 @@ import { Route as ApiPublicHooksErpSyncTickRouteImport } from './routes/api/publ
 import { Route as ApiPublicHooksErpInboundRouteImport } from './routes/api/public/hooks/erp-inbound'
 import { Route as ApiPublicHooksErpAgentPushRouteImport } from './routes/api/public/hooks/erp-agent-push'
 import { Route as ApiPublicHooksDailyBriefingRouteImport } from './routes/api/public/hooks/daily-briefing'
+import { Route as ApiPublicHooksCustomer360RefreshRouteImport } from './routes/api/public/hooks/customer-360-refresh'
 import { Route as ApiPublicHooksActivityRemindersRouteImport } from './routes/api/public/hooks/activity-reminders'
 
 const LoginRoute = LoginRouteImport.update({
@@ -587,6 +588,12 @@ const ApiPublicHooksDailyBriefingRoute =
     path: '/api/public/hooks/daily-briefing',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicHooksCustomer360RefreshRoute =
+  ApiPublicHooksCustomer360RefreshRouteImport.update({
+    id: '/api/public/hooks/customer-360-refresh',
+    path: '/api/public/hooks/customer-360-refresh',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHooksActivityRemindersRoute =
   ApiPublicHooksActivityRemindersRouteImport.update({
     id: '/api/public/hooks/activity-reminders',
@@ -684,6 +691,7 @@ export interface FileRoutesByFullPath {
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/i/$org/$slug': typeof IOrgSlugRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
+  '/api/public/hooks/customer-360-refresh': typeof ApiPublicHooksCustomer360RefreshRoute
   '/api/public/hooks/daily-briefing': typeof ApiPublicHooksDailyBriefingRoute
   '/api/public/hooks/erp-agent-push': typeof ApiPublicHooksErpAgentPushRoute
   '/api/public/hooks/erp-inbound': typeof ApiPublicHooksErpInboundRoute
@@ -781,6 +789,7 @@ export interface FileRoutesByTo {
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/i/$org/$slug': typeof IOrgSlugRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
+  '/api/public/hooks/customer-360-refresh': typeof ApiPublicHooksCustomer360RefreshRoute
   '/api/public/hooks/daily-briefing': typeof ApiPublicHooksDailyBriefingRoute
   '/api/public/hooks/erp-agent-push': typeof ApiPublicHooksErpAgentPushRoute
   '/api/public/hooks/erp-inbound': typeof ApiPublicHooksErpInboundRoute
@@ -880,6 +889,7 @@ export interface FileRoutesById {
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/i/$org/$slug': typeof IOrgSlugRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
+  '/api/public/hooks/customer-360-refresh': typeof ApiPublicHooksCustomer360RefreshRoute
   '/api/public/hooks/daily-briefing': typeof ApiPublicHooksDailyBriefingRoute
   '/api/public/hooks/erp-agent-push': typeof ApiPublicHooksErpAgentPushRoute
   '/api/public/hooks/erp-inbound': typeof ApiPublicHooksErpInboundRoute
@@ -979,6 +989,7 @@ export interface FileRouteTypes {
     | '/api/public/lead-form'
     | '/i/$org/$slug'
     | '/api/public/hooks/activity-reminders'
+    | '/api/public/hooks/customer-360-refresh'
     | '/api/public/hooks/daily-briefing'
     | '/api/public/hooks/erp-agent-push'
     | '/api/public/hooks/erp-inbound'
@@ -1076,6 +1087,7 @@ export interface FileRouteTypes {
     | '/api/public/lead-form'
     | '/i/$org/$slug'
     | '/api/public/hooks/activity-reminders'
+    | '/api/public/hooks/customer-360-refresh'
     | '/api/public/hooks/daily-briefing'
     | '/api/public/hooks/erp-agent-push'
     | '/api/public/hooks/erp-inbound'
@@ -1174,6 +1186,7 @@ export interface FileRouteTypes {
     | '/api/public/lead-form'
     | '/i/$org/$slug'
     | '/api/public/hooks/activity-reminders'
+    | '/api/public/hooks/customer-360-refresh'
     | '/api/public/hooks/daily-briefing'
     | '/api/public/hooks/erp-agent-push'
     | '/api/public/hooks/erp-inbound'
@@ -1191,6 +1204,7 @@ export interface RootRouteChildren {
   ApiPublicLeadFormRoute: typeof ApiPublicLeadFormRoute
   IOrgSlugRoute: typeof IOrgSlugRoute
   ApiPublicHooksActivityRemindersRoute: typeof ApiPublicHooksActivityRemindersRoute
+  ApiPublicHooksCustomer360RefreshRoute: typeof ApiPublicHooksCustomer360RefreshRoute
   ApiPublicHooksDailyBriefingRoute: typeof ApiPublicHooksDailyBriefingRoute
   ApiPublicHooksErpAgentPushRoute: typeof ApiPublicHooksErpAgentPushRoute
   ApiPublicHooksErpInboundRoute: typeof ApiPublicHooksErpInboundRoute
@@ -1866,6 +1880,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksDailyBriefingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/customer-360-refresh': {
+      id: '/api/public/hooks/customer-360-refresh'
+      path: '/api/public/hooks/customer-360-refresh'
+      fullPath: '/api/public/hooks/customer-360-refresh'
+      preLoaderRoute: typeof ApiPublicHooksCustomer360RefreshRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/activity-reminders': {
       id: '/api/public/hooks/activity-reminders'
       path: '/api/public/hooks/activity-reminders'
@@ -2135,6 +2156,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicLeadFormRoute: ApiPublicLeadFormRoute,
   IOrgSlugRoute: IOrgSlugRoute,
   ApiPublicHooksActivityRemindersRoute: ApiPublicHooksActivityRemindersRoute,
+  ApiPublicHooksCustomer360RefreshRoute: ApiPublicHooksCustomer360RefreshRoute,
   ApiPublicHooksDailyBriefingRoute: ApiPublicHooksDailyBriefingRoute,
   ApiPublicHooksErpAgentPushRoute: ApiPublicHooksErpAgentPushRoute,
   ApiPublicHooksErpInboundRoute: ApiPublicHooksErpInboundRoute,
