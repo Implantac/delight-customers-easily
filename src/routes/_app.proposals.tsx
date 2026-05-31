@@ -36,6 +36,8 @@ function ProposalsPage() {
   const create = useServerFn(createProposal);
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
+  const [status, setStatus] = useState<"all" | "draft" | "sent" | "accepted" | "rejected">("all");
+  const [q, setQ] = useState("");
 
   const { data, isLoading } = useQuery({
     queryKey: ["proposals", orgId],
