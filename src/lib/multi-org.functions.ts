@@ -11,7 +11,7 @@ export const getOrgTree = createServerFn({ method: 'GET' })
   .inputValidator((input) =>
     z.object({ rootOrgId: z.string().uuid().optional() }).parse(input ?? {}),
   )
-  .handler(async ({ data, context }) => {
+  .handler(async ({ data, context }): Promise<{ root: string | null; nodes: Array<{ id: string; name: string; slug: string; org_type: string; parent_org_id: string | null; cnpj: string | null; legal_name: string | null; external_company_code: string | null; external_branch_code: string | null }> }> => {
     const { supabase, userId } = context;
 
     let rootId = data.rootOrgId;
