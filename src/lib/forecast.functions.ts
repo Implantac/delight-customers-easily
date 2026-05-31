@@ -300,7 +300,7 @@ export const listGoals = createServerFn({ method: 'POST' })
       .order('period_month', { ascending: false })
       .limit(500);
     if (error) throw new Error(error.message);
-    return result ?? [];
+    return { goals: result ?? [] };
   });
 
 export const upsertGoal = createServerFn({ method: 'POST' })
