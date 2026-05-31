@@ -68,6 +68,7 @@ function CommissionsPage() {
       <Tabs defaultValue="report">
         <TabsList>
           <TabsTrigger value="report">Relatório do mês</TabsTrigger>
+          <TabsTrigger value="payouts">Payouts</TabsTrigger>
           {canManage && <TabsTrigger value="rules">Regras</TabsTrigger>}
         </TabsList>
 
