@@ -11,13 +11,22 @@ export function OnboardingChecklist() {
   const { data } = useQuery({
     queryKey: ["onboarding-counts"],
     queryFn: async () => {
-      const [c, e, d, a] = await Promise.all([
+      const [c, e, d, a, w, i] = await Promise.all([
         supabase.from("contacts").select("id", { count: "exact", head: true }),
         supabase.from("companies").select("id", { count: "exact", head: true }),
         supabase.from("deals").select("id", { count: "exact", head: true }),
         supabase.from("activities").select("id", { count: "exact", head: true }),
+        supabase.from("whatsapp_conversations").select("id", { count: "exact", head: true }),
+        supabase.from("erp_integrations").select("id", { count: "exact", head: true }),
       ]);
-      return { contacts: c.count ?? 0, companies: e.count ?? 0, deals: d.count ?? 0, activities: a.count ?? 0 };
+      return {
+        contacts: c.count ?? 0,
+        companies: e.count ?? 0,
+        deals: d.count ?? 0,
+        activities: a.count ?? 0,
+        whatsapp: w.count ?? 0,
+        integrations: i.count ?? 0,
+      };
     },
     staleTime: 30_000,
   });
@@ -29,7 +38,10 @@ export function OnboardingChecklist() {
     { key: "contact", label: "Adicionar 1º contato", to: "/contacts", done: data.contacts > 0 },
     { key: "deal", label: "Criar 1º negócio no pipeline", to: "/pipeline", done: data.deals > 0 },
     { key: "activity", label: "Registrar 1ª atividade", to: "/activities", done: data.activities > 0 },
+    { key: "whatsapp", label: "Abrir 1ª conversa no WhatsApp", to: "/whatsapp", done: data.whatsapp > 0 },
+    { key: "integration", label: "Conectar ERP em Integrações", to: "/integrations", done: data.integrations > 0 },
   ];
+
   const completed = steps.filter((s) => s.done).length;
   if (completed === steps.length) return null;
 
