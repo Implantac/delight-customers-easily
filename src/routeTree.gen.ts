@@ -54,6 +54,7 @@ import { Route as AppIntegrationsRouteImport } from './routes/_app.integrations'
 import { Route as AppInfluencersRouteImport } from './routes/_app.influencers'
 import { Route as AppIaComercialRouteImport } from './routes/_app.ia-comercial'
 import { Route as AppGoalsRouteImport } from './routes/_app.goals'
+import { Route as AppGeoProspeccaoRouteImport } from './routes/_app.geo-prospeccao'
 import { Route as AppGeoRouteImport } from './routes/_app.geo'
 import { Route as AppForecastRouteImport } from './routes/_app.forecast'
 import { Route as AppDataQualityRouteImport } from './routes/_app.data-quality'
@@ -325,6 +326,11 @@ const AppGoalsRoute = AppGoalsRouteImport.update({
   path: '/goals',
   getParentRoute: () => AppRoute,
 } as any)
+const AppGeoProspeccaoRoute = AppGeoProspeccaoRouteImport.update({
+  id: '/geo-prospeccao',
+  path: '/geo-prospeccao',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppGeoRoute = AppGeoRouteImport.update({
   id: '/geo',
   path: '/geo',
@@ -584,6 +590,7 @@ export interface FileRoutesByFullPath {
   '/data-quality': typeof AppDataQualityRoute
   '/forecast': typeof AppForecastRoute
   '/geo': typeof AppGeoRoute
+  '/geo-prospeccao': typeof AppGeoProspeccaoRoute
   '/goals': typeof AppGoalsRoute
   '/ia-comercial': typeof AppIaComercialRoute
   '/influencers': typeof AppInfluencersRoute
@@ -676,6 +683,7 @@ export interface FileRoutesByTo {
   '/data-quality': typeof AppDataQualityRoute
   '/forecast': typeof AppForecastRoute
   '/geo': typeof AppGeoRoute
+  '/geo-prospeccao': typeof AppGeoProspeccaoRoute
   '/goals': typeof AppGoalsRoute
   '/ia-comercial': typeof AppIaComercialRoute
   '/influencers': typeof AppInfluencersRoute
@@ -770,6 +778,7 @@ export interface FileRoutesById {
   '/_app/data-quality': typeof AppDataQualityRoute
   '/_app/forecast': typeof AppForecastRoute
   '/_app/geo': typeof AppGeoRoute
+  '/_app/geo-prospeccao': typeof AppGeoProspeccaoRoute
   '/_app/goals': typeof AppGoalsRoute
   '/_app/ia-comercial': typeof AppIaComercialRoute
   '/_app/influencers': typeof AppInfluencersRoute
@@ -864,6 +873,7 @@ export interface FileRouteTypes {
     | '/data-quality'
     | '/forecast'
     | '/geo'
+    | '/geo-prospeccao'
     | '/goals'
     | '/ia-comercial'
     | '/influencers'
@@ -956,6 +966,7 @@ export interface FileRouteTypes {
     | '/data-quality'
     | '/forecast'
     | '/geo'
+    | '/geo-prospeccao'
     | '/goals'
     | '/ia-comercial'
     | '/influencers'
@@ -1049,6 +1060,7 @@ export interface FileRouteTypes {
     | '/_app/data-quality'
     | '/_app/forecast'
     | '/_app/geo'
+    | '/_app/geo-prospeccao'
     | '/_app/goals'
     | '/_app/ia-comercial'
     | '/_app/influencers'
@@ -1452,6 +1464,13 @@ declare module '@tanstack/react-router' {
       path: '/goals'
       fullPath: '/goals'
       preLoaderRoute: typeof AppGoalsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/geo-prospeccao': {
+      id: '/_app/geo-prospeccao'
+      path: '/geo-prospeccao'
+      fullPath: '/geo-prospeccao'
+      preLoaderRoute: typeof AppGeoProspeccaoRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/geo': {
@@ -1896,6 +1915,7 @@ interface AppRouteChildren {
   AppDataQualityRoute: typeof AppDataQualityRoute
   AppForecastRoute: typeof AppForecastRoute
   AppGeoRoute: typeof AppGeoRoute
+  AppGeoProspeccaoRoute: typeof AppGeoProspeccaoRoute
   AppGoalsRoute: typeof AppGoalsRoute
   AppIaComercialRoute: typeof AppIaComercialRoute
   AppInfluencersRoute: typeof AppInfluencersRoute
@@ -1967,6 +1987,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppDataQualityRoute: AppDataQualityRoute,
   AppForecastRoute: AppForecastRoute,
   AppGeoRoute: AppGeoRoute,
+  AppGeoProspeccaoRoute: AppGeoProspeccaoRoute,
   AppGoalsRoute: AppGoalsRoute,
   AppIaComercialRoute: AppIaComercialRoute,
   AppInfluencersRoute: AppInfluencersRoute,
