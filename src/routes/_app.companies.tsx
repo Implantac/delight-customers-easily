@@ -118,7 +118,14 @@ function CompaniesPage() {
         }
       />
 
-      <div className="mt-6 mb-4 flex flex-wrap items-center gap-2">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <KpiCell label="Empresas" value={kpi.total} icon={Building2} loading={isLoading} />
+        <KpiCell label="Setores distintos" value={kpi.industries} icon={Layers} loading={isLoading} tone="primary" />
+        <KpiCell label="Com website" value={kpi.withSite} icon={Link2} loading={isLoading} />
+        <KpiCell label="Com contexto" value={kpi.withNotes} icon={FileText} loading={isLoading} />
+      </div>
+
+      <div className="flex flex-wrap items-center gap-2">
         <div className="relative flex-1 min-w-[200px] max-w-sm">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input placeholder="Buscar empresas…" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
