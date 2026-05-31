@@ -62,6 +62,14 @@ function CarteiraPage() {
   const [bucket, setBucket] = useState<Bucket>("todos");
   const [q, setQ] = useState("");
   const [industry, setIndustry] = useState<string>("all");
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const toggle = (id: string) =>
+    setSelected((s) => {
+      const n = new Set(s);
+      n.has(id) ? n.delete(id) : n.add(id);
+      return n;
+    });
+  const clearSelection = () => setSelected(new Set());
 
   const { data, isLoading } = useQuery({
     queryKey: ["wallet", orgId],
