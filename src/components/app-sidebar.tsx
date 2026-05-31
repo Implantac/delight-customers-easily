@@ -104,6 +104,7 @@ const navSections: NavSection[] = [
     label: "Administração",
     items: [
       { to: "/integrations", label: "Integrações ERP", icon: Plug, managerOnly: true },
+      { to: "/integrations/apps", label: "Integrações Apps", icon: Plug, managerOnly: true },
       { to: "/settings/organization", label: "Empresas (workspaces)", icon: Building, managerOnly: true },
       { to: "/settings/organization", label: "Usuários", icon: Users, managerOnly: true },
       { to: "/settings/organization", label: "Configurações", icon: Settings },
