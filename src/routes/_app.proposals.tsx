@@ -133,7 +133,7 @@ function ProposalsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {data!.items.map((p: any) => (
+              {filtered.map((p: any) => (
                 <TableRow key={p.id} className="cursor-pointer hover:bg-muted/40" onClick={() => nav({ to: "/proposals/$id", params: { id: p.id } })}>
                   <TableCell className="font-medium">
                     <Link to="/proposals/$id" params={{ id: p.id }} className="hover:underline">{p.title}</Link>
