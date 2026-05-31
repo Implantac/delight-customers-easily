@@ -134,14 +134,13 @@ export const Route = createFileRoute('/api/public/hooks/erp-sync-tick')({
           await supabase.from('erp_health_checks').insert(healthRows);
         }
 
-        return new Response(
-          JSON.stringify({
-            stuckRecovered: stuck?.length ?? 0,
-            promoted: promotedIds.length,
-            healthLogged: healthRows.length,
-          }),
-          { headers: { 'Content-Type': 'application/json' } },
-        );
+        return Response.json({
+          stuckRecovered: stuck?.length ?? 0,
+          executed,
+          processed: processedTotal,
+          conflicts: conflictsTotal,
+          healthLogged: healthRows.length,
+        });
       },
     },
   },
