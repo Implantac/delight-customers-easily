@@ -14,7 +14,7 @@ export const getOrgTree = createServerFn({ method: 'GET' })
   .handler(async ({ data, context }): Promise<{ root: string | null; nodes: Array<{ id: string; name: string; slug: string; org_type: string; parent_org_id: string | null; cnpj: string | null; legal_name: string | null; external_company_code: string | null; external_branch_code: string | null }> }> => {
     const { supabase, userId } = context;
 
-    let rootId = data.rootOrgId;
+    let rootId: string | null = data.rootOrgId ?? null;
     if (!rootId) {
       const { data: prof } = await supabase
         .from('profiles')
@@ -22,7 +22,7 @@ export const getOrgTree = createServerFn({ method: 'GET' })
         .eq('id', userId)
         .maybeSingle();
       if (!prof?.current_organization_id) {
-        return { root: null, nodes: [] as Array<Record<string, unknown>> };
+        return { root: null, nodes: [] };
       }
       const { data: rootRow } = await supabase.rpc('org_tenant_root', {
         _org: prof.current_organization_id,
