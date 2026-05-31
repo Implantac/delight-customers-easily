@@ -14,7 +14,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { PageHeader } from "@/components/page-header";
 import { EmptyState } from "@/components/empty-state";
-import { Plus, Globe, Trash2, Building2, Download, X, Search } from "lucide-react";
+import { Plus, Globe, Trash2, Building2, Download, X, Search, Layers, FileText, Link2 } from "lucide-react";
 import { toast } from "sonner";
 import { companySchema, fromForm } from "@/lib/validation";
 import { CompanyDuplicateWarning } from "@/components/duplicate-warning";
