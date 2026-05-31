@@ -67,15 +67,18 @@ export const listTickets = createServerFn({ method: "POST" })
 
 export const getTicket = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((i) => z.object({ id: z.string().uuid() }).parse(i))
+  .inputValidator((i) =>
+    z.object({ id: z.string().uuid(), organization_id: z.string().uuid() }).parse(i),
+  )
   .handler(async ({ data, context }) => {
     const { supabase } = context;
     const [ticketRes, commentsRes] = await Promise.all([
-      supabase.from("tickets").select("*").eq("id", data.id).maybeSingle(),
+      supabase.from("tickets").select("*").eq("id", data.id).eq("organization_id", data.organization_id).maybeSingle(),
       supabase
         .from("ticket_comments")
         .select("id, author_id, body, is_internal, created_at")
         .eq("ticket_id", data.id)
+        .eq("organization_id", data.organization_id)
         .order("created_at", { ascending: true }),
     ]);
     if (ticketRes.error) throw new Error(ticketRes.error.message);
