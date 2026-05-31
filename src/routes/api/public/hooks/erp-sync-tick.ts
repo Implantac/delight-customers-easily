@@ -2,6 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { createClient } from '@supabase/supabase-js';
 import { requireCronApiKey } from '@/lib/cron-auth.server';
 import { executeJob } from '@/lib/erp-sync-engine.server';
+import { processOutbox } from '@/lib/erp-outbox-processor.server';
 
 /**
  * Cron tick do Connect Hub. Cron sugerido: a cada 5 minutos.
