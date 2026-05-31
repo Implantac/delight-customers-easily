@@ -467,6 +467,111 @@ function WhatsAppPage() {
             </div>
           )}
         </Card>
+
+        {/* Customer 360 rail — só em telas largas */}
+        <Card className="hidden xl:flex col-span-12 xl:col-span-3 flex-col min-h-0 overflow-hidden">
+          {selected ? (
+            <ScrollArea className="flex-1">
+              <div className="p-4 space-y-4">
+                {/* Contato */}
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="h-12 w-12">
+                      <AvatarFallback className="bg-[var(--gradient-primary)] text-primary-foreground text-sm font-semibold">
+                        {initials(selected.contact_name)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="min-w-0">
+                      <p className="font-semibold truncate">{selected.contact_name}</p>
+                      <p className="text-xs text-muted-foreground truncate">{selected.contact_phone}</p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-3 gap-1.5">
+                    <Button asChild variant="outline" size="sm" className="h-8 px-0">
+                      <a
+                        href={whatsappLink(selected.contact_phone)}
+                        target="_blank"
+                        rel="noreferrer"
+                        title="Abrir no WhatsApp"
+                      >
+                        <MessageCircle className="h-3.5 w-3.5" />
+                      </a>
+                    </Button>
+                    <Button asChild variant="outline" size="sm" className="h-8 px-0">
+                      <a href={`tel:${selected.contact_phone}`} title="Ligar">
+                        <Phone className="h-3.5 w-3.5" />
+                      </a>
+                    </Button>
+                    <Button variant="outline" size="sm" className="h-8 px-0" disabled title="E-mail">
+                      <Mail className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Status & atribuição (resumo) */}
+                <div className="rounded-md border border-border/60 bg-muted/30 p-3 space-y-1.5 text-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Status</span>
+                    <Badge variant="outline" className="text-[10px]">{STATUS_LABEL[selected.status]}</Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Prioridade</span>
+                    <Badge className={`text-[10px] ${PRIORITY_COLOR[selected.priority]}`}>{selected.priority}</Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Atribuída a</span>
+                    <span className="font-medium truncate max-w-[60%] text-right">
+                      {selected.assigned_name ?? <span className="text-muted-foreground italic">sem dono</span>}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Atalhos para perfil */}
+                <div className="space-y-1.5">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium px-1">
+                    Perfil
+                  </p>
+                  {selected.contact_id ? (
+                    <Button asChild variant="ghost" size="sm" className="w-full justify-start h-8">
+                      <Link to="/contacts/$id" params={{ id: selected.contact_id }}>
+                        <User className="h-3.5 w-3.5 mr-2" /> Abrir contato
+                      </Link>
+                    </Button>
+                  ) : (
+                    <p className="text-xs text-muted-foreground px-2">
+                      Sem contato vinculado.
+                    </p>
+                  )}
+                  {selected.company_id && (
+                    <Button asChild variant="ghost" size="sm" className="w-full justify-start h-8">
+                      <Link to="/companies/$id" params={{ id: selected.company_id }}>
+                        <Building2 className="h-3.5 w-3.5 mr-2" /> Customer 360
+                      </Link>
+                    </Button>
+                  )}
+                </div>
+
+                {/* IA — próxima ação sugerida */}
+                {selected.contact_id && (
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-1.5 px-1">
+                      <Sparkles className="h-3 w-3 text-primary" />
+                      <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
+                        IA sugere
+                      </p>
+                    </div>
+                    <NextActionBlock surface="contact" title="" limit={2} />
+                  </div>
+                )}
+              </div>
+            </ScrollArea>
+          ) : (
+            <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground p-6 text-center">
+              <Sparkles className="h-8 w-8 mb-2 opacity-50" />
+              <p className="text-sm">Selecione uma conversa para ver o Customer 360 e sugestões da IA.</p>
+            </div>
+          )}
+        </Card>
       </div>
     </div>
   );
