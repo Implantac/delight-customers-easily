@@ -34,6 +34,7 @@ import {
   Activity, Database, Cloud, Server, FileText, Sparkles, ArrowRight,
   Wifi, WifiOff, Loader2, Upload, Webhook, Copy,
 } from "lucide-react";
+import { PageHeader } from "@/components/page-header";
 
 export const Route = createFileRoute("/_app/integrations/advanced")({ component: ErpHubPage });
 
@@ -58,17 +59,11 @@ function ErpHubPage() {
 
   return (
     <div className="p-6 space-y-6">
-      <div className="flex items-start justify-between gap-4 flex-wrap">
-        <div>
-          <h1 className="text-2xl font-semibold flex items-center gap-2">
-            <Plug className="h-6 w-6" /> ERP Connect Hub
-          </h1>
-          <p className="text-sm text-muted-foreground mt-1 max-w-2xl">
-            Conecte o CRM a qualquer ERP — via API (Omie, Bling), webhook universal,
-            CSV ou agente local. Mapeie campos uma vez, sincronize sempre.
-          </p>
-        </div>
-      </div>
+      <PageHeader
+        icon={Plug}
+        title="ERP Connect Hub"
+        subtitle="Conecte o CRM a qualquer ERP — via API (Omie, Bling), webhook universal, CSV ou agente local. Mapeie campos uma vez, sincronize sempre."
+      />
 
       <Tabs defaultValue="catalog" className="space-y-4">
         <TabsList>

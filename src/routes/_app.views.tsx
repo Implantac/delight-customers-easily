@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Bookmark, Trash2, Users as UsersIcon, Building2, Briefcase, CheckSquare, Globe, Lock } from "lucide-react";
+import { PageHeader } from "@/components/page-header";
 import { useCurrentOrg } from "@/lib/org";
 import { listViews, deleteView, updateView } from "@/lib/views.functions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -63,12 +64,11 @@ function ViewsPage() {
 
   return (
     <div className="flex flex-col gap-6 p-6">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Visualizações salvas</h1>
-        <p className="text-sm text-muted-foreground">
-          Gerencie filtros salvos e compartilhe com sua equipe.
-        </p>
-      </div>
+      <PageHeader
+        icon={Bookmark}
+        title="Visualizações salvas"
+        subtitle="Gerencie filtros salvos e compartilhe com sua equipe."
+      />
 
       <Tabs value={tab} onValueChange={(v) => setTab(v as any)}>
         <TabsList>

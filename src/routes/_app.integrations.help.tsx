@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, HelpCircle, Shield, Download, BookOpen, Copy, CheckCircle2 } from "lucide-react";
+import { PageHeader } from "@/components/page-header";
 import { useCurrentOrg } from "@/lib/org";
 import { toast } from "sonner";
 
@@ -17,6 +18,12 @@ function HelpPage() {
       <Link to="/integrations">
         <Button variant="ghost" size="sm" className="gap-2"><ArrowLeft className="h-4 w-4" /> Voltar</Button>
       </Link>
+
+      <PageHeader
+        icon={HelpCircle}
+        title="Central de Ajuda — Integrações"
+        subtitle="Tudo o que você precisa para conectar o CRM ao seu ERP com segurança."
+      />
 
       {/* Agente Local */}
       <Card className="border-primary/20 bg-primary/5">
