@@ -271,6 +271,7 @@ function DealDrawer({
   onDelete: (id: string) => void;
 }) {
   const qc = useQueryClient();
+  const { orgId } = useCurrentOrg();
   const [form, setForm] = useState<any>(null);
 
   useEffect(() => {
