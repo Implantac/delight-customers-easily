@@ -14,7 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus, Trash2, Printer, ArrowLeft, Save } from "lucide-react";
+import { Plus, Trash2, Printer, ArrowLeft, Save, Link2 } from "lucide-react";
 import { toast } from "sonner";
 import {
   getProposal, updateProposal, deleteProposal, upsertItem, deleteItem,
