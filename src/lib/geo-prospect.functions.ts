@@ -352,12 +352,7 @@ export const getProspectingInsights = createServerFn({ method: "POST" })
       i.total += 1;
       industryMap.set(ind, i);
     }
-    // Customers per city/industry (segunda passada para contar com base no set)
-    for (const co of companies as Array<{ id?: string }>) {
-      // os campos retornados não trazem id (select acima omitiu) — recontamos sem id:
-      void co;
-    }
-    // Recompose with id-aware pass:
+    // Customers per city/industry — segunda passada com id-aware:
     const { data: coWithId } = await supabase
       .from("companies")
       .select("id, city, state, industry")
