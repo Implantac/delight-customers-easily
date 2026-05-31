@@ -126,7 +126,9 @@ async function dedupeToday(rows: Row[]): Promise<Row[]> {
 export const Route = createFileRoute("/api/public/hooks/daily-briefing")({
   server: {
     handlers: {
-      POST: async () => {
+      POST: async ({ request }) => {
+        const unauth = requireCronApiKey(request);
+        if (unauth) return unauth;
         try {
           const { data: orgs, error } = await supabaseAdmin.from("organizations").select("id");
           if (error) throw error;
