@@ -87,80 +87,79 @@ function GoalsPage() {
 
   return (
     <div className="flex flex-col gap-6 p-6">
-      <div className="flex items-center justify-between gap-4 flex-wrap">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Metas & Leaderboard</h1>
-          <p className="text-sm text-muted-foreground">
-            Acompanhe o progresso da equipe contra metas mensais.
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Input
-            type="month"
-            value={month}
-            onChange={(e) => setMonth(e.target.value)}
-            className="w-[180px]"
-          />
-          {canManage && (
-            <Dialog open={open} onOpenChange={setOpen}>
-              <DialogTrigger asChild>
-                <Button>
-                  <TargetIcon className="mr-2 h-4 w-4" /> Definir meta
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Definir meta para {month}</DialogTitle>
-                </DialogHeader>
-                <div className="grid gap-4 py-2">
-                  <div className="grid gap-2">
-                    <Label>Vendedor</Label>
-                    <Select value={selectedUser} onValueChange={setSelectedUser}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Selecione um vendedor" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {rows.map((r) => (
-                          <SelectItem key={r.user_id} value={r.user_id}>
-                            {r.user_name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="grid gap-2">
-                    <Label>Meta (R$)</Label>
-                    <Input
-                      type="number"
-                      min="0"
-                      step="100"
-                      value={target}
-                      onChange={(e) => setTarget(e.target.value)}
-                      placeholder="50000"
-                    />
-                  </div>
-                </div>
-                <DialogFooter>
-                  <Button variant="outline" onClick={() => setOpen(false)}>
-                    Cancelar
+      <PageHeader
+        title="Metas & Leaderboard"
+        subtitle="Acompanhe o progresso da equipe contra metas mensais."
+        icon={Trophy}
+        action={
+          <div className="flex items-center gap-2">
+            <Input
+              type="month"
+              value={month}
+              onChange={(e) => setMonth(e.target.value)}
+              className="w-[180px]"
+            />
+            {canManage && (
+              <Dialog open={open} onOpenChange={setOpen}>
+                <DialogTrigger asChild>
+                  <Button>
+                    <TargetIcon className="mr-2 h-4 w-4" /> Definir meta
                   </Button>
-                  <Button
-                    disabled={!selectedUser || !target || mutation.isPending}
-                    onClick={() =>
-                      mutation.mutate({
-                        user_id: selectedUser,
-                        target_value: Number(target),
-                      })
-                    }
-                  >
-                    Salvar
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          )}
-        </div>
-      </div>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Definir meta para {month}</DialogTitle>
+                  </DialogHeader>
+                  <div className="grid gap-4 py-2">
+                    <div className="grid gap-2">
+                      <Label>Vendedor</Label>
+                      <Select value={selectedUser} onValueChange={setSelectedUser}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione um vendedor" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {rows.map((r) => (
+                            <SelectItem key={r.user_id} value={r.user_id}>
+                              {r.user_name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="grid gap-2">
+                      <Label>Meta (R$)</Label>
+                      <Input
+                        type="number"
+                        min="0"
+                        step="100"
+                        value={target}
+                        onChange={(e) => setTarget(e.target.value)}
+                        placeholder="50000"
+                      />
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setOpen(false)}>
+                      Cancelar
+                    </Button>
+                    <Button
+                      disabled={!selectedUser || !target || mutation.isPending}
+                      onClick={() =>
+                        mutation.mutate({
+                          user_id: selectedUser,
+                          target_value: Number(target),
+                        })
+                      }
+                    >
+                      Salvar
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            )}
+          </div>
+        }
+      />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
