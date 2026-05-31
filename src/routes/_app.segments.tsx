@@ -42,6 +42,7 @@ function SegmentsPage() {
   return (
     <div className="space-y-6 p-6">
       <PageHeader
+        icon={Sparkles}
         title="Segmentação RFM"
         subtitle="Clientes agrupados por Recência, Frequência e Valor. Cada segmento sugere uma ação concreta."
       />

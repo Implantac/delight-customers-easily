@@ -43,7 +43,7 @@ function ImportPage() {
 
   return (
     <div className="p-4 md:p-8 max-w-4xl">
-      <PageHeader title="Importar CSV" subtitle="Carregue um arquivo CSV e mapeie as colunas para os campos do CRM." />
+      <PageHeader icon={Upload} title="Importar CSV" subtitle="Carregue um arquivo CSV e mapeie as colunas para os campos do CRM." />
       <Tabs value={kind} onValueChange={(v) => setKind(v as Kind)} className="mt-6">
         <TabsList>
           <TabsTrigger value="contacts">Contatos</TabsTrigger>

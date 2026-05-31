@@ -48,6 +48,7 @@ function ProductsPage() {
     <div className="p-4 md:p-8 space-y-6 max-w-7xl mx-auto">
       <ErpReadOnlyBanner entity="Produtos" />
       <PageHeader
+        icon={Boxes}
         title="Inteligência de Portfólio"
         subtitle="Análise comercial ABC/XYZ sobre o catálogo espelhado do ERP. Cadastro e estoque permanecem no ERP."
       />

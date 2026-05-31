@@ -37,6 +37,7 @@ function LeadScoringPage() {
   return (
     <div className="space-y-6 p-6">
       <PageHeader
+        icon={Thermometer}
         title="Lead Scoring"
         subtitle="Onde focar agora. Cada contato é pontuado por engajamento, valor e recência."
       />

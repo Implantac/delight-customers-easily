@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { listOutbox, resolveOutbox } from "@/lib/erp-outbox.functions";
+import { Inbox } from "lucide-react";
 
 export const Route = createFileRoute("/_app/integrations/outbox")({
   component: OutboxPage,
@@ -61,6 +62,7 @@ function OutboxPage() {
     <RequireManager>
       <div className="p-6 space-y-6">
         <PageHeader
+          icon={Inbox}
           title="Fila CRM → ERP"
           subtitle="Mutações comerciais aguardando propagação ao ERP. Itens em 'needs_manual' requerem revisão."
         />

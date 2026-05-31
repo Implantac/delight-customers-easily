@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { listMappingTemplates, applyMappingTemplate } from "@/lib/erp-templates.functions";
+import { ClipboardList } from "lucide-react";
 
 export const Route = createFileRoute("/_app/integrations/templates")({
   component: TemplatesPage,
@@ -49,7 +50,7 @@ function TemplatesPage() {
   return (
     <RequireManager>
       <div className="p-6 space-y-6">
-        <PageHeader title="Templates de Mapeamento" subtitle="Aplique mapeamentos prontos para ERPs conhecidos. Apenas dados comerciais." />
+        <PageHeader icon={ClipboardList} title="Templates de Mapeamento" subtitle="Aplique mapeamentos prontos para ERPs conhecidos. Apenas dados comerciais." />
 
         <div className="flex items-center gap-2">
           <Checkbox id="ow" checked={overwrite} onCheckedChange={(v) => setOverwrite(Boolean(v))} />

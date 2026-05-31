@@ -45,6 +45,7 @@ function ProductivityPage() {
   return (
     <div className="space-y-6 p-6">
       <PageHeader
+        icon={Activity}
         title="Produtividade da equipe"
         subtitle="Quem está executando, quem precisa de ajuda — em um só olhar."
         action={
