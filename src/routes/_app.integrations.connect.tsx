@@ -17,8 +17,11 @@ import { Badge } from "@/components/ui/badge";
 import {
   ArrowLeft, ArrowRight, CheckCircle2, AlertCircle, Loader2, Plug,
   Cloud, Database, Shield, FileSpreadsheet, Sparkles, PartyPopper,
+  HelpCircle, Lock, MessageCircle, ChevronDown,
 } from "lucide-react";
 import { toast } from "sonner";
+
+const STEP_LABELS = ["Seu ERP", "Como conectar", "Acesso", "Teste", "Dados", "Pronto"];
 
 export const Route = createFileRoute("/_app/integrations/connect")({ component: ConnectWizard });
 
@@ -134,8 +137,38 @@ function ConnectWizard() {
         <h1 className="text-2xl font-semibold flex items-center gap-2">
           <Plug className="h-6 w-6" /> Conectar meu ERP
         </h1>
-        <p className="text-sm text-muted-foreground mt-1">Passo {step} de 6</p>
-        <Progress value={(step / 6) * 100} className="mt-3" />
+        <p className="text-sm text-muted-foreground mt-1">
+          Vamos te guiar passo a passo. Você não precisa entender de tecnologia. 💡
+        </p>
+
+        {/* Stepper nomeado */}
+        <div className="mt-4 flex items-center gap-1 overflow-x-auto pb-1">
+          {STEP_LABELS.map((label, i) => {
+            const n = (i + 1) as Step;
+            const active = step === n;
+            const done = step > n;
+            return (
+              <div key={label} className="flex items-center gap-1 shrink-0">
+                <div className={`flex items-center gap-2 rounded-full px-3 py-1 text-xs border transition ${
+                  active ? "border-primary bg-primary/10 text-primary font-medium" :
+                  done ? "border-green-500/40 bg-green-500/5 text-green-700 dark:text-green-400" :
+                  "border-muted text-muted-foreground"
+                }`}>
+                  <span className={`h-5 w-5 rounded-full flex items-center justify-center text-[10px] ${
+                    active ? "bg-primary text-primary-foreground" :
+                    done ? "bg-green-600 text-white" :
+                    "bg-muted"
+                  }`}>
+                    {done ? "✓" : i + 1}
+                  </span>
+                  <span className="hidden sm:inline">{label}</span>
+                </div>
+                {i < STEP_LABELS.length - 1 && <div className="h-px w-3 bg-border" />}
+              </div>
+            );
+          })}
+        </div>
+        <Progress value={(step / 6) * 100} className="mt-3 h-1" />
       </div>
 
       {/* PASSO 1 — Escolher ERP */}
@@ -165,6 +198,14 @@ function ConnectWizard() {
                   </div>
                 </button>
               ))}
+            </div>
+            <div className="mt-4 rounded-md bg-muted/40 p-3 text-xs text-muted-foreground flex items-start gap-2">
+              <HelpCircle className="h-4 w-4 mt-0.5 shrink-0" />
+              <div>
+                <strong className="text-foreground">Não sabe qual é o seu ERP?</strong> É o sistema que sua empresa usa para
+                emitir notas, controlar estoque ou financeiro. Se ninguém da equipe souber, escolha
+                <em> "ERP personalizado"</em> e nós te ajudamos por planilha.
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -218,44 +259,66 @@ function ConnectWizard() {
         <Card>
           <CardHeader>
             <CardTitle>Dados de acesso do {erp.name}</CardTitle>
-            <CardDescription>Preencha os campos abaixo. Tudo fica guardado com segurança.</CardDescription>
+            <CardDescription>Preencha os campos abaixo. Nada disso é compartilhado.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
+            {/* Reforço de segurança */}
+            <div className="flex items-center gap-2 rounded-md border border-green-500/30 bg-green-500/5 px-3 py-2 text-xs text-green-700 dark:text-green-400">
+              <Lock className="h-4 w-4" />
+              Suas credenciais são criptografadas e ficam guardadas apenas na sua conta.
+            </div>
+
             <div className="space-y-2">
               <Label>Nome desta conexão</Label>
               <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder={`Meu ${erp.name}`} />
+              <p className="text-xs text-muted-foreground">Um apelido para você identificar depois. Ex: "Matriz" ou "Filial SP".</p>
             </div>
+
             {provider === "bling" ? (
               <div className="space-y-2">
-                <Label>Access Token</Label>
+                <Label>Access Token <span className="text-xs text-muted-foreground font-normal">(token de acesso)</span></Label>
                 <Input
                   type="password"
                   value={form.app_key}
                   onChange={(e) => setForm({ ...form, app_key: e.target.value })}
                   placeholder="Cole aqui o token do Bling"
                 />
-                <p className="text-xs text-muted-foreground">
-                  Encontre em: Preferências → Sistema → Integrações → API no painel do Bling.
-                </p>
+                <WhereToFind
+                  title="Onde encontro o Access Token do Bling?"
+                  steps={[
+                    "Acesse seu Bling em bling.com.br e faça login",
+                    'Clique no menu "Preferências" (canto superior direito)',
+                    'Vá em "Sistema" → "Integrações" → "API"',
+                    'Clique em "Gerar novo token" e copie o código',
+                    "Cole o código no campo acima",
+                  ]}
+                />
               </div>
             ) : (
               <>
                 <div className="space-y-2">
-                  <Label>App Key</Label>
+                  <Label>App Key <span className="text-xs text-muted-foreground font-normal">(chave do aplicativo)</span></Label>
                   <Input value={form.app_key} onChange={(e) => setForm({ ...form, app_key: e.target.value })} placeholder="Sua chave do Omie" />
                 </div>
                 <div className="space-y-2">
-                  <Label>App Secret</Label>
+                  <Label>App Secret <span className="text-xs text-muted-foreground font-normal">(segredo do aplicativo)</span></Label>
                   <Input
                     type="password"
                     value={form.app_secret}
                     onChange={(e) => setForm({ ...form, app_secret: e.target.value })}
-                    placeholder="Sua senha do Omie"
+                    placeholder="Senha do aplicativo Omie"
                   />
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Encontre em: Aplicativos → Meus Aplicativos no painel do Omie.
-                </p>
+                <WhereToFind
+                  title="Onde encontro App Key e App Secret do Omie?"
+                  steps={[
+                    "Acesse seu Omie em app.omie.com.br e faça login",
+                    'No menu, vá em "Aplicativos" → "Meus Aplicativos"',
+                    'Crie um novo app (ou abra um existente) com a permissão "Clientes"',
+                    'Copie o "App Key" e o "App Secret" mostrados na tela',
+                    "Cole os dois nos campos acima",
+                  ]}
+                />
               </>
             )}
 
@@ -402,6 +465,38 @@ function ConnectWizard() {
             </div>
           </CardContent>
         </Card>
+      )}
+
+      {/* Rodapé: ajuda humana sempre visível */}
+      <div className="pt-2 flex items-center justify-center">
+        <Link to="/integrations/help">
+          <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground">
+            <MessageCircle className="h-4 w-4" /> Travou? Fale com a gente
+          </Button>
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+function WhereToFind({ title, steps }: { title: string; steps: string[] }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="rounded-md border bg-muted/30">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="w-full flex items-center justify-between px-3 py-2 text-xs font-medium hover:bg-muted/50 transition"
+      >
+        <span className="flex items-center gap-2">
+          <HelpCircle className="h-3.5 w-3.5" /> {title}
+        </span>
+        <ChevronDown className={`h-3.5 w-3.5 transition ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open && (
+        <ol className="px-4 pb-3 pt-1 text-xs text-muted-foreground space-y-1 list-decimal list-inside">
+          {steps.map((s, i) => <li key={i}>{s}</li>)}
+        </ol>
       )}
     </div>
   );
