@@ -1,76 +1,107 @@
-# Plano: USE CRM → Plataforma de Inteligência Comercial
 
-Este é um trabalho grande (semanas de execução). Vou propor um plano **faseado e priorizado** para entregarmos valor em ondas, sem tentar fazer tudo em uma única mensagem (o que destruiria a qualidade). Cada fase termina em algo navegável e testável.
+# Plano — Backend CRM Enterprise (consome ERP, nunca é ERP)
 
-## Princípio-mestre (aplicado em toda fase)
-- **Nada de ERP**: estoque, fiscal, financeiro, NF, contas a pagar/receber, SPED, compras, produção, logística, RH ficam **fora**. Onde já existem telas dessas, marcamos como `ERP read-only` (banner já existe) ou removemos do menu principal.
-- Toda feature responde: *gera lead? converte? aumenta venda? retém? melhora representante/marketing? identifica oportunidade?* Se não, não entra.
+> **Guardrail absoluto:** nenhum item abaixo cria estoque, compras, financeiro, fiscal, contábil, produção, logística, contas a pagar/receber, fluxo de caixa ou emissão fiscal. Tudo que envolver esses domínios é **somente leitura/consulta** vinda do ERP via conector.
 
----
-
-## Fase 1 — Auditoria + Limpeza da Sidebar (entrega imediata)
-1. Auditar rotas em `src/routes/_app.*` e listar:
-   - telas ERP-like (assets, banking, expenses, finance, invoices, products, stock, suppliers, sales-orders, subscriptions, contracts) → **remover do menu principal**, mover para grupo recolhido `Integrações ERP > Consulta` ou esconder.
-   - duplicações (ex: `oportunidades` vs `opportunity-map`, `contacts` vs `companies` vs `carteira`).
-2. Reorganizar `AppSidebar` na ordem oficial pedida:
-   `Dashboard · Carteira · Leads · Clientes · Oportunidades · Representantes · Agenda · WhatsApp · Marketing · Influencers · Geointeligência · IA Comercial · Relatórios · Integrações ERP · Empresas · Usuários · Configurações`
-3. Renomear "Empresas" para refletir **tenant/filial/unidade**, não cliente. Clientes = `Clientes` (companies de negócio).
-4. Entregável: navegação enxuta, foco 100% comercial.
-
-## Fase 2 — Revenue Command Center (novo Dashboard)
-- Substituir `/dashboard` por painel com cards:
-  - Receita em risco · Potencial identificado · Clientes sem compra · Oportunidades prioritárias · Cobertura representantes · Campanhas recomendadas · **Plano do dia** · Ações sugeridas.
-- **Business Health Score** (0-100) no topo, com breakdown: crescimento, retenção, conversão, produtividade, recompra.
-- Todos os widgets clicáveis → drill-down nas telas correspondentes.
-
-## Fase 3 — Customer 360 turbinado
-- `/clientes/$id` (ex-`/contacts/$id` e `/companies/$id` unificados em tabs):
-  - Header: dados, segmento, CNAE, representante, ticket médio, frequência, última compra, score, health.
-  - Tabs: Timeline · WhatsApp · Emails · Visitas · Reuniões · Notas · Campanhas · Oportunidades · IA (próximas ações).
-  - Bloco "IA Comercial" sempre visível com 3 próximas ações sugeridas.
-
-## Fase 4 — Carteira Comercial (a "tela principal")
-- Filtros completos: representante, região, cidade, estado, segmento, CNAE, período, canal.
-- Colunas: cliente, potencial, score, frequência, status relacionamento, última interação, buckets (risco/recompra/upsell/cross-sell).
-- Ações em lote: campanha, sequência, atribuir representante, exportar.
-
-## Fase 5 — Central de Oportunidades
-- `/oportunidades` com **buckets**: recuperar, sem compra, recompra, upsell, cross-sell, territorial, por campanha.
-- IA prioriza (score 0-100) e explica o "por quê".
-
-## Fase 6 — Representantes + Geointeligência + IA de Rotas
-- `/representantes`: carteira, visitas, metas, produtividade, conversão, cobertura, oportunidades.
-- `/geointeligencia`: mapa com clientes, prospects, rotas, cobertura, potencial territorial.
-- **IA de rotas**: ao montar visita, sugere prospects/clientes/oportunidades próximas baseado em CNAE/segmento/perfil dos melhores clientes.
-
-## Fase 7 — Marketing Intelligence + Lead Scoring + Influencers
-- Marketing: campanhas → leads → conversão → receita → ROI (já parcialmente existe, expandir).
-- Lead scoring automático (potencial, interesse, compatibilidade, região, segmento).
-- Influencer Intelligence: link exclusivo + LP + cupom + métricas (leads, vendas, ROI).
-
-## Fase 8 — WhatsApp Enterprise + Omnichannel + Chat interno
-- WhatsApp: multiatendimento, histórico, follow-up, campanhas, automações (base já existe).
-- Omnichannel: Instagram, Facebook, TikTok, LinkedIn, Email, Chat — tudo no Customer 360.
-- Chat interno corporativo.
-
-## Fase 9 — Multiempresa / Benchmark / ERP Connect Hub
-- Modo Individual / Consolidado / Comparativo entre tenants/filiais.
-- Benchmark com IA (melhores práticas, gargalos).
-- ERP Connect Hub: wizard 6 passos (selecionar ERP → método → testar → IA detecta → validar → sincronizar).
-- ERP Health Center (online/offline/última sync/erros).
-- Agent local (Windows/Linux) — apenas **especificação** nesta fase; build do binário é fora do escopo desta plataforma web.
-
-## Fase 10 — Automações + Alertas + Knowledge Center
-- Motor visual SE/ENTÃO.
-- Alertas matinais (07:30) por papel.
-- IA aprende com histórico e recomenda.
+Estado atual já entregue (não será refeito): `organizations` multinível, `memberships`, RLS, `erp_connections/erp_customers/erp_sales_history/erp_customer_metrics`, `customer_360_snapshot`, `ai_lead_scores/churn/repurchase/recommendations`, `geo_locations` + `find_opportunities_in_radius`, VRP em `/geo-rota`, Connect Hub em `/erp-connect`, drivers REST + Postgres + agent-bridged.
 
 ---
 
-## Como vou executar
-- **Uma fase por mensagem** (algumas grandes podem virar 2 mensagens). Você aprova/ajusta no fim de cada fase antes de eu seguir.
-- Em cada fase: edito código, mantenho RLS/multitenant, uso tokens do design system, sem alterar regras de segurança aceitas.
-- Tudo no padrão TanStack Start + `createServerFn` + Supabase (Lovable Cloud) já em uso.
+## Fase 1 — ERP Connect Universal (drivers que faltam)
 
-## Próximo passo proposto
-Começar pela **Fase 1 (Auditoria + Sidebar)** — é a base que destrava todas as outras e já entrega a sensação de "CRM, não ERP". Posso começar agora?
+Objetivo: cobrir os 6 protocolos do manifesto. Hoje temos REST, Postgres e agent-bridged. Faltam **MySQL, SQL Server, Firebird, Oracle**.
+
+- Adicionar drivers em `src/lib/erp-drivers/`:
+  - `mysql.ts` (via `mysql2`)
+  - `mssql.ts` (via `mssql` / tedious)
+  - `firebird.ts` (via `node-firebird` ou agent-bridged se incompatível com Worker)
+  - `oracle.ts` (via `oracledb` ou agent-bridged)
+- Para drivers Node-only (Firebird/Oracle/MSSQL pesados): rotear **automaticamente** pelo `agent-bridged.ts` (já existente), mantendo a mesma interface `ErpDriver`.
+- Registrar todos em `src/lib/erp-drivers/index.ts` com detecção por `connection_type`.
+- Validação de credenciais (`testConnection`) obrigatória antes de salvar — já é padrão, só estender.
+
+**Sem novas tabelas.** Reutiliza `erp_connections`.
+
+---
+
+## Fase 2 — ERP Mapping Engine
+
+Hoje o mapeamento é implícito no driver. Vamos explicitar:
+
+- Nova tabela `erp_field_mappings` (org, connection_id, entity `customer|rep|sale`, source_field, target_field, transform jsonb).
+- UI em `/erp-connect/$id/mapping` (drag-and-drop simples) — **só configuração**, sem criar entidade do ERP.
+- Função `applyMapping(row, mapping)` usada pelo Sync Engine antes do upsert.
+- Presets por ERP popular (Bling, Omie, TOTVS, SAP Business One) entregues como JSON seed.
+
+---
+
+## Fase 3 — ERP Sync Engine + Health Center
+
+Objetivo: tornar a sync confiável, observável e bidirecional controlada.
+
+- Tabela `erp_sync_jobs` (queue: pending/running/done/failed, retry_count, last_error, payload).
+- Tabela `erp_sync_conflicts` (entity, erp_value, crm_value, resolution `erp_wins|crm_wins|manual`, resolved_at).
+- Server fn `enqueueSync({connection_id, direction, entity})` — direção `crm_to_erp` exige flag `bidirectional_enabled` na conexão.
+- Worker tick (`/api/public/hooks/erp-sync-tick.ts` já existe) processa fila com lock otimista, escreve auditoria em `audit_log`.
+- **Health Center** em `/erp-connect/$id/health`: latência média, taxa de erro 24h, último sync por entidade, conflitos abertos, throughput. Powered by view materializada `erp_connection_health`.
+
+---
+
+## Fase 4 — Inteligência Comercial (responder as 7 perguntas-chave)
+
+Criar server fns que respondem cada pergunta do manifesto, todas filtráveis por org/filial:
+
+| Pergunta | Função | Fonte |
+|---|---|---|
+| Quem vende mais/menos? | `getRepRanking` | `erp_sales_history` + `users/memberships` |
+| Quem devo visitar? | `getVisitPriority` | `customer_360_snapshot` + `ai_churn` + última visita |
+| Clientes com potencial? | `getHighPotentialCustomers` | `ai_repurchase_predictions` + RFM |
+| Clientes em risco? | `getChurnRisk` | `ai_churn_predictions` |
+| Regiões com oportunidade? | `getRegionalOpportunities` | `get_regional_sales_rollup` (já existe) + `find_opportunities_in_radius` |
+| Campanhas que funcionam? | `getCampaignROI` | `campaigns` + `deals` won atribuídos |
+
+Dashboard novo `/inteligencia-comercial` agregando os 6 cards.
+
+---
+
+## Fase 5 — Customer 360 ampliado
+
+Expandir `customer_360_snapshot` (refresh já existe) para consolidar **tudo** comercial:
+
+- Adicionar agregados: `whatsapp_msgs_30d`, `emails_30d`, `last_visit_at`, `campaign_touches_90d`, `nps_last`.
+- Trigger de refresh incremental quando: nova `activity`, nova `whatsapp_message`, novo `deal`, nova venda importada.
+- Página `/companies/$id` já consome — só adicionar os novos blocos.
+
+---
+
+## Fase 6 — IA Comercial em produção (batch + on-demand)
+
+- Agendar `propensity-batch-tick` via `pg_cron` (hourly): indexa embeddings novos e roda scoring para clientes ativos.
+- Adicionar `getNextBestAction(customer_id)` que combina churn + repurchase + última atividade → recomendação textual + CTA.
+- Painel "IA do Dia" no `/dashboard` com top-10 ações sugeridas para o usuário logado.
+
+---
+
+## O que **NÃO** entra neste plano (por regra absoluta)
+
+- ❌ Cadastro de produtos, estoque, NCM, CFOP
+- ❌ Emissão de NFe/NFSe/boleto
+- ❌ Contas a pagar/receber, conciliação bancária, fluxo de caixa
+- ❌ Folha, ponto, RH
+- ❌ Ordens de produção, MRP, logística
+- ❌ Qualquer tela "cadastro de X do ERP" — apenas **visualização read-only** de dados sincronizados
+
+Se em qualquer fase surgir necessidade desses dados, a resposta é **sempre**: "ler do ERP via conector existente", nunca criar no CRM.
+
+---
+
+## Ordem sugerida de execução
+
+1. **Fase 4** (Inteligência Comercial) — maior valor percebido, usa dados já existentes
+2. **Fase 6** (IA em produção via pg_cron) — destrava os scores que já temos
+3. **Fase 5** (Customer 360 ampliado) — completa a visão
+4. **Fase 3** (Sync Engine + Health) — confiabilidade
+5. **Fase 2** (Mapping Engine) — flexibilidade de integração
+6. **Fase 1** (drivers MySQL/MSSQL/Firebird/Oracle) — cobertura de protocolos
+
+Cada fase é independente e entregável isoladamente. Posso começar pela Fase 4 assim que aprovado.
