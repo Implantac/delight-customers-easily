@@ -8,7 +8,7 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 export type ErpIntegration = {
   id: string;
   organization_id: string;
-  provider: "omie";
+  provider: "omie" | "bling" | "custom";
   app_key: string;
   app_secret: string;
   is_active: boolean;
@@ -78,7 +78,7 @@ function buildClientePayload(input: {
 
 export const getErpIntegration = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: { organization_id: string; provider?: "omie" }) => d)
+  .inputValidator((d: { organization_id: string; provider?: "omie" | "bling" | "custom" }) => d)
   .handler(async ({ data, context }) => {
     const provider = data.provider ?? "omie";
     const { data: row, error } = await context.supabase
@@ -95,7 +95,7 @@ export const saveErpIntegration = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: {
     organization_id: string;
-    provider?: "omie";
+    provider?: "omie" | "bling" | "custom";
     app_key: string;
     app_secret: string;
     is_active?: boolean;
@@ -126,7 +126,7 @@ export const saveErpIntegration = createServerFn({ method: "POST" })
 
 export const deleteErpIntegration = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((d: { organization_id: string; provider?: "omie" }) => d)
+  .inputValidator((d: { organization_id: string; provider?: "omie" | "bling" | "custom" }) => d)
   .handler(async ({ data, context }) => {
     const provider = data.provider ?? "omie";
     const { error } = await context.supabase
