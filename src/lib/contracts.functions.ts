@@ -82,15 +82,23 @@ export const listContracts = createServerFn({ method: "POST" })
 
 export const getContract = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((i) => z.object({ id: z.string().uuid() }).parse(i))
+  .inputValidator((i) =>
+    z.object({ id: z.string().uuid(), organization_id: z.string().uuid() }).parse(i),
+  )
   .handler(async ({ data, context }) => {
     const { supabase } = context;
-    const { data: c, error } = await supabase.from("contracts").select("*").eq("id", data.id).single();
+    const { data: c, error } = await supabase
+      .from("contracts")
+      .select("*")
+      .eq("id", data.id)
+      .eq("organization_id", data.organization_id)
+      .single();
     if (error) throw new Error(error.message);
     const { data: events } = await supabase
       .from("contract_events")
       .select("*")
       .eq("contract_id", data.id)
+      .eq("organization_id", data.organization_id)
       .order("created_at", { ascending: false });
     return { contract: c as Contract, events: (events ?? []) as ContractEvent[] };
   });
