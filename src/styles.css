@@ -317,7 +317,74 @@
     transform: scaleX(1);
     transform-origin: left;
   }
+
+  /* Painel "glass" para destacar áreas premium sem peso visual */
+  .glass-panel {
+    background: color-mix(in oklab, var(--card) 80%, transparent);
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    border: 1px solid color-mix(in oklab, var(--border) 80%, transparent);
+    border-radius: var(--radius-lg);
+  }
+
+  /* Texto com gradiente da marca — para títulos de destaque pontuais */
+  .text-gradient {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Linha divisória sutil com gradiente — substitui borders duras */
+  .divider-soft {
+    height: 1px;
+    background: linear-gradient(to right, transparent, color-mix(in oklab, var(--border) 100%, transparent), transparent);
+  }
+
+  /* Shimmer para skeletons mais vivos */
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  .shimmer::after {
+    content: "";
+    position: absolute; inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--foreground) 6%, transparent), transparent);
+    animation: shimmer 1.6s var(--ease-in-out) infinite;
+  }
 }
+
+/* === Refinamentos globais (sem mexer em componentes) === */
+@layer base {
+  /* Cards do shadcn ganham hover sutil quando dentro de um link/botão */
+  a [data-slot="card"], button [data-slot="card"] {
+    transition: transform 200ms var(--ease-out), box-shadow 200ms var(--ease-out), border-color 200ms var(--ease-out);
+  }
+  a:hover [data-slot="card"], button:hover [data-slot="card"] {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+    border-color: color-mix(in oklab, var(--primary) 18%, var(--border));
+  }
+
+  /* Botões: feedback tátil leve no clique (não afeta variantes existentes) */
+  button:not(:disabled):active {
+    transform: translateY(0.5px);
+  }
+
+  /* Inputs: foco com glow sutil da cor primária */
+  input:focus-visible, textarea:focus-visible, select:focus-visible {
+    box-shadow: 0 0 0 4px color-mix(in oklab, var(--primary) 12%, transparent);
+  }
+
+  /* Tabelas: linhas com hover discreto para melhor leitura */
+  tbody tr {
+    transition: background-color 120ms var(--ease-out);
+  }
+  tbody tr:hover {
+    background-color: color-mix(in oklab, var(--primary) 4%, transparent);
+  }
+
 
 @keyframes fade-up {
   from { opacity: 0; transform: translateY(6px); }
