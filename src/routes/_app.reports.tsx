@@ -106,12 +106,17 @@ function ReportsPage() {
 
   return (
     <div className="p-6 space-y-6">
-      <PageHeader title="Relatórios" subtitle="Funil, forecast e desempenho do time" action={
-        <div className="flex gap-2">
-          <Button asChild variant="default"><Link to="/reports/weekly"><FileText className="h-4 w-4 mr-2" />Executivo PDF</Link></Button>
-          <Button onClick={exportCSV} variant="outline"><Download className="h-4 w-4 mr-2" />Exportar CSV</Button>
-        </div>
-      } />
+      <PageHeader
+        title="Relatórios Comerciais"
+        subtitle="Funil, forecast 90 dias e ranking de receita — o pulso do time de vendas."
+        icon={TrendingUp}
+        action={
+          <div className="flex gap-2">
+            <Button asChild variant="default"><Link to="/reports/weekly"><FileText className="h-4 w-4 mr-2" />Executivo PDF</Link></Button>
+            <Button onClick={exportCSV} variant="outline"><Download className="h-4 w-4 mr-2" />Exportar CSV</Button>
+          </div>
+        }
+      />
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {[
