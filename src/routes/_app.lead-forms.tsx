@@ -146,17 +146,12 @@ function LeadFormsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-            <FormInput className="h-6 w-6" /> Formulários de Captura
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Endpoints públicos que recebem leads e criam contatos/deals automaticamente.
-          </p>
-        </div>
-        {canManage && <Button onClick={openNew}><Plus className="h-4 w-4 mr-1" /> Novo formulário</Button>}
-      </div>
+      <PageHeader
+        icon={FormInput}
+        title="Formulários de Captura"
+        subtitle="Endpoints públicos que recebem leads e criam contatos/deals automaticamente."
+        action={canManage ? <Button onClick={openNew}><Plus className="h-4 w-4 mr-1" /> Novo formulário</Button> : undefined}
+      />
 
       {isLoading ? (
         <div className="space-y-2">{[1, 2].map((i) => <Skeleton key={i} className="h-24 w-full" />)}</div>

@@ -125,19 +125,16 @@ function LoyaltyPage() {
 
   return (
     <div className="container mx-auto p-6 space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-3xl font-bold flex items-center gap-2">
-            <Award className="h-7 w-7" /> Programa de Fidelidade
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            Acumule pontos por compras, premie clientes recorrentes e gerencie um catálogo de recompensas.
-          </p>
-        </div>
-        <Button onClick={() => setEnrollDlg(true)}>
-          <UserPlus className="h-4 w-4 mr-2" /> Inscrever contato
-        </Button>
-      </div>
+      <PageHeader
+        icon={Award}
+        title="Programa de Fidelidade"
+        subtitle="Acumule pontos por compras, premie clientes recorrentes e gerencie um catálogo de recompensas."
+        action={
+          <Button onClick={() => setEnrollDlg(true)}>
+            <UserPlus className="h-4 w-4 mr-2" /> Inscrever contato
+          </Button>
+        }
+      />
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <Card><CardContent className="p-4">

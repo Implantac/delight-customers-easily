@@ -179,17 +179,14 @@ function PlaybooksPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-            <ClipboardList className="h-6 w-6" /> Playbooks
-          </h1>
-          <p className="text-sm text-muted-foreground">Checklists padronizados para cada etapa do funil.</p>
-        </div>
-        {tab === "library" && canManage && (
+      <PageHeader
+        icon={ClipboardList}
+        title="Playbooks"
+        subtitle="Checklists padronizados para cada etapa do funil — operacionalize o que dá certo."
+        action={tab === "library" && canManage ? (
           <Button onClick={openNewPb}><Plus className="h-4 w-4 mr-1" /> Novo playbook</Button>
-        )}
-      </div>
+        ) : undefined}
+      />
 
       <Tabs value={tab} onValueChange={(v) => setTab(v as any)}>
         <TabsList>

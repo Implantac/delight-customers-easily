@@ -179,17 +179,14 @@ function TerritoriesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-            <MapIcon className="h-6 w-6" /> Territórios
-          </h1>
-          <p className="text-sm text-muted-foreground">Roteamento e distribuição de carteira por região ou segmento.</p>
-        </div>
-        {canManage && (
+      <PageHeader
+        icon={MapIcon}
+        title="Territórios"
+        subtitle="Roteamento e distribuição de carteira por região ou segmento."
+        action={canManage ? (
           <Button onClick={openNew}><Plus className="h-4 w-4 mr-1" /> Novo território</Button>
-        )}
-      </div>
+        ) : undefined}
+      />
 
       <div className="grid gap-4 lg:grid-cols-[320px_1fr]">
         <Card>

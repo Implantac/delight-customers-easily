@@ -160,15 +160,12 @@ function SubsPage() {
   return (
     <div className="space-y-6">
       <ErpReadOnlyBanner entity="Assinaturas recorrentes" />
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-            <Repeat className="h-6 w-6" /> Assinaturas
-          </h1>
-          <p className="text-sm text-muted-foreground">Receita recorrente, MRR e renovações.</p>
-        </div>
-        <Button onClick={openNew}><Plus className="h-4 w-4 mr-1" /> Nova assinatura</Button>
-      </div>
+      <PageHeader
+        icon={Repeat}
+        title="Assinaturas"
+        subtitle="Receita recorrente, MRR e renovações em um só painel."
+        action={<Button onClick={openNew}><Plus className="h-4 w-4 mr-1" /> Nova assinatura</Button>}
+      />
 
       <div className="grid gap-3 md:grid-cols-5">
         <Card><CardContent className="p-4">
