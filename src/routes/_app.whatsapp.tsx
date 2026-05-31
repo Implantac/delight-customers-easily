@@ -34,9 +34,11 @@ import {
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MessageCircle, Plus, Send, Check, CheckCheck, Clock, AlertTriangle, MoreVertical, UserPlus, FileText, User } from "lucide-react";
+import { MessageCircle, Plus, Send, Check, CheckCheck, Clock, AlertTriangle, MoreVertical, UserPlus, FileText, User, Building2, Phone, Mail, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { WhatsAppSlaPanel } from "@/components/whatsapp-sla-panel";
+import { NextActionBlock } from "@/components/next-action-block";
+import { whatsappLink } from "@/lib/wa";
 
 export const Route = createFileRoute("/_app/whatsapp")({ component: WhatsAppPage });
 
@@ -238,7 +240,7 @@ function WhatsAppPage() {
 
       <div className="flex-1 grid grid-cols-12 gap-4 px-6 pb-6 min-h-0">
         {/* List */}
-        <Card className="col-span-12 md:col-span-4 flex flex-col min-h-0">
+        <Card className="col-span-12 md:col-span-4 xl:col-span-3 flex flex-col min-h-0">
           <div className="p-3 border-b">
             <Tabs value={filter} onValueChange={(v) => setFilter(v as typeof filter)}>
               <TabsList className="grid grid-cols-3 w-full">
@@ -315,7 +317,7 @@ function WhatsAppPage() {
         </Card>
 
         {/* Thread */}
-        <Card className="col-span-12 md:col-span-8 flex flex-col min-h-0">
+        <Card className="col-span-12 md:col-span-8 xl:col-span-6 flex flex-col min-h-0">
           {selected ? (
             <>
               <div className="p-3 border-b flex items-center gap-3">
@@ -462,6 +464,104 @@ function WhatsAppPage() {
             <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground">
               <MessageCircle className="h-10 w-10 mb-2 opacity-50" />
               <p>Selecione uma conversa para começar.</p>
+            </div>
+          )}
+        </Card>
+
+        {/* Customer 360 rail — só em telas largas */}
+        <Card className="hidden xl:flex col-span-12 xl:col-span-3 flex-col min-h-0 overflow-hidden">
+          {selected ? (
+            <ScrollArea className="flex-1">
+              <div className="p-4 space-y-4">
+                {/* Contato */}
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="h-12 w-12">
+                      <AvatarFallback className="bg-[var(--gradient-primary)] text-primary-foreground text-sm font-semibold">
+                        {initials(selected.contact_name)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="min-w-0">
+                      <p className="font-semibold truncate">{selected.contact_name}</p>
+                      <p className="text-xs text-muted-foreground truncate">{selected.contact_phone}</p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-3 gap-1.5">
+                    <Button asChild variant="outline" size="sm" className="h-8 px-0" disabled={!selected.contact_phone}>
+                      <a
+                        href={(selected.contact_phone && whatsappLink(selected.contact_phone)) || "#"}
+                        target="_blank"
+                        rel="noreferrer"
+                        title="Abrir no WhatsApp"
+                      >
+                        <MessageCircle className="h-3.5 w-3.5" />
+                      </a>
+                    </Button>
+                    <Button asChild variant="outline" size="sm" className="h-8 px-0" disabled={!selected.contact_phone}>
+                      <a href={selected.contact_phone ? `tel:${selected.contact_phone}` : "#"} title="Ligar">
+                        <Phone className="h-3.5 w-3.5" />
+                      </a>
+                    </Button>
+                    <Button variant="outline" size="sm" className="h-8 px-0" disabled title="E-mail">
+                      <Mail className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Status & atribuição (resumo) */}
+                <div className="rounded-md border border-border/60 bg-muted/30 p-3 space-y-1.5 text-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Status</span>
+                    <Badge variant="outline" className="text-[10px]">{STATUS_LABEL[selected.status]}</Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Prioridade</span>
+                    <Badge className={`text-[10px] ${PRIORITY_COLOR[selected.priority]}`}>{selected.priority}</Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Atribuída a</span>
+                    <span className="font-medium truncate max-w-[60%] text-right">
+                      {selected.assigned_name ?? <span className="text-muted-foreground italic">sem dono</span>}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Atalhos para perfil */}
+                <div className="space-y-1.5">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium px-1">
+                    Perfil
+                  </p>
+                  {selected.contact_id ? (
+                    <Button asChild variant="ghost" size="sm" className="w-full justify-start h-8">
+                      <Link to="/contacts/$id" params={{ id: selected.contact_id }}>
+                        <User className="h-3.5 w-3.5 mr-2" /> Abrir contato
+                      </Link>
+                    </Button>
+                  ) : (
+                    <p className="text-xs text-muted-foreground px-2">
+                      Sem contato vinculado.
+                    </p>
+                  )}
+                </div>
+
+                {/* IA — próxima ação sugerida */}
+                {selected.contact_id && (
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-1.5 px-1">
+                      <Sparkles className="h-3 w-3 text-primary" />
+                      <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">
+                        IA sugere
+                      </p>
+                    </div>
+                    <NextActionBlock surface="contact" title="" limit={2} />
+                  </div>
+                )}
+              </div>
+            </ScrollArea>
+          ) : (
+            <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground p-6 text-center">
+              <Sparkles className="h-8 w-8 mb-2 opacity-50" />
+              <p className="text-sm">Selecione uma conversa para ver o Customer 360 e sugestões da IA.</p>
             </div>
           )}
         </Card>
