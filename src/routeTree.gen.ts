@@ -89,6 +89,7 @@ import { Route as AppReportsWeeklyRouteImport } from './routes/_app.reports.week
 import { Route as AppProposalsIdRouteImport } from './routes/_app.proposals.$id'
 import { Route as AppKbIdRouteImport } from './routes/_app.kb.$id'
 import { Route as AppInviteTokenRouteImport } from './routes/_app.invite.$token'
+import { Route as AppIntegrationsAdvancedRouteImport } from './routes/_app.integrations.advanced'
 import { Route as AppContactsIdRouteImport } from './routes/_app.contacts.$id'
 import { Route as AppCompaniesIdRouteImport } from './routes/_app.companies.$id'
 import { Route as ApiPublicHooksRefreshRecommendationsRouteImport } from './routes/api/public/hooks/refresh-recommendations'
@@ -498,6 +499,11 @@ const AppInviteTokenRoute = AppInviteTokenRouteImport.update({
   path: '/invite/$token',
   getParentRoute: () => AppRoute,
 } as any)
+const AppIntegrationsAdvancedRoute = AppIntegrationsAdvancedRouteImport.update({
+  id: '/advanced',
+  path: '/advanced',
+  getParentRoute: () => AppIntegrationsRoute,
+} as any)
 const AppContactsIdRoute = AppContactsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -569,7 +575,7 @@ export interface FileRoutesByFullPath {
   '/goals': typeof AppGoalsRoute
   '/ia-comercial': typeof AppIaComercialRoute
   '/influencers': typeof AppInfluencersRoute
-  '/integrations': typeof AppIntegrationsRoute
+  '/integrations': typeof AppIntegrationsRouteWithChildren
   '/kb': typeof AppKbRouteWithChildren
   '/lead-forms': typeof AppLeadFormsRoute
   '/lead-scoring': typeof AppLeadScoringRoute
@@ -610,6 +616,7 @@ export interface FileRoutesByFullPath {
   '/win-loss': typeof AppWinLossRoute
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
+  '/integrations/advanced': typeof AppIntegrationsAdvancedRoute
   '/invite/$token': typeof AppInviteTokenRoute
   '/kb/$id': typeof AppKbIdRoute
   '/proposals/$id': typeof AppProposalsIdRoute
@@ -658,7 +665,7 @@ export interface FileRoutesByTo {
   '/goals': typeof AppGoalsRoute
   '/ia-comercial': typeof AppIaComercialRoute
   '/influencers': typeof AppInfluencersRoute
-  '/integrations': typeof AppIntegrationsRoute
+  '/integrations': typeof AppIntegrationsRouteWithChildren
   '/kb': typeof AppKbRouteWithChildren
   '/lead-forms': typeof AppLeadFormsRoute
   '/lead-scoring': typeof AppLeadScoringRoute
@@ -699,6 +706,7 @@ export interface FileRoutesByTo {
   '/win-loss': typeof AppWinLossRoute
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
+  '/integrations/advanced': typeof AppIntegrationsAdvancedRoute
   '/invite/$token': typeof AppInviteTokenRoute
   '/kb/$id': typeof AppKbIdRoute
   '/proposals/$id': typeof AppProposalsIdRoute
@@ -749,7 +757,7 @@ export interface FileRoutesById {
   '/_app/goals': typeof AppGoalsRoute
   '/_app/ia-comercial': typeof AppIaComercialRoute
   '/_app/influencers': typeof AppInfluencersRoute
-  '/_app/integrations': typeof AppIntegrationsRoute
+  '/_app/integrations': typeof AppIntegrationsRouteWithChildren
   '/_app/kb': typeof AppKbRouteWithChildren
   '/_app/lead-forms': typeof AppLeadFormsRoute
   '/_app/lead-scoring': typeof AppLeadScoringRoute
@@ -790,6 +798,7 @@ export interface FileRoutesById {
   '/_app/win-loss': typeof AppWinLossRoute
   '/_app/companies/$id': typeof AppCompaniesIdRoute
   '/_app/contacts/$id': typeof AppContactsIdRoute
+  '/_app/integrations/advanced': typeof AppIntegrationsAdvancedRoute
   '/_app/invite/$token': typeof AppInviteTokenRoute
   '/_app/kb/$id': typeof AppKbIdRoute
   '/_app/proposals/$id': typeof AppProposalsIdRoute
@@ -881,6 +890,7 @@ export interface FileRouteTypes {
     | '/win-loss'
     | '/companies/$id'
     | '/contacts/$id'
+    | '/integrations/advanced'
     | '/invite/$token'
     | '/kb/$id'
     | '/proposals/$id'
@@ -970,6 +980,7 @@ export interface FileRouteTypes {
     | '/win-loss'
     | '/companies/$id'
     | '/contacts/$id'
+    | '/integrations/advanced'
     | '/invite/$token'
     | '/kb/$id'
     | '/proposals/$id'
@@ -1060,6 +1071,7 @@ export interface FileRouteTypes {
     | '/_app/win-loss'
     | '/_app/companies/$id'
     | '/_app/contacts/$id'
+    | '/_app/integrations/advanced'
     | '/_app/invite/$token'
     | '/_app/kb/$id'
     | '/_app/proposals/$id'
@@ -1663,6 +1675,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppInviteTokenRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/integrations/advanced': {
+      id: '/_app/integrations/advanced'
+      path: '/advanced'
+      fullPath: '/integrations/advanced'
+      preLoaderRoute: typeof AppIntegrationsAdvancedRouteImport
+      parentRoute: typeof AppIntegrationsRoute
+    }
     '/_app/contacts/$id': {
       id: '/_app/contacts/$id'
       path: '/$id'
@@ -1746,6 +1765,18 @@ const AppContactsRouteWithChildren = AppContactsRoute._addFileChildren(
   AppContactsRouteChildren,
 )
 
+interface AppIntegrationsRouteChildren {
+  AppIntegrationsAdvancedRoute: typeof AppIntegrationsAdvancedRoute
+}
+
+const AppIntegrationsRouteChildren: AppIntegrationsRouteChildren = {
+  AppIntegrationsAdvancedRoute: AppIntegrationsAdvancedRoute,
+}
+
+const AppIntegrationsRouteWithChildren = AppIntegrationsRoute._addFileChildren(
+  AppIntegrationsRouteChildren,
+)
+
 interface AppKbRouteChildren {
   AppKbIdRoute: typeof AppKbIdRoute
 }
@@ -1826,7 +1857,7 @@ interface AppRouteChildren {
   AppGoalsRoute: typeof AppGoalsRoute
   AppIaComercialRoute: typeof AppIaComercialRoute
   AppInfluencersRoute: typeof AppInfluencersRoute
-  AppIntegrationsRoute: typeof AppIntegrationsRoute
+  AppIntegrationsRoute: typeof AppIntegrationsRouteWithChildren
   AppKbRoute: typeof AppKbRouteWithChildren
   AppLeadFormsRoute: typeof AppLeadFormsRoute
   AppLeadScoringRoute: typeof AppLeadScoringRoute
@@ -1897,7 +1928,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppGoalsRoute: AppGoalsRoute,
   AppIaComercialRoute: AppIaComercialRoute,
   AppInfluencersRoute: AppInfluencersRoute,
-  AppIntegrationsRoute: AppIntegrationsRoute,
+  AppIntegrationsRoute: AppIntegrationsRouteWithChildren,
   AppKbRoute: AppKbRouteWithChildren,
   AppLeadFormsRoute: AppLeadFormsRoute,
   AppLeadScoringRoute: AppLeadScoringRoute,
