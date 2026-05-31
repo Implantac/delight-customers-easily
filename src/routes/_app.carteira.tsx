@@ -16,8 +16,9 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import {
-  Briefcase, Search, ArrowRight, TrendingUp, AlertTriangle, Clock, Flame, Receipt,
+  Briefcase, Search, ArrowRight, TrendingUp, AlertTriangle, Clock, Flame, Receipt, Download,
 } from "lucide-react";
+import { toCSV, downloadCSV } from "@/lib/csv-export";
 
 export const Route = createFileRoute("/_app/carteira")({
   component: CarteiraPage,
