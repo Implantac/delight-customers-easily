@@ -320,19 +320,84 @@ function MockCard({
   );
 }
 
-/* ---------------- Logos / social proof ---------------- */
+/* ---------------- Stats strip ---------------- */
 
-function LogosStrip() {
-  const logos = ["Acme", "NorthWind", "Globex", "Initech", "Umbrella", "Hooli"];
+function StatsStrip() {
+  const stats = [
+    { value: "3×", label: "mais follow-ups completados" },
+    { value: "27%", label: "aumento na taxa de fechamento" },
+    { value: "5h", label: "economizadas por vendedor/semana" },
+    { value: "100%", label: "dos dados isolados por organização" },
+  ];
   return (
-    <section className="border-b border-border/60 bg-muted/30 py-10">
+    <section className="border-b border-border/60 bg-muted/30 py-12">
       <div className="mx-auto max-w-6xl px-4">
         <p className="text-center text-xs uppercase tracking-widest text-muted-foreground">
-          Confiança de times comerciais em crescimento
+          Resultados observados em times que adotaram o Lovable CRM
         </p>
-        <div className="mt-6 grid grid-cols-2 gap-6 text-center text-lg font-semibold text-muted-foreground/70 sm:grid-cols-3 md:grid-cols-6">
-          {logos.map((l) => (
-            <span key={l} className="tracking-tight">{l}</span>
+        <div className="mt-8 grid grid-cols-2 gap-6 md:grid-cols-4">
+          {stats.map((s) => (
+            <div key={s.label} className="text-center">
+              <div className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
+                {s.value}
+              </div>
+              <div className="mt-1 text-xs text-muted-foreground md:text-sm">{s.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- Testimonials ---------------- */
+
+const testimonials = [
+  {
+    quote:
+      "Conseguimos consolidar pipeline, WhatsApp e propostas em uma só ferramenta. Em 6 semanas o ciclo de venda caiu 22%.",
+    name: "Ana Carvalho",
+    role: "Head de Vendas, Construflex",
+  },
+  {
+    quote:
+      "O copiloto de IA virou o ponto de partida do dia dos vendedores. Ninguém mais perde tempo decidindo o que fazer primeiro.",
+    name: "Rafael Mendes",
+    role: "Diretor Comercial, NorteAg",
+  },
+  {
+    quote:
+      "Migrei de três planilhas e um WhatsApp Business numa tarde. O importador de CSV simplesmente funcionou.",
+    name: "Juliana Reis",
+    role: "Fundadora, Aurora Digital",
+  },
+];
+
+function Testimonials() {
+  return (
+    <section className="border-b border-border/60 py-24">
+      <div className="mx-auto max-w-6xl px-4">
+        <div className="mx-auto max-w-2xl text-center">
+          <Badge variant="outline" className="mb-4">Depoimentos</Badge>
+          <h2 className="text-balance text-3xl font-semibold tracking-tight md:text-4xl">
+            Times comerciais que pararam de perder oportunidades
+          </h2>
+        </div>
+        <div className="mt-14 grid gap-5 md:grid-cols-3">
+          {testimonials.map((t) => (
+            <figure
+              key={t.name}
+              className="flex flex-col rounded-2xl border border-border/70 bg-card p-6"
+            >
+              <Quote className="h-5 w-5 text-primary/70" />
+              <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-foreground/90">
+                "{t.quote}"
+              </blockquote>
+              <figcaption className="mt-6">
+                <div className="text-sm font-semibold">{t.name}</div>
+                <div className="text-xs text-muted-foreground">{t.role}</div>
+              </figcaption>
+            </figure>
           ))}
         </div>
       </div>
