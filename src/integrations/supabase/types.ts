@@ -4648,7 +4648,42 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      webhooks_safe: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          enabled: boolean | null
+          events: string[] | null
+          id: string | null
+          name: string | null
+          organization_id: string | null
+          updated_at: string | null
+          url: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          enabled?: boolean | null
+          events?: string[] | null
+          id?: string | null
+          name?: string | null
+          organization_id?: string | null
+          updated_at?: string | null
+          url?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          enabled?: boolean | null
+          events?: string[] | null
+          id?: string | null
+          name?: string | null
+          organization_id?: string | null
+          updated_at?: string | null
+          url?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       accept_org_invite: { Args: { _token: string }; Returns: string }
