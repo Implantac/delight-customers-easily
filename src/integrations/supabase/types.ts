@@ -730,6 +730,92 @@ export type Database = {
         }
         Relationships: []
       }
+      automation_runs: {
+        Row: {
+          automation_id: string
+          duration_ms: number | null
+          error: string | null
+          id: string
+          organization_id: string
+          payload: Json
+          started_at: string
+          status: string
+          trigger_event: string
+        }
+        Insert: {
+          automation_id: string
+          duration_ms?: number | null
+          error?: string | null
+          id?: string
+          organization_id: string
+          payload?: Json
+          started_at?: string
+          status: string
+          trigger_event: string
+        }
+        Update: {
+          automation_id?: string
+          duration_ms?: number | null
+          error?: string | null
+          id?: string
+          organization_id?: string
+          payload?: Json
+          started_at?: string
+          status?: string
+          trigger_event?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_runs_automation_id_fkey"
+            columns: ["automation_id"]
+            isOneToOne: false
+            referencedRelation: "automations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automation_runs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["branch_org_id"]
+          },
+          {
+            foreignKeyName: "automation_runs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "automation_runs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "automation_runs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "automation_runs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "automation_runs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       automations: {
         Row: {
           action_config: Json
