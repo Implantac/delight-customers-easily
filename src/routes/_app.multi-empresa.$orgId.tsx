@@ -131,7 +131,7 @@ function DrilldownPage() {
                   <li key={a.id} className="flex justify-between border-b pb-1">
                     <span>
                       <Badge variant="outline" className="mr-2">{a.type}</Badge>
-                      {a.subject ?? "—"}
+                      {a.title ?? "—"}
                     </span>
                     <span className="text-xs text-muted-foreground">
                       {new Date(a.created_at).toLocaleString("pt-BR")}

@@ -30,7 +30,7 @@ export const getOrgDrilldown = createServerFn({ method: "POST" })
       supabase.from("organizations").select("id, name, org_type, slug, cnpj").eq("id", data.organization_id).maybeSingle(),
       supabase
         .from("deals")
-        .select("id, title, stage, value, owner_id, company_id, created_at, closed_at")
+        .select("id, title, stage, value, user_id, company_id, created_at, closed_at")
         .eq("organization_id", data.organization_id)
         .gte("created_at", sinceIso),
       supabase
@@ -44,7 +44,7 @@ export const getOrgDrilldown = createServerFn({ method: "POST" })
         .eq("organization_id", data.organization_id),
       supabase
         .from("activities")
-        .select("id, type, subject, created_at, user_id")
+        .select("id, type, title, created_at, user_id")
         .eq("organization_id", data.organization_id)
         .gte("created_at", sinceIso)
         .order("created_at", { ascending: false })
@@ -80,8 +80,8 @@ export const getOrgDrilldown = createServerFn({ method: "POST" })
       repAgg.set(r.user_id, { name, won: 0, won_count: 0, pipeline: 0 });
     }
     for (const d of deals) {
-      if (!d.owner_id) continue;
-      const r = repAgg.get(d.owner_id);
+      if (!d.user_id) continue;
+      const r = repAgg.get(d.user_id);
       if (!r) continue;
       const v = Number(d.value ?? 0);
       if (d.stage === "won") {
