@@ -489,7 +489,7 @@ function WhatsAppPage() {
                   <div className="grid grid-cols-3 gap-1.5">
                     <Button asChild variant="outline" size="sm" className="h-8 px-0" disabled={!selected.contact_phone}>
                       <a
-                        href={selected.contact_phone ? whatsappLink(selected.contact_phone) : "#"}
+                        href={(selected.contact_phone && whatsappLink(selected.contact_phone)) || "#"}
                         target="_blank"
                         rel="noreferrer"
                         title="Abrir no WhatsApp"
