@@ -1,107 +1,179 @@
+# Plano — Refatoração Frontend: CRM Enterprise Premium
 
-# Plano — Backend CRM Enterprise (consome ERP, nunca é ERP)
-
-> **Guardrail absoluto:** nenhum item abaixo cria estoque, compras, financeiro, fiscal, contábil, produção, logística, contas a pagar/receber, fluxo de caixa ou emissão fiscal. Tudo que envolver esses domínios é **somente leitura/consulta** vinda do ERP via conector.
-
-Estado atual já entregue (não será refeito): `organizations` multinível, `memberships`, RLS, `erp_connections/erp_customers/erp_sales_history/erp_customer_metrics`, `customer_360_snapshot`, `ai_lead_scores/churn/repurchase/recommendations`, `geo_locations` + `find_opportunities_in_radius`, VRP em `/geo-rota`, Connect Hub em `/erp-connect`, drivers REST + Postgres + agent-bridged.
+**Princípio absoluto:** zero aparência de ERP. Toda tela responde *"O que devo fazer hoje para vender mais?"*. Sem alterar regras de negócio — só camada visual, navegação, composição e microinterações.
 
 ---
 
-## Fase 1 — ERP Connect Universal (drivers que faltam)
+## Fase 1 — Design System (fundação)
 
-Objetivo: cobrir os 6 protocolos do manifesto. Hoje temos REST, Postgres e agent-bridged. Faltam **MySQL, SQL Server, Firebird, Oracle**.
+Refatorar `src/styles.css` com tokens inspirados em Attio + Linear:
 
-- Adicionar drivers em `src/lib/erp-drivers/`:
-  - `mysql.ts` (via `mysql2`)
-  - `mssql.ts` (via `mssql` / tedious)
-  - `firebird.ts` (via `node-firebird` ou agent-bridged se incompatível com Worker)
-  - `oracle.ts` (via `oracledb` ou agent-bridged)
-- Para drivers Node-only (Firebird/Oracle/MSSQL pesados): rotear **automaticamente** pelo `agent-bridged.ts` (já existente), mantendo a mesma interface `ErpDriver`.
-- Registrar todos em `src/lib/erp-drivers/index.ts` com detecção por `connection_type`.
-- Validação de credenciais (`testConnection`) obrigatória antes de salvar — já é padrão, só estender.
+- **Paleta clara:** branco quente (`oklch(0.99 0.005 95)`), surface elevada, primary indigo profundo (`oklch(0.45 0.18 265)`), accent vibrante para ações IA.
+- **Paleta escura:** preto azulado (`oklch(0.16 0.015 265)`), surfaces em camadas, mesmo primary.
+- **Tipografia:** Inter (UI) + Geist Mono (números/dados). Escala tight: 11/12/13/14/16/20/28/40. Tracking negativo em títulos.
+- **Espaçamento:** densidade Linear (4/8/12/16/24/32/48). Cards com `border` sutil em vez de shadow pesada.
+- **Raios:** 6/8/12 (nada de 16+). Botões `rounded-md`.
+- **Microinterações:** `transition-all 150ms ease-out`, hover lift sutil, focus rings em primary/30.
+- **Componentes premium:** rever Button, Card, Badge, Input, Dialog, Sheet, Tabs, Table, Tooltip — todos com variantes "premium" (ghost-elevated, gradient-subtle, glass).
 
-**Sem novas tabelas.** Reutiliza `erp_connections`.
-
----
-
-## Fase 2 — ERP Mapping Engine
-
-Hoje o mapeamento é implícito no driver. Vamos explicitar:
-
-- Nova tabela `erp_field_mappings` (org, connection_id, entity `customer|rep|sale`, source_field, target_field, transform jsonb).
-- UI em `/erp-connect/$id/mapping` (drag-and-drop simples) — **só configuração**, sem criar entidade do ERP.
-- Função `applyMapping(row, mapping)` usada pelo Sync Engine antes do upsert.
-- Presets por ERP popular (Bling, Omie, TOTVS, SAP Business One) entregues como JSON seed.
+Criar `src/components/ui/` extensions:
+- `MetricCard` (número grande + delta + sparkline)
+- `ActionCard` (recomendação IA com CTA inline)
+- `EmptyState` premium
+- `PageHeader` unificado (já existe — repolir)
+- `CommandBar` (Cmd+K global estilo Linear/Attio)
 
 ---
 
-## Fase 3 — ERP Sync Engine + Health Center
+## Fase 2 — Sidebar reorganizada (CRM-only)
 
-Objetivo: tornar a sync confiável, observável e bidirecional controlada.
+Reescrever `src/components/app-sidebar.tsx` com a ordem exata pedida:
 
-- Tabela `erp_sync_jobs` (queue: pending/running/done/failed, retry_count, last_error, payload).
-- Tabela `erp_sync_conflicts` (entity, erp_value, crm_value, resolution `erp_wins|crm_wins|manual`, resolved_at).
-- Server fn `enqueueSync({connection_id, direction, entity})` — direção `crm_to_erp` exige flag `bidirectional_enabled` na conexão.
-- Worker tick (`/api/public/hooks/erp-sync-tick.ts` já existe) processa fila com lock otimista, escreve auditoria em `audit_log`.
-- **Health Center** em `/erp-connect/$id/health`: latência média, taxa de erro 24h, último sync por entidade, conflitos abertos, throughput. Powered by view materializada `erp_connection_health`.
+```
+Dashboard
+Carteira Comercial
+Leads
+Clientes
+Oportunidades
+Representantes
+Agenda
+WhatsApp
+Marketing
+Influencers
+Geointeligência
+IA Comercial
+Relatórios
+─────────────
+Integrações ERP
+Empresas
+Usuários
+Configurações
+```
 
----
-
-## Fase 4 — Inteligência Comercial (responder as 7 perguntas-chave)
-
-Criar server fns que respondem cada pergunta do manifesto, todas filtráveis por org/filial:
-
-| Pergunta | Função | Fonte |
-|---|---|---|
-| Quem vende mais/menos? | `getRepRanking` | `erp_sales_history` + `users/memberships` |
-| Quem devo visitar? | `getVisitPriority` | `customer_360_snapshot` + `ai_churn` + última visita |
-| Clientes com potencial? | `getHighPotentialCustomers` | `ai_repurchase_predictions` + RFM |
-| Clientes em risco? | `getChurnRisk` | `ai_churn_predictions` |
-| Regiões com oportunidade? | `getRegionalOpportunities` | `get_regional_sales_rollup` (já existe) + `find_opportunities_in_radius` |
-| Campanhas que funcionam? | `getCampaignROI` | `campaigns` + `deals` won atribuídos |
-
-Dashboard novo `/inteligencia-comercial` agregando os 6 cards.
-
----
-
-## Fase 5 — Customer 360 ampliado
-
-Expandir `customer_360_snapshot` (refresh já existe) para consolidar **tudo** comercial:
-
-- Adicionar agregados: `whatsapp_msgs_30d`, `emails_30d`, `last_visit_at`, `campaign_touches_90d`, `nps_last`.
-- Trigger de refresh incremental quando: nova `activity`, nova `whatsapp_message`, novo `deal`, nova venda importada.
-- Página `/companies/$id` já consome — só adicionar os novos blocos.
+- Remover qualquer item com aparência de ERP (estoque, financeiro, fiscal — se existir).
+- Separador visual entre bloco comercial e bloco de administração.
+- Ícones Lucide consistentes (linha fina, 16px).
+- Estado ativo: barra lateral primary + bg sutil.
+- Collapsible "icon mode" com tooltips.
+- Workspace switcher no topo (multiempresa).
+- User menu no rodapé com avatar + status.
 
 ---
 
-## Fase 6 — IA Comercial em produção (batch + on-demand)
+## Fase 3 — Revenue Command Center (`/dashboard`)
 
-- Agendar `propensity-batch-tick` via `pg_cron` (hourly): indexa embeddings novos e roda scoring para clientes ativos.
-- Adicionar `getNextBestAction(customer_id)` que combina churn + repurchase + última atividade → recomendação textual + CTA.
-- Painel "IA do Dia" no `/dashboard` com top-10 ações sugeridas para o usuário logado.
+Substituir o dashboard atual por um **centro de ação**, não de indicadores:
 
----
+Layout em grid 12 colunas:
 
-## O que **NÃO** entra neste plano (por regra absoluta)
+1. **Hero:** "Bom dia, {nome}. Você tem **7 ações prioritárias** hoje." + barra de progresso de meta.
+2. **Próximas ações (8 col):** lista priorizada vinda de `getNextBestAction` — cada linha tem cliente, motivo IA, CTA ("Agendar visita", "Enviar WhatsApp", "Ligar").
+3. **Clientes em risco (4 col):** top 5 churn, com botão "Recuperar".
+4. **Oportunidades quentes:** kanban mini horizontal.
+5. **Representantes do dia:** ranking compacto.
+6. **Campanhas ativas:** ROI inline.
+7. **Sem compra recente:** lista com "Reativar".
 
-- ❌ Cadastro de produtos, estoque, NCM, CFOP
-- ❌ Emissão de NFe/NFSe/boleto
-- ❌ Contas a pagar/receber, conciliação bancária, fluxo de caixa
-- ❌ Folha, ponto, RH
-- ❌ Ordens de produção, MRP, logística
-- ❌ Qualquer tela "cadastro de X do ERP" — apenas **visualização read-only** de dados sincronizados
-
-Se em qualquer fase surgir necessidade desses dados, a resposta é **sempre**: "ler do ERP via conector existente", nunca criar no CRM.
+Cada card termina com CTA. Nada é só número.
 
 ---
 
-## Ordem sugerida de execução
+## Fase 4 — Customer 360 (`/companies/$id`)
 
-1. **Fase 4** (Inteligência Comercial) — maior valor percebido, usa dados já existentes
-2. **Fase 6** (IA em produção via pg_cron) — destrava os scores que já temos
-3. **Fase 5** (Customer 360 ampliado) — completa a visão
-4. **Fase 3** (Sync Engine + Health) — confiabilidade
-5. **Fase 2** (Mapping Engine) — flexibilidade de integração
-6. **Fase 1** (drivers MySQL/MSSQL/Firebird/Oracle) — cobertura de protocolos
+A melhor tela do sistema. Layout split:
 
-Cada fase é independente e entregável isoladamente. Posso começar pela Fase 4 assim que aprovado.
+- **Coluna esquerda fixa (320px):** avatar/logo, nome, tags, scores IA (churn/recompra/LTV), dados de contato, dono, endereço com mini-mapa.
+- **Centro (flex):** Tabs premium estilo Attio:
+  - **Timeline** (default) — feed unificado: vendas ERP, WhatsApp, emails, visitas, atividades, mudanças. Filtros por tipo.
+  - **WhatsApp** — conversa embedada.
+  - **Emails** — thread.
+  - **Visitas** — lista + mapa.
+  - **Oportunidades** — kanban do cliente.
+  - **IA Comercial** — painel com próxima melhor ação, previsões, recomendações de produto, comparativos.
+- **Coluna direita (320px):** "Quick actions" sticky — Agendar, WhatsApp, Email, Nova oportunidade, Nota.
+
+---
+
+## Fase 5 — Connect Hub como assistente
+
+Refatorar `/erp-connect/new` em **wizard de 6 passos** com linguagem zero técnica:
+
+1. **Qual sistema você usa?** — grid de logos (TOTVS, SAP B1, Bling, Omie, Tiny, "Outro").
+2. **Como conectamos?** — opções amigáveis ("Tenho um link/API", "Acesso direto ao banco", "Não sei" → abre chat com IA).
+3. **Dados de acesso** — formulário curto com placeholder e exemplo. Senha mascarada. Botão "Onde encontro isso?" abre tooltip ilustrado.
+4. **Testando conexão** — animação de loading + checks verdes/vermelhos em tempo real.
+5. **IA validando** — "Encontramos 1.247 clientes, 89 representantes, 3 anos de histórico. Está correto?".
+6. **Pronto!** — resumo + botão "Sincronizar agora" + agendamento automático.
+
+Nenhuma palavra técnica visível (sem "host", "porta", "schema", "JDBC"). Tooltips e exemplos cuidam disso.
+
+---
+
+## Fase 6 — IA Comercial (`/inteligencia-comercial`)
+
+Repolir a tela existente:
+- Cada card de insight → CTA inline ("Agendar visita", "Criar campanha", "Atribuir representante").
+- "AI do Dia" hero no topo: 3 ações destacadas com explicação curta da IA.
+- Drawer de detalhe ao clicar: mostra o "porquê" da recomendação (sinais que pesaram).
+
+---
+
+## Fase 7 — Geointeligência (`/geo-rota`, `/geo-prospect`)
+
+- Mapa fullscreen com sidebar flutuante (filtros + lista).
+- Clusters por região (Mapbox-style com Leaflet.markercluster já instalado).
+- Heatmap toggle (densidade de clientes / oportunidades / vendas).
+- Pins coloridos por tipo: cliente ativo, em risco, prospect, oportunidade aberta.
+- Click no pin → popup com mini Customer 360 + CTA "Adicionar à rota".
+- Painel de rota: drag-and-drop de paradas + ETA + botão "Enviar para representante".
+
+---
+
+## Fase 8 — WhatsApp Inbox
+
+Layout Intercom/HubSpot Inbox:
+- **Coluna 1 (240px):** filtros (Não lidas, Atribuídas a mim, Aguardando, Todas) + tags.
+- **Coluna 2 (320px):** lista de conversas com preview, hora, badge unread, avatar.
+- **Coluna 3 (flex):** thread com bubbles modernas, suporte a mídia, quick replies, templates.
+- **Coluna 4 (320px):** Customer 360 lateral do contato ativo + IA sugerindo resposta.
+
+---
+
+## Fase 9 — Telas restantes (refit visual)
+
+Aplicar o novo design system em:
+- **Leads / Clientes / Oportunidades:** tabelas estilo Attio (linhas finas, hover sutil, inline edit, colunas customizáveis, views salvas).
+- **Pipeline:** kanban com cards densos, drag suave, preview hover.
+- **Representantes:** ranking + perfil individual com mapa de cobertura.
+- **Agenda:** calendário Linear-like + lista de hoje.
+- **Marketing / Influencers / Relatórios:** cards e gráficos consistentes (Recharts com tema custom).
+- **Empresas / Usuários / Configurações:** forms premium, settings em duas colunas.
+
+---
+
+## Fase 10 — Polish global
+
+- **Command Bar (Cmd+K):** busca global + ações rápidas ("Novo lead", "Ir para cliente X", "Criar oportunidade").
+- **Toasts:** Sonner reposicionado, ícones por tipo, undo inline.
+- **Loading states:** skeletons que imitam layout real, nada de spinners genéricos.
+- **Empty states:** ilustração + CTA claro em cada tela.
+- **Theme toggle:** claro/escuro/sistema, persistente.
+- **Accessibility:** focus visible, contraste AA, keyboard nav.
+
+---
+
+## Detalhes técnicos
+
+- Stack inalterada: TanStack Start + Router, TanStack Query, Tailwind v4, shadcn/ui, Lucide, Recharts, Leaflet.
+- Zero mudança em server functions, schemas, RLS ou regras de negócio.
+- Tokens em `src/styles.css` (oklch). Nenhuma cor hard-coded em componentes.
+- Rotas existentes preservadas; apenas componentes reescritos.
+- `app-sidebar.tsx` é o único ponto de mudança de navegação.
+
+---
+
+## Ordem de execução sugerida
+
+**1 → 2 → 3 → 4** (fundação + navegação + 2 telas-vitrine que provam o conceito) → **5 → 6 → 7 → 8** (módulos diferenciados) → **9 → 10** (consistência + polish).
+
+Cada fase é entregável independente. Posso começar pela Fase 1+2 (design system + sidebar) que destrava o resto. Confirma?
