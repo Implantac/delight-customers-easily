@@ -53,12 +53,6 @@ function CommandCenter() {
     queryFn: () => runForecast({ data: { organization_id: orgId! } }),
     refetchOnWindowFocus: false,
   });
-  const { data: finance } = useQuery({
-    queryKey: ["cc-finance", orgId],
-    enabled: !!orgId,
-    queryFn: () => runFinance({ data: { organization_id: orgId! } }),
-    refetchOnWindowFocus: false,
-  });
   const { data: retention } = useQuery({
     queryKey: ["cc-retention", orgId],
     enabled: !!orgId,
