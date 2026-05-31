@@ -81,28 +81,27 @@ function QuotesPage() {
   return (
     <div className="space-y-6 p-4 md:p-6">
       <ErpReadOnlyBanner entity="Orçamentos" />
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="flex items-center gap-2 text-2xl font-semibold tracking-tight">
-            <FileSignature className="h-6 w-6 text-primary" /> Orçamentos
-          </h1>
-          <p className="text-sm text-muted-foreground">Crie, envie e acompanhe a aceitação de orçamentos.</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as any)}>
-            <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todos</SelectItem>
-              <SelectItem value="draft">Rascunho</SelectItem>
-              <SelectItem value="sent">Enviado</SelectItem>
-              <SelectItem value="accepted">Aceito</SelectItem>
-              <SelectItem value="declined">Recusado</SelectItem>
-              <SelectItem value="expired">Expirado</SelectItem>
-            </SelectContent>
-          </Select>
-          {false && <Button onClick={openNew}><Plus className="mr-2 h-4 w-4" /> Novo orçamento</Button>}
-        </div>
-      </div>
+      <PageHeader
+        icon={FileSignature}
+        title="Orçamentos"
+        subtitle="Crie, envie e acompanhe a aceitação de orçamentos."
+        action={
+          <div className="flex items-center gap-2">
+            <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as any)}>
+              <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos</SelectItem>
+                <SelectItem value="draft">Rascunho</SelectItem>
+                <SelectItem value="sent">Enviado</SelectItem>
+                <SelectItem value="accepted">Aceito</SelectItem>
+                <SelectItem value="declined">Recusado</SelectItem>
+                <SelectItem value="expired">Expirado</SelectItem>
+              </SelectContent>
+            </Select>
+            {false && <Button onClick={openNew}><Plus className="mr-2 h-4 w-4" /> Novo orçamento</Button>}
+          </div>
+        }
+      />
 
       <div className="grid gap-4 md:grid-cols-4">
         <Kpi title="Total" value={String(t?.count ?? 0)} icon={<FileSignature className="h-4 w-4" />} />

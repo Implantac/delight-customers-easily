@@ -73,31 +73,30 @@ function SalesOrdersPage() {
   return (
     <div className="space-y-6 p-4 md:p-6">
       <ErpReadOnlyBanner entity="Pedidos de venda" />
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="flex items-center gap-2 text-2xl font-semibold tracking-tight">
-            <Package className="h-6 w-6 text-primary" /> Pedidos de Venda
-          </h1>
-          <p className="text-sm text-muted-foreground">Confirme orçamentos e acompanhe a entrega.</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as any)}>
-            <SelectTrigger className="w-44"><SelectValue /></SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todos</SelectItem>
-              <SelectItem value="draft">Rascunho</SelectItem>
-              <SelectItem value="confirmed">Confirmado</SelectItem>
-              <SelectItem value="in_production">Em produção</SelectItem>
-              <SelectItem value="shipped">Enviado</SelectItem>
-              <SelectItem value="delivered">Entregue</SelectItem>
-              <SelectItem value="cancelled">Cancelado</SelectItem>
-            </SelectContent>
-          </Select>
-          {false && (<Button onClick={() => { setEditingId(null); setOpenDialog(true); }}>
-            <Plus className="mr-2 h-4 w-4" /> Novo pedido
-          </Button>)}
-        </div>
-      </div>
+      <PageHeader
+        icon={Package}
+        title="Pedidos de Venda"
+        subtitle="Confirme orçamentos e acompanhe a entrega."
+        action={
+          <div className="flex items-center gap-2">
+            <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as any)}>
+              <SelectTrigger className="w-44"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos</SelectItem>
+                <SelectItem value="draft">Rascunho</SelectItem>
+                <SelectItem value="confirmed">Confirmado</SelectItem>
+                <SelectItem value="in_production">Em produção</SelectItem>
+                <SelectItem value="shipped">Enviado</SelectItem>
+                <SelectItem value="delivered">Entregue</SelectItem>
+                <SelectItem value="cancelled">Cancelado</SelectItem>
+              </SelectContent>
+            </Select>
+            {false && (<Button onClick={() => { setEditingId(null); setOpenDialog(true); }}>
+              <Plus className="mr-2 h-4 w-4" /> Novo pedido
+            </Button>)}
+          </div>
+        }
+      />
 
       <div className="grid gap-4 md:grid-cols-4">
         <Kpi title="Total" value={String(t?.count ?? 0)} icon={<Package className="h-4 w-4" />} />
