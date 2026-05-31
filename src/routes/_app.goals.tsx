@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { Trophy, Medal, Award, Target as TargetIcon } from "lucide-react";
+import { Trophy, Medal, Award, Target as TargetIcon, TrendingUp, Users, DollarSign } from "lucide-react";
 import { useCurrentOrg } from "@/lib/org";
 import { useCanManage } from "@/lib/permissions";
 import { supabase } from "@/integrations/supabase/client";
