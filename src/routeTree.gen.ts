@@ -89,6 +89,7 @@ import { Route as AppReportsWeeklyRouteImport } from './routes/_app.reports.week
 import { Route as AppProposalsIdRouteImport } from './routes/_app.proposals.$id'
 import { Route as AppKbIdRouteImport } from './routes/_app.kb.$id'
 import { Route as AppInviteTokenRouteImport } from './routes/_app.invite.$token'
+import { Route as AppIntegrationsHelpRouteImport } from './routes/_app.integrations.help'
 import { Route as AppIntegrationsAdvancedRouteImport } from './routes/_app.integrations.advanced'
 import { Route as AppContactsIdRouteImport } from './routes/_app.contacts.$id'
 import { Route as AppCompaniesIdRouteImport } from './routes/_app.companies.$id'
@@ -499,6 +500,11 @@ const AppInviteTokenRoute = AppInviteTokenRouteImport.update({
   path: '/invite/$token',
   getParentRoute: () => AppRoute,
 } as any)
+const AppIntegrationsHelpRoute = AppIntegrationsHelpRouteImport.update({
+  id: '/help',
+  path: '/help',
+  getParentRoute: () => AppIntegrationsRoute,
+} as any)
 const AppIntegrationsAdvancedRoute = AppIntegrationsAdvancedRouteImport.update({
   id: '/advanced',
   path: '/advanced',
@@ -617,6 +623,7 @@ export interface FileRoutesByFullPath {
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
   '/integrations/advanced': typeof AppIntegrationsAdvancedRoute
+  '/integrations/help': typeof AppIntegrationsHelpRoute
   '/invite/$token': typeof AppInviteTokenRoute
   '/kb/$id': typeof AppKbIdRoute
   '/proposals/$id': typeof AppProposalsIdRoute
@@ -707,6 +714,7 @@ export interface FileRoutesByTo {
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
   '/integrations/advanced': typeof AppIntegrationsAdvancedRoute
+  '/integrations/help': typeof AppIntegrationsHelpRoute
   '/invite/$token': typeof AppInviteTokenRoute
   '/kb/$id': typeof AppKbIdRoute
   '/proposals/$id': typeof AppProposalsIdRoute
@@ -799,6 +807,7 @@ export interface FileRoutesById {
   '/_app/companies/$id': typeof AppCompaniesIdRoute
   '/_app/contacts/$id': typeof AppContactsIdRoute
   '/_app/integrations/advanced': typeof AppIntegrationsAdvancedRoute
+  '/_app/integrations/help': typeof AppIntegrationsHelpRoute
   '/_app/invite/$token': typeof AppInviteTokenRoute
   '/_app/kb/$id': typeof AppKbIdRoute
   '/_app/proposals/$id': typeof AppProposalsIdRoute
@@ -891,6 +900,7 @@ export interface FileRouteTypes {
     | '/companies/$id'
     | '/contacts/$id'
     | '/integrations/advanced'
+    | '/integrations/help'
     | '/invite/$token'
     | '/kb/$id'
     | '/proposals/$id'
@@ -981,6 +991,7 @@ export interface FileRouteTypes {
     | '/companies/$id'
     | '/contacts/$id'
     | '/integrations/advanced'
+    | '/integrations/help'
     | '/invite/$token'
     | '/kb/$id'
     | '/proposals/$id'
@@ -1072,6 +1083,7 @@ export interface FileRouteTypes {
     | '/_app/companies/$id'
     | '/_app/contacts/$id'
     | '/_app/integrations/advanced'
+    | '/_app/integrations/help'
     | '/_app/invite/$token'
     | '/_app/kb/$id'
     | '/_app/proposals/$id'
@@ -1675,6 +1687,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppInviteTokenRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/integrations/help': {
+      id: '/_app/integrations/help'
+      path: '/help'
+      fullPath: '/integrations/help'
+      preLoaderRoute: typeof AppIntegrationsHelpRouteImport
+      parentRoute: typeof AppIntegrationsRoute
+    }
     '/_app/integrations/advanced': {
       id: '/_app/integrations/advanced'
       path: '/advanced'
@@ -1767,10 +1786,12 @@ const AppContactsRouteWithChildren = AppContactsRoute._addFileChildren(
 
 interface AppIntegrationsRouteChildren {
   AppIntegrationsAdvancedRoute: typeof AppIntegrationsAdvancedRoute
+  AppIntegrationsHelpRoute: typeof AppIntegrationsHelpRoute
 }
 
 const AppIntegrationsRouteChildren: AppIntegrationsRouteChildren = {
   AppIntegrationsAdvancedRoute: AppIntegrationsAdvancedRoute,
+  AppIntegrationsHelpRoute: AppIntegrationsHelpRoute,
 }
 
 const AppIntegrationsRouteWithChildren = AppIntegrationsRoute._addFileChildren(
@@ -1998,13 +2019,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
