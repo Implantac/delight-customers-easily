@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import { useCurrentOrg } from "@/lib/org";
 import { useCanManage } from "@/lib/permissions";
 import { getDashboard, addWidget, deleteWidget, runWidget } from "@/lib/dashboards.functions";
@@ -15,11 +15,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, Plus, Trash2, LayoutDashboard } from "lucide-react";
 import { toast } from "sonner";
-import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line,
-} from "recharts";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
+
+const BarByStage = lazy(() => import("@/components/dashboard-charts").then((m) => ({ default: m.BarByStage })));
+const LineRevenue = lazy(() => import("@/components/dashboard-charts").then((m) => ({ default: m.LineRevenue })));
+
+const ChartFallback = () => <div className="h-56 animate-pulse bg-muted/40 rounded" />;
 
 export const Route = createFileRoute("/_app/reports/dashboards/$id")({ component: DashboardDetailPage });
 
