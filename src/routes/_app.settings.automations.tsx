@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -202,20 +202,25 @@ function AutomationsPage() {
         title="Automações"
         subtitle="Regras que executam ações automaticamente quando eventos acontecem no CRM."
         action={
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-              <Button><Plus className="h-4 w-4 mr-2" />Nova automação</Button>
-            </DialogTrigger>
-            <AutomationDialog
-              orgId={orgId}
-              userId={user?.id ?? null}
-              onClose={() => setOpen(false)}
-              onSaved={() => {
-                qc.invalidateQueries({ queryKey: ["automations", orgId] });
-                setOpen(false);
-              }}
-            />
-          </Dialog>
+          <div className="flex gap-2">
+            <Link to="/settings/automations/runs">
+              <Button variant="outline"><Zap className="h-4 w-4 mr-2" />Ver execuções</Button>
+            </Link>
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogTrigger asChild>
+                <Button><Plus className="h-4 w-4 mr-2" />Nova automação</Button>
+              </DialogTrigger>
+              <AutomationDialog
+                orgId={orgId}
+                userId={user?.id ?? null}
+                onClose={() => setOpen(false)}
+                onSaved={() => {
+                  qc.invalidateQueries({ queryKey: ["automations", orgId] });
+                  setOpen(false);
+                }}
+              />
+            </Dialog>
+          </div>
         }
       />
 

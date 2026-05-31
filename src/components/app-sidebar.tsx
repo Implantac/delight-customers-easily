@@ -97,6 +97,7 @@ const navSections: NavSection[] = [
     items: [
       { to: "/ia-comercial", label: "IA Comercial", icon: Sparkles, shortcut: "G I" },
       { to: "/reports", label: "Relatórios", icon: BarChart3, shortcut: "G R", managerOnly: true },
+      { to: "/reports/dashboards", label: "Dashboards", icon: BarChart3, managerOnly: true },
     ],
   },
   {
@@ -104,6 +105,7 @@ const navSections: NavSection[] = [
     label: "Administração",
     items: [
       { to: "/integrations", label: "Integrações ERP", icon: Plug, managerOnly: true },
+      { to: "/integrations/apps", label: "Integrações Apps", icon: Plug, managerOnly: true },
       { to: "/settings/organization", label: "Empresas (workspaces)", icon: Building, managerOnly: true },
       { to: "/settings/organization", label: "Usuários", icon: Users, managerOnly: true },
       { to: "/settings/organization", label: "Configurações", icon: Settings },

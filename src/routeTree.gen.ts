@@ -91,11 +91,13 @@ import { Route as AppSettingsErpAgentRouteImport } from './routes/_app.settings.
 import { Route as AppSettingsAutomationsRouteImport } from './routes/_app.settings.automations'
 import { Route as AppSequencesIdRouteImport } from './routes/_app.sequences.$id'
 import { Route as AppReportsWeeklyRouteImport } from './routes/_app.reports.weekly'
+import { Route as AppReportsDashboardsRouteImport } from './routes/_app.reports.dashboards'
 import { Route as AppProposalsIdRouteImport } from './routes/_app.proposals.$id'
 import { Route as AppKbIdRouteImport } from './routes/_app.kb.$id'
 import { Route as AppInviteTokenRouteImport } from './routes/_app.invite.$token'
 import { Route as AppIntegrationsHelpRouteImport } from './routes/_app.integrations.help'
 import { Route as AppIntegrationsConnectRouteImport } from './routes/_app.integrations.connect'
+import { Route as AppIntegrationsAppsRouteImport } from './routes/_app.integrations.apps'
 import { Route as AppIntegrationsAdvancedRouteImport } from './routes/_app.integrations.advanced'
 import { Route as AppContactsIdRouteImport } from './routes/_app.contacts.$id'
 import { Route as AppCompaniesIdRouteImport } from './routes/_app.companies.$id'
@@ -108,6 +110,8 @@ import { Route as ApiPublicHooksDailyBriefingRouteImport } from './routes/api/pu
 import { Route as ApiPublicHooksCustomer360RefreshRouteImport } from './routes/api/public/hooks/customer-360-refresh'
 import { Route as ApiPublicHooksAiPurgeExpiredRouteImport } from './routes/api/public/hooks/ai-purge-expired'
 import { Route as ApiPublicHooksActivityRemindersRouteImport } from './routes/api/public/hooks/activity-reminders'
+import { Route as AppSettingsAutomationsRunsRouteImport } from './routes/_app.settings.automations.runs'
+import { Route as AppReportsDashboardsIdRouteImport } from './routes/_app.reports.dashboards.$id'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -519,6 +523,11 @@ const AppReportsWeeklyRoute = AppReportsWeeklyRouteImport.update({
   path: '/weekly',
   getParentRoute: () => AppReportsRoute,
 } as any)
+const AppReportsDashboardsRoute = AppReportsDashboardsRouteImport.update({
+  id: '/dashboards',
+  path: '/dashboards',
+  getParentRoute: () => AppReportsRoute,
+} as any)
 const AppProposalsIdRoute = AppProposalsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -542,6 +551,11 @@ const AppIntegrationsHelpRoute = AppIntegrationsHelpRouteImport.update({
 const AppIntegrationsConnectRoute = AppIntegrationsConnectRouteImport.update({
   id: '/connect',
   path: '/connect',
+  getParentRoute: () => AppIntegrationsRoute,
+} as any)
+const AppIntegrationsAppsRoute = AppIntegrationsAppsRouteImport.update({
+  id: '/apps',
+  path: '/apps',
   getParentRoute: () => AppIntegrationsRoute,
 } as any)
 const AppIntegrationsAdvancedRoute = AppIntegrationsAdvancedRouteImport.update({
@@ -613,6 +627,17 @@ const ApiPublicHooksActivityRemindersRoute =
     path: '/api/public/hooks/activity-reminders',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AppSettingsAutomationsRunsRoute =
+  AppSettingsAutomationsRunsRouteImport.update({
+    id: '/runs',
+    path: '/runs',
+    getParentRoute: () => AppSettingsAutomationsRoute,
+  } as any)
+const AppReportsDashboardsIdRoute = AppReportsDashboardsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppReportsDashboardsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -685,14 +710,16 @@ export interface FileRoutesByFullPath {
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
   '/integrations/advanced': typeof AppIntegrationsAdvancedRoute
+  '/integrations/apps': typeof AppIntegrationsAppsRoute
   '/integrations/connect': typeof AppIntegrationsConnectRoute
   '/integrations/help': typeof AppIntegrationsHelpRoute
   '/invite/$token': typeof AppInviteTokenRoute
   '/kb/$id': typeof AppKbIdRoute
   '/proposals/$id': typeof AppProposalsIdRoute
+  '/reports/dashboards': typeof AppReportsDashboardsRouteWithChildren
   '/reports/weekly': typeof AppReportsWeeklyRoute
   '/sequences/$id': typeof AppSequencesIdRoute
-  '/settings/automations': typeof AppSettingsAutomationsRoute
+  '/settings/automations': typeof AppSettingsAutomationsRouteWithChildren
   '/settings/erp-agent': typeof AppSettingsErpAgentRoute
   '/settings/fields': typeof AppSettingsFieldsRoute
   '/settings/import': typeof AppSettingsImportRoute
@@ -704,6 +731,8 @@ export interface FileRoutesByFullPath {
   '/api/public/influencer-visit': typeof ApiPublicInfluencerVisitRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/i/$org/$slug': typeof IOrgSlugRoute
+  '/reports/dashboards/$id': typeof AppReportsDashboardsIdRoute
+  '/settings/automations/runs': typeof AppSettingsAutomationsRunsRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
   '/api/public/hooks/ai-purge-expired': typeof ApiPublicHooksAiPurgeExpiredRoute
   '/api/public/hooks/customer-360-refresh': typeof ApiPublicHooksCustomer360RefreshRoute
@@ -785,14 +814,16 @@ export interface FileRoutesByTo {
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
   '/integrations/advanced': typeof AppIntegrationsAdvancedRoute
+  '/integrations/apps': typeof AppIntegrationsAppsRoute
   '/integrations/connect': typeof AppIntegrationsConnectRoute
   '/integrations/help': typeof AppIntegrationsHelpRoute
   '/invite/$token': typeof AppInviteTokenRoute
   '/kb/$id': typeof AppKbIdRoute
   '/proposals/$id': typeof AppProposalsIdRoute
+  '/reports/dashboards': typeof AppReportsDashboardsRouteWithChildren
   '/reports/weekly': typeof AppReportsWeeklyRoute
   '/sequences/$id': typeof AppSequencesIdRoute
-  '/settings/automations': typeof AppSettingsAutomationsRoute
+  '/settings/automations': typeof AppSettingsAutomationsRouteWithChildren
   '/settings/erp-agent': typeof AppSettingsErpAgentRoute
   '/settings/fields': typeof AppSettingsFieldsRoute
   '/settings/import': typeof AppSettingsImportRoute
@@ -804,6 +835,8 @@ export interface FileRoutesByTo {
   '/api/public/influencer-visit': typeof ApiPublicInfluencerVisitRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/i/$org/$slug': typeof IOrgSlugRoute
+  '/reports/dashboards/$id': typeof AppReportsDashboardsIdRoute
+  '/settings/automations/runs': typeof AppSettingsAutomationsRunsRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
   '/api/public/hooks/ai-purge-expired': typeof ApiPublicHooksAiPurgeExpiredRoute
   '/api/public/hooks/customer-360-refresh': typeof ApiPublicHooksCustomer360RefreshRoute
@@ -887,14 +920,16 @@ export interface FileRoutesById {
   '/_app/companies/$id': typeof AppCompaniesIdRoute
   '/_app/contacts/$id': typeof AppContactsIdRoute
   '/_app/integrations/advanced': typeof AppIntegrationsAdvancedRoute
+  '/_app/integrations/apps': typeof AppIntegrationsAppsRoute
   '/_app/integrations/connect': typeof AppIntegrationsConnectRoute
   '/_app/integrations/help': typeof AppIntegrationsHelpRoute
   '/_app/invite/$token': typeof AppInviteTokenRoute
   '/_app/kb/$id': typeof AppKbIdRoute
   '/_app/proposals/$id': typeof AppProposalsIdRoute
+  '/_app/reports/dashboards': typeof AppReportsDashboardsRouteWithChildren
   '/_app/reports/weekly': typeof AppReportsWeeklyRoute
   '/_app/sequences/$id': typeof AppSequencesIdRoute
-  '/_app/settings/automations': typeof AppSettingsAutomationsRoute
+  '/_app/settings/automations': typeof AppSettingsAutomationsRouteWithChildren
   '/_app/settings/erp-agent': typeof AppSettingsErpAgentRoute
   '/_app/settings/fields': typeof AppSettingsFieldsRoute
   '/_app/settings/import': typeof AppSettingsImportRoute
@@ -906,6 +941,8 @@ export interface FileRoutesById {
   '/api/public/influencer-visit': typeof ApiPublicInfluencerVisitRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/i/$org/$slug': typeof IOrgSlugRoute
+  '/_app/reports/dashboards/$id': typeof AppReportsDashboardsIdRoute
+  '/_app/settings/automations/runs': typeof AppSettingsAutomationsRunsRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
   '/api/public/hooks/ai-purge-expired': typeof ApiPublicHooksAiPurgeExpiredRoute
   '/api/public/hooks/customer-360-refresh': typeof ApiPublicHooksCustomer360RefreshRoute
@@ -989,11 +1026,13 @@ export interface FileRouteTypes {
     | '/companies/$id'
     | '/contacts/$id'
     | '/integrations/advanced'
+    | '/integrations/apps'
     | '/integrations/connect'
     | '/integrations/help'
     | '/invite/$token'
     | '/kb/$id'
     | '/proposals/$id'
+    | '/reports/dashboards'
     | '/reports/weekly'
     | '/sequences/$id'
     | '/settings/automations'
@@ -1008,6 +1047,8 @@ export interface FileRouteTypes {
     | '/api/public/influencer-visit'
     | '/api/public/lead-form'
     | '/i/$org/$slug'
+    | '/reports/dashboards/$id'
+    | '/settings/automations/runs'
     | '/api/public/hooks/activity-reminders'
     | '/api/public/hooks/ai-purge-expired'
     | '/api/public/hooks/customer-360-refresh'
@@ -1089,11 +1130,13 @@ export interface FileRouteTypes {
     | '/companies/$id'
     | '/contacts/$id'
     | '/integrations/advanced'
+    | '/integrations/apps'
     | '/integrations/connect'
     | '/integrations/help'
     | '/invite/$token'
     | '/kb/$id'
     | '/proposals/$id'
+    | '/reports/dashboards'
     | '/reports/weekly'
     | '/sequences/$id'
     | '/settings/automations'
@@ -1108,6 +1151,8 @@ export interface FileRouteTypes {
     | '/api/public/influencer-visit'
     | '/api/public/lead-form'
     | '/i/$org/$slug'
+    | '/reports/dashboards/$id'
+    | '/settings/automations/runs'
     | '/api/public/hooks/activity-reminders'
     | '/api/public/hooks/ai-purge-expired'
     | '/api/public/hooks/customer-360-refresh'
@@ -1190,11 +1235,13 @@ export interface FileRouteTypes {
     | '/_app/companies/$id'
     | '/_app/contacts/$id'
     | '/_app/integrations/advanced'
+    | '/_app/integrations/apps'
     | '/_app/integrations/connect'
     | '/_app/integrations/help'
     | '/_app/invite/$token'
     | '/_app/kb/$id'
     | '/_app/proposals/$id'
+    | '/_app/reports/dashboards'
     | '/_app/reports/weekly'
     | '/_app/sequences/$id'
     | '/_app/settings/automations'
@@ -1209,6 +1256,8 @@ export interface FileRouteTypes {
     | '/api/public/influencer-visit'
     | '/api/public/lead-form'
     | '/i/$org/$slug'
+    | '/_app/reports/dashboards/$id'
+    | '/_app/settings/automations/runs'
     | '/api/public/hooks/activity-reminders'
     | '/api/public/hooks/ai-purge-expired'
     | '/api/public/hooks/customer-360-refresh'
@@ -1816,6 +1865,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppReportsWeeklyRouteImport
       parentRoute: typeof AppReportsRoute
     }
+    '/_app/reports/dashboards': {
+      id: '/_app/reports/dashboards'
+      path: '/dashboards'
+      fullPath: '/reports/dashboards'
+      preLoaderRoute: typeof AppReportsDashboardsRouteImport
+      parentRoute: typeof AppReportsRoute
+    }
     '/_app/proposals/$id': {
       id: '/_app/proposals/$id'
       path: '/$id'
@@ -1849,6 +1905,13 @@ declare module '@tanstack/react-router' {
       path: '/connect'
       fullPath: '/integrations/connect'
       preLoaderRoute: typeof AppIntegrationsConnectRouteImport
+      parentRoute: typeof AppIntegrationsRoute
+    }
+    '/_app/integrations/apps': {
+      id: '/_app/integrations/apps'
+      path: '/apps'
+      fullPath: '/integrations/apps'
+      preLoaderRoute: typeof AppIntegrationsAppsRouteImport
       parentRoute: typeof AppIntegrationsRoute
     }
     '/_app/integrations/advanced': {
@@ -1935,6 +1998,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksActivityRemindersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_app/settings/automations/runs': {
+      id: '/_app/settings/automations/runs'
+      path: '/runs'
+      fullPath: '/settings/automations/runs'
+      preLoaderRoute: typeof AppSettingsAutomationsRunsRouteImport
+      parentRoute: typeof AppSettingsAutomationsRoute
+    }
+    '/_app/reports/dashboards/$id': {
+      id: '/_app/reports/dashboards/$id'
+      path: '/$id'
+      fullPath: '/reports/dashboards/$id'
+      preLoaderRoute: typeof AppReportsDashboardsIdRouteImport
+      parentRoute: typeof AppReportsDashboardsRoute
+    }
   }
 }
 
@@ -1964,12 +2041,14 @@ const AppContactsRouteWithChildren = AppContactsRoute._addFileChildren(
 
 interface AppIntegrationsRouteChildren {
   AppIntegrationsAdvancedRoute: typeof AppIntegrationsAdvancedRoute
+  AppIntegrationsAppsRoute: typeof AppIntegrationsAppsRoute
   AppIntegrationsConnectRoute: typeof AppIntegrationsConnectRoute
   AppIntegrationsHelpRoute: typeof AppIntegrationsHelpRoute
 }
 
 const AppIntegrationsRouteChildren: AppIntegrationsRouteChildren = {
   AppIntegrationsAdvancedRoute: AppIntegrationsAdvancedRoute,
+  AppIntegrationsAppsRoute: AppIntegrationsAppsRoute,
   AppIntegrationsConnectRoute: AppIntegrationsConnectRoute,
   AppIntegrationsHelpRoute: AppIntegrationsHelpRoute,
 }
@@ -2000,11 +2079,24 @@ const AppProposalsRouteWithChildren = AppProposalsRoute._addFileChildren(
   AppProposalsRouteChildren,
 )
 
+interface AppReportsDashboardsRouteChildren {
+  AppReportsDashboardsIdRoute: typeof AppReportsDashboardsIdRoute
+}
+
+const AppReportsDashboardsRouteChildren: AppReportsDashboardsRouteChildren = {
+  AppReportsDashboardsIdRoute: AppReportsDashboardsIdRoute,
+}
+
+const AppReportsDashboardsRouteWithChildren =
+  AppReportsDashboardsRoute._addFileChildren(AppReportsDashboardsRouteChildren)
+
 interface AppReportsRouteChildren {
+  AppReportsDashboardsRoute: typeof AppReportsDashboardsRouteWithChildren
   AppReportsWeeklyRoute: typeof AppReportsWeeklyRoute
 }
 
 const AppReportsRouteChildren: AppReportsRouteChildren = {
+  AppReportsDashboardsRoute: AppReportsDashboardsRouteWithChildren,
   AppReportsWeeklyRoute: AppReportsWeeklyRoute,
 }
 
@@ -2035,6 +2127,20 @@ const AppTicketsRouteChildren: AppTicketsRouteChildren = {
 const AppTicketsRouteWithChildren = AppTicketsRoute._addFileChildren(
   AppTicketsRouteChildren,
 )
+
+interface AppSettingsAutomationsRouteChildren {
+  AppSettingsAutomationsRunsRoute: typeof AppSettingsAutomationsRunsRoute
+}
+
+const AppSettingsAutomationsRouteChildren: AppSettingsAutomationsRouteChildren =
+  {
+    AppSettingsAutomationsRunsRoute: AppSettingsAutomationsRunsRoute,
+  }
+
+const AppSettingsAutomationsRouteWithChildren =
+  AppSettingsAutomationsRoute._addFileChildren(
+    AppSettingsAutomationsRouteChildren,
+  )
 
 interface AppRouteChildren {
   AppActivitiesRoute: typeof AppActivitiesRoute
@@ -2102,7 +2208,7 @@ interface AppRouteChildren {
   AppWhatsappRoute: typeof AppWhatsappRoute
   AppWinLossRoute: typeof AppWinLossRoute
   AppInviteTokenRoute: typeof AppInviteTokenRoute
-  AppSettingsAutomationsRoute: typeof AppSettingsAutomationsRoute
+  AppSettingsAutomationsRoute: typeof AppSettingsAutomationsRouteWithChildren
   AppSettingsErpAgentRoute: typeof AppSettingsErpAgentRoute
   AppSettingsFieldsRoute: typeof AppSettingsFieldsRoute
   AppSettingsImportRoute: typeof AppSettingsImportRoute
@@ -2177,7 +2283,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppWhatsappRoute: AppWhatsappRoute,
   AppWinLossRoute: AppWinLossRoute,
   AppInviteTokenRoute: AppInviteTokenRoute,
-  AppSettingsAutomationsRoute: AppSettingsAutomationsRoute,
+  AppSettingsAutomationsRoute: AppSettingsAutomationsRouteWithChildren,
   AppSettingsErpAgentRoute: AppSettingsErpAgentRoute,
   AppSettingsFieldsRoute: AppSettingsFieldsRoute,
   AppSettingsImportRoute: AppSettingsImportRoute,
