@@ -16,7 +16,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "@/components/page-header";
 import { NextActionBlock } from "@/components/next-action-block";
 import { EmptyState } from "@/components/empty-state";
-import { Plus, Trash2, Target } from "lucide-react";
+import { Plus, Trash2, Target, TrendingUp, Trophy, Flame, DollarSign } from "lucide-react";
 import { toast } from "sonner";
 import { dealSchema, fromForm } from "@/lib/validation";
 import { AIInsights } from "@/components/ai-insights";
