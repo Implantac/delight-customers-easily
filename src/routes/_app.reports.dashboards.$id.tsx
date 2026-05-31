@@ -168,30 +168,16 @@ function WidgetBody({ type, data, loading }: { type: string; data: any; loading:
   }
   if (type === "bar_by_stage") {
     return (
-      <div className="h-56">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data.data}>
-            <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-            <XAxis dataKey="stage" className="text-xs" /><YAxis className="text-xs" />
-            <Tooltip formatter={(v: number) => fmtBRL(v)} />
-            <Bar dataKey="value" fill="hsl(var(--primary))" />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
+      <Suspense fallback={<ChartFallback />}>
+        <BarByStage data={data.data} />
+      </Suspense>
     );
   }
   if (type === "line_revenue_6m") {
     return (
-      <div className="h-56">
-        <ResponsiveContainer width="100%" height="100%">
-          <LineChart data={data.data}>
-            <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
-            <XAxis dataKey="month" className="text-xs" /><YAxis className="text-xs" />
-            <Tooltip formatter={(v: number) => fmtBRL(v)} />
-            <Line type="monotone" dataKey="value" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
+      <Suspense fallback={<ChartFallback />}>
+        <LineRevenue data={data.data} />
+      </Suspense>
     );
   }
   if (type === "funnel_conversion") {
