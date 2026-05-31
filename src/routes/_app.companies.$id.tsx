@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { PageHeader } from "@/components/page-header";
+
 import { HealthScore } from "@/components/health-score";
 import { NextActionBlock } from "@/components/next-action-block";
 import { Timeline, type TimelineItem } from "@/components/timeline";
@@ -189,17 +189,76 @@ function CompanyDetail() {
   const waLink = primaryContact?.phone ? whatsappLink(primaryContact.phone) : null;
 
   return (
-    <div className="p-4 md:p-8 max-w-6xl mx-auto">
-      <Button variant="ghost" size="sm" asChild className="mb-4">
-        <Link to="/companies"><ArrowLeft className="mr-1 h-4 w-4" />Carteira</Link>
+    <div className="page-container max-w-[1600px]">
+      <Button variant="ghost" size="sm" asChild className="mb-3 -ml-2 h-7 text-muted-foreground">
+        <Link to="/companies"><ArrowLeft className="mr-1 h-3.5 w-3.5" />Carteira</Link>
       </Button>
 
-      {/* ============ Zona 1 — Cabeçalho comercial ============ */}
-      <PageHeader
-        title={company.name}
-        subtitle={[company.industry, company.size].filter(Boolean).join(" · ") || "Cliente da carteira"}
-        action={
-          <div className="flex flex-wrap gap-2">
+      {/* ============ HERO — Command bar premium ============ */}
+      <div className="surface-elevated relative overflow-hidden p-5 md:p-6">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+        <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+          <div className="flex min-w-0 items-start gap-4">
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-[var(--gradient-primary)] text-primary-foreground shadow-[var(--shadow-glow)] ring-1 ring-white/10">
+              <span className="font-display text-xl font-semibold tracking-tight">
+                {company.name.slice(0, 2).toUpperCase()}
+              </span>
+            </div>
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
+                <h1 className="font-display text-[1.625rem] font-semibold leading-tight tracking-[-0.025em] md:text-[2rem]">
+                  {company.name}
+                </h1>
+                {company.omie_id && (
+                  <span className="inline-flex items-center gap-1 rounded-full border border-border/60 bg-muted/50 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+                    <Plug className="h-2.5 w-2.5" /> ERP
+                  </span>
+                )}
+              </div>
+              <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-muted-foreground">
+                {company.industry && <span>{company.industry}</span>}
+                {company.size && <><span className="opacity-30">·</span><span>{company.size}</span></>}
+                {company.website && (
+                  <>
+                    <span className="opacity-30">·</span>
+                    <a href={company.website} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-primary hover:underline">
+                      <Globe className="h-3 w-3" />
+                      {company.website.replace(/^https?:\/\//, "")}
+                    </a>
+                  </>
+                )}
+              </div>
+              {/* Status pills derivadas da inteligência comercial */}
+              <div className="mt-3 flex flex-wrap items-center gap-1.5">
+                {kpis.lastPurchase && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[11px] font-medium text-emerald-700 dark:text-emerald-300">
+                    <Clock className="h-2.5 w-2.5" />
+                    Última compra {new Date(kpis.lastPurchase).toLocaleDateString("pt-BR", { day: "2-digit", month: "short" })}
+                  </span>
+                )}
+                {kpis.openCount > 0 && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary">
+                    <KanbanSquare className="h-2.5 w-2.5" />
+                    {kpis.openCount} aberta{kpis.openCount === 1 ? "" : "s"}
+                  </span>
+                )}
+                {kpis.overdueCount > 0 && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-rose-500/10 px-2 py-0.5 text-[11px] font-medium text-rose-700 dark:text-rose-300">
+                    <Receipt className="h-2.5 w-2.5" />
+                    {kpis.overdueCount} em atraso
+                  </span>
+                )}
+                {kpis.frequency >= 6 && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-0.5 text-[11px] font-medium text-amber-700 dark:text-amber-300">
+                    <Sparkles className="h-2.5 w-2.5" />
+                    Cliente recorrente
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-2 lg:shrink-0">
             {waLink && (
               <Button variant="outline" size="sm" asChild>
                 <a href={waLink} target="_blank" rel="noreferrer"><MessageCircle className="mr-1 h-4 w-4" />WhatsApp</a>
@@ -218,22 +277,15 @@ function CompanyDetail() {
             <Button size="sm" asChild>
               <Link to="/pipeline"><KanbanSquare className="mr-1 h-4 w-4" />Nova oportunidade</Link>
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => { if (confirm("Remover empresa?")) del.mutate(); }}>
+            <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive" onClick={() => { if (confirm("Remover empresa?")) del.mutate(); }}>
               <Trash2 className="h-4 w-4" />
             </Button>
           </div>
-        }
-      />
-
-      {company.omie_id && (
-        <div className="mt-3 inline-flex items-center gap-2 rounded-md border border-dashed bg-muted/40 px-2.5 py-1 text-xs text-muted-foreground">
-          <Plug className="h-3 w-3" /> Sincronizado com ERP · ID {company.omie_id}
-          {company.omie_synced_at && <> · {new Date(company.omie_synced_at).toLocaleDateString("pt-BR")}</>}
         </div>
-      )}
+      </div>
 
-      {/* ============ Zona 2 — KPIs comerciais ============ */}
-      <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {/* ============ KPI strip ============ */}
+      <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Kpi
           icon={<TrendingUp className="h-4 w-4" />}
           label="Receita ganha"
@@ -265,63 +317,11 @@ function CompanyDetail() {
         />
       </div>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-3">
-        {/* ============ Coluna esquerda: identidade ============ */}
-        <div className="space-y-6 lg:col-span-1">
-          <Card className="p-5">
-            <h3 className="text-sm font-semibold">Detalhes</h3>
-            <dl className="mt-3 space-y-2 text-sm">
-              {company.website && (
-                <div className="flex items-center gap-2">
-                  <Globe className="h-3.5 w-3.5 text-muted-foreground" />
-                  <a href={company.website} target="_blank" rel="noreferrer" className="text-primary hover:underline truncate">
-                    {company.website}
-                  </a>
-                </div>
-              )}
-              {company.industry && <div className="text-muted-foreground">Setor: <span className="text-foreground">{company.industry}</span></div>}
-              {company.size && <div className="text-muted-foreground">Tamanho: <span className="text-foreground">{company.size}</span></div>}
-            </dl>
-            <div className="mt-4">
-              <p className="mb-1.5 text-xs font-medium text-muted-foreground">Etiquetas</p>
-              <TagPicker entityType="company" entityId={company.id} />
-            </div>
-            {company.notes && (
-              <>
-                <h3 className="mt-5 text-sm font-semibold">Notas</h3>
-                <p className="mt-2 whitespace-pre-wrap text-sm text-muted-foreground">{company.notes}</p>
-              </>
-            )}
-          </Card>
+      {/* ============ Layout invertido: conteúdo principal à esquerda, painel de inteligência sticky à direita ============ */}
+      <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_340px]">
+        {/* ====== Coluna principal: ação comercial ====== */}
+        <div className="min-w-0 space-y-6">
 
-          <HealthScore companyId={company.id} />
-
-          <Card className="p-5">
-            <h3 className="flex items-center gap-2 text-sm font-semibold"><Users className="h-4 w-4" />Contatos ({contacts?.length ?? 0})</h3>
-            <div className="mt-3 space-y-2">
-              {(contacts ?? []).length === 0 && <p className="text-sm text-muted-foreground">Sem contatos.</p>}
-              {contacts?.map((c) => (
-                <Link
-                  key={c.id}
-                  to="/contacts/$id"
-                  params={{ id: c.id }}
-                  className="flex items-center justify-between rounded-md border p-3 text-sm hover:bg-accent"
-                >
-                  <div>
-                    <p className="font-medium">{c.name}</p>
-                    {c.position && <p className="text-xs text-muted-foreground">{c.position}</p>}
-                  </div>
-                  {c.email && <span className="text-xs text-muted-foreground truncate ml-2">{c.email}</span>}
-                </Link>
-              ))}
-            </div>
-          </Card>
-
-          <Attachments entityType="company" entityId={company.id} />
-        </div>
-
-        {/* ============ Coluna direita: ação comercial (em abas) ============ */}
-        <div className="lg:col-span-2 space-y-6">
           {/* IA Comercial — sempre visível (briefing Fase 3) */}
           {primaryContact && (
             <NextActionBlock surface="contact" title="Próxima ação sugerida" limit={3} showRegenerate />
@@ -560,6 +560,61 @@ function CompanyDetail() {
             </TabsContent>
           </Tabs>
         </div>
+
+        {/* ====== Coluna direita: painel de inteligência sticky ====== */}
+        <aside className="space-y-4 lg:sticky lg:top-20 lg:self-start">
+          <HealthScore companyId={company.id} />
+
+          <Card className="p-4">
+            <div className="flex items-center justify-between">
+              <h3 className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+                <Users className="h-3.5 w-3.5" />
+                Contatos · {contacts?.length ?? 0}
+              </h3>
+            </div>
+            <div className="mt-3 space-y-1.5">
+              {(contacts ?? []).length === 0 && (
+                <p className="text-xs text-muted-foreground">Sem contatos vinculados.</p>
+              )}
+              {(contacts ?? []).slice(0, 5).map((c) => (
+                <Link
+                  key={c.id}
+                  to="/contacts/$id"
+                  params={{ id: c.id }}
+                  className="group flex items-center justify-between rounded-md border border-transparent p-2 text-sm transition-colors hover:border-border hover:bg-accent/40"
+                >
+                  <div className="min-w-0">
+                    <p className="truncate font-medium leading-tight">{c.name}</p>
+                    {c.position && (
+                      <p className="truncate text-[11px] text-muted-foreground">{c.position}</p>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </Card>
+
+          <Card className="p-4">
+            <h3 className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+              Etiquetas
+            </h3>
+            <div className="mt-2">
+              <TagPicker entityType="company" entityId={company.id} />
+            </div>
+            {company.notes && (
+              <>
+                <h3 className="mt-4 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+                  Notas
+                </h3>
+                <p className="mt-2 whitespace-pre-wrap text-[13px] leading-relaxed text-muted-foreground">
+                  {company.notes}
+                </p>
+              </>
+            )}
+          </Card>
+
+          <Attachments entityType="company" entityId={company.id} />
+        </aside>
       </div>
     </div>
   );
@@ -575,17 +630,27 @@ type KpiProps = {
 
 function Kpi({ icon, label, value, hint, tone }: KpiProps) {
   return (
-    <Card className="p-4">
-      <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-        <span className="text-primary">{icon}</span>
-        {label}
+    <Card className="kpi-card p-4">
+      <div className="flex items-center justify-between">
+        <span className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+          {label}
+        </span>
+        <span className="flex h-6 w-6 items-center justify-center rounded-md border border-border/60 bg-card text-primary">
+          {icon}
+        </span>
       </div>
-      <p className="mt-2 text-2xl font-semibold tabular-nums tracking-tight">{value}</p>
+      <p
+        data-slot="kpi-value"
+        className="mt-3 font-display text-[1.5rem] font-semibold leading-none tracking-[-0.025em]"
+      >
+        {value}
+      </p>
       {hint && (
-        <p className={`mt-1 text-xs ${tone === "warn" ? "text-destructive font-medium" : "text-muted-foreground"}`}>
+        <p className={`mt-2 text-[11px] ${tone === "warn" ? "text-destructive font-medium" : "text-muted-foreground"}`}>
           {hint}
         </p>
       )}
     </Card>
   );
 }
+
