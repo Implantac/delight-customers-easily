@@ -34,8 +34,8 @@ function IntelComercialPage() {
     <div className="space-y-6 p-6">
       <PageHeader
         title="Inteligência Comercial"
-        description="Respostas diretas às perguntas que movem a receita."
-        actions={
+        subtitle="Respostas diretas às perguntas que movem a receita."
+        action={
           <button
             onClick={() => refetch()}
             disabled={isFetching}
