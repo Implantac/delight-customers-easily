@@ -125,7 +125,7 @@ export const createTerritory = createServerFn({ method: 'POST' })
         center_lat: data.centerLat ?? null,
         center_lng: data.centerLng ?? null,
         radius_km: data.radiusKm ?? null,
-        polygon_geojson: (data.polygonGeojson as object | null) ?? null,
+        polygon_geojson: (data.polygonGeojson as never) ?? null,
         is_active: data.isActive,
       })
       .select()
