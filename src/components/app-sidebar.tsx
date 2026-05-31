@@ -98,6 +98,9 @@ const navSections: NavSection[] = [
       { to: "/ia-comercial", label: "IA Comercial", icon: Sparkles, shortcut: "G I" },
       { to: "/reports", label: "Relatórios", icon: BarChart3, shortcut: "G R", managerOnly: true },
       { to: "/reports/dashboards", label: "Dashboards", icon: BarChart3, managerOnly: true },
+      { to: "/multi-empresa", label: "Comparativo multiempresa", icon: Building, managerOnly: true },
+      { to: "/propensao", label: "Propensão & churn (IA)", icon: Sparkles, managerOnly: true },
+      { to: "/rota-otimizada", label: "Rota otimizada (VRP)", icon: RouteIcon },
     ],
   },
   {
