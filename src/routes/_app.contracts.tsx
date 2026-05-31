@@ -144,7 +144,7 @@ function ContractsPage() {
   });
 
   const remove = useMutation({
-    mutationFn: (id: string) => delFn({ data: { id } }),
+    mutationFn: (id: string) => delFn({ data: { id, organization_id: orgId! } }),
     onSuccess: () => { toast.success("Excluído"); qc.invalidateQueries({ queryKey: ["contracts"] }); },
     onError: (e: any) => toast.error(e.message),
   });
