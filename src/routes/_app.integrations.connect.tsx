@@ -137,8 +137,38 @@ function ConnectWizard() {
         <h1 className="text-2xl font-semibold flex items-center gap-2">
           <Plug className="h-6 w-6" /> Conectar meu ERP
         </h1>
-        <p className="text-sm text-muted-foreground mt-1">Passo {step} de 6</p>
-        <Progress value={(step / 6) * 100} className="mt-3" />
+        <p className="text-sm text-muted-foreground mt-1">
+          Vamos te guiar passo a passo. Você não precisa entender de tecnologia. 💡
+        </p>
+
+        {/* Stepper nomeado */}
+        <div className="mt-4 flex items-center gap-1 overflow-x-auto pb-1">
+          {STEP_LABELS.map((label, i) => {
+            const n = (i + 1) as Step;
+            const active = step === n;
+            const done = step > n;
+            return (
+              <div key={label} className="flex items-center gap-1 shrink-0">
+                <div className={`flex items-center gap-2 rounded-full px-3 py-1 text-xs border transition ${
+                  active ? "border-primary bg-primary/10 text-primary font-medium" :
+                  done ? "border-green-500/40 bg-green-500/5 text-green-700 dark:text-green-400" :
+                  "border-muted text-muted-foreground"
+                }`}>
+                  <span className={`h-5 w-5 rounded-full flex items-center justify-center text-[10px] ${
+                    active ? "bg-primary text-primary-foreground" :
+                    done ? "bg-green-600 text-white" :
+                    "bg-muted"
+                  }`}>
+                    {done ? "✓" : i + 1}
+                  </span>
+                  <span className="hidden sm:inline">{label}</span>
+                </div>
+                {i < STEP_LABELS.length - 1 && <div className="h-px w-3 bg-border" />}
+              </div>
+            );
+          })}
+        </div>
+        <Progress value={(step / 6) * 100} className="mt-3 h-1" />
       </div>
 
       {/* PASSO 1 — Escolher ERP */}
