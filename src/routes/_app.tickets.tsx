@@ -163,7 +163,8 @@ function TicketsPage() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
-      </div>
+        }
+      />
 
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         {(["open", "in_progress", "pending", "resolved", "closed"] as const).map((k) => {

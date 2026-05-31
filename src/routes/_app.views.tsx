@@ -64,12 +64,11 @@ function ViewsPage() {
 
   return (
     <div className="flex flex-col gap-6 p-6">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Visualizações salvas</h1>
-        <p className="text-sm text-muted-foreground">
-          Gerencie filtros salvos e compartilhe com sua equipe.
-        </p>
-      </div>
+      <PageHeader
+        icon={Bookmark}
+        title="Visualizações salvas"
+        subtitle="Gerencie filtros salvos e compartilhe com sua equipe."
+      />
 
       <Tabs value={tab} onValueChange={(v) => setTab(v as any)}>
         <TabsList>

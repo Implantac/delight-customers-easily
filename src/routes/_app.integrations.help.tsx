@@ -19,6 +19,12 @@ function HelpPage() {
         <Button variant="ghost" size="sm" className="gap-2"><ArrowLeft className="h-4 w-4" /> Voltar</Button>
       </Link>
 
+      <PageHeader
+        icon={HelpCircle}
+        title="Central de Ajuda — Integrações"
+        subtitle="Tudo o que você precisa para conectar o CRM ao seu ERP com segurança."
+      />
+
       {/* Agente Local */}
       <Card className="border-primary/20 bg-primary/5">
         <CardHeader>

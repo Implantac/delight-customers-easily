@@ -134,13 +134,13 @@ function ConnectWizard() {
         <Button variant="ghost" size="sm" className="gap-2"><ArrowLeft className="h-4 w-4" /> Voltar</Button>
       </Link>
 
+      <PageHeader
+        icon={Plug}
+        title="Conectar meu ERP"
+        subtitle="Vamos te guiar passo a passo. Você não precisa entender de tecnologia."
+      />
+
       <div>
-        <h1 className="text-2xl font-semibold flex items-center gap-2">
-          <Plug className="h-6 w-6" /> Conectar meu ERP
-        </h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Vamos te guiar passo a passo. Você não precisa entender de tecnologia. 💡
-        </p>
 
         {/* Stepper nomeado */}
         <div className="mt-4 flex items-center gap-1 overflow-x-auto pb-1">

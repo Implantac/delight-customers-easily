@@ -127,19 +127,16 @@ function TimeTrackingPage() {
 
   return (
     <div className="container mx-auto p-6 space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-3xl font-bold flex items-center gap-2">
-            <Clock className="h-7 w-7" /> Apontamento de Horas
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            Registre tempo trabalhado por negócio, ticket ou cliente e gere valores faturáveis.
-          </p>
-        </div>
-        <Button onClick={() => { setEditId(null); setDraft(emptyDraft()); setDlg(true); }}>
-          <Plus className="h-4 w-4 mr-2" /> Novo registro
-        </Button>
-      </div>
+      <PageHeader
+        icon={Clock}
+        title="Apontamento de Horas"
+        subtitle="Registre tempo trabalhado por negócio, ticket ou cliente e gere valores faturáveis."
+        action={
+          <Button onClick={() => { setEditId(null); setDraft(emptyDraft()); setDlg(true); }}>
+            <Plus className="h-4 w-4 mr-2" /> Novo registro
+          </Button>
+        }
+      />
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <Card><CardContent className="p-4">
