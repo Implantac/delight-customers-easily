@@ -691,29 +691,6 @@ function Pricing({ ctaHref }: { ctaHref: string }) {
 /* ---------------- FAQ ---------------- */
 
 function FAQ() {
-  const items = [
-    {
-      q: "Preciso de cartão de crédito para começar?",
-      a: "Não. O plano Starter é gratuito e você pode criar sua organização em minutos.",
-    },
-    {
-      q: "Funciona para times com poucos vendedores?",
-      a: "Sim. O Lovable CRM foi pensado para escalar de 1 vendedor a operações com dezenas de equipes.",
-    },
-    {
-      q: "Meus dados ficam isolados de outras empresas?",
-      a: "Sim. Cada organização é totalmente isolada por padrão, com políticas de segurança em nível de banco de dados.",
-    },
-    {
-      q: "Consigo migrar minha planilha atual?",
-      a: "Sim. Suportamos importação por CSV e temos um assistente de mapeamento de campos.",
-    },
-    {
-      q: "A IA usa os meus dados para treinar modelos?",
-      a: "Não. Seus dados são usados apenas para gerar sugestões dentro da sua própria organização.",
-    },
-  ];
-
   return (
     <section id="faq" className="border-b border-border/60 py-24">
       <div className="mx-auto max-w-3xl px-4">
@@ -725,7 +702,7 @@ function FAQ() {
         </div>
 
         <Accordion type="single" collapsible className="mt-10">
-          {items.map((it, i) => (
+          {FAQ_ITEMS.map((it, i) => (
             <AccordionItem key={i} value={`item-${i}`}>
               <AccordionTrigger className="text-left">{it.q}</AccordionTrigger>
               <AccordionContent className="text-muted-foreground">
