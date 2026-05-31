@@ -60,10 +60,9 @@ type NavSection = {
  */
 const navSections: NavSection[] = [
   {
-    id: "comercial",
-    label: "Comercial",
+    id: "principal",
+    label: "Principal",
     items: [
-      { to: "/meu-dia", label: "Meu Dia", icon: Sun, shortcut: "G Y" },
       { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, shortcut: "G D" },
       { to: "/carteira", label: "Carteira Comercial", icon: Briefcase, shortcut: "G W" },
       { to: "/leads", label: "Leads", icon: Flame, shortcut: "G L" },
@@ -96,7 +95,7 @@ const navSections: NavSection[] = [
     label: "Administração",
     items: [
       { to: "/integrations", label: "Integrações ERP", icon: Plug, managerOnly: true },
-      { to: "/companies", label: "Empresas", icon: Building },
+      { to: "/settings/organization", label: "Empresas (workspaces)", icon: Building, managerOnly: true },
       { to: "/settings/organization", label: "Usuários", icon: Users, managerOnly: true },
       { to: "/settings/organization", label: "Configurações", icon: Settings },
     ],
@@ -106,6 +105,8 @@ const navSections: NavSection[] = [
     label: "Comercial — aprofundar",
     defaultCollapsed: true,
     items: [
+      { to: "/meu-dia", label: "Meu Dia", icon: Sun, shortcut: "G Y" },
+      { to: "/companies", label: "Contas (B2B)", icon: Building },
       { to: "/opportunity-map", label: "Mapa territorial", icon: Target },
       { to: "/pipeline", label: "Pipeline", icon: KanbanSquare, shortcut: "G P" },
       { to: "/forecast", label: "Previsão", icon: Target, shortcut: "G F" },
@@ -193,6 +194,7 @@ const navSections: NavSection[] = [
     ],
   },
 ];
+
 
 
 export function AppSidebar() {
