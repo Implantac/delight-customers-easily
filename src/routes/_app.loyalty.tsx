@@ -236,7 +236,7 @@ function LoyaltyPage() {
                     {r.description && <p className="text-sm text-muted-foreground line-clamp-2">{r.description}</p>}
                     <div className="flex items-center gap-2 pt-1">
                       <Badge className="text-base px-3 py-1">{r.cost_points.toLocaleString("pt-BR")} pts</Badge>
-                      {r.stock !== null && <span className="text-xs text-muted-foreground">Estoque: {r.stock}</span>}
+                      {r.stock !== null && <span className="text-xs text-muted-foreground">Disponível: {r.stock}</span>}
                     </div>
                     <div className="flex gap-1 pt-2">
                       <Button size="sm" variant="ghost" onClick={() => {
@@ -363,7 +363,7 @@ function LoyaltyPage() {
                 <Input type="number" value={rewardDraft.cost_points} onChange={(e) => setRewardDraft({ ...rewardDraft, cost_points: e.target.value })} />
               </div>
               <div>
-                <Label>Estoque (vazio = ilimitado)</Label>
+                <Label>Quantidade disponível (vazio = ilimitado)</Label>
                 <Input type="number" value={rewardDraft.stock} onChange={(e) => setRewardDraft({ ...rewardDraft, stock: e.target.value })} />
               </div>
             </div>
