@@ -118,6 +118,7 @@ function TemplatesPage() {
   return (
     <div className="space-y-6 p-6">
       <PageHeader
+        icon={FileText}
         title="Templates de mensagens"
         subtitle="Biblioteca compartilhada de emails, WhatsApp e scripts. Use merge tags para personalizar em segundos."
         action={<Button onClick={startNew}><Plus className="mr-2 h-4 w-4" />Novo template</Button>}

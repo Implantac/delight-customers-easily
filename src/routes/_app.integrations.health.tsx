@@ -72,6 +72,7 @@ function HealthCenterPage() {
   return (
     <div className="space-y-6 p-4 md:p-6">
       <PageHeader
+        icon={Activity}
         title="ERP Health Center"
         subtitle="Status das integrações comerciais com o ERP e resolução de conflitos."
         action={

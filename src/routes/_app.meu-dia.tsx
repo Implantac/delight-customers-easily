@@ -115,6 +115,7 @@ function MyDayPage() {
   return (
     <div className="p-4 md:p-8 space-y-6">
       <PageHeader
+        icon={Sun}
         title={`${greeting}${first ? `, ${first}` : ""}`}
         subtitle={new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long" })}
         action={

@@ -120,6 +120,7 @@ function ChatPage() {
   return (
     <div className="p-4 md:p-8 max-w-7xl mx-auto h-[calc(100vh-2rem)] flex flex-col">
       <PageHeader
+        icon={MessageSquare}
         title="Chat da equipe"
         subtitle="Conversas internas em tempo real, escopadas à sua organização."
         action={

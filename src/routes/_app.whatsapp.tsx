@@ -203,6 +203,7 @@ function WhatsAppPage() {
   return (
     <div className="flex flex-col h-[calc(100vh-3.5rem)]">
       <PageHeader
+        icon={MessageCircle}
         title="WhatsApp"
         subtitle="Inbox unificada multi-atendimento, com SLA, atribuição e templates."
         action={

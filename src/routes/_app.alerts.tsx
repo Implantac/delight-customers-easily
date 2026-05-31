@@ -73,6 +73,7 @@ function AlertsPage() {
   return (
     <div className="p-4 md:p-8">
       <PageHeader
+        icon={Bell}
         title="Central de Alertas"
         subtitle="Sinais que exigem ação agora — negócios parados, clientes silenciosos, tarefas atrasadas."
         action={

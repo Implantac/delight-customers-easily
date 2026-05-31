@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PageHeader } from "@/components/page-header";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Crown, Shield, User, LogOut, Copy, Trash2, Mail } from "lucide-react";
+import { Crown, Shield, User, LogOut, Copy, Trash2, Mail, Building2 } from "lucide-react";
 import { toast } from "sonner";
 import { inviteSchema } from "@/lib/validation";
 
@@ -119,7 +119,7 @@ function OrgSettings() {
 
   return (
     <div className="p-4 md:p-8 max-w-3xl">
-      <PageHeader title="Organização" subtitle={`Você é ${role === "owner" ? "owner" : role === "admin" ? "admin" : "membro"}`} />
+      <PageHeader icon={Building2} title="Organização" subtitle={`Você é ${role === "owner" ? "owner" : role === "admin" ? "admin" : "membro"} — gerencie membros, papéis e convites.`} />
 
       <Card className="mt-6 p-6">
         <h3 className="font-semibold">Detalhes</h3>
