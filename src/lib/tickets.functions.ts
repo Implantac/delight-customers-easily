@@ -186,6 +186,14 @@ export const addComment = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
+    // verify the ticket belongs to the claimed organization
+    const { data: t } = await supabase
+      .from("tickets")
+      .select("id")
+      .eq("id", data.ticket_id)
+      .eq("organization_id", data.organization_id)
+      .maybeSingle();
+    if (!t) throw new Error("Ticket não encontrado");
     const { error } = await supabase.from("ticket_comments").insert({
       organization_id: data.organization_id,
       ticket_id: data.ticket_id,
