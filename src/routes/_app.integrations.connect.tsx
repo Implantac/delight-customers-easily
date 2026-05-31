@@ -466,6 +466,38 @@ function ConnectWizard() {
           </CardContent>
         </Card>
       )}
+
+      {/* Rodapé: ajuda humana sempre visível */}
+      <div className="pt-2 flex items-center justify-center">
+        <Link to="/integrations/help">
+          <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground">
+            <MessageCircle className="h-4 w-4" /> Travou? Fale com a gente
+          </Button>
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+function WhereToFind({ title, steps }: { title: string; steps: string[] }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="rounded-md border bg-muted/30">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="w-full flex items-center justify-between px-3 py-2 text-xs font-medium hover:bg-muted/50 transition"
+      >
+        <span className="flex items-center gap-2">
+          <HelpCircle className="h-3.5 w-3.5" /> {title}
+        </span>
+        <ChevronDown className={`h-3.5 w-3.5 transition ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open && (
+        <ol className="px-4 pb-3 pt-1 text-xs text-muted-foreground space-y-1 list-decimal list-inside">
+          {steps.map((s, i) => <li key={i}>{s}</li>)}
+        </ol>
+      )}
     </div>
   );
 }
