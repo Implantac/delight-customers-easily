@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Route as RouteIcon, Plus, Pencil, Trash2, Users, X, UserPlus, History } from "lucide-react";
+import { PageHeader } from "@/components/page-header";
 import { useCurrentOrg } from "@/lib/org";
 import { useCanManage } from "@/lib/permissions";
 import {
@@ -144,17 +145,12 @@ function RoutingPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-            <RouteIcon className="h-6 w-6" /> Roteamento de Leads
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Distribua leads automaticamente entre vendedores por regras e estratégias.
-          </p>
-        </div>
-        {canManage && <Button onClick={openNew}><Plus className="h-4 w-4 mr-1" /> Nova regra</Button>}
-      </div>
+      <PageHeader
+        icon={RouteIcon}
+        title="Roteamento de Leads"
+        subtitle="Distribua leads automaticamente entre vendedores por regras e estratégias."
+        action={canManage ? <Button onClick={openNew}><Plus className="h-4 w-4 mr-1" /> Nova regra</Button> : undefined}
+      />
 
       <Tabs defaultValue="rules">
         <TabsList>

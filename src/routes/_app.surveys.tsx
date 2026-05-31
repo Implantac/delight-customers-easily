@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, useMemo } from "react";
 import { Smile, Plus, Trash2, MessageSquarePlus, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { PageHeader } from "@/components/page-header";
 import { useCurrentOrg } from "@/lib/org";
 import {
   listSurveys, upsertSurvey, deleteSurvey, recordResponse, deleteResponse,
@@ -106,13 +107,12 @@ function SurveysPage() {
 
   return (
     <div className="container mx-auto px-4 py-6 space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold flex items-center gap-2"><Smile className="w-6 h-6" /> Pesquisas (NPS/CSAT)</h1>
-          <p className="text-sm text-muted-foreground">Meça satisfação e indicação de clientes.</p>
-        </div>
-        <Button onClick={openCreate}><Plus className="w-4 h-4 mr-1" /> Nova pesquisa</Button>
-      </div>
+      <PageHeader
+        icon={Smile}
+        title="Pesquisas (NPS/CSAT)"
+        subtitle="Meça satisfação e indicação de clientes para encontrar promotores e detratores."
+        action={<Button onClick={openCreate}><Plus className="w-4 h-4 mr-1" /> Nova pesquisa</Button>}
+      />
 
       {q.isLoading ? (
         <Skeleton className="h-32 w-full" />

@@ -6,6 +6,7 @@ import {
   FileSignature, Plus, Pencil, Trash2, Send, CheckCircle2, RefreshCw, XCircle,
   StickyNote, Calendar, ExternalLink, Building2,
 } from "lucide-react";
+import { PageHeader } from "@/components/page-header";
 import { useCurrentOrg } from "@/lib/org";
 import { useCanManage } from "@/lib/permissions";
 import {
@@ -189,15 +190,12 @@ function ContractsPage() {
   return (
     <div className="space-y-6">
       <ErpReadOnlyBanner entity="Contratos" />
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-            <FileSignature className="h-6 w-6" /> Contratos
-          </h1>
-          <p className="text-sm text-muted-foreground">Gestão de contratos, renovações e linha do tempo de eventos.</p>
-        </div>
-        {false && <Button onClick={openNew}><Plus className="h-4 w-4 mr-1" /> Novo contrato</Button>}
-      </div>
+      <PageHeader
+        icon={FileSignature}
+        title="Contratos"
+        subtitle="Gestão de contratos, renovações e linha do tempo de eventos."
+        action={false ? <Button onClick={openNew}><Plus className="h-4 w-4 mr-1" /> Novo contrato</Button> : undefined}
+      />
 
       <div className="grid gap-3 md:grid-cols-4">
         <Card><CardContent className="p-4">

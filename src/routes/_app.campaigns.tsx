@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Mail, Plus, Send, Trash2, Pencil, Users, Eye, MousePointerClick, AlertTriangle, Calendar } from "lucide-react";
+import { PageHeader } from "@/components/page-header";
 import { useCurrentOrg } from "@/lib/org";
 import {
   listCampaigns, upsertCampaign, scheduleCampaign, populateRecipients,
@@ -151,15 +152,12 @@ function CampaignsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-            <Mail className="h-6 w-6" /> Campanhas de Email
-          </h1>
-          <p className="text-sm text-muted-foreground">Crie, agende e meça campanhas para seus contatos.</p>
-        </div>
-        <Button onClick={openNew}><Plus className="h-4 w-4 mr-1" /> Nova campanha</Button>
-      </div>
+      <PageHeader
+        icon={Mail}
+        title="Campanhas de Email"
+        subtitle="Crie, agende e meça campanhas para seus contatos — segmente, personalize e acompanhe a taxa de abertura."
+        action={<Button onClick={openNew}><Plus className="h-4 w-4 mr-1" /> Nova campanha</Button>}
+      />
 
       <div className="grid gap-3 md:grid-cols-4">
         <Card><CardContent className="p-4">

@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Workflow, Plus, Pencil, Trash2, Users as UsersIcon, ListChecks } from "lucide-react";
+import { PageHeader } from "@/components/page-header";
 import { useCurrentOrg } from "@/lib/org";
 import { useCanManage } from "@/lib/permissions";
 import { listSequences, upsertSequence, deleteSequence } from "@/lib/sequences.functions";
@@ -75,21 +76,16 @@ function SequencesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-            <Workflow className="h-6 w-6" /> Sequências
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Cadências multi-passo para outreach. Ao matricular um contato, atividades são criadas automaticamente.
-          </p>
-        </div>
-        {canManage && (
+      <PageHeader
+        icon={Workflow}
+        title="Sequências"
+        subtitle="Cadências multi-passo para outreach. Ao matricular um contato, atividades são criadas automaticamente."
+        action={canManage ? (
           <Button onClick={openNew}>
             <Plus className="h-4 w-4 mr-1" /> Nova sequência
           </Button>
-        )}
-      </div>
+        ) : undefined}
+      />
 
       {isLoading ? (
         <div className="grid gap-3 md:grid-cols-2">

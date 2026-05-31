@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Gift, Plus, Trash2, Pencil, Check, X, DollarSign, Award, Users } from "lucide-react";
+import { PageHeader } from "@/components/page-header";
 import { useCurrentOrg } from "@/lib/org";
 import {
   listReferralPrograms, upsertReferralProgram, deleteReferralProgram,
@@ -158,18 +159,17 @@ function ReferralsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-            <Gift className="h-6 w-6" /> Programa de Indicações
-          </h1>
-          <p className="text-sm text-muted-foreground">Recompense quem trouxer novos clientes para você.</p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={openNewProg}><Award className="h-4 w-4 mr-1" /> Novo programa</Button>
-          <Button onClick={openNewRef}><Plus className="h-4 w-4 mr-1" /> Nova indicação</Button>
-        </div>
-      </div>
+      <PageHeader
+        icon={Gift}
+        title="Programa de Indicações"
+        subtitle="Recompense quem trouxer novos clientes para você — defina programas e acompanhe conversões."
+        action={
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={openNewProg}><Award className="h-4 w-4 mr-1" /> Novo programa</Button>
+            <Button onClick={openNewRef}><Plus className="h-4 w-4 mr-1" /> Nova indicação</Button>
+          </div>
+        }
+      />
 
       <div className="grid gap-3 md:grid-cols-4">
         <Card><CardContent className="p-4">

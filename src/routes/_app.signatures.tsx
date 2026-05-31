@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { PenLine, Plus, Send, Trash2, Pencil, X, Check, Eye, ExternalLink, Mail, UserPlus } from "lucide-react";
+import { PageHeader } from "@/components/page-header";
 import { useCurrentOrg } from "@/lib/org";
 import {
   listSignatureRequests, upsertSignatureRequest, sendSignatureRequest,
@@ -125,15 +126,12 @@ function SignaturesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-            <PenLine className="h-6 w-6" /> Assinaturas Eletrônicas
-          </h1>
-          <p className="text-sm text-muted-foreground">Envie documentos para assinatura e acompanhe cada signatário.</p>
-        </div>
-        <Button onClick={openNew}><Plus className="h-4 w-4 mr-1" /> Nova solicitação</Button>
-      </div>
+      <PageHeader
+        icon={PenLine}
+        title="Assinaturas Eletrônicas"
+        subtitle="Envie documentos para assinatura e acompanhe cada signatário em tempo real."
+        action={<Button onClick={openNew}><Plus className="h-4 w-4 mr-1" /> Nova solicitação</Button>}
+      />
 
       <div className="grid gap-3 md:grid-cols-4">
         <Card><CardContent className="p-4">

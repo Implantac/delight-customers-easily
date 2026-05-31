@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { ClipboardList, Plus, Pencil, Trash2, Play, CheckCircle2, Circle, Flag } from "lucide-react";
+import { PageHeader } from "@/components/page-header";
 import { useCurrentOrg } from "@/lib/org";
 import { useCanManage } from "@/lib/permissions";
 import {
@@ -178,17 +179,14 @@ function PlaybooksPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-            <ClipboardList className="h-6 w-6" /> Playbooks
-          </h1>
-          <p className="text-sm text-muted-foreground">Checklists padronizados para cada etapa do funil.</p>
-        </div>
-        {tab === "library" && canManage && (
+      <PageHeader
+        icon={ClipboardList}
+        title="Playbooks"
+        subtitle="Checklists padronizados para cada etapa do funil — operacionalize o que dá certo."
+        action={tab === "library" && canManage ? (
           <Button onClick={openNewPb}><Plus className="h-4 w-4 mr-1" /> Novo playbook</Button>
-        )}
-      </div>
+        ) : undefined}
+      />
 
       <Tabs value={tab} onValueChange={(v) => setTab(v as any)}>
         <TabsList>
