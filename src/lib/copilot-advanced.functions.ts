@@ -163,7 +163,7 @@ export const getDealInsight = createServerFn({ method: "POST" })
 
     const { data: deal, error } = await supabase
       .from("deals")
-      .select("id,organization_id,title,stage,value,expected_close,created_at,updated_at,owner_id,contact_id,company_id,contacts(name,email),companies(name,industry)")
+      .select("id,organization_id,title,stage,value,expected_close,created_at,updated_at,user_id,contact_id,company_id,contacts(name,email),companies(name,industry)")
       .eq("id", data.deal_id)
       .single();
     if (error || !deal) throw error ?? new Error("Deal não encontrado");
