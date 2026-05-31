@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /_app/
+Disallow: /login
+Disallow: /api/
+
+Sitemap: https://delight-customers-easily.lovable.app/sitemap.xml

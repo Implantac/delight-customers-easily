@@ -14,6 +14,7 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppWinLossRouteImport } from './routes/_app.win-loss'
 import { Route as AppWhatsappRouteImport } from './routes/_app.whatsapp'
+import { Route as AppWelcomeRouteImport } from './routes/_app.welcome'
 import { Route as AppViewsRouteImport } from './routes/_app.views'
 import { Route as AppTimeRouteImport } from './routes/_app.time'
 import { Route as AppTicketsRouteImport } from './routes/_app.tickets'
@@ -126,6 +127,11 @@ const AppWinLossRoute = AppWinLossRouteImport.update({
 const AppWhatsappRoute = AppWhatsappRouteImport.update({
   id: '/whatsapp',
   path: '/whatsapp',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppWelcomeRoute = AppWelcomeRouteImport.update({
+  id: '/welcome',
+  path: '/welcome',
   getParentRoute: () => AppRoute,
 } as any)
 const AppViewsRoute = AppViewsRouteImport.update({
@@ -645,6 +651,7 @@ export interface FileRoutesByFullPath {
   '/tickets': typeof AppTicketsRouteWithChildren
   '/time': typeof AppTimeRoute
   '/views': typeof AppViewsRoute
+  '/welcome': typeof AppWelcomeRoute
   '/whatsapp': typeof AppWhatsappRoute
   '/win-loss': typeof AppWinLossRoute
   '/companies/$id': typeof AppCompaniesIdRoute
@@ -740,6 +747,7 @@ export interface FileRoutesByTo {
   '/tickets': typeof AppTicketsRouteWithChildren
   '/time': typeof AppTimeRoute
   '/views': typeof AppViewsRoute
+  '/welcome': typeof AppWelcomeRoute
   '/whatsapp': typeof AppWhatsappRoute
   '/win-loss': typeof AppWinLossRoute
   '/companies/$id': typeof AppCompaniesIdRoute
@@ -837,6 +845,7 @@ export interface FileRoutesById {
   '/_app/tickets': typeof AppTicketsRouteWithChildren
   '/_app/time': typeof AppTimeRoute
   '/_app/views': typeof AppViewsRoute
+  '/_app/welcome': typeof AppWelcomeRoute
   '/_app/whatsapp': typeof AppWhatsappRoute
   '/_app/win-loss': typeof AppWinLossRoute
   '/_app/companies/$id': typeof AppCompaniesIdRoute
@@ -934,6 +943,7 @@ export interface FileRouteTypes {
     | '/tickets'
     | '/time'
     | '/views'
+    | '/welcome'
     | '/whatsapp'
     | '/win-loss'
     | '/companies/$id'
@@ -1029,6 +1039,7 @@ export interface FileRouteTypes {
     | '/tickets'
     | '/time'
     | '/views'
+    | '/welcome'
     | '/whatsapp'
     | '/win-loss'
     | '/companies/$id'
@@ -1125,6 +1136,7 @@ export interface FileRouteTypes {
     | '/_app/tickets'
     | '/_app/time'
     | '/_app/views'
+    | '/_app/welcome'
     | '/_app/whatsapp'
     | '/_app/win-loss'
     | '/_app/companies/$id'
@@ -1208,6 +1220,13 @@ declare module '@tanstack/react-router' {
       path: '/whatsapp'
       fullPath: '/whatsapp'
       preLoaderRoute: typeof AppWhatsappRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/welcome': {
+      id: '/_app/welcome'
+      path: '/welcome'
+      fullPath: '/welcome'
+      preLoaderRoute: typeof AppWelcomeRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/views': {
@@ -1996,6 +2015,7 @@ interface AppRouteChildren {
   AppTicketsRoute: typeof AppTicketsRouteWithChildren
   AppTimeRoute: typeof AppTimeRoute
   AppViewsRoute: typeof AppViewsRoute
+  AppWelcomeRoute: typeof AppWelcomeRoute
   AppWhatsappRoute: typeof AppWhatsappRoute
   AppWinLossRoute: typeof AppWinLossRoute
   AppInviteTokenRoute: typeof AppInviteTokenRoute
@@ -2070,6 +2090,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppTicketsRoute: AppTicketsRouteWithChildren,
   AppTimeRoute: AppTimeRoute,
   AppViewsRoute: AppViewsRoute,
+  AppWelcomeRoute: AppWelcomeRoute,
   AppWhatsappRoute: AppWhatsappRoute,
   AppWinLossRoute: AppWinLossRoute,
   AppInviteTokenRoute: AppInviteTokenRoute,
@@ -2103,13 +2124,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

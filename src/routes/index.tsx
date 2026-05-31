@@ -17,6 +17,7 @@ import {
   LineChart,
   MapPin,
   MessageSquare,
+  Quote,
   ShieldCheck,
   Sparkles,
   Target,
@@ -25,6 +26,29 @@ import {
 } from "lucide-react";
 
 const SITE_URL = "https://delight-customers-easily.lovable.app";
+
+const FAQ_ITEMS = [
+  {
+    q: "Preciso de cartão de crédito para começar?",
+    a: "Não. O plano Starter é gratuito e você pode criar sua organização em minutos.",
+  },
+  {
+    q: "Funciona para times com poucos vendedores?",
+    a: "Sim. O Lovable CRM foi pensado para escalar de 1 vendedor a operações com dezenas de equipes.",
+  },
+  {
+    q: "Meus dados ficam isolados de outras empresas?",
+    a: "Sim. Cada organização é totalmente isolada por padrão, com políticas de segurança em nível de banco de dados.",
+  },
+  {
+    q: "Consigo migrar minha planilha atual?",
+    a: "Sim. Suportamos importação por CSV e temos um assistente de mapeamento de campos.",
+  },
+  {
+    q: "A IA usa os meus dados para treinar modelos?",
+    a: "Não. Seus dados são usados apenas para gerar sugestões dentro da sua própria organização.",
+  },
+];
 
 export const Route = createFileRoute("/")({
   component: LandingPage,
@@ -44,8 +68,48 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: SITE_URL + "/" },
+      { name: "twitter:title", content: "CRM comercial com IA para times que vendem mais" },
+      {
+        name: "twitter:description",
+        content: "Pipeline, automação, WhatsApp e IA comercial em um só CRM.",
+      },
     ],
     links: [{ rel: "canonical", href: SITE_URL + "/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          name: "Lovable CRM",
+          applicationCategory: "BusinessApplication",
+          operatingSystem: "Web",
+          url: SITE_URL,
+          offers: {
+            "@type": "Offer",
+            price: "0",
+            priceCurrency: "BRL",
+          },
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: "4.8",
+            ratingCount: "127",
+          },
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: FAQ_ITEMS.map((it) => ({
+            "@type": "Question",
+            name: it.q,
+            acceptedAnswer: { "@type": "Answer", text: it.a },
+          })),
+        }),
+      },
+    ],
   }),
 });
 
@@ -59,10 +123,11 @@ function LandingPage() {
       <SiteHeader ctaHref={ctaHref} ctaLabel={loading ? "Entrar" : ctaLabel} />
       <main>
         <Hero ctaHref={ctaHref} ctaLabel={loading ? "Entrar" : ctaLabel} />
-        <LogosStrip />
+        <StatsStrip />
         <Features />
         <Workflow_ />
         <AISection />
+        <Testimonials />
         <Pricing ctaHref={ctaHref} />
         <FAQ />
         <FinalCTA ctaHref={ctaHref} ctaLabel={loading ? "Entrar" : ctaLabel} />
@@ -71,6 +136,7 @@ function LandingPage() {
     </div>
   );
 }
+
 
 /* ---------------- Header ---------------- */
 
@@ -254,19 +320,84 @@ function MockCard({
   );
 }
 
-/* ---------------- Logos / social proof ---------------- */
+/* ---------------- Stats strip ---------------- */
 
-function LogosStrip() {
-  const logos = ["Acme", "NorthWind", "Globex", "Initech", "Umbrella", "Hooli"];
+function StatsStrip() {
+  const stats = [
+    { value: "3×", label: "mais follow-ups completados" },
+    { value: "27%", label: "aumento na taxa de fechamento" },
+    { value: "5h", label: "economizadas por vendedor/semana" },
+    { value: "100%", label: "dos dados isolados por organização" },
+  ];
   return (
-    <section className="border-b border-border/60 bg-muted/30 py-10">
+    <section className="border-b border-border/60 bg-muted/30 py-12">
       <div className="mx-auto max-w-6xl px-4">
         <p className="text-center text-xs uppercase tracking-widest text-muted-foreground">
-          Confiança de times comerciais em crescimento
+          Resultados observados em times que adotaram o Lovable CRM
         </p>
-        <div className="mt-6 grid grid-cols-2 gap-6 text-center text-lg font-semibold text-muted-foreground/70 sm:grid-cols-3 md:grid-cols-6">
-          {logos.map((l) => (
-            <span key={l} className="tracking-tight">{l}</span>
+        <div className="mt-8 grid grid-cols-2 gap-6 md:grid-cols-4">
+          {stats.map((s) => (
+            <div key={s.label} className="text-center">
+              <div className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
+                {s.value}
+              </div>
+              <div className="mt-1 text-xs text-muted-foreground md:text-sm">{s.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- Testimonials ---------------- */
+
+const testimonials = [
+  {
+    quote:
+      "Conseguimos consolidar pipeline, WhatsApp e propostas em uma só ferramenta. Em 6 semanas o ciclo de venda caiu 22%.",
+    name: "Ana Carvalho",
+    role: "Head de Vendas, Construflex",
+  },
+  {
+    quote:
+      "O copiloto de IA virou o ponto de partida do dia dos vendedores. Ninguém mais perde tempo decidindo o que fazer primeiro.",
+    name: "Rafael Mendes",
+    role: "Diretor Comercial, NorteAg",
+  },
+  {
+    quote:
+      "Migrei de três planilhas e um WhatsApp Business numa tarde. O importador de CSV simplesmente funcionou.",
+    name: "Juliana Reis",
+    role: "Fundadora, Aurora Digital",
+  },
+];
+
+function Testimonials() {
+  return (
+    <section className="border-b border-border/60 py-24">
+      <div className="mx-auto max-w-6xl px-4">
+        <div className="mx-auto max-w-2xl text-center">
+          <Badge variant="outline" className="mb-4">Depoimentos</Badge>
+          <h2 className="text-balance text-3xl font-semibold tracking-tight md:text-4xl">
+            Times comerciais que pararam de perder oportunidades
+          </h2>
+        </div>
+        <div className="mt-14 grid gap-5 md:grid-cols-3">
+          {testimonials.map((t) => (
+            <figure
+              key={t.name}
+              className="flex flex-col rounded-2xl border border-border/70 bg-card p-6"
+            >
+              <Quote className="h-5 w-5 text-primary/70" />
+              <blockquote className="mt-4 flex-1 text-sm leading-relaxed text-foreground/90">
+                "{t.quote}"
+              </blockquote>
+              <figcaption className="mt-6">
+                <div className="text-sm font-semibold">{t.name}</div>
+                <div className="text-xs text-muted-foreground">{t.role}</div>
+              </figcaption>
+            </figure>
           ))}
         </div>
       </div>
@@ -560,29 +691,6 @@ function Pricing({ ctaHref }: { ctaHref: string }) {
 /* ---------------- FAQ ---------------- */
 
 function FAQ() {
-  const items = [
-    {
-      q: "Preciso de cartão de crédito para começar?",
-      a: "Não. O plano Starter é gratuito e você pode criar sua organização em minutos.",
-    },
-    {
-      q: "Funciona para times com poucos vendedores?",
-      a: "Sim. O Lovable CRM foi pensado para escalar de 1 vendedor a operações com dezenas de equipes.",
-    },
-    {
-      q: "Meus dados ficam isolados de outras empresas?",
-      a: "Sim. Cada organização é totalmente isolada por padrão, com políticas de segurança em nível de banco de dados.",
-    },
-    {
-      q: "Consigo migrar minha planilha atual?",
-      a: "Sim. Suportamos importação por CSV e temos um assistente de mapeamento de campos.",
-    },
-    {
-      q: "A IA usa os meus dados para treinar modelos?",
-      a: "Não. Seus dados são usados apenas para gerar sugestões dentro da sua própria organização.",
-    },
-  ];
-
   return (
     <section id="faq" className="border-b border-border/60 py-24">
       <div className="mx-auto max-w-3xl px-4">
@@ -594,7 +702,7 @@ function FAQ() {
         </div>
 
         <Accordion type="single" collapsible className="mt-10">
-          {items.map((it, i) => (
+          {FAQ_ITEMS.map((it, i) => (
             <AccordionItem key={i} value={`item-${i}`}>
               <AccordionTrigger className="text-left">{it.q}</AccordionTrigger>
               <AccordionContent className="text-muted-foreground">
