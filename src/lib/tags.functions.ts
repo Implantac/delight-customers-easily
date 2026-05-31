@@ -71,6 +71,7 @@ export const updateTag = createServerFn({ method: "POST" })
     z
       .object({
         id: z.string().uuid(),
+        organization_id: z.string().uuid(),
         name: z.string().min(1).max(40).optional(),
         color: z.enum(COLORS).optional(),
       })
@@ -81,17 +82,27 @@ export const updateTag = createServerFn({ method: "POST" })
     const patch: { name?: string; color?: string } = {};
     if (data.name !== undefined) patch.name = data.name.trim();
     if (data.color !== undefined) patch.color = data.color;
-    const { error } = await supabase.from("tags").update(patch).eq("id", data.id);
+    const { error } = await supabase
+      .from("tags")
+      .update(patch)
+      .eq("id", data.id)
+      .eq("organization_id", data.organization_id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
 
 export const deleteTag = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((i) => z.object({ id: z.string().uuid() }).parse(i))
+  .inputValidator((i) =>
+    z.object({ id: z.string().uuid(), organization_id: z.string().uuid() }).parse(i),
+  )
   .handler(async ({ data, context }) => {
     const { supabase } = context;
-    const { error } = await supabase.from("tags").delete().eq("id", data.id);
+    const { error } = await supabase
+      .from("tags")
+      .delete()
+      .eq("id", data.id)
+      .eq("organization_id", data.organization_id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
