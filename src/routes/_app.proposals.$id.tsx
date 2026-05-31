@@ -130,6 +130,12 @@ function ProposalDetail() {
           <Link to="/proposals"><ArrowLeft className="mr-1 h-4 w-4" />Voltar</Link>
         </Button>
         <div className="flex gap-2">
+          {p.share_token && (
+            <Button variant="outline" onClick={() => {
+              const url = `${window.location.origin}/p/${p.share_token}`;
+              navigator.clipboard.writeText(url).then(() => toast.success("Link público copiado"));
+            }}><Link2 className="mr-1 h-4 w-4" />Copiar link público</Button>
+          )}
           <Button variant="outline" onClick={() => window.print()}><Printer className="mr-1 h-4 w-4" />Imprimir / PDF</Button>
           <Button variant="outline" onClick={removeProposal}><Trash2 className="mr-1 h-4 w-4" />Excluir</Button>
           <Button onClick={save}><Save className="mr-1 h-4 w-4" />Salvar</Button>
