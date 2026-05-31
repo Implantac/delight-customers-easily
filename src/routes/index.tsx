@@ -17,6 +17,7 @@ import {
   LineChart,
   MapPin,
   MessageSquare,
+  Quote,
   ShieldCheck,
   Sparkles,
   Target,
