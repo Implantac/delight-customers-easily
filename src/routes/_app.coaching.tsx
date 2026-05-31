@@ -44,8 +44,9 @@ function CoachingPage() {
   return (
     <div className="space-y-6 p-6">
       <PageHeader
+        icon={Sparkles}
         title="Coaching"
-        subtitle="Próximas melhores ações e ranking do time."
+        subtitle="Próximas melhores ações sugeridas pela IA e ranking do time em tempo real."
       />
 
       <Tabs defaultValue="actions">

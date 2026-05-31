@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   AlertTriangle, TrendingUp, Target, Users, ArrowRight,
-  Flame, HeartPulse, Award,
+  Flame, HeartPulse, Award, Gauge,
 } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { NextActionBlock } from "@/components/next-action-block";
@@ -139,6 +139,7 @@ function DashboardPage() {
   return (
     <div className="p-4 md:p-8">
       <PageHeader
+        icon={Gauge}
         title="Revenue Command Center"
         subtitle="O que precisa acontecer hoje para vender mais"
         action={

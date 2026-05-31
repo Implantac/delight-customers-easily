@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Layers } from "lucide-react";
 import { getCohorts } from "@/lib/cohorts.functions";
 
 export const Route = createFileRoute("/_app/cohorts")({ component: CohortsPage });
@@ -36,6 +37,7 @@ function CohortsPage() {
   return (
     <div className="space-y-6 p-6">
       <PageHeader
+        icon={Layers}
         title="Análise de Cohort"
         subtitle="Clientes agrupados pelo mês da primeira compra e quanto retornaram mês a mês."
         action={

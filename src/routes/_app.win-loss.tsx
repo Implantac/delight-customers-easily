@@ -30,6 +30,7 @@ function WinLossPage() {
   return (
     <div className="space-y-6 p-6">
       <PageHeader
+        icon={Trophy}
         title="Win/Loss Analysis"
         subtitle="Entenda por que você vende — e por que perde. Últimos 180 dias."
       />

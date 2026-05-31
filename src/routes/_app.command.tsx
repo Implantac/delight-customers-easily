@@ -82,6 +82,7 @@ function CommandCenter() {
   return (
     <div className="p-4 md:p-8 space-y-6 max-w-7xl mx-auto">
       <PageHeader
+        icon={Zap}
         title={`${greeting()}${firstName ? `, ${firstName}` : ""}`}
         subtitle="Onde está o dinheiro que ainda não estamos ganhando — e o que fazer hoje."
         action={<CopilotDrawer />}
