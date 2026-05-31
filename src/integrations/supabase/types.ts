@@ -3412,6 +3412,312 @@ export type Database = {
           },
         ]
       }
+      geo_locations: {
+        Row: {
+          accuracy: string | null
+          cep: string | null
+          city: string | null
+          complement: string | null
+          country: string | null
+          created_at: string
+          geocoded_at: string | null
+          geohash: string | null
+          ibge_code: string | null
+          id: string
+          latitude: number | null
+          longitude: number | null
+          neighborhood: string | null
+          number: string | null
+          organization_id: string
+          source: string | null
+          state: string | null
+          street: string | null
+          subject_id: string
+          subject_type: string
+          updated_at: string
+        }
+        Insert: {
+          accuracy?: string | null
+          cep?: string | null
+          city?: string | null
+          complement?: string | null
+          country?: string | null
+          created_at?: string
+          geocoded_at?: string | null
+          geohash?: string | null
+          ibge_code?: string | null
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          neighborhood?: string | null
+          number?: string | null
+          organization_id: string
+          source?: string | null
+          state?: string | null
+          street?: string | null
+          subject_id: string
+          subject_type: string
+          updated_at?: string
+        }
+        Update: {
+          accuracy?: string | null
+          cep?: string | null
+          city?: string | null
+          complement?: string | null
+          country?: string | null
+          created_at?: string
+          geocoded_at?: string | null
+          geohash?: string | null
+          ibge_code?: string | null
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          neighborhood?: string | null
+          number?: string | null
+          organization_id?: string
+          source?: string | null
+          state?: string | null
+          street?: string | null
+          subject_id?: string
+          subject_type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "geo_locations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["branch_org_id"]
+          },
+          {
+            foreignKeyName: "geo_locations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "geo_locations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "geo_locations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "geo_locations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "geo_locations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      geo_route_plans: {
+        Row: {
+          created_at: string
+          id: string
+          notes: string | null
+          organization_id: string
+          owner_user_id: string
+          plan_date: string
+          start_lat: number | null
+          start_lng: number | null
+          status: string
+          stops: Json
+          title: string
+          total_distance_km: number | null
+          total_duration_min: number | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          organization_id: string
+          owner_user_id: string
+          plan_date: string
+          start_lat?: number | null
+          start_lng?: number | null
+          status?: string
+          stops?: Json
+          title: string
+          total_distance_km?: number | null
+          total_duration_min?: number | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          organization_id?: string
+          owner_user_id?: string
+          plan_date?: string
+          start_lat?: number | null
+          start_lng?: number | null
+          status?: string
+          stops?: Json
+          title?: string
+          total_distance_km?: number | null
+          total_duration_min?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "geo_route_plans_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["branch_org_id"]
+          },
+          {
+            foreignKeyName: "geo_route_plans_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "geo_route_plans_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "geo_route_plans_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "geo_route_plans_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "geo_route_plans_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      geo_territories: {
+        Row: {
+          center_lat: number | null
+          center_lng: number | null
+          cep_ranges: Json | null
+          cities: string[] | null
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string
+          organization_id: string
+          owner_user_id: string | null
+          polygon_geojson: Json | null
+          radius_km: number | null
+          states: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          center_lat?: number | null
+          center_lng?: number | null
+          cep_ranges?: Json | null
+          cities?: string[] | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name: string
+          organization_id: string
+          owner_user_id?: string | null
+          polygon_geojson?: Json | null
+          radius_km?: number | null
+          states?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          center_lat?: number | null
+          center_lng?: number | null
+          cep_ranges?: Json | null
+          cities?: string[] | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string
+          organization_id?: string
+          owner_user_id?: string | null
+          polygon_geojson?: Json | null
+          radius_km?: number | null
+          states?: string[] | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "geo_territories_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["branch_org_id"]
+          },
+          {
+            foreignKeyName: "geo_territories_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "geo_territories_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "geo_territories_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "geo_territories_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "geo_territories_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       influencer_conversions: {
         Row: {
           commission: number
@@ -7039,6 +7345,25 @@ export type Database = {
     }
     Functions: {
       accept_org_invite: { Args: { _token: string }; Returns: string }
+      find_opportunities_in_radius: {
+        Args: {
+          _lat: number
+          _limit?: number
+          _lng: number
+          _org: string
+          _radius_km?: number
+          _subject_types?: string[]
+        }
+        Returns: {
+          city: string
+          distance_km: number
+          latitude: number
+          longitude: number
+          state: string
+          subject_id: string
+          subject_type: string
+        }[]
+      }
       get_influencer_lp: {
         Args: { _inf_slug: string; _org_slug: string }
         Returns: {
@@ -7064,6 +7389,16 @@ export type Database = {
           org_name: string
           org_type: Database["public"]["Enums"]["org_type"]
           revenue: number
+        }[]
+      }
+      get_regional_sales_rollup: {
+        Args: { _days?: number; _org: string }
+        Returns: {
+          city: string
+          customers: number
+          orders: number
+          revenue: number
+          state: string
         }[]
       }
       has_org_role: {
