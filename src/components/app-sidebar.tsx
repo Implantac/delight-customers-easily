@@ -95,6 +95,7 @@ const navSections: NavSection[] = [
     id: "inteligencia",
     label: "Inteligência",
     items: [
+      { to: "/inteligencia-comercial", label: "Inteligência Comercial", icon: Sparkles, shortcut: "G C" },
       { to: "/ia-comercial", label: "IA Comercial", icon: Sparkles, shortcut: "G I" },
       { to: "/reports", label: "Relatórios", icon: BarChart3, shortcut: "G R", managerOnly: true },
       { to: "/reports/dashboards", label: "Dashboards", icon: BarChart3, managerOnly: true },
