@@ -100,13 +100,22 @@ function HelpPage() {
               </AccordionContent>
             </AccordionItem>
 
-            <AccordionItem value="agente">
+            <AccordionItem value="agente" id="acc-agente">
               <AccordionTrigger>O que é o Agente Local?</AccordionTrigger>
-              <AccordionContent className="text-sm text-muted-foreground">
-                É um programa pequeno que você instala no servidor da sua empresa.
-                Ele lê os dados do ERP e envia para o CRM com segurança, sem precisar abrir
-                portas do firewall nem expor seu banco de dados na internet.
-                Recomendado para ERPs instalados localmente (TOTVS, Sankhya, Senior).
+              <AccordionContent className="text-sm text-muted-foreground space-y-2">
+                <p>
+                  É um programa pequeno que você instala no servidor da sua empresa.
+                  Ele lê os dados do ERP e envia para o CRM com segurança, sem precisar abrir
+                  portas do firewall nem expor seu banco de dados na internet.
+                </p>
+                <p>Recomendado para ERPs instalados localmente (TOTVS, Sankhya, Senior).</p>
+                <p className="font-medium text-foreground">Como instalar:</p>
+                <ol className="list-decimal list-inside space-y-1">
+                  <li>Baixe o instalador do Agente (em breve nesta página).</li>
+                  <li>Instale no servidor onde o ERP roda.</li>
+                  <li>Cole o código de pareamento mostrado acima.</li>
+                  <li>Pronto — a sincronização começa automaticamente.</li>
+                </ol>
               </AccordionContent>
             </AccordionItem>
 
