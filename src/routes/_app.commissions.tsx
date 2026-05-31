@@ -270,3 +270,133 @@ function RuleDialog({ orgId }: { orgId: string }) {
     </Dialog>
   );
 }
+
+function PayoutsTab({ orgId, period, canManage }: { orgId: string; period: string; canManage: boolean }) {
+  const qc = useQueryClient();
+  const callList = useServerFn(listPayouts);
+  const callGen = useServerFn(generatePayouts);
+  const callStatus = useServerFn(setPayoutStatus);
+
+  const q = useQuery({
+    queryKey: ["payouts", orgId, period],
+    enabled: !!orgId,
+    queryFn: () => callList({ data: { organization_id: orgId, period_month: period } }),
+  });
+
+  const gen = useMutation({
+    mutationFn: () => callGen({ data: { organization_id: orgId, period_month: period } }),
+    onSuccess: (r: any) => {
+      toast.success(`${r.upserted} payout(s) atualizados${r.skipped ? ` · ${r.skipped} travado(s)` : ""}`);
+      qc.invalidateQueries({ queryKey: ["payouts", orgId, period] });
+    },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  const setSt = useMutation({
+    mutationFn: (v: { id: string; status: "open" | "locked" | "paid" }) => callStatus({ data: v }),
+    onSuccess: () => {
+      toast.success("Status atualizado");
+      qc.invalidateQueries({ queryKey: ["payouts", orgId, period] });
+    },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div className="text-sm text-muted-foreground">
+          Snapshots do mês — trave para congelar o cálculo e marque como pago após o pagamento.
+        </div>
+        {canManage && (
+          <Button onClick={() => gen.mutate()} disabled={gen.isPending}>
+            {gen.isPending ? "Gerando…" : "Gerar / recalcular payouts"}
+          </Button>
+        )}
+      </div>
+
+      {q.isLoading || !q.data ? (
+        <Skeleton className="h-40" />
+      ) : (
+        <>
+          <div className="grid gap-4 md:grid-cols-3">
+            <Card className="p-4">
+              <div className="text-xs text-muted-foreground">Vendido (snapshot)</div>
+              <div className="mt-2 text-2xl font-semibold">{BRL(q.data.totals.sold)}</div>
+            </Card>
+            <Card className="p-4">
+              <div className="text-xs text-muted-foreground">Comissão total</div>
+              <div className="mt-2 text-2xl font-semibold">{BRL(q.data.totals.commission)}</div>
+            </Card>
+            <Card className="p-4">
+              <div className="text-xs text-muted-foreground">Negócios</div>
+              <div className="mt-2 text-2xl font-semibold">{q.data.totals.count}</div>
+            </Card>
+          </div>
+
+          <Card className="p-0 overflow-hidden">
+            <table className="w-full text-sm">
+              <thead className="bg-muted/40 text-xs uppercase text-muted-foreground">
+                <tr>
+                  <th className="px-4 py-2 text-left">Vendedor</th>
+                  <th className="px-4 py-2 text-right">Vendido</th>
+                  <th className="px-4 py-2 text-right">Meta</th>
+                  <th className="px-4 py-2 text-right">Base</th>
+                  <th className="px-4 py-2 text-right">Acelerador</th>
+                  <th className="px-4 py-2 text-right">Bônus</th>
+                  <th className="px-4 py-2 text-right">Total</th>
+                  <th className="px-4 py-2 text-center">Status</th>
+                  {canManage && <th className="px-4 py-2" />}
+                </tr>
+              </thead>
+              <tbody>
+                {q.data.payouts.length === 0 ? (
+                  <tr>
+                    <td colSpan={canManage ? 9 : 8} className="px-4 py-6 text-center text-muted-foreground">
+                      Nenhum snapshot. Clique em "Gerar payouts" para calcular.
+                    </td>
+                  </tr>
+                ) : q.data.payouts.map((r: any) => (
+                  <tr key={r.id} className="border-t">
+                    <td className="px-4 py-3 font-medium">{r.name}</td>
+                    <td className="px-4 py-3 text-right">{BRL(Number(r.sold_value))}</td>
+                    <td className="px-4 py-3 text-right text-muted-foreground">{Number(r.goal_value) > 0 ? BRL(Number(r.goal_value)) : "—"}</td>
+                    <td className="px-4 py-3 text-right">{BRL(Number(r.base_commission))}</td>
+                    <td className="px-4 py-3 text-right text-blue-500">{Number(r.accelerator) > 0 ? BRL(Number(r.accelerator)) : "—"}</td>
+                    <td className="px-4 py-3 text-right">{Number(r.bonus) > 0 ? BRL(Number(r.bonus)) : "—"}</td>
+                    <td className="px-4 py-3 text-right font-semibold">{BRL(Number(r.total))}</td>
+                    <td className="px-4 py-3 text-center">
+                      <Badge variant={r.status === "paid" ? "default" : r.status === "locked" ? "secondary" : "outline"}>
+                        {r.status === "paid" ? "Pago" : r.status === "locked" ? "Travado" : "Aberto"}
+                      </Badge>
+                    </td>
+                    {canManage && (
+                      <td className="px-4 py-3 text-right">
+                        <div className="flex justify-end gap-1">
+                          {r.status === "open" && (
+                            <Button size="sm" variant="outline" onClick={() => setSt.mutate({ id: r.id, status: "locked" })}>
+                              Travar
+                            </Button>
+                          )}
+                          {r.status !== "paid" && (
+                            <Button size="sm" onClick={() => setSt.mutate({ id: r.id, status: "paid" })}>
+                              Marcar pago
+                            </Button>
+                          )}
+                          {r.status === "locked" && (
+                            <Button size="sm" variant="ghost" onClick={() => setSt.mutate({ id: r.id, status: "open" })}>
+                              Reabrir
+                            </Button>
+                          )}
+                        </div>
+                      </td>
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </Card>
+        </>
+      )}
+    </div>
+  );
+}
