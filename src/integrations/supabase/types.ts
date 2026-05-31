@@ -1373,6 +1373,94 @@ export type Database = {
           },
         ]
       }
+      erp_field_mappings: {
+        Row: {
+          created_at: string
+          entity: string
+          id: string
+          organization_id: string
+          provider: string
+          source_field: string
+          target_field: string
+          transform: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          entity: string
+          id?: string
+          organization_id: string
+          provider: string
+          source_field: string
+          target_field: string
+          transform?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          entity?: string
+          id?: string
+          organization_id?: string
+          provider?: string
+          source_field?: string
+          target_field?: string
+          transform?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "erp_field_mappings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      erp_inbound_log: {
+        Row: {
+          created_at: string
+          entity: string
+          error: string | null
+          external_id: string | null
+          id: string
+          organization_id: string
+          payload: Json
+          provider: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          entity: string
+          error?: string | null
+          external_id?: string | null
+          id?: string
+          organization_id: string
+          payload: Json
+          provider: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          entity?: string
+          error?: string | null
+          external_id?: string | null
+          id?: string
+          organization_id?: string
+          payload?: Json
+          provider?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "erp_inbound_log_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       erp_integrations: {
         Row: {
           app_key: string

@@ -28,9 +28,9 @@ export const ERP_CATALOG: ErpProviderCatalog[] = [
   {
     id: "bling",
     name: "Bling",
-    description: "ERP cloud com API REST. Sincroniza clientes, produtos e pedidos.",
+    description: "ERP cloud com API REST. Sincroniza contatos, produtos e pedidos.",
     methods: ["api"],
-    status: "soon",
+    status: "active",
     docsUrl: "https://developer.bling.com.br/",
     category: "cloud",
   },
@@ -127,6 +127,18 @@ export const getErpHealth = createServerFn({ method: "POST" })
             } else {
               status = latency_ms > 3000 ? "degraded" : "online";
             }
+          } catch {
+            latency_ms = Date.now() - t0;
+            status = "offline";
+          }
+        } else if (catalog.id === "bling") {
+          const t0 = Date.now();
+          try {
+            const res = await fetch("https://www.bling.com.br/Api/v3/contatos?limite=1", {
+              headers: { Authorization: `Bearer ${integ.app_key}`, Accept: "application/json" },
+            });
+            latency_ms = Date.now() - t0;
+            status = res.ok ? (latency_ms > 3000 ? "degraded" : "online") : "degraded";
           } catch {
             latency_ms = Date.now() - t0;
             status = "offline";
