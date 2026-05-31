@@ -135,12 +135,16 @@ export const Route = createFileRoute('/api/public/hooks/erp-sync-tick')({
           await supabase.from('erp_health_checks').insert(healthRows);
         }
 
+        // 4) Processa fila CRM→ERP (outbox)
+        const outboxResult = await processOutbox(supabase);
+
         return Response.json({
           stuckRecovered: stuck?.length ?? 0,
           executed,
           processed: processedTotal,
           conflicts: conflictsTotal,
           healthLogged: healthRows.length,
+          outbox: outboxResult,
         });
       },
     },
