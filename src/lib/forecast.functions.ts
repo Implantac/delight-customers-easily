@@ -1,210 +1,121 @@
-import { createServerFn } from "@tanstack/react-start";
-import { z } from "zod";
-import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { createServerFn } from '@tanstack/react-start';
+import { z } from 'zod';
+import { requireSupabaseAuth } from '@/integrations/supabase/auth-middleware';
 
-const STAGE_PROB: Record<string, number> = {
-  lead: 10, qualified: 30, proposal: 55, negotiation: 75, won: 100, lost: 0,
-};
-
-const orgInput = z.object({ organization_id: z.string().uuid() });
-
-function monthKey(d: Date) {
-  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
-}
-function monthDate(key: string) {
-  const [y, m] = key.split("-").map(Number);
-  return new Date(Date.UTC(y, m - 1, 1));
-}
-
-// -------- Forecast ponderado por mês + comparação com meta --------
-export const getForecast = createServerFn({ method: "POST" })
+export const getGoalAttainment = createServerFn({ method: 'POST' })
   .middleware([requireSupabaseAuth])
-  .inputValidator((i) => orgInput.parse(i))
+  .inputValidator((input: unknown) =>
+    z.object({ goalId: z.string().uuid() }).parse(input),
+  )
   .handler(async ({ data, context }) => {
     const { supabase } = context;
-    const org = data.organization_id;
-
-    const [dealsRes, goalsRes, profilesRes] = await Promise.all([
-      supabase
-        .from("deals")
-        .select("id, title, value, stage, expected_close, user_id, updated_at")
-        .eq("organization_id", org),
-      supabase
-        .from("sales_goals")
-        .select("id, user_id, period_month, target_value")
-        .eq("organization_id", org),
-      supabase
-        .from("profiles")
-        .select("id, full_name"),
-    ]);
-
-    const deals = dealsRes.data ?? [];
-    const goals = goalsRes.data ?? [];
-    const profiles = new Map((profilesRes.data ?? []).map((p: any) => [p.id, p.full_name ?? "Sem nome"]));
-
-    // Próximos 6 meses incluindo o atual
-    const today = new Date();
-    const months: string[] = [];
-    for (let i = 0; i < 6; i++) {
-      const d = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth() + i, 1));
-      months.push(monthKey(d));
-    }
-
-    type Bucket = { month: string; committed: number; weighted: number; best: number; won: number; target: number };
-    const byMonth = new Map<string, Bucket>();
-    months.forEach((m) => byMonth.set(m, { month: m, committed: 0, weighted: 0, best: 0, won: 0, target: 0 }));
-
-    for (const d of deals as any[]) {
-      const value = Number(d.value) || 0;
-      const stage = d.stage as string;
-      const prob = STAGE_PROB[stage] ?? 10;
-      const close = d.expected_close ? new Date(d.expected_close) : null;
-      const key = close ? monthKey(close) : monthKey(today);
-      const b = byMonth.get(key);
-      if (!b) continue;
-
-      if (stage === "won") {
-        b.won += value;
-      } else if (stage !== "lost") {
-        b.weighted += value * (prob / 100);
-        b.best += value;
-        if (prob >= 75) b.committed += value;
-      }
-    }
-
-    // Metas agregadas por mês (somando todas as metas individuais + meta da org)
-    for (const g of goals as any[]) {
-      const key = monthKey(new Date(g.period_month));
-      const b = byMonth.get(key);
-      if (b) b.target += Number(g.target_value) || 0;
-    }
-
-    const series = months.map((m) => byMonth.get(m)!);
-
-    // Gap-to-goal por vendedor (mês corrente)
-    const currentKey = months[0];
-    const currentMonthStart = monthDate(currentKey);
-    const nextMonthStart = new Date(Date.UTC(currentMonthStart.getUTCFullYear(), currentMonthStart.getUTCMonth() + 1, 1));
-
-    type RepRow = { user_id: string; name: string; target: number; won: number; weighted: number; gap: number; attainment: number };
-    const reps = new Map<string, RepRow>();
-
-    const ensureRep = (uid: string | null | undefined): RepRow | null => {
-      if (!uid) return null;
-      if (!reps.has(uid)) {
-        reps.set(uid, {
-          user_id: uid,
-          name: profiles.get(uid) ?? "Sem nome",
-          target: 0, won: 0, weighted: 0, gap: 0, attainment: 0,
-        });
-      }
-      return reps.get(uid)!;
-    };
-
-    for (const g of goals as any[]) {
-      if (!g.user_id) continue;
-      const gMonth = monthKey(new Date(g.period_month));
-      if (gMonth !== currentKey) continue;
-      const r = ensureRep(g.user_id);
-      if (r) r.target += Number(g.target_value) || 0;
-    }
-
-    for (const d of deals as any[]) {
-      const close = d.expected_close ? new Date(d.expected_close) : null;
-      const inCurrent = close && close >= currentMonthStart && close < nextMonthStart;
-      if (!inCurrent && d.stage !== "won") continue;
-      if (d.stage === "won") {
-        const updated = new Date(d.updated_at);
-        if (updated < currentMonthStart || updated >= nextMonthStart) continue;
-      }
-      const r = ensureRep(d.user_id);
-      if (!r) continue;
-      const value = Number(d.value) || 0;
-      const prob = STAGE_PROB[d.stage] ?? 10;
-      if (d.stage === "won") r.won += value;
-      else if (d.stage !== "lost") r.weighted += value * (prob / 100);
-    }
-
-    const repRows = Array.from(reps.values()).map((r) => {
-      const projected = r.won + r.weighted;
-      const gap = Math.max(0, r.target - projected);
-      const attainment = r.target > 0 ? Math.round((projected / r.target) * 100) : 0;
-      return { ...r, gap, attainment };
-    }).sort((a, b) => b.target - a.target);
-
-    const totals = series[0];
-    const projected = totals.won + totals.weighted;
-    const gap = Math.max(0, totals.target - projected);
-
-    return {
-      months: series,
-      current: {
-        month: currentKey,
-        target: totals.target,
-        won: totals.won,
-        weighted: totals.weighted,
-        committed: totals.committed,
-        best: totals.best,
-        projected,
-        gap,
-        attainment: totals.target > 0 ? Math.round((projected / totals.target) * 100) : 0,
-      },
-      reps: repRows,
-    };
-  });
-
-// -------- Listar metas --------
-export const listGoals = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((i) => orgInput.parse(i))
-  .handler(async ({ data, context }) => {
-    const { supabase } = context;
-    const { data: rows, error } = await supabase
-      .from("sales_goals")
-      .select("id, user_id, period_month, target_value")
-      .eq("organization_id", data.organization_id)
-      .order("period_month", { ascending: false });
+    const { data: result, error } = await supabase.rpc('get_goal_attainment_v2', {
+      _goal_id: data.goalId,
+    });
     if (error) throw new Error(error.message);
-    return { goals: rows ?? [] };
+    return { attainment: result?.[0] ?? null };
   });
 
-// -------- Criar/atualizar meta --------
-export const upsertGoal = createServerFn({ method: "POST" })
+export const listSalesGoals = createServerFn({ method: 'POST' })
   .middleware([requireSupabaseAuth])
-  .inputValidator((i) =>
+  .inputValidator((input: unknown) =>
     z.object({
-      organization_id: z.string().uuid(),
-      user_id: z.string().uuid().nullable(),
-      period_month: z.string().regex(/^\d{4}-\d{2}$/),
-      target_value: z.number().min(0).max(1_000_000_000),
-    }).parse(i),
+      organizationId: z.string().uuid(),
+      userId: z.string().uuid().nullable().optional(),
+      fromMonth: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+      toMonth: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+    }).parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+    let q = supabase
+      .from('sales_goals')
+      .select('*')
+      .eq('organization_id', data.organizationId)
+      .order('period_month', { ascending: false });
+    if (data.userId !== undefined) {
+      q = data.userId === null ? q.is('user_id', null) : q.eq('user_id', data.userId);
+    }
+    if (data.fromMonth) q = q.gte('period_month', data.fromMonth);
+    if (data.toMonth) q = q.lte('period_month', data.toMonth);
+    const { data: result, error } = await q;
+    if (error) throw new Error(error.message);
+    return { goals: result ?? [] };
+  });
+
+export const upsertSalesGoal = createServerFn({ method: 'POST' })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) =>
+    z.object({
+      organizationId: z.string().uuid(),
+      userId: z.string().uuid().nullable().optional(),
+      periodMonth: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+      targetValue: z.number().min(0),
+      targetDealsCount: z.number().int().min(0).default(0),
+      currency: z.string().min(3).max(8).default('BRL'),
+      notes: z.string().max(2000).nullable().optional(),
+    }).parse(input),
   )
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-    const period = `${data.period_month}-01`;
-    const { error } = await supabase
-      .from("sales_goals")
-      .upsert(
-        {
-          organization_id: data.organization_id,
-          user_id: data.user_id,
-          period_month: period,
-          target_value: data.target_value,
-          created_by: userId,
-        },
-        { onConflict: "organization_id,user_id,period_month" },
-      );
+    const row = {
+      organization_id: data.organizationId,
+      user_id: data.userId ?? null,
+      period_month: data.periodMonth,
+      target_value: data.targetValue,
+      target_deals_count: data.targetDealsCount,
+      currency: data.currency,
+      notes: data.notes ?? null,
+      created_by: userId,
+    };
+    const { data: result, error } = await supabase
+      .from('sales_goals')
+      .upsert(row, { onConflict: 'organization_id,user_id,period_month' })
+      .select()
+      .single();
     if (error) throw new Error(error.message);
-    return { success: true };
+    return { goal: result };
   });
 
-// -------- Deletar meta --------
-export const deleteGoal = createServerFn({ method: "POST" })
+export const computeSalesForecast = createServerFn({ method: 'POST' })
   .middleware([requireSupabaseAuth])
-  .inputValidator((i) => z.object({ id: z.string().uuid() }).parse(i))
+  .inputValidator((input: unknown) =>
+    z.object({
+      organizationId: z.string().uuid(),
+      periodStart: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+      periodEnd: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+      weights: z.record(z.string(), z.number().min(0).max(1)).optional(),
+    }).parse(input),
+  )
   .handler(async ({ data, context }) => {
     const { supabase } = context;
-    const { error } = await supabase.from("sales_goals").delete().eq("id", data.id);
+    const args: Record<string, unknown> = {
+      _org: data.organizationId,
+      _period_start: data.periodStart,
+      _period_end: data.periodEnd,
+    };
+    if (data.weights) args._weights = data.weights;
+    const { data: snapId, error } = await supabase.rpc('compute_sales_forecast', args as never);
     if (error) throw new Error(error.message);
-    return { success: true };
+    return { snapshotId: snapId as string };
+  });
+
+export const listForecastSnapshots = createServerFn({ method: 'POST' })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) =>
+    z.object({
+      organizationId: z.string().uuid(),
+      limit: z.number().int().min(1).max(200).default(50),
+    }).parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+    const { data: result, error } = await supabase
+      .from('sales_forecast_snapshots')
+      .select('*')
+      .eq('organization_id', data.organizationId)
+      .order('computed_at', { ascending: false })
+      .limit(data.limit);
+    if (error) throw new Error(error.message);
+    return { snapshots: result ?? [] };
   });
