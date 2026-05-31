@@ -130,7 +130,7 @@ function PublicProposalPage() {
             {proposal.items.length === 0 && (
               <p className="text-sm text-muted-foreground">Sem itens nesta proposta.</p>
             )}
-            {proposal.items.map((it, idx) => {
+            {proposal.items.map((it: PublicProposal["items"][number], idx: number) => {
               const line = Number(it.quantity) * Number(it.unit_price);
               const disc = line * (Number(it.discount_percent) / 100);
               const total = line - disc;
