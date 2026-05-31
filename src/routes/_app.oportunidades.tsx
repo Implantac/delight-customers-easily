@@ -35,6 +35,7 @@ function OportunidadesPage() {
   const { orgId } = useCurrentOrg();
   const run = useServerFn(getOpportunitiesCentral);
   const [filter, setFilter] = useState<OppType | "all">("all");
+  const [sort, setSort] = useState<"score" | "value">("score");
 
   const { data, isLoading } = useQuery({
     queryKey: ["opp-central", orgId],
@@ -45,10 +46,14 @@ function OportunidadesPage() {
 
   const filtered = useMemo(() => {
     if (!data) return [];
-    return filter === "all"
+    const base = filter === "all"
       ? data.opportunities
       : data.opportunities.filter((o) => o.type === filter);
-  }, [data, filter]);
+    const sorted = [...base].sort((a, b) =>
+      sort === "value" ? b.value - a.value : b.score - a.score,
+    );
+    return sorted;
+  }, [data, filter, sort]);
 
   return (
     <div className="space-y-6">
