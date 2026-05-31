@@ -149,7 +149,7 @@ function CalendarPage() {
         title="Agenda Comercial"
         subtitle="Onde estão suas ações de hoje, da semana e o que ficou para trás."
         icon={CalIcon}
-        actions={
+        action={
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
               <Switch id="mine" checked={mineOnly} onCheckedChange={setMineOnly} />
