@@ -131,6 +131,18 @@ export const getErpHealth = createServerFn({ method: "POST" })
             latency_ms = Date.now() - t0;
             status = "offline";
           }
+        } else if (catalog.id === "bling") {
+          const t0 = Date.now();
+          try {
+            const res = await fetch("https://www.bling.com.br/Api/v3/contatos?limite=1", {
+              headers: { Authorization: `Bearer ${integ.app_key}`, Accept: "application/json" },
+            });
+            latency_ms = Date.now() - t0;
+            status = res.ok ? (latency_ms > 3000 ? "degraded" : "online") : "degraded";
+          } catch {
+            latency_ms = Date.now() - t0;
+            status = "offline";
+          }
         } else {
           status = integ.last_error ? "degraded" : "online";
         }
