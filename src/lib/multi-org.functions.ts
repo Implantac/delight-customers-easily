@@ -78,7 +78,7 @@ export const createOrgNode = createServerFn({ method: 'POST' })
     const { data: canManage } = await supabase.rpc('has_org_role', {
       _org: data.parentOrgId,
       _user: userId,
-      _roles: ['owner', 'admin'] as unknown as string[],
+      _roles: ['owner', 'admin'],
     });
     if (!canManage) throw new Error('Sem permissão para criar nós organizacionais');
 
