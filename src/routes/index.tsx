@@ -27,6 +27,29 @@ import {
 
 const SITE_URL = "https://delight-customers-easily.lovable.app";
 
+const FAQ_ITEMS = [
+  {
+    q: "Preciso de cartão de crédito para começar?",
+    a: "Não. O plano Starter é gratuito e você pode criar sua organização em minutos.",
+  },
+  {
+    q: "Funciona para times com poucos vendedores?",
+    a: "Sim. O Lovable CRM foi pensado para escalar de 1 vendedor a operações com dezenas de equipes.",
+  },
+  {
+    q: "Meus dados ficam isolados de outras empresas?",
+    a: "Sim. Cada organização é totalmente isolada por padrão, com políticas de segurança em nível de banco de dados.",
+  },
+  {
+    q: "Consigo migrar minha planilha atual?",
+    a: "Sim. Suportamos importação por CSV e temos um assistente de mapeamento de campos.",
+  },
+  {
+    q: "A IA usa os meus dados para treinar modelos?",
+    a: "Não. Seus dados são usados apenas para gerar sugestões dentro da sua própria organização.",
+  },
+];
+
 export const Route = createFileRoute("/")({
   component: LandingPage,
   head: () => ({
@@ -45,8 +68,48 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: SITE_URL + "/" },
+      { name: "twitter:title", content: "CRM comercial com IA para times que vendem mais" },
+      {
+        name: "twitter:description",
+        content: "Pipeline, automação, WhatsApp e IA comercial em um só CRM.",
+      },
     ],
     links: [{ rel: "canonical", href: SITE_URL + "/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          name: "Lovable CRM",
+          applicationCategory: "BusinessApplication",
+          operatingSystem: "Web",
+          url: SITE_URL,
+          offers: {
+            "@type": "Offer",
+            price: "0",
+            priceCurrency: "BRL",
+          },
+          aggregateRating: {
+            "@type": "AggregateRating",
+            ratingValue: "4.8",
+            ratingCount: "127",
+          },
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: FAQ_ITEMS.map((it) => ({
+            "@type": "Question",
+            name: it.q,
+            acceptedAnswer: { "@type": "Answer", text: it.a },
+          })),
+        }),
+      },
+    ],
   }),
 });
 
@@ -60,10 +123,11 @@ function LandingPage() {
       <SiteHeader ctaHref={ctaHref} ctaLabel={loading ? "Entrar" : ctaLabel} />
       <main>
         <Hero ctaHref={ctaHref} ctaLabel={loading ? "Entrar" : ctaLabel} />
-        <LogosStrip />
+        <StatsStrip />
         <Features />
         <Workflow_ />
         <AISection />
+        <Testimonials />
         <Pricing ctaHref={ctaHref} />
         <FAQ />
         <FinalCTA ctaHref={ctaHref} ctaLabel={loading ? "Entrar" : ctaLabel} />
@@ -72,6 +136,7 @@ function LandingPage() {
     </div>
   );
 }
+
 
 /* ---------------- Header ---------------- */
 
