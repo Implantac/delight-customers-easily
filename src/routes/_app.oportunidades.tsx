@@ -72,8 +72,8 @@ function OportunidadesPage() {
         <Kpi label="Leads quentes" value={data?.summary.by_type.hot_lead ?? 0} icon={Flame} tone="ok" loading={isLoading} />
       </div>
 
-      <Card className="p-3">
-        <Tabs value={filter} onValueChange={(v) => setFilter(v as OppType | "all")}>
+      <Card className="p-3 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <Tabs value={filter} onValueChange={(v) => setFilter(v as OppType | "all")} className="flex-1">
           <TabsList className="flex flex-wrap h-auto">
             <TabsTrigger value="all" className="gap-2">
               Todas <span className="text-[10px] text-muted-foreground">{data?.summary.total ?? 0}</span>
@@ -86,6 +86,25 @@ function OportunidadesPage() {
             ))}
           </TabsList>
         </Tabs>
+        <div className="flex items-center gap-1 text-xs text-muted-foreground shrink-0">
+          <span className="pr-1">Ordenar:</span>
+          <Button
+            size="sm"
+            variant={sort === "score" ? "secondary" : "ghost"}
+            className="h-7 px-2"
+            onClick={() => setSort("score")}
+          >
+            Prioridade IA
+          </Button>
+          <Button
+            size="sm"
+            variant={sort === "value" ? "secondary" : "ghost"}
+            className="h-7 px-2"
+            onClick={() => setSort("value")}
+          >
+            Valor
+          </Button>
+        </div>
       </Card>
 
       {isLoading ? (
