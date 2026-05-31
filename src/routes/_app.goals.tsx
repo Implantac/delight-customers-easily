@@ -162,40 +162,25 @@ function GoalsPage() {
       />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Meta total
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{fmtBRL(totals.target)}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Realizado
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{fmtBRL(totals.achieved)}</div>
-            <Progress value={Math.min(totals.progress, 100)} className="mt-2" />
-            <p className="text-xs text-muted-foreground mt-1">
-              {totals.progress.toFixed(1)}% da meta
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Negócios fechados
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{totals.deals}</div>
-          </CardContent>
-        </Card>
+        <GoalKpi
+          label="Meta total"
+          value={fmtBRL(totals.target)}
+          icon={DollarSign}
+          tone="primary"
+        />
+        <GoalKpi
+          label="Realizado"
+          value={fmtBRL(totals.achieved)}
+          icon={TrendingUp}
+          tone={totals.progress >= 100 ? "ok" : totals.progress >= 70 ? "warn" : "danger"}
+          sub={`${totals.progress.toFixed(1)}% da meta`}
+        />
+        <GoalKpi
+          label="Negócios fechados"
+          value={totals.deals}
+          icon={Users}
+          tone="ok"
+        />
       </div>
 
       {top.length > 0 && (
