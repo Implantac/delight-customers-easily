@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { useCurrentOrg } from "@/lib/org";
+import { useCanManage } from "@/lib/permissions";
 import { listDashboards, createDashboard, deleteDashboard } from "@/lib/dashboards.functions";
 import { PageHeader } from "@/components/page-header";
 import { Card } from "@/components/ui/card";
@@ -18,6 +19,7 @@ export const Route = createFileRoute("/_app/reports/dashboards")({ component: Da
 
 function DashboardsListPage() {
   const { orgId } = useCurrentOrg();
+  const canManage = useCanManage();
   const qc = useQueryClient();
   const listFn = useServerFn(listDashboards);
   const createFn = useServerFn(createDashboard);
@@ -54,20 +56,22 @@ function DashboardsListPage() {
         subtitle="Crie painéis com KPIs, gráficos e listas. Cada usuário pode criar os próprios e compartilhar com a organização."
         icon={LayoutDashboard}
         action={
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild><Button><Plus className="h-4 w-4 mr-2" />Novo dashboard</Button></DialogTrigger>
-            <DialogContent>
-              <DialogHeader><DialogTitle>Novo dashboard</DialogTitle></DialogHeader>
-              <div className="space-y-3">
-                <div><Label>Nome</Label><Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ex.: Vendas Q4" /></div>
-                <div><Label>Descrição</Label><Textarea value={desc} onChange={(e) => setDesc(e.target.value)} rows={2} /></div>
-              </div>
-              <DialogFooter>
-                <Button variant="ghost" onClick={() => setOpen(false)}>Cancelar</Button>
-                <Button disabled={!name || createMut.isPending} onClick={() => createMut.mutate()}>Criar</Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+          canManage ? (
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogTrigger asChild><Button><Plus className="h-4 w-4 mr-2" />Novo dashboard</Button></DialogTrigger>
+              <DialogContent>
+                <DialogHeader><DialogTitle>Novo dashboard</DialogTitle></DialogHeader>
+                <div className="space-y-3">
+                  <div><Label>Nome</Label><Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ex.: Vendas Q4" /></div>
+                  <div><Label>Descrição</Label><Textarea value={desc} onChange={(e) => setDesc(e.target.value)} rows={2} /></div>
+                </div>
+                <DialogFooter>
+                  <Button variant="ghost" onClick={() => setOpen(false)}>Cancelar</Button>
+                  <Button disabled={!name || createMut.isPending} onClick={() => createMut.mutate()}>Criar</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          ) : null
         }
       />
 
@@ -88,9 +92,11 @@ function DashboardsListPage() {
             <Link to="/reports/dashboards/$id" params={{ id: d.id }}>
               <Button size="sm" variant="outline"><ArrowRight className="h-4 w-4" /></Button>
             </Link>
-            <Button size="sm" variant="ghost" onClick={() => { if (confirm("Remover?")) delMut.mutate(d.id); }}>
-              <Trash2 className="h-4 w-4 text-destructive" />
-            </Button>
+            {canManage && (
+              <Button size="sm" variant="ghost" onClick={() => { if (confirm("Remover?")) delMut.mutate(d.id); }}>
+                <Trash2 className="h-4 w-4 text-destructive" />
+              </Button>
+            )}
           </Card>
         ))}
       </div>

@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { useCurrentOrg } from "@/lib/org";
+import { useCanManage } from "@/lib/permissions";
 import { getDashboard, addWidget, deleteWidget, runWidget } from "@/lib/dashboards.functions";
 import { PageHeader } from "@/components/page-header";
 import { Card } from "@/components/ui/card";
@@ -37,6 +38,7 @@ const WIDGET_OPTIONS = [
 function DashboardDetailPage() {
   const { id } = Route.useParams();
   const { orgId } = useCurrentOrg();
+  const canManage = useCanManage();
   const qc = useQueryClient();
   const getFn = useServerFn(getDashboard);
   const addFn = useServerFn(addWidget);
@@ -71,28 +73,30 @@ function DashboardDetailPage() {
         action={
           <div className="flex gap-2">
             <Link to="/reports/dashboards"><Button variant="outline" size="sm"><ArrowLeft className="h-4 w-4 mr-2" />Voltar</Button></Link>
-            <Dialog open={open} onOpenChange={setOpen}>
-              <DialogTrigger asChild><Button size="sm"><Plus className="h-4 w-4 mr-2" />Widget</Button></DialogTrigger>
-              <DialogContent>
-                <DialogHeader><DialogTitle>Adicionar widget</DialogTitle></DialogHeader>
-                <div className="space-y-3">
-                  <div>
-                    <Label>Tipo</Label>
-                    <Select value={wtype} onValueChange={setWtype}>
-                      <SelectTrigger><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        {WIDGET_OPTIONS.map((o) => <SelectItem key={o.id} value={o.id}>{o.label}</SelectItem>)}
-                      </SelectContent>
-                    </Select>
+            {canManage && (
+              <Dialog open={open} onOpenChange={setOpen}>
+                <DialogTrigger asChild><Button size="sm"><Plus className="h-4 w-4 mr-2" />Widget</Button></DialogTrigger>
+                <DialogContent>
+                  <DialogHeader><DialogTitle>Adicionar widget</DialogTitle></DialogHeader>
+                  <div className="space-y-3">
+                    <div>
+                      <Label>Tipo</Label>
+                      <Select value={wtype} onValueChange={setWtype}>
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          {WIDGET_OPTIONS.map((o) => <SelectItem key={o.id} value={o.id}>{o.label}</SelectItem>)}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div><Label>Título (opcional)</Label><Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Personalize" /></div>
                   </div>
-                  <div><Label>Título (opcional)</Label><Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Personalize" /></div>
-                </div>
-                <DialogFooter>
-                  <Button variant="ghost" onClick={() => setOpen(false)}>Cancelar</Button>
-                  <Button onClick={() => addMut.mutate()} disabled={addMut.isPending}>Adicionar</Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+                  <DialogFooter>
+                    <Button variant="ghost" onClick={() => setOpen(false)}>Cancelar</Button>
+                    <Button onClick={() => addMut.mutate()} disabled={addMut.isPending}>Adicionar</Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            )}
           </div>
         }
       />
@@ -103,14 +107,14 @@ function DashboardDetailPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         {q.data?.widgets.map((w: any) => (
-          <WidgetCard key={w.id} widget={w} orgId={orgId!} onDelete={() => { if (confirm("Remover?")) delMut.mutate(w.id); }} />
+          <WidgetCard key={w.id} widget={w} orgId={orgId!} canManage={canManage} onDelete={() => { if (confirm("Remover?")) delMut.mutate(w.id); }} />
         ))}
       </div>
     </div>
   );
 }
 
-function WidgetCard({ widget, orgId, onDelete }: { widget: any; orgId: string; onDelete: () => void }) {
+function WidgetCard({ widget, orgId, canManage, onDelete }: { widget: any; orgId: string; canManage: boolean; onDelete: () => void }) {
   const runFn = useServerFn(runWidget);
   const q = useQuery({
     queryKey: ["widget", widget.id],
@@ -128,7 +132,7 @@ function WidgetCard({ widget, orgId, onDelete }: { widget: any; orgId: string; o
           <div className="text-xs text-muted-foreground">{WIDGET_OPTIONS.find((o) => o.id === t)?.label}</div>
           <h3 className="font-semibold">{widget.title}</h3>
         </div>
-        <Button size="sm" variant="ghost" onClick={onDelete}><Trash2 className="h-4 w-4 text-destructive" /></Button>
+        {canManage && <Button size="sm" variant="ghost" onClick={onDelete}><Trash2 className="h-4 w-4 text-destructive" /></Button>}
       </div>
       <WidgetBody type={t} data={q.data} loading={q.isLoading} />
     </Card>
