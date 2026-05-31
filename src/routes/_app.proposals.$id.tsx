@@ -14,7 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus, Trash2, Printer, ArrowLeft, Save } from "lucide-react";
+import { Plus, Trash2, Printer, ArrowLeft, Save, Link2 } from "lucide-react";
 import { toast } from "sonner";
 import {
   getProposal, updateProposal, deleteProposal, upsertItem, deleteItem,
@@ -130,6 +130,12 @@ function ProposalDetail() {
           <Link to="/proposals"><ArrowLeft className="mr-1 h-4 w-4" />Voltar</Link>
         </Button>
         <div className="flex gap-2">
+          {p.share_token && (
+            <Button variant="outline" onClick={() => {
+              const url = `${window.location.origin}/p/${p.share_token}`;
+              navigator.clipboard.writeText(url).then(() => toast.success("Link público copiado"));
+            }}><Link2 className="mr-1 h-4 w-4" />Copiar link público</Button>
+          )}
           <Button variant="outline" onClick={() => window.print()}><Printer className="mr-1 h-4 w-4" />Imprimir / PDF</Button>
           <Button variant="outline" onClick={removeProposal}><Trash2 className="mr-1 h-4 w-4" />Excluir</Button>
           <Button onClick={save}><Save className="mr-1 h-4 w-4" />Salvar</Button>
