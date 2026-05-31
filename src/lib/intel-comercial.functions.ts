@@ -98,12 +98,12 @@ export const getCommercialIntel = createServerFn({ method: "POST" })
     const repNameMap = new Map<string, string>();
     if (repIds.length) {
       const { data: reps } = await supabase
-        .from("sales_reps")
+        .from("erp_sales_reps")
         .select("external_id, name")
         .eq("organization_id", data.organization_id)
         .in("external_id", repIds);
-      for (const r of reps ?? []) {
-        if (r.external_id) repNameMap.set(r.external_id, (r as any).name ?? r.external_id);
+      for (const r of (reps ?? []) as Array<{ external_id: string | null; name: string | null }>) {
+        if (r.external_id) repNameMap.set(r.external_id, r.name ?? r.external_id);
       }
     }
 
