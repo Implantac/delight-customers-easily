@@ -144,6 +144,7 @@ export const updateTicket = createServerFn({ method: "POST" })
     z
       .object({
         id: z.string().uuid(),
+        organization_id: z.string().uuid(),
         status: STATUS.optional(),
         priority: PRIORITY.optional(),
         assignee_id: z.string().uuid().nullable().optional(),
@@ -162,7 +163,11 @@ export const updateTicket = createServerFn({ method: "POST" })
     if (data.priority !== undefined) patch.priority = data.priority;
     if (data.assignee_id !== undefined) patch.assignee_id = data.assignee_id;
     if (data.subject !== undefined) patch.subject = data.subject;
-    const { error } = await supabase.from("tickets").update(patch as any).eq("id", data.id);
+    const { error } = await supabase
+      .from("tickets")
+      .update(patch as any)
+      .eq("id", data.id)
+      .eq("organization_id", data.organization_id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
