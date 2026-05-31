@@ -278,3 +278,36 @@ function GoalsPage() {
     </div>
   );
 }
+
+function GoalKpi({
+  label,
+  value,
+  icon: Icon,
+  tone,
+  sub,
+}: {
+  label: string;
+  value: string | number;
+  icon: React.ComponentType<{ className?: string }>;
+  tone?: "primary" | "ok" | "warn" | "danger";
+  sub?: string;
+}) {
+  const color =
+    tone === "danger"
+      ? "text-destructive"
+      : tone === "warn"
+        ? "text-amber-600"
+        : tone === "ok"
+          ? "text-emerald-600"
+          : "text-primary";
+  return (
+    <Card className="p-4">
+      <div className="flex items-center justify-between">
+        <span className="text-xs text-muted-foreground">{label}</span>
+        <Icon className={`h-3.5 w-3.5 ${color}`} />
+      </div>
+      <div className={`text-2xl font-semibold mt-2 tabular-nums ${color}`}>{value}</div>
+      {sub && <p className="text-xs text-muted-foreground mt-1">{sub}</p>}
+    </Card>
+  );
+}
