@@ -111,7 +111,7 @@ function RotaPage() {
               <SelectTrigger><SelectValue placeholder="Todos" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todos</SelectItem>
-                {(repsQ.data?.reps ?? []).map((r: any) => (
+                {(repsQ.data?.rows ?? []).map((r: any) => (
                   <SelectItem key={r.user_id} value={r.user_id}>{r.name}</SelectItem>
                 ))}
               </SelectContent>
