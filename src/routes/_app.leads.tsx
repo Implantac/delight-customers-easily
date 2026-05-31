@@ -69,6 +69,7 @@ function LeadsInboxPage() {
       <PageHeader
         title="Caixa de Leads"
         subtitle="Tudo que chegou — formulários, indicações, contatos novos. Aja direto daqui."
+        icon={Inbox}
       />
 
       {q.isLoading || !summary ? (
