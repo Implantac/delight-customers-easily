@@ -645,6 +645,60 @@ export type Database = {
           },
         ]
       }
+      ai_prediction_outcomes: {
+        Row: {
+          created_at: string
+          customer_id: string | null
+          horizon_days: number
+          id: string
+          lead_id: string | null
+          model_version: string | null
+          observed_at: string | null
+          observed_outcome: boolean | null
+          observed_value: number | null
+          org_id: string | null
+          predicted_at: string
+          predicted_label: string | null
+          predicted_score: number
+          prediction_type: string
+          tenant_id: string
+        }
+        Insert: {
+          created_at?: string
+          customer_id?: string | null
+          horizon_days?: number
+          id?: string
+          lead_id?: string | null
+          model_version?: string | null
+          observed_at?: string | null
+          observed_outcome?: boolean | null
+          observed_value?: number | null
+          org_id?: string | null
+          predicted_at: string
+          predicted_label?: string | null
+          predicted_score: number
+          prediction_type: string
+          tenant_id: string
+        }
+        Update: {
+          created_at?: string
+          customer_id?: string | null
+          horizon_days?: number
+          id?: string
+          lead_id?: string | null
+          model_version?: string | null
+          observed_at?: string | null
+          observed_outcome?: boolean | null
+          observed_value?: number | null
+          org_id?: string | null
+          predicted_at?: string
+          predicted_label?: string | null
+          predicted_score?: number
+          prediction_type?: string
+          tenant_id?: string
+        }
+        Relationships: []
+      }
       ai_recommendations: {
         Row: {
           body: string | null
@@ -8651,6 +8705,18 @@ export type Database = {
           state: string
           subject_id: string
           subject_type: string
+        }[]
+      }
+      get_ai_backtest_metrics: {
+        Args: { _prediction_type: string; _since?: string; _tenant_id: string }
+        Returns: {
+          accuracy: number
+          avg_predicted: number
+          positive_rate: number
+          precision_pos: number
+          recall_pos: number
+          total: number
+          with_outcome: number
         }[]
       }
       get_goal_attainment_v2: {
