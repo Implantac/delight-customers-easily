@@ -307,6 +307,7 @@ function CarteiraPage() {
                         aria-label={`Selecionar ${r.name}`}
                       />
                     </td>
+                    <td className="px-3 py-2">
                       <div className="font-medium truncate max-w-[240px]">{r.name}</div>
                       {r.industry && <div className="text-xs text-muted-foreground truncate">{r.industry}</div>}
                     </td>
