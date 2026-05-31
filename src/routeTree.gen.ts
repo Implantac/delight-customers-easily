@@ -90,6 +90,7 @@ import { Route as AppProposalsIdRouteImport } from './routes/_app.proposals.$id'
 import { Route as AppKbIdRouteImport } from './routes/_app.kb.$id'
 import { Route as AppInviteTokenRouteImport } from './routes/_app.invite.$token'
 import { Route as AppIntegrationsHelpRouteImport } from './routes/_app.integrations.help'
+import { Route as AppIntegrationsConnectRouteImport } from './routes/_app.integrations.connect'
 import { Route as AppIntegrationsAdvancedRouteImport } from './routes/_app.integrations.advanced'
 import { Route as AppContactsIdRouteImport } from './routes/_app.contacts.$id'
 import { Route as AppCompaniesIdRouteImport } from './routes/_app.companies.$id'
@@ -505,6 +506,11 @@ const AppIntegrationsHelpRoute = AppIntegrationsHelpRouteImport.update({
   path: '/help',
   getParentRoute: () => AppIntegrationsRoute,
 } as any)
+const AppIntegrationsConnectRoute = AppIntegrationsConnectRouteImport.update({
+  id: '/connect',
+  path: '/connect',
+  getParentRoute: () => AppIntegrationsRoute,
+} as any)
 const AppIntegrationsAdvancedRoute = AppIntegrationsAdvancedRouteImport.update({
   id: '/advanced',
   path: '/advanced',
@@ -623,6 +629,7 @@ export interface FileRoutesByFullPath {
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
   '/integrations/advanced': typeof AppIntegrationsAdvancedRoute
+  '/integrations/connect': typeof AppIntegrationsConnectRoute
   '/integrations/help': typeof AppIntegrationsHelpRoute
   '/invite/$token': typeof AppInviteTokenRoute
   '/kb/$id': typeof AppKbIdRoute
@@ -714,6 +721,7 @@ export interface FileRoutesByTo {
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
   '/integrations/advanced': typeof AppIntegrationsAdvancedRoute
+  '/integrations/connect': typeof AppIntegrationsConnectRoute
   '/integrations/help': typeof AppIntegrationsHelpRoute
   '/invite/$token': typeof AppInviteTokenRoute
   '/kb/$id': typeof AppKbIdRoute
@@ -807,6 +815,7 @@ export interface FileRoutesById {
   '/_app/companies/$id': typeof AppCompaniesIdRoute
   '/_app/contacts/$id': typeof AppContactsIdRoute
   '/_app/integrations/advanced': typeof AppIntegrationsAdvancedRoute
+  '/_app/integrations/connect': typeof AppIntegrationsConnectRoute
   '/_app/integrations/help': typeof AppIntegrationsHelpRoute
   '/_app/invite/$token': typeof AppInviteTokenRoute
   '/_app/kb/$id': typeof AppKbIdRoute
@@ -900,6 +909,7 @@ export interface FileRouteTypes {
     | '/companies/$id'
     | '/contacts/$id'
     | '/integrations/advanced'
+    | '/integrations/connect'
     | '/integrations/help'
     | '/invite/$token'
     | '/kb/$id'
@@ -991,6 +1001,7 @@ export interface FileRouteTypes {
     | '/companies/$id'
     | '/contacts/$id'
     | '/integrations/advanced'
+    | '/integrations/connect'
     | '/integrations/help'
     | '/invite/$token'
     | '/kb/$id'
@@ -1083,6 +1094,7 @@ export interface FileRouteTypes {
     | '/_app/companies/$id'
     | '/_app/contacts/$id'
     | '/_app/integrations/advanced'
+    | '/_app/integrations/connect'
     | '/_app/integrations/help'
     | '/_app/invite/$token'
     | '/_app/kb/$id'
@@ -1694,6 +1706,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIntegrationsHelpRouteImport
       parentRoute: typeof AppIntegrationsRoute
     }
+    '/_app/integrations/connect': {
+      id: '/_app/integrations/connect'
+      path: '/connect'
+      fullPath: '/integrations/connect'
+      preLoaderRoute: typeof AppIntegrationsConnectRouteImport
+      parentRoute: typeof AppIntegrationsRoute
+    }
     '/_app/integrations/advanced': {
       id: '/_app/integrations/advanced'
       path: '/advanced'
@@ -1786,11 +1805,13 @@ const AppContactsRouteWithChildren = AppContactsRoute._addFileChildren(
 
 interface AppIntegrationsRouteChildren {
   AppIntegrationsAdvancedRoute: typeof AppIntegrationsAdvancedRoute
+  AppIntegrationsConnectRoute: typeof AppIntegrationsConnectRoute
   AppIntegrationsHelpRoute: typeof AppIntegrationsHelpRoute
 }
 
 const AppIntegrationsRouteChildren: AppIntegrationsRouteChildren = {
   AppIntegrationsAdvancedRoute: AppIntegrationsAdvancedRoute,
+  AppIntegrationsConnectRoute: AppIntegrationsConnectRoute,
   AppIntegrationsHelpRoute: AppIntegrationsHelpRoute,
 }
 
