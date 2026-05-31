@@ -6,6 +6,7 @@ import {
   FileSignature, Plus, Pencil, Trash2, Send, CheckCircle2, RefreshCw, XCircle,
   StickyNote, Calendar, ExternalLink, Building2,
 } from "lucide-react";
+import { PageHeader } from "@/components/page-header";
 import { useCurrentOrg } from "@/lib/org";
 import { useCanManage } from "@/lib/permissions";
 import {

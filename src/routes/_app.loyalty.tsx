@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Award, Plus, Trash2, Pencil, Gift, Users as UsersIcon, TrendingUp, Crown, UserPlus, Sparkles } from "lucide-react";
+import { PageHeader } from "@/components/page-header";
 import { useCurrentOrg } from "@/lib/org";
 import {
   listLoyalty, enrollContact, recordPoints, upsertReward, deleteReward, redeemReward,

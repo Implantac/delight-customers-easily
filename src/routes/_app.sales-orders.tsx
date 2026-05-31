@@ -18,6 +18,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
 import { Package, Plus, Trash2, Pencil, Clock, CheckCircle2, Truck, XCircle, Factory } from "lucide-react";
+import { PageHeader } from "@/components/page-header";
 import { ErpReadOnlyBanner } from "@/components/erp-readonly-banner";
 
 export const Route = createFileRoute("/_app/sales-orders")({ component: SalesOrdersPage });

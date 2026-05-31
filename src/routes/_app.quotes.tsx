@@ -15,6 +15,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
 import { FileSignature, Plus, Send, CheckCircle2, XCircle, Trash2, Pencil, Clock } from "lucide-react";
+import { PageHeader } from "@/components/page-header";
 import { ErpReadOnlyBanner } from "@/components/erp-readonly-banner";
 
 export const Route = createFileRoute("/_app/quotes")({ component: QuotesPage });
