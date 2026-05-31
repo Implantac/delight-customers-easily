@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { Inbox, Plus, Calendar as CalIcon, Phone, Mail, CheckSquare, Users as UsersIcon, FileText, Clock } from "lucide-react";
+import { PageHeader } from "@/components/page-header";
 import { useCurrentOrg } from "@/lib/org";
 import {
   listMyTasks,
@@ -206,16 +207,17 @@ function MyTasksPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Minhas Tarefas</h1>
-          <p className="text-sm text-muted-foreground">Inbox unificado de atividades atribuídas a você.</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Switch id="completed" checked={includeCompleted} onCheckedChange={setIncludeCompleted} />
-          <Label htmlFor="completed" className="text-sm">Mostrar concluídas</Label>
-        </div>
-      </div>
+      <PageHeader
+        icon={Inbox}
+        title="Minhas Tarefas"
+        subtitle="Inbox unificado de atividades atribuídas a você — feche o dia com o que importa."
+        action={
+          <div className="flex items-center gap-2">
+            <Switch id="completed" checked={includeCompleted} onCheckedChange={setIncludeCompleted} />
+            <Label htmlFor="completed" className="text-sm">Mostrar concluídas</Label>
+          </div>
+        }
+      />
 
       <Card>
         <CardHeader>

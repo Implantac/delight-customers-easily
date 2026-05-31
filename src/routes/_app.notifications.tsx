@@ -3,6 +3,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { Bell, Check, Trash2, CheckCheck, ExternalLink } from "lucide-react";
+import { PageHeader } from "@/components/page-header";
 import { useCurrentOrg } from "@/lib/org";
 import { useAuth } from "@/lib/auth";
 import { supabase } from "@/integrations/supabase/client";
@@ -91,21 +92,20 @@ function NotificationsPage() {
 
   return (
     <div className="flex flex-col gap-6 p-6">
-      <div className="flex items-center justify-between gap-4 flex-wrap">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Notificações</h1>
-          <p className="text-sm text-muted-foreground">
-            Acompanhe alertas, menções e eventos da sua conta.
-          </p>
-        </div>
-        <Button
-          variant="outline"
-          disabled={!data?.unread || readAll.isPending}
-          onClick={() => readAll.mutate()}
-        >
-          <CheckCheck className="mr-2 h-4 w-4" /> Marcar todas como lidas
-        </Button>
-      </div>
+      <PageHeader
+        icon={Bell}
+        title="Notificações"
+        subtitle="Acompanhe alertas, menções e eventos da sua conta em um único lugar."
+        action={
+          <Button
+            variant="outline"
+            disabled={!data?.unread || readAll.isPending}
+            onClick={() => readAll.mutate()}
+          >
+            <CheckCheck className="mr-2 h-4 w-4" /> Marcar todas como lidas
+          </Button>
+        }
+      />
 
       <Tabs value={filter} onValueChange={(v) => setFilter(v as any)}>
         <TabsList>
