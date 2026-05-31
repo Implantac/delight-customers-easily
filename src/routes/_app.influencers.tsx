@@ -129,6 +129,8 @@ function InfluencersPage() {
         }
       />
 
+      <InfluencerKpis loading={isLoading} rows={data?.rows ?? []} />
+
       <NextActionBlock surface="influencers" title="Ações com influenciadores" />
 
       <InfluencerMetricsPanel />
