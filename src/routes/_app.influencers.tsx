@@ -275,3 +275,42 @@ function InfluencerForm({
   );
 }
 
+
+function InfluencerKpis({ loading, rows }: { loading: boolean; rows: InfluencerRow[] }) {
+  const active = rows.filter((r) => r.is_active).length;
+  const leads = rows.reduce((s, r) => s + (r.leads_30d ?? 0), 0);
+  const conv = rows.reduce((s, r) => s + (r.converted_30d ?? 0), 0);
+  const rate = leads > 0 ? Math.round((conv / leads) * 100) : 0;
+  return (
+    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <Kpi loading={loading} label="Parceiros ativos" value={active} icon={Users} />
+      <Kpi loading={loading} label="Leads 30d" value={leads} icon={TrendingUp} tone="primary" />
+      <Kpi loading={loading} label="Convertidos 30d" value={conv} icon={CheckCircle2} tone="ok" />
+      <Kpi loading={loading} label="Taxa de conversão" value={`${rate}%`} icon={Percent} />
+    </div>
+  );
+}
+
+function Kpi({
+  loading, label, value, icon: Icon, tone,
+}: {
+  loading: boolean; label: string; value: number | string;
+  icon: React.ComponentType<{ className?: string }>;
+  tone?: "ok" | "primary";
+}) {
+  const color =
+    tone === "ok" ? "text-emerald-600 dark:text-emerald-400"
+    : tone === "primary" ? "text-primary"
+    : "text-foreground";
+  return (
+    <Card className="p-4">
+      <div className="flex items-center justify-between text-xs text-muted-foreground">
+        <span>{label}</span>
+        <Icon className="h-3.5 w-3.5" />
+      </div>
+      <div className={`mt-1 text-2xl font-semibold tabular-nums ${color}`}>
+        {loading ? <Skeleton className="h-7 w-16" /> : value}
+      </div>
+    </Card>
+  );
+}
