@@ -94,13 +94,11 @@ function TicketsPage() {
 
   return (
     <div className="flex flex-col gap-6 p-6">
-      <div className="flex items-center justify-between gap-4 flex-wrap">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Tickets</h1>
-          <p className="text-sm text-muted-foreground">
-            Gerencie chamados e solicitações de clientes.
-          </p>
-        </div>
+      <PageHeader
+        icon={LifeBuoy}
+        title="Tickets"
+        subtitle="Gerencie chamados e solicitações de clientes — atribua, priorize e responda em um só painel."
+        action={
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button>
