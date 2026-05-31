@@ -67,19 +67,13 @@ export const resolveOutbox = createServerFn({ method: "POST" })
     }).parse(i),
   )
   .handler(async ({ data, context }) => {
-    const patch: Record<string, unknown> = {};
-    if (data.strategy === "retry") {
-      patch.status = "pending";
-      patch.attempts = 0;
-      patch.last_error = null;
-      patch.scheduled_at = new Date().toISOString();
-    } else if (data.strategy === "cancel") {
-      patch.status = "cancelled";
-      patch.finished_at = new Date().toISOString();
-    } else {
-      patch.status = "succeeded";
-      patch.finished_at = new Date().toISOString();
-    }
+    const nowIso = new Date().toISOString();
+    const patch =
+      data.strategy === "retry"
+        ? { status: "pending", attempts: 0, last_error: null, scheduled_at: nowIso }
+        : data.strategy === "cancel"
+        ? { status: "cancelled", finished_at: nowIso }
+        : { status: "succeeded", finished_at: nowIso };
     const { error } = await context.supabase.from("erp_outbox").update(patch).eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
