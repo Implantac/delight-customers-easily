@@ -10,6 +10,7 @@
 import type { ErpDriver } from "./types";
 import { blingDriver } from "./bling-driver";
 import { omieDriver } from "./omie-driver";
+import { tinyDriver } from "./tiny-driver";
 import { postgresDirectDriver } from "./postgres-direct";
 import {
   mysqlAgentDriver,
@@ -32,6 +33,7 @@ export type DriverKey =
 const REGISTRY: Partial<Record<DriverKey, ErpDriver>> = {
   bling: blingDriver,
   omie: omieDriver,
+  tiny: tinyDriver,
   "postgres-direct": postgresDirectDriver,
   "mysql-agent": mysqlAgentDriver,
   "sqlserver-agent": sqlserverAgentDriver,
