@@ -199,6 +199,14 @@ function ConnectWizard() {
                 </button>
               ))}
             </div>
+            <div className="mt-4 rounded-md bg-muted/40 p-3 text-xs text-muted-foreground flex items-start gap-2">
+              <HelpCircle className="h-4 w-4 mt-0.5 shrink-0" />
+              <div>
+                <strong className="text-foreground">Não sabe qual é o seu ERP?</strong> É o sistema que sua empresa usa para
+                emitir notas, controlar estoque ou financeiro. Se ninguém da equipe souber, escolha
+                <em> "ERP personalizado"</em> e nós te ajudamos por planilha.
+              </div>
+            </div>
           </CardContent>
         </Card>
       )}
