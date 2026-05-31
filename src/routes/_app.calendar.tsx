@@ -2,12 +2,16 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { ChevronLeft, ChevronRight, Calendar as CalIcon, Phone, Mail, CheckSquare, Users as UsersIcon, FileText } from "lucide-react";
+import {
+  ChevronLeft, ChevronRight, Calendar as CalIcon, Phone, Mail,
+  CheckSquare, Users as UsersIcon, FileText, Clock, AlertCircle, CheckCircle2,
+} from "lucide-react";
 import { useCurrentOrg } from "@/lib/org";
 import {
   getCalendarActivities,
   toggleActivityComplete,
 } from "@/lib/calendar.functions";
+import { PageHeader } from "@/components/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -29,12 +33,13 @@ const TYPE_ICONS: Record<string, any> = {
   note: FileText,
 };
 
+// Semantic tokens via opacity — adaptam-se automaticamente ao tema claro/escuro
 const TYPE_COLORS: Record<string, string> = {
-  call: "bg-blue-100 text-blue-800 border-blue-200",
-  email: "bg-purple-100 text-purple-800 border-purple-200",
-  task: "bg-amber-100 text-amber-800 border-amber-200",
-  meeting: "bg-green-100 text-green-800 border-green-200",
-  note: "bg-slate-100 text-slate-800 border-slate-200",
+  call: "bg-primary/10 text-primary border-primary/20",
+  email: "bg-violet-500/10 text-violet-600 dark:text-violet-400 border-violet-500/20",
+  task: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
+  meeting: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
+  note: "bg-muted text-muted-foreground border-border",
 };
 
 const WEEK_DAYS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
@@ -121,36 +126,58 @@ function CalendarPage() {
     setCursor((c) => (c.m === 11 ? { y: c.y + 1, m: 0 } : { y: c.y, m: c.m + 1 }));
   const goToday = () => setCursor({ y: today.getFullYear(), m: today.getMonth() });
 
+  const stats = useMemo(() => {
+    const acts = data?.activities ?? [];
+    const now = new Date();
+    const todayK = now.toISOString().slice(0, 10);
+    let today = 0, overdue = 0, done = 0, week = 0;
+    const weekEnd = new Date(now); weekEnd.setDate(now.getDate() + 7);
+    for (const a of acts) {
+      const d = new Date(a.due_date);
+      const k = a.due_date.slice(0, 10);
+      if (a.completed) { done++; continue; }
+      if (k === todayK) today++;
+      if (d < now && k !== todayK) overdue++;
+      if (d >= now && d <= weekEnd) week++;
+    }
+    return { today, overdue, done, week };
+  }, [data]);
+
   return (
-    <div className="flex flex-col gap-4 p-6">
-      <div className="flex items-center justify-between flex-wrap gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Agenda</h1>
-          <p className="text-sm text-muted-foreground">
-            Visualize suas atividades em formato de calendário.
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2">
-            <Switch id="mine" checked={mineOnly} onCheckedChange={setMineOnly} />
-            <Label htmlFor="mine" className="text-sm">Só minhas</Label>
-          </div>
-          <Button variant="outline" size="sm" onClick={goToday}>
-            Hoje
-          </Button>
-          <div className="flex items-center gap-1">
-            <Button variant="ghost" size="icon" onClick={goPrev}>
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <div className="text-sm font-medium min-w-[160px] text-center">
-              {MONTHS[cursor.m]} {cursor.y}
+    <div className="space-y-6">
+      <PageHeader
+        title="Agenda Comercial"
+        subtitle="Onde estão suas ações de hoje, da semana e o que ficou para trás."
+        icon={CalIcon}
+        action={
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <Switch id="mine" checked={mineOnly} onCheckedChange={setMineOnly} />
+              <Label htmlFor="mine" className="text-sm">Só minhas</Label>
             </div>
-            <Button variant="ghost" size="icon" onClick={goNext}>
-              <ChevronRight className="h-4 w-4" />
-            </Button>
+            <Button variant="outline" size="sm" onClick={goToday}>Hoje</Button>
+            <div className="flex items-center gap-1">
+              <Button variant="ghost" size="icon" onClick={goPrev}>
+                <ChevronLeft className="h-4 w-4" />
+              </Button>
+              <div className="text-sm font-medium min-w-[160px] text-center">
+                {MONTHS[cursor.m]} {cursor.y}
+              </div>
+              <Button variant="ghost" size="icon" onClick={goNext}>
+                <ChevronRight className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
-        </div>
+        }
+      />
+
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <KpiCell label="Para hoje" value={stats.today} icon={Clock} tone="primary" />
+        <KpiCell label="Próximos 7 dias" value={stats.week} icon={CalIcon} />
+        <KpiCell label="Atrasadas" value={stats.overdue} icon={AlertCircle} tone="danger" />
+        <KpiCell label="Concluídas" value={stats.done} icon={CheckCircle2} tone="ok" />
       </div>
+
 
       <Card>
         <CardContent className="p-2">
@@ -275,5 +302,24 @@ function CalendarPage() {
         </DialogContent>
       </Dialog>
     </div>
+  );
+}
+
+function KpiCell({
+  label, value, icon: Icon, tone,
+}: { label: string; value: number; icon: any; tone?: "primary" | "ok" | "danger" }) {
+  const color =
+    tone === "danger" ? "text-destructive"
+    : tone === "ok" ? "text-emerald-600 dark:text-emerald-400"
+    : tone === "primary" ? "text-primary"
+    : "text-foreground";
+  return (
+    <Card className="p-3">
+      <div className="flex items-center justify-between">
+        <span className="text-xs text-muted-foreground">{label}</span>
+        <Icon className={`h-4 w-4 ${color}`} />
+      </div>
+      <div className={`text-2xl font-semibold mt-1 tracking-tight ${color}`}>{value}</div>
+    </Card>
   );
 }
