@@ -1,15 +1,17 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { createClient } from '@supabase/supabase-js';
 import { requireCronApiKey } from '@/lib/cron-auth.server';
+import { executeJob } from '@/lib/erp-sync-engine.server';
 
 /**
  * Cron tick do Connect Hub. Cron sugerido: a cada 5 minutos.
- * - Promove jobs `pending` cujo scheduled_at já passou para `running` (até N por tick).
- * - Para esta iteração o executor real por tipo de conector ainda não roda aqui;
- *   apenas reconcilia jobs presos (running há > 30 min) e gera health checks
- *   básicos por presença/ausência de erros recentes.
+ * - Recupera jobs presos (running > 30 min) com retry/backoff
+ * - Promove jobs `pending` para `running` e executa via Sync Engine
+ * - Cada driver é resolvido via `resolveDriverKey` (Bling, Postgres direto, etc.)
+ * - Atualiza erp_integrations.last_sync_at / last_error
+ * - Gera health checks por integração
  *
- * IMPORTANTE: não criar lógica de ERP aqui (estoque, fiscal, compras). Apenas orquestração.
+ * Regra: nenhuma lógica de ERP aqui (estoque, fiscal, compras). Só orquestração comercial.
  */
 
 const MAX_RUN_PER_TICK = 25;
@@ -53,35 +55,60 @@ export const Route = createFileRoute('/api/public/hooks/erp-sync-tick')({
             .eq('id', j.id);
         }
 
-        // 2) Promove próximos pending para running
+        // 2) Promove próximos pending para running E EXECUTA via Sync Engine
         const { data: pending } = await supabase
           .from('erp_sync_jobs')
-          .select('id, organization_id, integration_id, resource')
+          .select('id, organization_id, integration_id, resource, cursor, attempts, max_attempts')
           .eq('status', 'pending')
           .lte('scheduled_at', nowIso)
           .order('scheduled_at', { ascending: true })
           .limit(MAX_RUN_PER_TICK);
 
-        const promotedIds = (pending ?? []).map((p) => p.id);
-        if (promotedIds.length > 0) {
-          await supabase
-            .from('erp_sync_jobs')
-            .update({ status: 'running', started_at: nowIso })
-            .in('id', promotedIds);
+        let executed = 0; let processedTotal = 0; let conflictsTotal = 0;
+        for (const job of pending ?? []) {
+          await supabase.from('erp_sync_jobs')
+            .update({ status: 'running', started_at: new Date().toISOString() })
+            .eq('id', job.id);
 
-          // Marca como succeeded imediatamente (executor real virá depois).
-          // Por ora apenas registra que o tick aceitou o job — evita acúmulo
-          // enquanto a Fase 2.1 (executores por connector_type) não está pronta.
-          await supabase
-            .from('erp_sync_jobs')
-            .update({
+          const result = await executeJob(supabase, job);
+          executed++;
+          processedTotal += result.processed;
+          conflictsTotal += result.failed;
+
+          const attempts = (job.attempts ?? 0) + 1;
+          if (result.ok) {
+            await supabase.from('erp_sync_jobs').update({
               status: 'succeeded',
               finished_at: new Date().toISOString(),
-              records_processed: 0,
-              error_message: 'Executor por tipo de conector não implementado nesta fase',
-            })
-            .in('id', promotedIds);
+              records_processed: result.processed,
+              records_failed: result.failed,
+              attempts,
+            }).eq('id', job.id);
+
+            await supabase.from('erp_integrations').update({
+              last_sync_at: new Date().toISOString(),
+              last_error: null,
+            }).eq('id', job.integration_id);
+          } else {
+            const giveUp = attempts >= (job.max_attempts ?? 3);
+            const patch: Record<string, unknown> = {
+              status: giveUp ? 'failed' : 'pending',
+              error_message: result.error ?? 'Erro desconhecido',
+              attempts,
+              started_at: null,
+              finished_at: giveUp ? new Date().toISOString() : null,
+            };
+            if (!giveUp) patch.scheduled_at = new Date(Date.now() + attempts * 60_000).toISOString();
+            await supabase.from('erp_sync_jobs').update(patch).eq('id', job.id);
+
+            if (giveUp) {
+              await supabase.from('erp_integrations').update({
+                last_error: result.error ?? 'Falha após retries',
+              }).eq('id', job.integration_id);
+            }
+          }
         }
+
 
         // 3) Health checks: integrações ativas sem sync nas últimas 24h => degraded
         const { data: integrations } = await supabase
