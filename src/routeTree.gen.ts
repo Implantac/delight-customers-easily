@@ -55,6 +55,7 @@ import { Route as AppLeadsRouteImport } from './routes/_app.leads'
 import { Route as AppLeadScoringRouteImport } from './routes/_app.lead-scoring'
 import { Route as AppLeadFormsRouteImport } from './routes/_app.lead-forms'
 import { Route as AppKbRouteImport } from './routes/_app.kb'
+import { Route as AppInteligenciaComercialRouteImport } from './routes/_app.inteligencia-comercial'
 import { Route as AppIntegrationsRouteImport } from './routes/_app.integrations'
 import { Route as AppInfluencersRouteImport } from './routes/_app.influencers'
 import { Route as AppIaComercialRouteImport } from './routes/_app.ia-comercial'
@@ -352,6 +353,12 @@ const AppKbRoute = AppKbRouteImport.update({
   path: '/kb',
   getParentRoute: () => AppRoute,
 } as any)
+const AppInteligenciaComercialRoute =
+  AppInteligenciaComercialRouteImport.update({
+    id: '/inteligencia-comercial',
+    path: '/inteligencia-comercial',
+    getParentRoute: () => AppRoute,
+  } as any)
 const AppIntegrationsRoute = AppIntegrationsRouteImport.update({
   id: '/integrations',
   path: '/integrations',
@@ -729,6 +736,7 @@ export interface FileRoutesByFullPath {
   '/ia-comercial': typeof AppIaComercialRoute
   '/influencers': typeof AppInfluencersRoute
   '/integrations': typeof AppIntegrationsRouteWithChildren
+  '/inteligencia-comercial': typeof AppInteligenciaComercialRoute
   '/kb': typeof AppKbRouteWithChildren
   '/lead-forms': typeof AppLeadFormsRoute
   '/lead-scoring': typeof AppLeadScoringRoute
@@ -843,6 +851,7 @@ export interface FileRoutesByTo {
   '/ia-comercial': typeof AppIaComercialRoute
   '/influencers': typeof AppInfluencersRoute
   '/integrations': typeof AppIntegrationsRouteWithChildren
+  '/inteligencia-comercial': typeof AppInteligenciaComercialRoute
   '/kb': typeof AppKbRouteWithChildren
   '/lead-forms': typeof AppLeadFormsRoute
   '/lead-scoring': typeof AppLeadScoringRoute
@@ -959,6 +968,7 @@ export interface FileRoutesById {
   '/_app/ia-comercial': typeof AppIaComercialRoute
   '/_app/influencers': typeof AppInfluencersRoute
   '/_app/integrations': typeof AppIntegrationsRouteWithChildren
+  '/_app/inteligencia-comercial': typeof AppInteligenciaComercialRoute
   '/_app/kb': typeof AppKbRouteWithChildren
   '/_app/lead-forms': typeof AppLeadFormsRoute
   '/_app/lead-scoring': typeof AppLeadScoringRoute
@@ -1075,6 +1085,7 @@ export interface FileRouteTypes {
     | '/ia-comercial'
     | '/influencers'
     | '/integrations'
+    | '/inteligencia-comercial'
     | '/kb'
     | '/lead-forms'
     | '/lead-scoring'
@@ -1189,6 +1200,7 @@ export interface FileRouteTypes {
     | '/ia-comercial'
     | '/influencers'
     | '/integrations'
+    | '/inteligencia-comercial'
     | '/kb'
     | '/lead-forms'
     | '/lead-scoring'
@@ -1304,6 +1316,7 @@ export interface FileRouteTypes {
     | '/_app/ia-comercial'
     | '/_app/influencers'
     | '/_app/integrations'
+    | '/_app/inteligencia-comercial'
     | '/_app/kb'
     | '/_app/lead-forms'
     | '/_app/lead-scoring'
@@ -1736,6 +1749,13 @@ declare module '@tanstack/react-router' {
       path: '/kb'
       fullPath: '/kb'
       preLoaderRoute: typeof AppKbRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/inteligencia-comercial': {
+      id: '/_app/inteligencia-comercial'
+      path: '/inteligencia-comercial'
+      fullPath: '/inteligencia-comercial'
+      preLoaderRoute: typeof AppInteligenciaComercialRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/integrations': {
@@ -2381,6 +2401,7 @@ interface AppRouteChildren {
   AppIaComercialRoute: typeof AppIaComercialRoute
   AppInfluencersRoute: typeof AppInfluencersRoute
   AppIntegrationsRoute: typeof AppIntegrationsRouteWithChildren
+  AppInteligenciaComercialRoute: typeof AppInteligenciaComercialRoute
   AppKbRoute: typeof AppKbRouteWithChildren
   AppLeadFormsRoute: typeof AppLeadFormsRoute
   AppLeadScoringRoute: typeof AppLeadScoringRoute
@@ -2459,6 +2480,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppIaComercialRoute: AppIaComercialRoute,
   AppInfluencersRoute: AppInfluencersRoute,
   AppIntegrationsRoute: AppIntegrationsRouteWithChildren,
+  AppInteligenciaComercialRoute: AppInteligenciaComercialRoute,
   AppKbRoute: AppKbRouteWithChildren,
   AppLeadFormsRoute: AppLeadFormsRoute,
   AppLeadScoringRoute: AppLeadScoringRoute,
