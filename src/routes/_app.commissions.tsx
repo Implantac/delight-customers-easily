@@ -153,6 +153,10 @@ function CommissionsPage() {
           )}
         </TabsContent>
 
+        <TabsContent value="payouts" className="mt-4">
+          <PayoutsTab orgId={orgId!} period={period} canManage={canManage} />
+        </TabsContent>
+
         {canManage && (
           <TabsContent value="rules" className="mt-4 space-y-4">
             <div className="flex justify-end">
