@@ -75,7 +75,7 @@ export const DRIVER_CAPABILITIES: Record<DriverKey, { mode: "cloud" | "agent" | 
   "firebird-agent":   { mode: "agent", label: "Firebird (via Agent)",   note: "Requer ERP Connect Agent instalado on-premise." },
   "oracle-agent":     { mode: "agent", label: "Oracle (via Agent)",     note: "Requer ERP Connect Agent instalado on-premise." },
   "omie":             { mode: "cloud", label: "Omie (REST)",            note: "Pull direto via API REST (app_key + app_secret)." },
-  "tiny":             { mode: "todo",  label: "Tiny (REST)",            note: "Adapter REST em backlog." },
+  "tiny":             { mode: "cloud", label: "Tiny (REST v3)",         note: "Pull direto via API REST OAuth2 (access_token)." },
 };
 
 export type { ErpDriver } from "./types";
