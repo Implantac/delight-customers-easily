@@ -139,6 +139,7 @@ function DashboardPage() {
   return (
     <div className="p-4 md:p-8">
       <PageHeader
+        tone="primary"
         icon={Gauge}
         title="Revenue Command Center"
         subtitle="O que precisa acontecer hoje para vender mais"
