@@ -265,11 +265,28 @@ function ConnectHubDashboard() {
                     <Separator />
 
                     <div className="flex flex-wrap gap-1.5">
-                      <Link to="/integrations/health">
-                        <Button size="sm" variant="outline" className="h-7 gap-1.5 text-xs">
-                          <RefreshCw className="h-3 w-3" /> Sincronizar
-                        </Button>
-                      </Link>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="h-7 gap-1.5 text-xs"
+                        disabled={
+                          !r.integration_id ||
+                          !r.is_active ||
+                          (syncMut.isPending && syncMut.variables === r.integration_id)
+                        }
+                        onClick={() => r.integration_id && syncMut.mutate(r.integration_id)}
+                      >
+                        <RefreshCw
+                          className={`h-3 w-3 ${
+                            syncMut.isPending && syncMut.variables === r.integration_id
+                              ? "animate-spin"
+                              : ""
+                          }`}
+                        />
+                        {syncMut.isPending && syncMut.variables === r.integration_id
+                          ? "Enviando..."
+                          : "Sincronizar"}
+                      </Button>
                       <Link to="/integrations/outbox">
                         <Button size="sm" variant="ghost" className="h-7 gap-1.5 text-xs">
                           <Inbox className="h-3 w-3" /> Logs
