@@ -72,7 +72,7 @@ function ConnectHubDashboard() {
         icon={Plug}
         title="ConnectHub"
         subtitle="Conecte, sincronize e monitore seus ERPs em um só lugar."
-        actions={
+        action={
           <div className="flex items-center gap-2">
             <Button
               variant="outline"
