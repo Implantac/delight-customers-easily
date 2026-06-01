@@ -51,10 +51,13 @@ function PipelinePage() {
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
   const [dragId, setDragId] = useState<string | null>(null);
+  const [dragOverStage, setDragOverStage] = useState<Stage | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [q, setQ] = useState("");
   const [minValue, setMinValue] = useState("");
   const [onlyMine, setOnlyMine] = useState(false);
+
+
 
 
   const { data: deals, isLoading } = useQuery({
