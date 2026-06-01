@@ -66,6 +66,7 @@ import { Route as AppGeoCoberturaRouteImport } from './routes/_app.geo-cobertura
 import { Route as AppGeoRouteImport } from './routes/_app.geo'
 import { Route as AppForecastRouteImport } from './routes/_app.forecast'
 import { Route as AppDataQualityRouteImport } from './routes/_app.data-quality'
+import { Route as AppDashboardExecutivoRouteImport } from './routes/_app.dashboard-executivo'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppContractsRouteImport } from './routes/_app.contracts'
 import { Route as AppContactsRouteImport } from './routes/_app.contacts'
@@ -410,6 +411,11 @@ const AppDataQualityRoute = AppDataQualityRouteImport.update({
   path: '/data-quality',
   getParentRoute: () => AppRoute,
 } as any)
+const AppDashboardExecutivoRoute = AppDashboardExecutivoRouteImport.update({
+  id: '/dashboard-executivo',
+  path: '/dashboard-executivo',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -733,6 +739,7 @@ export interface FileRoutesByFullPath {
   '/contacts': typeof AppContactsRouteWithChildren
   '/contracts': typeof AppContractsRoute
   '/dashboard': typeof AppDashboardRoute
+  '/dashboard-executivo': typeof AppDashboardExecutivoRoute
   '/data-quality': typeof AppDataQualityRoute
   '/forecast': typeof AppForecastRoute
   '/geo': typeof AppGeoRoute
@@ -849,6 +856,7 @@ export interface FileRoutesByTo {
   '/contacts': typeof AppContactsRouteWithChildren
   '/contracts': typeof AppContractsRoute
   '/dashboard': typeof AppDashboardRoute
+  '/dashboard-executivo': typeof AppDashboardExecutivoRoute
   '/data-quality': typeof AppDataQualityRoute
   '/forecast': typeof AppForecastRoute
   '/geo': typeof AppGeoRoute
@@ -967,6 +975,7 @@ export interface FileRoutesById {
   '/_app/contacts': typeof AppContactsRouteWithChildren
   '/_app/contracts': typeof AppContractsRoute
   '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/dashboard-executivo': typeof AppDashboardExecutivoRoute
   '/_app/data-quality': typeof AppDataQualityRoute
   '/_app/forecast': typeof AppForecastRoute
   '/_app/geo': typeof AppGeoRoute
@@ -1085,6 +1094,7 @@ export interface FileRouteTypes {
     | '/contacts'
     | '/contracts'
     | '/dashboard'
+    | '/dashboard-executivo'
     | '/data-quality'
     | '/forecast'
     | '/geo'
@@ -1201,6 +1211,7 @@ export interface FileRouteTypes {
     | '/contacts'
     | '/contracts'
     | '/dashboard'
+    | '/dashboard-executivo'
     | '/data-quality'
     | '/forecast'
     | '/geo'
@@ -1318,6 +1329,7 @@ export interface FileRouteTypes {
     | '/_app/contacts'
     | '/_app/contracts'
     | '/_app/dashboard'
+    | '/_app/dashboard-executivo'
     | '/_app/data-quality'
     | '/_app/forecast'
     | '/_app/geo'
@@ -1839,6 +1851,13 @@ declare module '@tanstack/react-router' {
       path: '/data-quality'
       fullPath: '/data-quality'
       preLoaderRoute: typeof AppDataQualityRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/dashboard-executivo': {
+      id: '/_app/dashboard-executivo'
+      path: '/dashboard-executivo'
+      fullPath: '/dashboard-executivo'
+      preLoaderRoute: typeof AppDashboardExecutivoRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/dashboard': {
@@ -2426,6 +2445,7 @@ interface AppRouteChildren {
   AppContactsRoute: typeof AppContactsRouteWithChildren
   AppContractsRoute: typeof AppContractsRoute
   AppDashboardRoute: typeof AppDashboardRoute
+  AppDashboardExecutivoRoute: typeof AppDashboardExecutivoRoute
   AppDataQualityRoute: typeof AppDataQualityRoute
   AppForecastRoute: typeof AppForecastRoute
   AppGeoRoute: typeof AppGeoRoute
@@ -2505,6 +2525,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppContactsRoute: AppContactsRouteWithChildren,
   AppContractsRoute: AppContractsRoute,
   AppDashboardRoute: AppDashboardRoute,
+  AppDashboardExecutivoRoute: AppDashboardExecutivoRoute,
   AppDataQualityRoute: AppDataQualityRoute,
   AppForecastRoute: AppForecastRoute,
   AppGeoRoute: AppGeoRoute,
