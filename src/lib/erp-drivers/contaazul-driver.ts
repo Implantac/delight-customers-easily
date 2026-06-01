@@ -126,4 +126,22 @@ export const contaAzulDriver: ErpDriver = {
       has_more: dtos.length === limit,
     };
   },
+
+  async pushCustomer(cfg, input): Promise<ErpPushResult> {
+    const payload = {
+      name: input.trade_name ?? input.legal_name ?? "Cliente CRM",
+      business_name: input.legal_name ?? undefined,
+      document: input.document ?? undefined,
+      email: input.email ?? undefined,
+      cell_phone: input.phone ?? undefined,
+    };
+    if (input.external_id) {
+      await caWrite(cfg, "PUT", `/customers/${encodeURIComponent(input.external_id)}`, payload);
+      return { external_id: input.external_id, note: "Conta Azul: cliente atualizado" };
+    }
+    const res = await caWrite(cfg, "POST", "/customers", payload);
+    const id = String(res?.id ?? res?.uuid ?? "");
+    if (!id) throw new Error("Conta Azul: resposta sem id");
+    return { external_id: id, note: "Conta Azul: cliente criado" };
+  },
 };
