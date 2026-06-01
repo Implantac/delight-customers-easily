@@ -1784,6 +1784,48 @@ export type Database = {
           },
         ]
       }
+      consent_log: {
+        Row: {
+          consent_text: string
+          created_at: string
+          granted: boolean
+          id: string
+          ip: string | null
+          organization_id: string | null
+          purpose: string
+          subject_id: string | null
+          subject_type: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          consent_text: string
+          created_at?: string
+          granted: boolean
+          id?: string
+          ip?: string | null
+          organization_id?: string | null
+          purpose: string
+          subject_id?: string | null
+          subject_type: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          consent_text?: string
+          created_at?: string
+          granted?: boolean
+          id?: string
+          ip?: string | null
+          organization_id?: string | null
+          purpose?: string
+          subject_id?: string | null
+          subject_type?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       contacts: {
         Row: {
           company_id: string | null
@@ -4560,6 +4602,7 @@ export type Database = {
           complement: string | null
           country: string | null
           created_at: string
+          geocode_source: string | null
           geocoded_at: string | null
           geohash: string | null
           ibge_code: string | null
@@ -4583,6 +4626,7 @@ export type Database = {
           complement?: string | null
           country?: string | null
           created_at?: string
+          geocode_source?: string | null
           geocoded_at?: string | null
           geohash?: string | null
           ibge_code?: string | null
@@ -4606,6 +4650,7 @@ export type Database = {
           complement?: string | null
           country?: string | null
           created_at?: string
+          geocode_source?: string | null
           geocoded_at?: string | null
           geohash?: string | null
           ibge_code?: string | null
@@ -5429,6 +5474,9 @@ export type Database = {
       }
       lead_form_submissions: {
         Row: {
+          consent_at: string | null
+          consent_ip: string | null
+          consent_text: string | null
           contact_id: string | null
           created_at: string
           deal_id: string | null
@@ -5444,6 +5492,9 @@ export type Database = {
           user_agent: string | null
         }
         Insert: {
+          consent_at?: string | null
+          consent_ip?: string | null
+          consent_text?: string | null
           contact_id?: string | null
           created_at?: string
           deal_id?: string | null
@@ -5459,6 +5510,9 @@ export type Database = {
           user_agent?: string | null
         }
         Update: {
+          consent_at?: string | null
+          consent_ip?: string | null
+          consent_text?: string | null
           contact_id?: string | null
           created_at?: string
           deal_id?: string | null
@@ -7673,6 +7727,8 @@ export type Database = {
           enrolled_at: string
           enrolled_by: string
           id: string
+          last_dispatched_at: string | null
+          last_dispatched_step: number
           organization_id: string
           sequence_id: string
           status: string
@@ -7683,6 +7739,8 @@ export type Database = {
           enrolled_at?: string
           enrolled_by: string
           id?: string
+          last_dispatched_at?: string | null
+          last_dispatched_step?: number
           organization_id: string
           sequence_id: string
           status?: string
@@ -7693,6 +7751,8 @@ export type Database = {
           enrolled_at?: string
           enrolled_by?: string
           id?: string
+          last_dispatched_at?: string | null
+          last_dispatched_step?: number
           organization_id?: string
           sequence_id?: string
           status?: string
