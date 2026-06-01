@@ -144,43 +144,73 @@ function MappingScreen() {
   });
 
   const aiMut = useMutation({
-    mutationFn: () =>
-      aiSuggest({
+    mutationFn: async () => {
+      if (entity === "orders") {
+        throw new Error("IA suporta apenas Empresas, Contatos e Produtos.");
+      }
+      // Extrai headers da amostra JSON colada
+      let headers: string[] = [];
+      let sample_rows: string[][] | undefined;
+      const trimmed = aiSample.trim();
+      if (trimmed) {
+        try {
+          const parsed = JSON.parse(trimmed);
+          const first = Array.isArray(parsed) ? parsed[0] : parsed;
+          if (first && typeof first === "object") {
+            headers = Object.keys(first);
+            const rows = (Array.isArray(parsed) ? parsed : [parsed])
+              .slice(0, 3)
+              .map((row: any) =>
+                headers.map((h) => String(row?.[h] ?? "").slice(0, 200)),
+              );
+            sample_rows = rows;
+          }
+        } catch {
+          throw new Error("JSON inválido. Cole um objeto ou array de objetos.");
+        }
+      }
+      if (headers.length === 0) {
+        throw new Error("Cole um exemplo JSON para a IA analisar.");
+      }
+      return aiSuggest({
         data: {
-          provider,
-          entity,
-          sample: aiSample || undefined,
-        } as any,
-      }),
+          entity: entity as "contacts" | "companies" | "products",
+          headers,
+          sample_rows,
+        },
+      });
+    },
     onSuccess: async (data: any) => {
-      const suggestions = (data?.mappings ?? data?.suggestions ?? []) as Array<{
-        source_field: string;
-        target_field: string;
-        transform?: Transform;
-      }>;
-      if (suggestions.length === 0) {
-        toast.info("IA não encontrou sugestões novas.");
+      const mapping = (data?.mapping ?? {}) as Record<
+        string,
+        { field: string; confidence: number }
+      >;
+      const entries = Object.entries(mapping).filter(
+        ([, v]) => v?.field && v.field !== "skip",
+      );
+      if (entries.length === 0) {
+        toast.info("IA não encontrou sugestões aplicáveis.");
         return;
       }
       let saved = 0;
-      for (const s of suggestions) {
+      for (const [src, info] of entries) {
         try {
           await upsert({
             data: {
               organization_id: orgId!,
               provider,
               entity,
-              source_field: s.source_field,
-              target_field: s.target_field,
-              transform: s.transform ?? "none",
+              source_field: src,
+              target_field: info.field,
+              transform: "none",
             },
           });
           saved++;
         } catch {
-          /* skip individual failures */
+          /* skip */
         }
       }
-      toast.success(`${saved} mapeamentos sugeridos pela IA aplicados.`);
+      toast.success(`${saved} mapeamento(s) aplicados pela IA.`);
       qc.invalidateQueries({ queryKey: ["field-mappings"] });
     },
     onError: (e: any) =>
