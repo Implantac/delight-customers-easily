@@ -112,6 +112,7 @@ import { Route as AppIntegrationsHealthRouteImport } from './routes/_app.integra
 import { Route as AppIntegrationsDiagnosticRouteImport } from './routes/_app.integrations.diagnostic'
 import { Route as AppIntegrationsDashboardRouteImport } from './routes/_app.integrations.dashboard'
 import { Route as AppIntegrationsConnectRouteImport } from './routes/_app.integrations.connect'
+import { Route as AppIntegrationsConflictsRouteImport } from './routes/_app.integrations.conflicts'
 import { Route as AppIntegrationsAppsRouteImport } from './routes/_app.integrations.apps'
 import { Route as AppIntegrationsAgentRouteImport } from './routes/_app.integrations.agent'
 import { Route as AppIntegrationsAdvancedRouteImport } from './routes/_app.integrations.advanced'
@@ -655,6 +656,12 @@ const AppIntegrationsConnectRoute = AppIntegrationsConnectRouteImport.update({
   path: '/connect',
   getParentRoute: () => AppIntegrationsRoute,
 } as any)
+const AppIntegrationsConflictsRoute =
+  AppIntegrationsConflictsRouteImport.update({
+    id: '/conflicts',
+    path: '/conflicts',
+    getParentRoute: () => AppIntegrationsRoute,
+  } as any)
 const AppIntegrationsAppsRoute = AppIntegrationsAppsRouteImport.update({
   id: '/apps',
   path: '/apps',
@@ -853,6 +860,7 @@ export interface FileRoutesByFullPath {
   '/integrations/advanced': typeof AppIntegrationsAdvancedRoute
   '/integrations/agent': typeof AppIntegrationsAgentRoute
   '/integrations/apps': typeof AppIntegrationsAppsRoute
+  '/integrations/conflicts': typeof AppIntegrationsConflictsRoute
   '/integrations/connect': typeof AppIntegrationsConnectRouteWithChildren
   '/integrations/dashboard': typeof AppIntegrationsDashboardRoute
   '/integrations/diagnostic': typeof AppIntegrationsDiagnosticRoute
@@ -978,6 +986,7 @@ export interface FileRoutesByTo {
   '/integrations/advanced': typeof AppIntegrationsAdvancedRoute
   '/integrations/agent': typeof AppIntegrationsAgentRoute
   '/integrations/apps': typeof AppIntegrationsAppsRoute
+  '/integrations/conflicts': typeof AppIntegrationsConflictsRoute
   '/integrations/connect': typeof AppIntegrationsConnectRouteWithChildren
   '/integrations/dashboard': typeof AppIntegrationsDashboardRoute
   '/integrations/diagnostic': typeof AppIntegrationsDiagnosticRoute
@@ -1105,6 +1114,7 @@ export interface FileRoutesById {
   '/_app/integrations/advanced': typeof AppIntegrationsAdvancedRoute
   '/_app/integrations/agent': typeof AppIntegrationsAgentRoute
   '/_app/integrations/apps': typeof AppIntegrationsAppsRoute
+  '/_app/integrations/conflicts': typeof AppIntegrationsConflictsRoute
   '/_app/integrations/connect': typeof AppIntegrationsConnectRouteWithChildren
   '/_app/integrations/dashboard': typeof AppIntegrationsDashboardRoute
   '/_app/integrations/diagnostic': typeof AppIntegrationsDiagnosticRoute
@@ -1232,6 +1242,7 @@ export interface FileRouteTypes {
     | '/integrations/advanced'
     | '/integrations/agent'
     | '/integrations/apps'
+    | '/integrations/conflicts'
     | '/integrations/connect'
     | '/integrations/dashboard'
     | '/integrations/diagnostic'
@@ -1357,6 +1368,7 @@ export interface FileRouteTypes {
     | '/integrations/advanced'
     | '/integrations/agent'
     | '/integrations/apps'
+    | '/integrations/conflicts'
     | '/integrations/connect'
     | '/integrations/dashboard'
     | '/integrations/diagnostic'
@@ -1483,6 +1495,7 @@ export interface FileRouteTypes {
     | '/_app/integrations/advanced'
     | '/_app/integrations/agent'
     | '/_app/integrations/apps'
+    | '/_app/integrations/conflicts'
     | '/_app/integrations/connect'
     | '/_app/integrations/dashboard'
     | '/_app/integrations/diagnostic'
@@ -2277,6 +2290,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIntegrationsConnectRouteImport
       parentRoute: typeof AppIntegrationsRoute
     }
+    '/_app/integrations/conflicts': {
+      id: '/_app/integrations/conflicts'
+      path: '/conflicts'
+      fullPath: '/integrations/conflicts'
+      preLoaderRoute: typeof AppIntegrationsConflictsRouteImport
+      parentRoute: typeof AppIntegrationsRoute
+    }
     '/_app/integrations/apps': {
       id: '/_app/integrations/apps'
       path: '/apps'
@@ -2469,6 +2489,7 @@ interface AppIntegrationsRouteChildren {
   AppIntegrationsAdvancedRoute: typeof AppIntegrationsAdvancedRoute
   AppIntegrationsAgentRoute: typeof AppIntegrationsAgentRoute
   AppIntegrationsAppsRoute: typeof AppIntegrationsAppsRoute
+  AppIntegrationsConflictsRoute: typeof AppIntegrationsConflictsRoute
   AppIntegrationsConnectRoute: typeof AppIntegrationsConnectRouteWithChildren
   AppIntegrationsDashboardRoute: typeof AppIntegrationsDashboardRoute
   AppIntegrationsDiagnosticRoute: typeof AppIntegrationsDiagnosticRoute
@@ -2484,6 +2505,7 @@ const AppIntegrationsRouteChildren: AppIntegrationsRouteChildren = {
   AppIntegrationsAdvancedRoute: AppIntegrationsAdvancedRoute,
   AppIntegrationsAgentRoute: AppIntegrationsAgentRoute,
   AppIntegrationsAppsRoute: AppIntegrationsAppsRoute,
+  AppIntegrationsConflictsRoute: AppIntegrationsConflictsRoute,
   AppIntegrationsConnectRoute: AppIntegrationsConnectRouteWithChildren,
   AppIntegrationsDashboardRoute: AppIntegrationsDashboardRoute,
   AppIntegrationsDiagnosticRoute: AppIntegrationsDiagnosticRoute,

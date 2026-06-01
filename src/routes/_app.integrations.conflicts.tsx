@@ -75,13 +75,14 @@ function ConflictsPage() {
     <div className="space-y-6 p-6">
       <PageHeader
         title="Conflitos de sincronização"
-        description="Resolva divergências entre CRM e ERP detectadas pelo motor de sync."
+        subtitle="Resolva divergências entre CRM e ERP detectadas pelo motor de sync."
         icon={AlertTriangle}
-      >
-        <Button asChild variant="outline" size="sm">
-          <Link to="/integrations">Voltar</Link>
-        </Button>
-      </PageHeader>
+        action={
+          <Button asChild variant="outline" size="sm">
+            <Link to="/integrations">Voltar</Link>
+          </Button>
+        }
+      />
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
