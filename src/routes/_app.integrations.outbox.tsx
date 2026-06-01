@@ -95,28 +95,18 @@ function OutboxPage() {
   const [search, setSearch] = useState("");
   const [detail, setDetail] = useState<OutboxItem | null>(null);
 
-  // Conta itens por status (para chips no topo)
-  const counts = useQueries({
-    queries: STATUS.map((s) => ({
-      queryKey: ["erp-outbox-count", orgId, s],
-      queryFn: () =>
-        listFn({ data: { organization_id: orgId!, status: s, limit: 1 } }),
-      enabled: !!orgId,
-      // Aproximação: pegamos len. Para ser exato precisaria de count separado;
-      // como o backend retorna até `limit` itens, vamos buscar com limit alto.
-      select: (d: any) => d.items.length,
-    })),
-  });
-
-  // Recarrega contagens com limit maior em paralelo
+  // Contagem por status (busca em paralelo, com limit alto)
   const countsBig = useQueries({
     queries: STATUS.map((s) => ({
       queryKey: ["erp-outbox-count-big", orgId, s],
-      queryFn: () =>
-        listFn({ data: { organization_id: orgId!, status: s, limit: 100 } }),
+      queryFn: async () => {
+        const r = await listFn({
+          data: { organization_id: orgId!, status: s, limit: 100 },
+        });
+        return r.items.length;
+      },
       enabled: !!orgId,
       refetchInterval: 30_000,
-      select: (d: any) => d.items.length,
     })),
   });
 
