@@ -212,6 +212,42 @@ function ConnectHubDashboard() {
       }),
   });
 
+  const scheduleMut = useMutation({
+    mutationFn: (vars: { integrationId: string; frequency: ScheduleFreq }) =>
+      updateSchedule({
+        data: {
+          organizationId: orgId!,
+          integrationId: vars.integrationId,
+          frequency: vars.frequency,
+          resources: ["customers", "sales_history"],
+          direction: "pull",
+        },
+      }),
+    onSuccess: (data) => {
+      toast.success(
+        data.nextRunAt
+          ? `Agendado. Próxima execução: ${new Date(data.nextRunAt).toLocaleString("pt-BR")}`
+          : "Agendamento removido.",
+      );
+      setScheduleDialog(null);
+      qc.invalidateQueries({ queryKey: ["erp-health", orgId] });
+    },
+    onError: (e: any) =>
+      toast.error("Falha ao salvar agendamento", { description: e?.message }),
+  });
+
+  async function openScheduleDialog(integrationId: string, providerName: string) {
+    setScheduleDialog({ integrationId, providerName });
+    try {
+      const cur = await fetchSchedule({
+        data: { organizationId: orgId!, integrationId },
+      });
+      setSchedFreq(cur.frequency);
+    } catch {
+      setSchedFreq("hourly");
+    }
+  }
+
   function openSyncDialog(integrationId: string, providerName: string) {
     setSelectedResources({
       customers: true,
