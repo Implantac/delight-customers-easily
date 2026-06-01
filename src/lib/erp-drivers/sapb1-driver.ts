@@ -147,4 +147,23 @@ export const sapb1Driver: ErpDriver = {
       has_more: hasMore,
     };
   },
+
+  async pushCustomer(cfg, input: ErpCustomerPushInput): Promise<ErpPushResult> {
+    const payload: Record<string, unknown> = {
+      CardType: "cCustomer",
+      CardName: input.legal_name ?? input.trade_name,
+      FederalTaxID: input.document ?? undefined,
+      EmailAddress: input.email ?? undefined,
+      Phone1: input.phone ?? undefined,
+    };
+    if (input.external_id) {
+      await slWrite(cfg, `/BusinessPartners('${encodeURIComponent(input.external_id)}')`, "PATCH", payload);
+      return { external_id: input.external_id, note: "atualizado" };
+    }
+    // CardCode é obrigatório para criar; usar documento como base se não vier external_id
+    const cardCode = (input.document?.replace(/\D/g, "") ?? "").slice(0, 15) || `CRM${Date.now()}`;
+    const body = await slWrite(cfg, "/BusinessPartners", "POST", { CardCode: cardCode, ...payload });
+    const id = String(body?.CardCode ?? cardCode);
+    return { external_id: id, note: "criado" };
+  },
 };
