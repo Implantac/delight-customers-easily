@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
@@ -63,8 +63,18 @@ import {
 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/integrations")({
-  component: ConnectHubDashboard,
+  component: IntegrationsRoute,
 });
+
+function IntegrationsRoute() {
+  const pathname = useLocation({ select: (location) => location.pathname });
+
+  if (pathname !== "/integrations") {
+    return <Outlet />;
+  }
+
+  return <ConnectHubDashboard />;
+}
 
 const ADVANCED_LINKS = [
   { to: "/integrations/dashboard" as const, icon: BarChart3, label: "Painel executivo", desc: "KPIs e SLA da integração" },
