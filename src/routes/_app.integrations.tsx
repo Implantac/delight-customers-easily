@@ -67,36 +67,12 @@ export const Route = createFileRoute("/_app/integrations")({
 });
 
 const QUICK_LINKS = [
-  {
-    to: "/integrations/health" as const,
-    icon: Activity,
-    label: "Saúde",
-    desc: "Status em tempo real",
-  },
-  {
-    to: "/integrations/outbox" as const,
-    icon: Inbox,
-    label: "Fila de eventos",
-    desc: "Envios e retries",
-  },
-  {
-    to: "/integrations/templates" as const,
-    icon: FileText,
-    label: "Templates",
-    desc: "Mapeamentos prontos",
-  },
-  {
-    to: "/integrations/apps" as const,
-    icon: AppWindow,
-    label: "Apps",
-    desc: "Conectores extras",
-  },
-  {
-    to: "/settings/erp-agent" as const,
-    icon: Server,
-    label: "Agente local",
-    desc: "ERPs on-premise",
-  },
+  { to: "/integrations/dashboard" as const, icon: BarChart3, label: "Dashboard", desc: "KPIs e SLA" },
+  { to: "/integrations/health" as const, icon: Activity, label: "Saúde", desc: "Status em tempo real" },
+  { to: "/integrations/mapping" as const, icon: GitBranch, label: "Mapeamento", desc: "Campos ERP↔CRM" },
+  { to: "/integrations/outbox" as const, icon: Inbox, label: "Fila", desc: "Envios e retries" },
+  { to: "/integrations/templates" as const, icon: FileText, label: "Templates", desc: "Mapeamentos prontos" },
+  { to: "/integrations/apps" as const, icon: AppWindow, label: "Apps", desc: "Conectores extras" },
 ];
 
 type SyncResource =
