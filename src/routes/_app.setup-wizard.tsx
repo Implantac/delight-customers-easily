@@ -15,8 +15,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import {
   Rocket, Building2, Plug, RefreshCw, CheckCircle2, ArrowRight, ArrowLeft, Loader2, Sparkles,
+  Eye, EyeOff, AlertCircle, ExternalLink, ShieldCheck,
 } from "lucide-react";
 import { toast } from "sonner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export const Route = createFileRoute("/_app/setup-wizard")({
   component: SetupWizardPage,
@@ -24,11 +26,55 @@ export const Route = createFileRoute("/_app/setup-wizard")({
 
 type ProviderKey = "bling" | "omie" | "tiny" | "contaazul";
 
-const PROVIDERS: Array<{ key: ProviderKey; label: string; hint: string }> = [
-  { key: "bling",     label: "Bling v3",     hint: "Token Bearer obtido no painel do Bling." },
-  { key: "omie",      label: "Omie",         hint: "APP KEY + APP SECRET do painel Omie." },
-  { key: "tiny",      label: "Tiny ERP v3",  hint: "Access Token OAuth2 do Tiny." },
-  { key: "contaazul", label: "Conta Azul",   hint: "Access Token OAuth2 da Conta Azul." },
+type ProviderSpec = {
+  key: ProviderKey;
+  label: string;
+  short: string;
+  keyLabel: string;
+  secretLabel?: string;
+  needsSecret: boolean;
+  docsUrl: string;
+  docsHint: string;
+};
+
+const PROVIDERS: ProviderSpec[] = [
+  {
+    key: "bling",
+    label: "Bling v3",
+    short: "PMEs · varejo · e-commerce",
+    keyLabel: "Access Token (Bearer)",
+    needsSecret: false,
+    docsUrl: "https://developer.bling.com.br/aplicativos",
+    docsHint: "Painel Bling → Preferências → Integrações → API → gerar Access Token.",
+  },
+  {
+    key: "omie",
+    label: "Omie",
+    short: "PMEs · serviços · indústria",
+    keyLabel: "APP KEY",
+    secretLabel: "APP SECRET",
+    needsSecret: true,
+    docsUrl: "https://app.omie.com.br/aplicativos/api",
+    docsHint: "Omie → Aplicativos → API → criar credencial (APP KEY + APP SECRET).",
+  },
+  {
+    key: "tiny",
+    label: "Tiny ERP v3",
+    short: "E-commerce · marketplaces",
+    keyLabel: "Access Token (OAuth2)",
+    needsSecret: false,
+    docsUrl: "https://tiny.com.br/ajuda/integracao-api-v3",
+    docsHint: "Tiny → Configurações → API v3 → autorizar app e copiar o token.",
+  },
+  {
+    key: "contaazul",
+    label: "Conta Azul",
+    short: "Contabilidade · PMEs",
+    keyLabel: "Access Token (OAuth2)",
+    needsSecret: false,
+    docsUrl: "https://developers.contaazul.com/",
+    docsHint: "Conta Azul Developers → app OAuth → autorizar e copiar o token.",
+  },
 ];
 
 const STEPS = [
@@ -37,6 +83,7 @@ const STEPS = [
   { n: 3, label: "Primeiro sync", icon: RefreshCw },
   { n: 4, label: "Pronto",       icon: CheckCircle2 },
 ] as const;
+
 
 function SetupWizardPage() {
   const navigate = useNavigate();
