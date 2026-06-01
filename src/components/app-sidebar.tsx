@@ -175,6 +175,7 @@ export function AppSidebar() {
                   to={item.to}
                   label={item.label}
                   Icon={item.icon}
+                  tone={item.tone ?? "primary"}
                   active={isItemActive(item.to)}
                 />
               ))}
