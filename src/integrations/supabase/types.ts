@@ -9273,7 +9273,7 @@ export type Database = {
         | "negotiation"
         | "won"
         | "lost"
-      org_role: "owner" | "admin" | "member"
+      org_role: "owner" | "admin" | "member" | "manager" | "sales_rep"
       org_type: "tenant" | "company" | "branch"
       routing_strategy:
         | "round_robin"
@@ -9438,7 +9438,7 @@ export const Constants = {
         "won",
         "lost",
       ],
-      org_role: ["owner", "admin", "member"],
+      org_role: ["owner", "admin", "member", "manager", "sales_rep"],
       org_type: ["tenant", "company", "branch"],
       routing_strategy: [
         "round_robin",
