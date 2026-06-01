@@ -7,6 +7,7 @@ import { useCurrentOrg } from "@/lib/org";
 import { useCanManage } from "@/lib/permissions";
 import { getErpHealth } from "@/lib/erp-hub.functions";
 import { enqueueErpSync, listErpSyncJobs } from "@/lib/connect-hub.functions";
+import { getErpSchedule, updateErpSchedule, FREQ_LABELS, type ScheduleFreq } from "@/lib/erp-schedule.functions";
 import { FRIENDLY_ERPS, statusLabel } from "@/lib/connect-hub";
 import {
   Card,
@@ -32,6 +33,13 @@ import {
   RadioGroup,
   RadioGroupItem,
 } from "@/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { PageHeader } from "@/components/page-header";
 import {
   Plug,
@@ -49,6 +57,9 @@ import {
   AlertTriangle,
   ChevronRight,
   Loader2,
+  Calendar,
+  GitBranch,
+  BarChart3,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/integrations")({
