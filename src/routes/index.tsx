@@ -145,7 +145,7 @@ function SiteHeader({ ctaHref, ctaLabel }: { ctaHref: string; ctaLabel: string }
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2 font-semibold tracking-tight">
-          <span className="grid h-8 w-8 place-items-center rounded-lg bg-[var(--gradient-accent)] text-[#1a2234] shadow-[var(--shadow-glow)] ring-1 ring-white/15">
+          <span className="grid h-8 w-8 place-items-center rounded-lg bg-[var(--gradient-accent)] text-[#1f2740] shadow-[var(--shadow-glow)] ring-1 ring-white/15">
             <Sparkles className="h-4 w-4" />
           </span>
           <span>Lovable CRM</span>
@@ -192,7 +192,7 @@ function Hero({ ctaHref, ctaLabel }: { ctaHref: string; ctaLabel: string }) {
             <span className="text-foreground/80">Novo: agente de IA comercial integrado</span>
           </Badge>
           <h1 className="text-balance font-display text-4xl font-semibold tracking-tight md:text-6xl">
-            O CRM que <span className="bg-gradient-to-r from-accent to-[#ffb84d] bg-clip-text text-transparent">trabalha com o seu time</span>, não contra ele.
+            O CRM que <span className="bg-gradient-to-r from-accent to-[#e8a05a] bg-clip-text text-transparent">trabalha com o seu time</span>, não contra ele.
           </h1>
           <p className="mt-5 text-pretty text-lg text-muted-foreground md:text-xl">
             Centralize contatos, pipeline, WhatsApp, contratos e propostas. Deixe a IA priorizar o próximo lead,
