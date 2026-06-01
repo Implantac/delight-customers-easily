@@ -152,6 +152,27 @@ export const tinyDriver: ErpDriver = {
       rows,
       next_cursor: hasMore ? { offset: offset + lim } : null,
       has_more: hasMore,
+  },
+
+  async pushCustomer(cfg, input): Promise<ErpPushResult> {
+    // Apenas dados comerciais — sem fiscal, sem financeiro.
+    const payload = {
+      nome: input.legal_name ?? input.trade_name ?? "Cliente CRM",
+      fantasia: input.trade_name ?? undefined,
+      cpfCnpj: input.document ?? undefined,
+      email: input.email ?? undefined,
+      telefone: input.phone ?? undefined,
+      tipoPessoa: "C",
     };
+    if (input.external_id) {
+      await tinyWrite(cfg, "PUT", `/contatos/${encodeURIComponent(input.external_id)}`, payload);
+      return { external_id: input.external_id, note: "Tiny: contato atualizado" };
+    }
+    const res = await tinyWrite(cfg, "POST", "/contatos", payload);
+    const id = String(res?.id ?? res?.data?.id ?? "");
+    if (!id) throw new Error("Tiny: resposta sem id");
+    return { external_id: id, note: "Tiny: contato criado" };
+  },
+};
   },
 };
