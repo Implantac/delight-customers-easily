@@ -75,6 +75,7 @@ export const ERP_CATALOG: ErpProviderCatalog[] = [
 
 export type ErpHealthRow = {
   provider: string;
+  integration_id: string | null;
   is_configured: boolean;
   is_active: boolean;
   last_sync_at: string | null;
