@@ -180,18 +180,19 @@ function Hero({ ctaHref, ctaLabel }: { ctaHref: string; ctaLabel: string }) {
     <section className="relative overflow-hidden border-b border-border/60">
       {/* Decorative glow */}
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute left-1/2 top-[-20%] h-[600px] w-[900px] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
+        <div className="absolute left-1/2 top-[-20%] h-[600px] w-[900px] -translate-x-1/2 rounded-full bg-accent/15 blur-3xl" />
+        <div className="absolute right-[-10%] top-[10%] h-[400px] w-[600px] rounded-full bg-primary/10 blur-3xl" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent,var(--background)_70%)]" />
       </div>
 
       <div className="mx-auto max-w-6xl px-4 pb-20 pt-20 md:pt-28">
         <div className="mx-auto max-w-3xl text-center">
-          <Badge variant="secondary" className="mb-6 gap-1.5 rounded-full px-3 py-1">
-            <Sparkles className="h-3.5 w-3.5 text-primary" />
-            <span>Novo: agente de IA comercial integrado</span>
+          <Badge variant="secondary" className="mb-6 gap-1.5 rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-accent-foreground">
+            <Sparkles className="h-3.5 w-3.5 text-accent" />
+            <span className="text-foreground/80">Novo: agente de IA comercial integrado</span>
           </Badge>
-          <h1 className="text-balance text-4xl font-semibold tracking-tight md:text-6xl">
-            O CRM que <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">trabalha com o seu time</span>, não contra ele.
+          <h1 className="text-balance font-display text-4xl font-semibold tracking-tight md:text-6xl">
+            O CRM que <span className="bg-gradient-to-r from-accent to-[#ffb84d] bg-clip-text text-transparent">trabalha com o seu time</span>, não contra ele.
           </h1>
           <p className="mt-5 text-pretty text-lg text-muted-foreground md:text-xl">
             Centralize contatos, pipeline, WhatsApp, contratos e propostas. Deixe a IA priorizar o próximo lead,
