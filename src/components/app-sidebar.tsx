@@ -22,11 +22,22 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { toast } from "sonner";
 
+type NavTone = "primary" | "info" | "success" | "violet" | "accent" | "rose";
 type NavEntry = {
   to: string;
   label: string;
   icon: LucideIcon;
+  tone?: NavTone;
   managerOnly?: boolean;
+};
+
+const TONE_CLASS: Record<NavTone, string> = {
+  primary: "text-sidebar-foreground/70 group-data-[active=true]/menu-item:text-[color:var(--accent-glow)]",
+  info:    "text-[#7aa9d9] group-data-[active=true]/menu-item:text-[color:var(--accent-glow)]",
+  success: "text-[#7cc095] group-data-[active=true]/menu-item:text-[color:var(--accent-glow)]",
+  violet:  "text-[#a89bd6] group-data-[active=true]/menu-item:text-[color:var(--accent-glow)]",
+  accent:  "text-[color:var(--accent-glow)]",
+  rose:    "text-[#d49aae] group-data-[active=true]/menu-item:text-[color:var(--accent-glow)]",
 };
 
 /**
@@ -38,29 +49,29 @@ type NavEntry = {
  * via a entrada "Integrações ERP".
  */
 const primaryNav: NavEntry[] = [
-  { to: "/dashboard",                label: "Dashboard",          icon: LayoutDashboard },
-  { to: "/dashboard-executivo",      label: "Dashboard Executivo", icon: Building, managerOnly: true },
-  { to: "/carteira",                 label: "Carteira Comercial", icon: Briefcase },
-  { to: "/leads",                    label: "Leads",              icon: Flame },
-  { to: "/contacts",                 label: "Clientes",           icon: Users },
-  { to: "/oportunidades",            label: "Oportunidades",      icon: Target },
-  { to: "/representantes",           label: "Representantes",     icon: Award, managerOnly: true },
-  { to: "/calendar",                 label: "Agenda",             icon: CalendarIcon },
-  { to: "/whatsapp",                 label: "WhatsApp",           icon: MessageSquare },
-  { to: "/campaigns",                label: "Marketing",          icon: Megaphone },
-  { to: "/influencers",              label: "Influencers",        icon: Sparkles },
-  { to: "/geo",                      label: "Geointeligência",    icon: Map },
-  { to: "/inteligencia-comercial",   label: "IA Comercial",       icon: Sparkles },
-  { to: "/inteligencia-comercial/qualidade-ia", label: "Qualidade da IA", icon: Sparkles, managerOnly: true },
-  { to: "/reports",                  label: "Relatórios",         icon: BarChart3, managerOnly: true },
+  { to: "/dashboard",                label: "Dashboard",          icon: LayoutDashboard, tone: "primary" },
+  { to: "/dashboard-executivo",      label: "Dashboard Executivo", icon: Building,       tone: "primary", managerOnly: true },
+  { to: "/carteira",                 label: "Carteira Comercial", icon: Briefcase,       tone: "info" },
+  { to: "/leads",                    label: "Leads",              icon: Flame,           tone: "accent" },
+  { to: "/contacts",                 label: "Clientes",           icon: Users,           tone: "info" },
+  { to: "/oportunidades",            label: "Oportunidades",      icon: Target,          tone: "accent" },
+  { to: "/representantes",           label: "Representantes",     icon: Award,           tone: "success", managerOnly: true },
+  { to: "/calendar",                 label: "Agenda",             icon: CalendarIcon,    tone: "primary" },
+  { to: "/whatsapp",                 label: "WhatsApp",           icon: MessageSquare,   tone: "success" },
+  { to: "/campaigns",                label: "Marketing",          icon: Megaphone,       tone: "rose" },
+  { to: "/influencers",              label: "Influencers",        icon: Sparkles,        tone: "violet" },
+  { to: "/geo",                      label: "Geointeligência",    icon: Map,             tone: "info" },
+  { to: "/inteligencia-comercial",   label: "IA Comercial",       icon: Sparkles,        tone: "violet" },
+  { to: "/inteligencia-comercial/qualidade-ia", label: "Qualidade da IA", icon: Sparkles, tone: "violet", managerOnly: true },
+  { to: "/reports",                  label: "Relatórios",         icon: BarChart3,       tone: "info", managerOnly: true },
 ];
 
 const adminNav: NavEntry[] = [
-  { to: "/setup-wizard",             label: "Setup guiado",       icon: Rocket, managerOnly: true },
-  { to: "/integrations",             label: "Integrações ERP",    icon: Plug, managerOnly: true },
-  { to: "/companies",                label: "Empresas",           icon: Building },
-  { to: "/settings/organization",    label: "Usuários",           icon: Users, managerOnly: true },
-  { to: "/settings/organization",    label: "Configurações",      icon: Settings },
+  { to: "/setup-wizard",             label: "Setup guiado",       icon: Rocket,          tone: "accent", managerOnly: true },
+  { to: "/integrations",             label: "Integrações ERP",    icon: Plug,            tone: "primary", managerOnly: true },
+  { to: "/companies",                label: "Empresas",           icon: Building,        tone: "primary" },
+  { to: "/settings/organization",    label: "Usuários",           icon: Users,           tone: "primary", managerOnly: true },
+  { to: "/settings/organization",    label: "Configurações",      icon: Settings,        tone: "primary" },
 ];
 
 export function AppSidebar() {
@@ -164,6 +175,7 @@ export function AppSidebar() {
                   to={item.to}
                   label={item.label}
                   Icon={item.icon}
+                  tone={item.tone ?? "primary"}
                   active={isItemActive(item.to)}
                 />
               ))}
@@ -184,6 +196,7 @@ export function AppSidebar() {
                     to={item.to}
                     label={item.label}
                     Icon={item.icon}
+                    tone={item.tone ?? "primary"}
                     active={isItemActive(item.to)}
                   />
                 ))}
@@ -224,13 +237,13 @@ export function AppSidebar() {
   );
 }
 
-type NavItemProps = { to: string; label: string; Icon: LucideIcon; active: boolean };
-const NavItem = memo(function NavItem({ to, label, Icon, active }: NavItemProps) {
+type NavItemProps = { to: string; label: string; Icon: LucideIcon; active: boolean; tone: NavTone };
+const NavItem = memo(function NavItem({ to, label, Icon, active, tone }: NavItemProps) {
   return (
     <SidebarMenuItem>
       <SidebarMenuButton asChild isActive={active} tooltip={label}>
         <Link to={to as any} preload="intent">
-          <Icon className="h-4 w-4" />
+          <Icon className={`h-4 w-4 transition-colors ${TONE_CLASS[tone]}`} />
           <span>{label}</span>
         </Link>
       </SidebarMenuButton>
