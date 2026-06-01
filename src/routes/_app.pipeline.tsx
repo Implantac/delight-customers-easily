@@ -51,10 +51,13 @@ function PipelinePage() {
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
   const [dragId, setDragId] = useState<string | null>(null);
+  const [dragOverStage, setDragOverStage] = useState<Stage | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [q, setQ] = useState("");
   const [minValue, setMinValue] = useState("");
   const [onlyMine, setOnlyMine] = useState(false);
+
+
 
 
   const { data: deals, isLoading } = useQuery({
@@ -251,32 +254,56 @@ function PipelinePage() {
             return (
               <div
                 key={stage.id}
-                onDragOver={(e) => e.preventDefault()}
+                onDragOver={(e) => { e.preventDefault(); if (dragOverStage !== stage.id) setDragOverStage(stage.id); }}
+                onDragLeave={(e) => {
+                  // only clear when leaving the column entirely
+                  if (e.currentTarget.contains(e.relatedTarget as Node)) return;
+                  setDragOverStage((s) => (s === stage.id ? null : s));
+                }}
                 onDrop={() => {
+                  setDragOverStage(null);
                   if (!dragId) return;
                   const d = (deals ?? []).find((x) => x.id === dragId);
                   if (d && d.stage !== stage.id) move.mutate({ id: dragId, stage: stage.id, prevStage: d.stage as Stage, deal: { title: d.title, value: d.value } });
                   setDragId(null);
                 }}
-                className="flex w-[80vw] shrink-0 flex-col rounded-xl border border-border/50 bg-muted/30 p-2 transition-colors md:w-auto md:shrink"
+                className={`flex w-[80vw] shrink-0 flex-col rounded-xl border bg-muted/30 p-2 transition-all md:w-auto md:shrink ${
+                  dragOverStage === stage.id && dragId
+                    ? "border-primary/60 bg-primary/5 ring-2 ring-primary/30 scale-[1.01]"
+                    : "border-border/50"
+                }`}
               >
-                <div className="px-2 py-2">
+                <div className="sticky top-0 z-10 -mx-2 -mt-2 mb-1 rounded-t-xl bg-muted/60 px-4 py-2 backdrop-blur supports-[backdrop-filter]:bg-muted/40">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-semibold tracking-tight">{stage.label}</span>
                     <span className="rounded-full bg-background px-2 py-0.5 text-xs text-muted-foreground">{items.length}</span>
                   </div>
                   <p className="mt-0.5 text-xs text-muted-foreground">{fmtBRL(sum)}</p>
                 </div>
+
                 <div className="flex-1 space-y-2">
+                  {items.length === 0 && (
+                    <div className={`flex h-20 items-center justify-center rounded-lg border-2 border-dashed text-xs transition-colors ${
+                      dragOverStage === stage.id && dragId
+                        ? "border-primary/60 text-primary"
+                        : "border-border/40 text-muted-foreground/60"
+                    }`}>
+                      {dragOverStage === stage.id && dragId ? "Solte aqui" : "Vazio"}
+                    </div>
+                  )}
                   {items.map((d) => {
                     const heat = HEAT_STYLES[d._score.heat];
+                    const isDragging = dragId === d.id;
                     return (
                       <Card
                         key={d.id}
                         draggable
                         onDragStart={() => setDragId(d.id)}
+                        onDragEnd={() => { setDragId(null); setDragOverStage(null); }}
                         onClick={() => setSelectedId(d.id)}
-                        className={`group cursor-grab border-l-4 p-3 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)] active:cursor-grabbing ${stage.color}`}
+                        className={`group cursor-grab border-l-4 p-3 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)] active:cursor-grabbing ${stage.color} ${
+                          isDragging ? "opacity-40 rotate-1 scale-95" : ""
+                        }`}
                         title={d._score.reasons.join(" · ")}
                       >
                         <div className="flex items-start justify-between gap-2">
@@ -317,6 +344,7 @@ function PipelinePage() {
           })}
         </div>
       )}
+
 
       <DealDrawer
         deal={selected}
