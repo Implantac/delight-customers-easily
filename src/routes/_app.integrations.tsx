@@ -1,16 +1,37 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
+import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { useCurrentOrg } from "@/lib/org";
 import { useCanManage } from "@/lib/permissions";
 import { getErpHealth } from "@/lib/erp-hub.functions";
-import { enqueueErpSync } from "@/lib/connect-hub.functions";
+import { enqueueErpSync, listErpSyncJobs } from "@/lib/connect-hub.functions";
 import { FRIENDLY_ERPS, statusLabel } from "@/lib/connect-hub";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  RadioGroup,
+  RadioGroupItem,
+} from "@/components/ui/radio-group";
 import { PageHeader } from "@/components/page-header";
 import {
   Plug,
@@ -27,16 +48,79 @@ import {
   Server,
   AlertTriangle,
   ChevronRight,
+  Loader2,
 } from "lucide-react";
 
-export const Route = createFileRoute("/_app/integrations")({ component: ConnectHubDashboard });
+export const Route = createFileRoute("/_app/integrations")({
+  component: ConnectHubDashboard,
+});
 
 const QUICK_LINKS = [
-  { to: "/integrations/health" as const, icon: Activity, label: "Saúde", desc: "Status em tempo real" },
-  { to: "/integrations/outbox" as const, icon: Inbox, label: "Fila de eventos", desc: "Envios e retries" },
-  { to: "/integrations/templates" as const, icon: FileText, label: "Templates", desc: "Mapeamentos prontos" },
-  { to: "/integrations/apps" as const, icon: AppWindow, label: "Apps", desc: "Conectores extras" },
-  { to: "/settings/erp-agent" as const, icon: Server, label: "Agente local", desc: "ERPs on-premise" },
+  {
+    to: "/integrations/health" as const,
+    icon: Activity,
+    label: "Saúde",
+    desc: "Status em tempo real",
+  },
+  {
+    to: "/integrations/outbox" as const,
+    icon: Inbox,
+    label: "Fila de eventos",
+    desc: "Envios e retries",
+  },
+  {
+    to: "/integrations/templates" as const,
+    icon: FileText,
+    label: "Templates",
+    desc: "Mapeamentos prontos",
+  },
+  {
+    to: "/integrations/apps" as const,
+    icon: AppWindow,
+    label: "Apps",
+    desc: "Conectores extras",
+  },
+  {
+    to: "/settings/erp-agent" as const,
+    icon: Server,
+    label: "Agente local",
+    desc: "ERPs on-premise",
+  },
+];
+
+type SyncResource =
+  | "customers"
+  | "sales_reps"
+  | "sales_history"
+  | "products"
+  | "metrics";
+
+const RESOURCE_OPTIONS: Array<{
+  id: SyncResource;
+  label: string;
+  desc: string;
+  default: boolean;
+}> = [
+  { id: "customers", label: "Clientes", desc: "Cadastros do ERP", default: true },
+  {
+    id: "sales_history",
+    label: "Histórico comercial",
+    desc: "Pedidos e vendas",
+    default: true,
+  },
+  {
+    id: "sales_reps",
+    label: "Representantes",
+    desc: "Vendedores e equipes",
+    default: false,
+  },
+  { id: "products", label: "Produtos", desc: "Catálogo comercial", default: false },
+  {
+    id: "metrics",
+    label: "Métricas",
+    desc: "RFM, ticket médio, frequência",
+    default: false,
+  },
 ];
 
 function ConnectHubDashboard() {
@@ -45,6 +129,23 @@ function ConnectHubDashboard() {
   const qc = useQueryClient();
   const fetchHealth = useServerFn(getErpHealth);
   const enqueueSync = useServerFn(enqueueErpSync);
+  const fetchJobs = useServerFn(listErpSyncJobs);
+
+  const [syncDialog, setSyncDialog] = useState<{
+    integrationId: string;
+    providerName: string;
+  } | null>(null);
+  const [selectedResources, setSelectedResources] = useState<
+    Record<SyncResource, boolean>
+  >({
+    customers: true,
+    sales_history: true,
+    sales_reps: false,
+    products: false,
+    metrics: false,
+  });
+  const [direction, setDirection] = useState<"pull" | "push">("pull");
+
   const health = useQuery({
     queryKey: ["erp-health", orgId],
     queryFn: () => fetchHealth({ data: { organization_id: orgId! } }),
@@ -52,24 +153,63 @@ function ConnectHubDashboard() {
     refetchInterval: 60_000,
   });
 
+  // Jobs em andamento para badges de progresso nos cards
+  const jobs = useQuery({
+    queryKey: ["erp-jobs-open", orgId],
+    queryFn: () =>
+      fetchJobs({
+        data: { organizationId: orgId!, limit: 100 },
+      }),
+    enabled: !!orgId,
+    refetchInterval: 10_000,
+  });
+
+  const openJobsByIntegration = useMemo(() => {
+    const map = new Map<string, { pending: number; running: number }>();
+    for (const j of jobs.data?.rows ?? []) {
+      if (j.status === "pending" || j.status === "running") {
+        const cur = map.get(j.integration_id) ?? { pending: 0, running: 0 };
+        if (j.status === "pending") cur.pending++;
+        else cur.running++;
+        map.set(j.integration_id, cur);
+      }
+    }
+    return map;
+  }, [jobs.data]);
+
   const syncMut = useMutation({
-    mutationFn: (integrationId: string) =>
+    mutationFn: (vars: {
+      integrationId: string;
+      resources: SyncResource[];
+      direction: "pull" | "push";
+    }) =>
       enqueueSync({
         data: {
           organizationId: orgId!,
-          integrationId,
-          resources: ["customers", "sales_history"],
-          direction: "pull",
+          integrationId: vars.integrationId,
+          resources: vars.resources,
+          direction: vars.direction,
         },
       }),
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("Sincronização iniciada", {
-        description: "Os cards serão atualizados em instantes.",
+        description: `${data.jobs.length} job(s) na fila. Os cards atualizam em instantes.`,
       });
-      // Refresh health a few times to catch the sync completing
-      setTimeout(() => qc.invalidateQueries({ queryKey: ["erp-health", orgId] }), 1500);
-      setTimeout(() => qc.invalidateQueries({ queryKey: ["erp-health", orgId] }), 6000);
-      setTimeout(() => qc.invalidateQueries({ queryKey: ["erp-health", orgId] }), 15000);
+      setSyncDialog(null);
+      // Atualiza jobs imediatamente e health em intervalos
+      qc.invalidateQueries({ queryKey: ["erp-jobs-open", orgId] });
+      setTimeout(
+        () => qc.invalidateQueries({ queryKey: ["erp-health", orgId] }),
+        1500,
+      );
+      setTimeout(
+        () => qc.invalidateQueries({ queryKey: ["erp-health", orgId] }),
+        6000,
+      );
+      setTimeout(
+        () => qc.invalidateQueries({ queryKey: ["erp-health", orgId] }),
+        15000,
+      );
     },
     onError: (e: any) =>
       toast.error("Não foi possível iniciar a sincronização", {
@@ -77,6 +217,33 @@ function ConnectHubDashboard() {
       }),
   });
 
+  function openSyncDialog(integrationId: string, providerName: string) {
+    setSelectedResources({
+      customers: true,
+      sales_history: true,
+      sales_reps: false,
+      products: false,
+      metrics: false,
+    });
+    setDirection("pull");
+    setSyncDialog({ integrationId, providerName });
+  }
+
+  function confirmSync() {
+    if (!syncDialog) return;
+    const resources = (Object.keys(selectedResources) as SyncResource[]).filter(
+      (k) => selectedResources[k],
+    );
+    if (resources.length === 0) {
+      toast.error("Selecione ao menos um recurso para sincronizar.");
+      return;
+    }
+    syncMut.mutate({
+      integrationId: syncDialog.integrationId,
+      resources,
+      direction,
+    });
+  }
 
   if (!canManage) {
     return (
@@ -96,6 +263,11 @@ function ConnectHubDashboard() {
   const offline = rows.filter((r) => r.status === "offline").length;
   const needsAttention = degraded + offline;
 
+  const totalOpenJobs = Array.from(openJobsByIntegration.values()).reduce(
+    (acc, v) => acc + v.pending + v.running,
+    0,
+  );
+
   return (
     <div className="p-6 space-y-6 max-w-6xl mx-auto">
       <PageHeader
@@ -108,10 +280,15 @@ function ConnectHubDashboard() {
               variant="outline"
               size="sm"
               className="gap-2"
-              onClick={() => health.refetch()}
+              onClick={() => {
+                health.refetch();
+                jobs.refetch();
+              }}
               disabled={health.isFetching}
             >
-              <RefreshCw className={`h-4 w-4 ${health.isFetching ? "animate-spin" : ""}`} />
+              <RefreshCw
+                className={`h-4 w-4 ${health.isFetching ? "animate-spin" : ""}`}
+              />
               Atualizar
             </Button>
             <Link to="/integrations/connect">
@@ -127,8 +304,19 @@ function ConnectHubDashboard() {
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="ERPs conectados" value={rows.length} tone="primary" icon={Plug} />
         <StatCard label="Online" value={online} tone="green" icon={CheckCircle2} />
-        <StatCard label="Precisa atenção" value={needsAttention} tone="amber" icon={AlertTriangle} />
-        <StatCard label="Total de eventos hoje" value={"—"} tone="muted" icon={Activity} hint="Veja em Saúde" />
+        <StatCard
+          label="Precisa atenção"
+          value={needsAttention}
+          tone="amber"
+          icon={AlertTriangle}
+        />
+        <StatCard
+          label="Jobs em andamento"
+          value={totalOpenJobs}
+          tone={totalOpenJobs > 0 ? "primary" : "muted"}
+          icon={Loader2}
+          spinning={totalOpenJobs > 0}
+        />
       </div>
 
       {/* Quick links */}
@@ -160,7 +348,9 @@ function ConnectHubDashboard() {
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-lg font-semibold">Seus ERPs conectados</h2>
-            <p className="text-sm text-muted-foreground">Status, última sincronização e ações rápidas por conector.</p>
+            <p className="text-sm text-muted-foreground">
+              Status, última sincronização e ações rápidas por conector.
+            </p>
           </div>
           {rows.length > 0 && (
             <Link to="/integrations/health">
@@ -213,6 +403,12 @@ function ConnectHubDashboard() {
                   ? "border-red-500/40 bg-red-500/5 text-red-700 dark:text-red-400"
                   : "border-muted-foreground/40 text-muted-foreground";
 
+              const jobInfo = r.integration_id
+                ? openJobsByIntegration.get(r.integration_id)
+                : undefined;
+              const hasActiveJobs = !!jobInfo && (jobInfo.pending + jobInfo.running) > 0;
+              const providerName = friendly?.name ?? r.provider;
+
               return (
                 <Card key={r.provider} className="overflow-hidden">
                   <CardHeader className="pb-3">
@@ -223,16 +419,29 @@ function ConnectHubDashboard() {
                         </div>
                         <div className="min-w-0">
                           <CardTitle className="text-base truncate">
-                            {friendly?.name ?? r.provider}
+                            {providerName}
                           </CardTitle>
                           <CardDescription className="text-xs">
                             {r.latency_ms != null ? `${r.latency_ms} ms` : "—"}
                           </CardDescription>
                         </div>
                       </div>
-                      <Badge variant="outline" className={tone}>
-                        {st.label}
-                      </Badge>
+                      <div className="flex flex-col items-end gap-1.5">
+                        <Badge variant="outline" className={tone}>
+                          {st.label}
+                        </Badge>
+                        {hasActiveJobs && (
+                          <Badge
+                            variant="outline"
+                            className="border-primary/40 bg-primary/5 text-primary gap-1"
+                          >
+                            <Loader2 className="h-3 w-3 animate-spin" />
+                            {jobInfo!.running > 0
+                              ? `${jobInfo!.running} rodando`
+                              : `${jobInfo!.pending} na fila`}
+                          </Badge>
+                        )}
+                      </div>
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-3 text-sm pb-4">
@@ -253,6 +462,12 @@ function ConnectHubDashboard() {
                         </span>
                       </div>
                     )}
+                    {hasActiveJobs && (
+                      <div className="flex items-center gap-2 text-xs text-primary">
+                        <Loader2 className="h-3 w-3 animate-spin" />
+                        {jobInfo!.running} rodando · {jobInfo!.pending} na fila
+                      </div>
+                    )}
                     {r.last_error && (
                       <div className="flex items-start gap-2 rounded-md border border-red-500/30 bg-red-500/5 p-2">
                         <AlertTriangle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
@@ -269,23 +484,14 @@ function ConnectHubDashboard() {
                         size="sm"
                         variant="outline"
                         className="h-7 gap-1.5 text-xs"
-                        disabled={
-                          !r.integration_id ||
-                          !r.is_active ||
-                          (syncMut.isPending && syncMut.variables === r.integration_id)
+                        disabled={!r.integration_id || !r.is_active}
+                        onClick={() =>
+                          r.integration_id &&
+                          openSyncDialog(r.integration_id, providerName)
                         }
-                        onClick={() => r.integration_id && syncMut.mutate(r.integration_id)}
                       >
-                        <RefreshCw
-                          className={`h-3 w-3 ${
-                            syncMut.isPending && syncMut.variables === r.integration_id
-                              ? "animate-spin"
-                              : ""
-                          }`}
-                        />
-                        {syncMut.isPending && syncMut.variables === r.integration_id
-                          ? "Enviando..."
-                          : "Sincronizar"}
+                        <RefreshCw className="h-3 w-3" />
+                        Sincronizar
                       </Button>
                       <Link to="/integrations/outbox">
                         <Button size="sm" variant="ghost" className="h-7 gap-1.5 text-xs">
@@ -320,6 +526,111 @@ function ConnectHubDashboard() {
           </Button>
         </Link>
       </div>
+
+      {/* Dialog de opções de sincronização */}
+      <Dialog
+        open={!!syncDialog}
+        onOpenChange={(o) => !o && !syncMut.isPending && setSyncDialog(null)}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <RefreshCw className="h-4 w-4" />
+              Sincronizar {syncDialog?.providerName}
+            </DialogTitle>
+            <DialogDescription>
+              Escolha o que sincronizar. O ConnectHub enfileira um job para cada recurso.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label className="text-xs uppercase tracking-wide text-muted-foreground">
+                Recursos
+              </Label>
+              <div className="space-y-2 rounded-md border p-3">
+                {RESOURCE_OPTIONS.map((opt) => (
+                  <div key={opt.id} className="flex items-start gap-3">
+                    <Checkbox
+                      id={`res-${opt.id}`}
+                      checked={selectedResources[opt.id]}
+                      onCheckedChange={(c) =>
+                        setSelectedResources((prev) => ({
+                          ...prev,
+                          [opt.id]: !!c,
+                        }))
+                      }
+                    />
+                    <div className="flex-1 min-w-0">
+                      <Label
+                        htmlFor={`res-${opt.id}`}
+                        className="text-sm font-medium cursor-pointer"
+                      >
+                        {opt.label}
+                      </Label>
+                      <p className="text-xs text-muted-foreground">{opt.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label className="text-xs uppercase tracking-wide text-muted-foreground">
+                Direção
+              </Label>
+              <RadioGroup
+                value={direction}
+                onValueChange={(v) => setDirection(v as "pull" | "push")}
+                className="grid grid-cols-2 gap-2"
+              >
+                <Label
+                  htmlFor="dir-pull"
+                  className="flex items-start gap-2 rounded-md border p-3 cursor-pointer hover:bg-accent"
+                >
+                  <RadioGroupItem value="pull" id="dir-pull" className="mt-0.5" />
+                  <div className="space-y-0.5">
+                    <div className="text-sm font-medium">ERP → CRM</div>
+                    <div className="text-xs text-muted-foreground">
+                      Importar do ERP (padrão)
+                    </div>
+                  </div>
+                </Label>
+                <Label
+                  htmlFor="dir-push"
+                  className="flex items-start gap-2 rounded-md border p-3 cursor-pointer hover:bg-accent"
+                >
+                  <RadioGroupItem value="push" id="dir-push" className="mt-0.5" />
+                  <div className="space-y-0.5">
+                    <div className="text-sm font-medium">CRM → ERP</div>
+                    <div className="text-xs text-muted-foreground">
+                      Enviar alterações
+                    </div>
+                  </div>
+                </Label>
+              </RadioGroup>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setSyncDialog(null)}
+              disabled={syncMut.isPending}
+            >
+              Cancelar
+            </Button>
+            <Button onClick={confirmSync} disabled={syncMut.isPending} className="gap-2">
+              {syncMut.isPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <RefreshCw className="h-4 w-4" />
+              )}
+              {syncMut.isPending ? "Enviando..." : "Iniciar sincronização"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
@@ -330,12 +641,14 @@ function StatCard({
   tone,
   icon: Icon,
   hint,
+  spinning,
 }: {
   label: string;
   value: number | string;
   tone: "primary" | "green" | "amber" | "muted";
   icon: React.ComponentType<{ className?: string }>;
   hint?: string;
+  spinning?: boolean;
 }) {
   const color =
     tone === "primary"
@@ -348,12 +661,16 @@ function StatCard({
   return (
     <Card>
       <CardContent className="p-4 flex items-center gap-3">
-        <div className={`h-10 w-10 rounded-md flex items-center justify-center ${color}`}>
-          <Icon className="h-5 w-5" />
+        <div
+          className={`h-10 w-10 rounded-md flex items-center justify-center ${color}`}
+        >
+          <Icon className={`h-5 w-5 ${spinning ? "animate-spin" : ""}`} />
         </div>
         <div className="min-w-0">
           <div className="text-2xl font-semibold leading-none">{value}</div>
-          <div className="text-xs text-muted-foreground mt-1 truncate">{hint ?? label}</div>
+          <div className="text-xs text-muted-foreground mt-1 truncate">
+            {hint ?? label}
+          </div>
         </div>
       </CardContent>
     </Card>
