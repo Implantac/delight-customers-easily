@@ -50,6 +50,7 @@ const primaryNav: NavEntry[] = [
   { to: "/influencers",              label: "Influencers",        icon: Sparkles },
   { to: "/geo",                      label: "Geointeligência",    icon: Map },
   { to: "/inteligencia-comercial",   label: "IA Comercial",       icon: Sparkles },
+  { to: "/inteligencia-comercial/qualidade-ia", label: "Qualidade da IA", icon: Sparkles, managerOnly: true },
   { to: "/reports",                  label: "Relatórios",         icon: BarChart3, managerOnly: true },
 ];
 
