@@ -3328,6 +3328,86 @@ export type Database = {
           },
         ]
       }
+      erp_diagnostic_messages: {
+        Row: {
+          content: string
+          created_at: string
+          created_by: string | null
+          id: string
+          integration_id: string | null
+          organization_id: string
+          role: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          integration_id?: string | null
+          organization_id: string
+          role: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          integration_id?: string | null
+          organization_id?: string
+          role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "erp_diagnostic_messages_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "erp_integrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "erp_diagnostic_messages_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["branch_org_id"]
+          },
+          {
+            foreignKeyName: "erp_diagnostic_messages_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "erp_diagnostic_messages_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "erp_diagnostic_messages_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "erp_diagnostic_messages_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "erp_diagnostic_messages_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       erp_field_mappings: {
         Row: {
           created_at: string
@@ -3573,8 +3653,11 @@ export type Database = {
         Row: {
           app_key: string
           app_secret: string
+          conflict_strategy: string
           connector_type: string
           created_at: string
+          credentials_enc: string | null
+          credentials_version: number
           id: string
           is_active: boolean
           last_error: string | null
@@ -3591,8 +3674,11 @@ export type Database = {
         Insert: {
           app_key: string
           app_secret: string
+          conflict_strategy?: string
           connector_type?: string
           created_at?: string
+          credentials_enc?: string | null
+          credentials_version?: number
           id?: string
           is_active?: boolean
           last_error?: string | null
@@ -3609,8 +3695,11 @@ export type Database = {
         Update: {
           app_key?: string
           app_secret?: string
+          conflict_strategy?: string
           connector_type?: string
           created_at?: string
+          credentials_enc?: string | null
+          credentials_version?: number
           id?: string
           is_active?: boolean
           last_error?: string | null
@@ -3662,6 +3751,94 @@ export type Database = {
           },
           {
             foreignKeyName: "erp_integrations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      erp_local_agents: {
+        Row: {
+          agent_token_hash: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          last_seen_at: string | null
+          name: string
+          organization_id: string
+          os: string | null
+          pairing_code: string
+          status: string
+          updated_at: string
+          version: string | null
+        }
+        Insert: {
+          agent_token_hash?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          last_seen_at?: string | null
+          name: string
+          organization_id: string
+          os?: string | null
+          pairing_code: string
+          status?: string
+          updated_at?: string
+          version?: string | null
+        }
+        Update: {
+          agent_token_hash?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          last_seen_at?: string | null
+          name?: string
+          organization_id?: string
+          os?: string | null
+          pairing_code?: string
+          status?: string
+          updated_at?: string
+          version?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "erp_local_agents_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["branch_org_id"]
+          },
+          {
+            foreignKeyName: "erp_local_agents_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "erp_local_agents_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "erp_local_agents_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "erp_local_agents_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "erp_local_agents_organization_id_fkey"
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
