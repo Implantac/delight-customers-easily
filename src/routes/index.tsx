@@ -145,7 +145,7 @@ function SiteHeader({ ctaHref, ctaLabel }: { ctaHref: string; ctaLabel: string }
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2 font-semibold tracking-tight">
-          <span className="grid h-8 w-8 place-items-center rounded-lg bg-primary text-primary-foreground">
+          <span className="grid h-8 w-8 place-items-center rounded-lg bg-[var(--gradient-accent)] text-[#1a2234] shadow-[var(--shadow-glow)] ring-1 ring-white/15">
             <Sparkles className="h-4 w-4" />
           </span>
           <span>Lovable CRM</span>
