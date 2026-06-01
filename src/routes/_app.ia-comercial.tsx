@@ -128,14 +128,21 @@ function IAComercialPage() {
         <TabsList className="grid grid-cols-2 lg:grid-cols-4 w-full">
           {(Object.keys(AGENT_META) as AgentKey[]).map((k) => {
             const M = AGENT_META[k];
+            const count = data?.[k]?.length ?? 0;
             return (
               <TabsTrigger key={k} value={k} className="gap-2">
                 <M.icon className="h-4 w-4" />
-                {M.label}
+                <span>{M.label}</span>
+                {count > 0 && (
+                  <Badge variant="secondary" className="ml-1 h-5 px-1.5 text-[10px]">
+                    {count}
+                  </Badge>
+                )}
               </TabsTrigger>
             );
           })}
         </TabsList>
+
 
         {(Object.keys(AGENT_META) as AgentKey[]).map((k) => {
           const M = AGENT_META[k];
