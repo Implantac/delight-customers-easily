@@ -145,7 +145,7 @@ function SiteHeader({ ctaHref, ctaLabel }: { ctaHref: string; ctaLabel: string }
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2 font-semibold tracking-tight">
-          <span className="grid h-8 w-8 place-items-center rounded-lg bg-primary text-primary-foreground">
+          <span className="grid h-8 w-8 place-items-center rounded-lg bg-[var(--gradient-accent)] text-[#1a2234] shadow-[var(--shadow-glow)] ring-1 ring-white/15">
             <Sparkles className="h-4 w-4" />
           </span>
           <span>Lovable CRM</span>
@@ -180,18 +180,19 @@ function Hero({ ctaHref, ctaLabel }: { ctaHref: string; ctaLabel: string }) {
     <section className="relative overflow-hidden border-b border-border/60">
       {/* Decorative glow */}
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute left-1/2 top-[-20%] h-[600px] w-[900px] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
+        <div className="absolute left-1/2 top-[-20%] h-[600px] w-[900px] -translate-x-1/2 rounded-full bg-accent/15 blur-3xl" />
+        <div className="absolute right-[-10%] top-[10%] h-[400px] w-[600px] rounded-full bg-primary/10 blur-3xl" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent,var(--background)_70%)]" />
       </div>
 
       <div className="mx-auto max-w-6xl px-4 pb-20 pt-20 md:pt-28">
         <div className="mx-auto max-w-3xl text-center">
-          <Badge variant="secondary" className="mb-6 gap-1.5 rounded-full px-3 py-1">
-            <Sparkles className="h-3.5 w-3.5 text-primary" />
-            <span>Novo: agente de IA comercial integrado</span>
+          <Badge variant="secondary" className="mb-6 gap-1.5 rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-accent-foreground">
+            <Sparkles className="h-3.5 w-3.5 text-accent" />
+            <span className="text-foreground/80">Novo: agente de IA comercial integrado</span>
           </Badge>
-          <h1 className="text-balance text-4xl font-semibold tracking-tight md:text-6xl">
-            O CRM que <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">trabalha com o seu time</span>, não contra ele.
+          <h1 className="text-balance font-display text-4xl font-semibold tracking-tight md:text-6xl">
+            O CRM que <span className="bg-gradient-to-r from-accent to-[#ffb84d] bg-clip-text text-transparent">trabalha com o seu time</span>, não contra ele.
           </h1>
           <p className="mt-5 text-pretty text-lg text-muted-foreground md:text-xl">
             Centralize contatos, pipeline, WhatsApp, contratos e propostas. Deixe a IA priorizar o próximo lead,
@@ -261,19 +262,19 @@ function Hero({ ctaHref, ctaLabel }: { ctaHref: string; ctaLabel: string }) {
                     <div className="mt-3 space-y-2">
                       <div className="h-2 rounded-full bg-muted">
                         <div
-                          className="h-2 rounded-full bg-primary/80"
+                          className="h-2 rounded-full bg-accent"
                           style={{ width: `${[80, 60, 40, 25][i]}%` }}
                         />
                       </div>
                       <div className="h-2 rounded-full bg-muted">
                         <div
-                          className="h-2 rounded-full bg-primary/60"
+                          className="h-2 rounded-full bg-accent/70"
                           style={{ width: `${[60, 45, 30, 15][i]}%` }}
                         />
                       </div>
                       <div className="h-2 rounded-full bg-muted">
                         <div
-                          className="h-2 rounded-full bg-primary/40"
+                          className="h-2 rounded-full bg-accent/40"
                           style={{ width: `${[40, 30, 20, 10][i]}%` }}
                         />
                       </div>
@@ -303,14 +304,14 @@ function MockCard({
   positive?: boolean;
 }) {
   return (
-    <div className="rounded-xl border border-border/70 bg-card p-5">
+    <div className="rounded-xl border border-border/70 bg-card p-5 transition-all hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-[var(--shadow-md)]">
       <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-        <span className="grid h-7 w-7 place-items-center rounded-md bg-primary/10 text-primary">
+        <span className="grid h-7 w-7 place-items-center rounded-md bg-accent/15 text-accent ring-1 ring-accent/20">
           {icon}
         </span>
         {label}
       </div>
-      <div className="mt-3 text-2xl font-semibold tracking-tight">{value}</div>
+      <div className="mt-3 font-display text-2xl font-semibold tracking-tight tabular-nums">{value}</div>
       <div
         className={`mt-1 text-xs ${positive ? "text-success" : "text-muted-foreground"}`}
       >
@@ -459,12 +460,12 @@ function Features() {
           {features.map((f) => (
             <div
               key={f.title}
-              className="group rounded-2xl border border-border/70 bg-card p-6 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg"
+              className="group rounded-2xl border border-border/70 bg-card p-6 transition-all hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-lg"
             >
-              <div className="grid h-10 w-10 place-items-center rounded-lg bg-primary/10 text-primary">
+              <div className="grid h-10 w-10 place-items-center rounded-lg bg-accent/15 text-accent ring-1 ring-accent/20 transition-all group-hover:bg-accent/20">
                 {f.icon}
               </div>
-              <h3 className="mt-4 text-lg font-semibold tracking-tight">{f.title}</h3>
+              <h3 className="mt-4 font-display text-lg font-semibold tracking-tight">{f.title}</h3>
               <p className="mt-1.5 text-sm text-muted-foreground">{f.desc}</p>
             </div>
           ))}
