@@ -25,6 +25,7 @@ import { Route as AppTagsRouteImport } from './routes/_app.tags'
 import { Route as AppSurveysRouteImport } from './routes/_app.surveys'
 import { Route as AppSubscriptionsRouteImport } from './routes/_app.subscriptions'
 import { Route as AppSignaturesRouteImport } from './routes/_app.signatures'
+import { Route as AppSetupWizardRouteImport } from './routes/_app.setup-wizard'
 import { Route as AppSequencesRouteImport } from './routes/_app.sequences'
 import { Route as AppSegmentsRouteImport } from './routes/_app.segments'
 import { Route as AppSalesOrdersRouteImport } from './routes/_app.sales-orders'
@@ -203,6 +204,11 @@ const AppSubscriptionsRoute = AppSubscriptionsRouteImport.update({
 const AppSignaturesRoute = AppSignaturesRouteImport.update({
   id: '/signatures',
   path: '/signatures',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSetupWizardRoute = AppSetupWizardRouteImport.update({
+  id: '/setup-wizard',
+  path: '/setup-wizard',
   getParentRoute: () => AppRoute,
 } as any)
 const AppSequencesRoute = AppSequencesRouteImport.update({
@@ -781,6 +787,7 @@ export interface FileRoutesByFullPath {
   '/sales-orders': typeof AppSalesOrdersRoute
   '/segments': typeof AppSegmentsRoute
   '/sequences': typeof AppSequencesRouteWithChildren
+  '/setup-wizard': typeof AppSetupWizardRoute
   '/signatures': typeof AppSignaturesRoute
   '/subscriptions': typeof AppSubscriptionsRoute
   '/surveys': typeof AppSurveysRoute
@@ -898,6 +905,7 @@ export interface FileRoutesByTo {
   '/sales-orders': typeof AppSalesOrdersRoute
   '/segments': typeof AppSegmentsRoute
   '/sequences': typeof AppSequencesRouteWithChildren
+  '/setup-wizard': typeof AppSetupWizardRoute
   '/signatures': typeof AppSignaturesRoute
   '/subscriptions': typeof AppSubscriptionsRoute
   '/surveys': typeof AppSurveysRoute
@@ -1017,6 +1025,7 @@ export interface FileRoutesById {
   '/_app/sales-orders': typeof AppSalesOrdersRoute
   '/_app/segments': typeof AppSegmentsRoute
   '/_app/sequences': typeof AppSequencesRouteWithChildren
+  '/_app/setup-wizard': typeof AppSetupWizardRoute
   '/_app/signatures': typeof AppSignaturesRoute
   '/_app/subscriptions': typeof AppSubscriptionsRoute
   '/_app/surveys': typeof AppSurveysRoute
@@ -1136,6 +1145,7 @@ export interface FileRouteTypes {
     | '/sales-orders'
     | '/segments'
     | '/sequences'
+    | '/setup-wizard'
     | '/signatures'
     | '/subscriptions'
     | '/surveys'
@@ -1253,6 +1263,7 @@ export interface FileRouteTypes {
     | '/sales-orders'
     | '/segments'
     | '/sequences'
+    | '/setup-wizard'
     | '/signatures'
     | '/subscriptions'
     | '/surveys'
@@ -1371,6 +1382,7 @@ export interface FileRouteTypes {
     | '/_app/sales-orders'
     | '/_app/segments'
     | '/_app/sequences'
+    | '/_app/setup-wizard'
     | '/_app/signatures'
     | '/_app/subscriptions'
     | '/_app/surveys'
@@ -1564,6 +1576,13 @@ declare module '@tanstack/react-router' {
       path: '/signatures'
       fullPath: '/signatures'
       preLoaderRoute: typeof AppSignaturesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/setup-wizard': {
+      id: '/_app/setup-wizard'
+      path: '/setup-wizard'
+      fullPath: '/setup-wizard'
+      preLoaderRoute: typeof AppSetupWizardRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/sequences': {
@@ -2487,6 +2506,7 @@ interface AppRouteChildren {
   AppSalesOrdersRoute: typeof AppSalesOrdersRoute
   AppSegmentsRoute: typeof AppSegmentsRoute
   AppSequencesRoute: typeof AppSequencesRouteWithChildren
+  AppSetupWizardRoute: typeof AppSetupWizardRoute
   AppSignaturesRoute: typeof AppSignaturesRoute
   AppSubscriptionsRoute: typeof AppSubscriptionsRoute
   AppSurveysRoute: typeof AppSurveysRoute
@@ -2567,6 +2587,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSalesOrdersRoute: AppSalesOrdersRoute,
   AppSegmentsRoute: AppSegmentsRoute,
   AppSequencesRoute: AppSequencesRouteWithChildren,
+  AppSetupWizardRoute: AppSetupWizardRoute,
   AppSignaturesRoute: AppSignaturesRoute,
   AppSubscriptionsRoute: AppSubscriptionsRoute,
   AppSurveysRoute: AppSurveysRoute,
@@ -2618,13 +2639,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
