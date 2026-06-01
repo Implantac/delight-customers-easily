@@ -4,15 +4,21 @@
  * Apenas leitura comercial — sem estoque, sem fiscal, sem compras.
  */
 import type {
-  ErpCustomerDTO, ErpDriver, ErpDriverConfig, ErpPullResult,
-  ErpSalesOrderDTO, ErpSalesRepDTO,
+  ErpCustomerDTO, ErpCustomerPushInput, ErpDriver, ErpDriverConfig, ErpPullResult,
+  ErpPushResult, ErpSalesOrderDTO, ErpSalesRepDTO,
 } from "./types";
 
 const BASE = "https://www.bling.com.br/Api/v3";
 
-async function call(token: string, path: string) {
+async function call(token: string, path: string, init?: RequestInit) {
   const res = await fetch(`${BASE}${path}`, {
-    headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+    ...init,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/json",
+      ...(init?.body ? { "Content-Type": "application/json" } : {}),
+      ...(init?.headers ?? {}),
+    },
   });
   const text = await res.text();
   let body: any; try { body = text ? JSON.parse(text) : {}; } catch { body = { raw: text }; }
