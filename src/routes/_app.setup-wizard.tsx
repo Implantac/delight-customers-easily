@@ -11,7 +11,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+// select removed: provider is picked via card grid in step 2
 import { Badge } from "@/components/ui/badge";
 import {
   Rocket, Building2, Plug, RefreshCw, CheckCircle2, ArrowRight, ArrowLeft, Loader2, Sparkles,
