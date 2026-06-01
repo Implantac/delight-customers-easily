@@ -88,13 +88,15 @@ const STEPS = [
 function SetupWizardPage() {
   const navigate = useNavigate();
   const { org, orgId } = useCurrentOrg();
+  const storageKey = orgId ? `setup-wizard:${orgId}` : null;
+
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
 
   // Step 1
   const [orgName, setOrgName] = useState(org?.name ?? "");
   const [savingOrg, setSavingOrg] = useState(false);
 
-  // Step 2
+  // Step 2 (secrets never persisted)
   const [provider, setProvider] = useState<ProviderKey>("bling");
   const [appKey, setAppKey] = useState("");
   const [appSecret, setAppSecret] = useState("");
@@ -103,6 +105,43 @@ function SetupWizardPage() {
   const [integrationId, setIntegrationId] = useState<string | null>(null);
   const [testLatency, setTestLatency] = useState<number | null>(null);
   const [connError, setConnError] = useState<string | null>(null);
+  const [restored, setRestored] = useState(false);
+
+  // Restore non-sensitive draft once orgId is known
+  useEffect(() => {
+    if (!storageKey) return;
+    try {
+      const raw = localStorage.getItem(storageKey);
+      if (!raw) return;
+      const s = JSON.parse(raw) as {
+        step?: 1 | 2 | 3 | 4;
+        orgName?: string;
+        provider?: ProviderKey;
+        integrationId?: string | null;
+      };
+      if (s.step) setStep(s.step);
+      if (s.orgName) setOrgName(s.orgName);
+      if (s.provider) setProvider(s.provider);
+      if (s.integrationId) setIntegrationId(s.integrationId);
+      setRestored(true);
+    } catch {
+      /* ignore */
+    }
+  }, [storageKey]);
+
+  // Persist progress (no secrets)
+  useEffect(() => {
+    if (!storageKey) return;
+    try {
+      localStorage.setItem(
+        storageKey,
+        JSON.stringify({ step, orgName, provider, integrationId }),
+      );
+    } catch {
+      /* ignore */
+    }
+  }, [storageKey, step, orgName, provider, integrationId]);
+
 
   const spec = PROVIDERS.find((p) => p.key === provider)!;
 
