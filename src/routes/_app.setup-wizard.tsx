@@ -489,9 +489,11 @@ function SetupWizardPage() {
           </div>
         </Card>
       )}
+      </div>
     </div>
   );
 }
+
 
 function ShortcutCard({ to, title, desc }: { to: string; title: string; desc: string }) {
   return (
