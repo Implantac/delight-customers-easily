@@ -105,8 +105,10 @@ import { Route as AppInviteTokenRouteImport } from './routes/_app.invite.$token'
 import { Route as AppInteligenciaComercialQualidadeIaRouteImport } from './routes/_app.inteligencia-comercial.qualidade-ia'
 import { Route as AppIntegrationsTemplatesRouteImport } from './routes/_app.integrations.templates'
 import { Route as AppIntegrationsOutboxRouteImport } from './routes/_app.integrations.outbox'
+import { Route as AppIntegrationsMappingRouteImport } from './routes/_app.integrations.mapping'
 import { Route as AppIntegrationsHelpRouteImport } from './routes/_app.integrations.help'
 import { Route as AppIntegrationsHealthRouteImport } from './routes/_app.integrations.health'
+import { Route as AppIntegrationsDashboardRouteImport } from './routes/_app.integrations.dashboard'
 import { Route as AppIntegrationsConnectRouteImport } from './routes/_app.integrations.connect'
 import { Route as AppIntegrationsAppsRouteImport } from './routes/_app.integrations.apps'
 import { Route as AppIntegrationsAdvancedRouteImport } from './routes/_app.integrations.advanced'
@@ -610,6 +612,11 @@ const AppIntegrationsOutboxRoute = AppIntegrationsOutboxRouteImport.update({
   path: '/outbox',
   getParentRoute: () => AppIntegrationsRoute,
 } as any)
+const AppIntegrationsMappingRoute = AppIntegrationsMappingRouteImport.update({
+  id: '/mapping',
+  path: '/mapping',
+  getParentRoute: () => AppIntegrationsRoute,
+} as any)
 const AppIntegrationsHelpRoute = AppIntegrationsHelpRouteImport.update({
   id: '/help',
   path: '/help',
@@ -620,6 +627,12 @@ const AppIntegrationsHealthRoute = AppIntegrationsHealthRouteImport.update({
   path: '/health',
   getParentRoute: () => AppIntegrationsRoute,
 } as any)
+const AppIntegrationsDashboardRoute =
+  AppIntegrationsDashboardRouteImport.update({
+    id: '/dashboard',
+    path: '/dashboard',
+    getParentRoute: () => AppIntegrationsRoute,
+  } as any)
 const AppIntegrationsConnectRoute = AppIntegrationsConnectRouteImport.update({
   id: '/connect',
   path: '/connect',
@@ -806,8 +819,10 @@ export interface FileRoutesByFullPath {
   '/integrations/advanced': typeof AppIntegrationsAdvancedRoute
   '/integrations/apps': typeof AppIntegrationsAppsRoute
   '/integrations/connect': typeof AppIntegrationsConnectRoute
+  '/integrations/dashboard': typeof AppIntegrationsDashboardRoute
   '/integrations/health': typeof AppIntegrationsHealthRoute
   '/integrations/help': typeof AppIntegrationsHelpRoute
+  '/integrations/mapping': typeof AppIntegrationsMappingRoute
   '/integrations/outbox': typeof AppIntegrationsOutboxRoute
   '/integrations/templates': typeof AppIntegrationsTemplatesRoute
   '/inteligencia-comercial/qualidade-ia': typeof AppInteligenciaComercialQualidadeIaRoute
@@ -924,8 +939,10 @@ export interface FileRoutesByTo {
   '/integrations/advanced': typeof AppIntegrationsAdvancedRoute
   '/integrations/apps': typeof AppIntegrationsAppsRoute
   '/integrations/connect': typeof AppIntegrationsConnectRoute
+  '/integrations/dashboard': typeof AppIntegrationsDashboardRoute
   '/integrations/health': typeof AppIntegrationsHealthRoute
   '/integrations/help': typeof AppIntegrationsHelpRoute
+  '/integrations/mapping': typeof AppIntegrationsMappingRoute
   '/integrations/outbox': typeof AppIntegrationsOutboxRoute
   '/integrations/templates': typeof AppIntegrationsTemplatesRoute
   '/inteligencia-comercial/qualidade-ia': typeof AppInteligenciaComercialQualidadeIaRoute
@@ -1044,8 +1061,10 @@ export interface FileRoutesById {
   '/_app/integrations/advanced': typeof AppIntegrationsAdvancedRoute
   '/_app/integrations/apps': typeof AppIntegrationsAppsRoute
   '/_app/integrations/connect': typeof AppIntegrationsConnectRoute
+  '/_app/integrations/dashboard': typeof AppIntegrationsDashboardRoute
   '/_app/integrations/health': typeof AppIntegrationsHealthRoute
   '/_app/integrations/help': typeof AppIntegrationsHelpRoute
+  '/_app/integrations/mapping': typeof AppIntegrationsMappingRoute
   '/_app/integrations/outbox': typeof AppIntegrationsOutboxRoute
   '/_app/integrations/templates': typeof AppIntegrationsTemplatesRoute
   '/_app/inteligencia-comercial/qualidade-ia': typeof AppInteligenciaComercialQualidadeIaRoute
@@ -1164,8 +1183,10 @@ export interface FileRouteTypes {
     | '/integrations/advanced'
     | '/integrations/apps'
     | '/integrations/connect'
+    | '/integrations/dashboard'
     | '/integrations/health'
     | '/integrations/help'
+    | '/integrations/mapping'
     | '/integrations/outbox'
     | '/integrations/templates'
     | '/inteligencia-comercial/qualidade-ia'
@@ -1282,8 +1303,10 @@ export interface FileRouteTypes {
     | '/integrations/advanced'
     | '/integrations/apps'
     | '/integrations/connect'
+    | '/integrations/dashboard'
     | '/integrations/health'
     | '/integrations/help'
+    | '/integrations/mapping'
     | '/integrations/outbox'
     | '/integrations/templates'
     | '/inteligencia-comercial/qualidade-ia'
@@ -1401,8 +1424,10 @@ export interface FileRouteTypes {
     | '/_app/integrations/advanced'
     | '/_app/integrations/apps'
     | '/_app/integrations/connect'
+    | '/_app/integrations/dashboard'
     | '/_app/integrations/health'
     | '/_app/integrations/help'
+    | '/_app/integrations/mapping'
     | '/_app/integrations/outbox'
     | '/_app/integrations/templates'
     | '/_app/inteligencia-comercial/qualidade-ia'
@@ -2138,6 +2163,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIntegrationsOutboxRouteImport
       parentRoute: typeof AppIntegrationsRoute
     }
+    '/_app/integrations/mapping': {
+      id: '/_app/integrations/mapping'
+      path: '/mapping'
+      fullPath: '/integrations/mapping'
+      preLoaderRoute: typeof AppIntegrationsMappingRouteImport
+      parentRoute: typeof AppIntegrationsRoute
+    }
     '/_app/integrations/help': {
       id: '/_app/integrations/help'
       path: '/help'
@@ -2150,6 +2182,13 @@ declare module '@tanstack/react-router' {
       path: '/health'
       fullPath: '/integrations/health'
       preLoaderRoute: typeof AppIntegrationsHealthRouteImport
+      parentRoute: typeof AppIntegrationsRoute
+    }
+    '/_app/integrations/dashboard': {
+      id: '/_app/integrations/dashboard'
+      path: '/dashboard'
+      fullPath: '/integrations/dashboard'
+      preLoaderRoute: typeof AppIntegrationsDashboardRouteImport
       parentRoute: typeof AppIntegrationsRoute
     }
     '/_app/integrations/connect': {
@@ -2316,8 +2355,10 @@ interface AppIntegrationsRouteChildren {
   AppIntegrationsAdvancedRoute: typeof AppIntegrationsAdvancedRoute
   AppIntegrationsAppsRoute: typeof AppIntegrationsAppsRoute
   AppIntegrationsConnectRoute: typeof AppIntegrationsConnectRoute
+  AppIntegrationsDashboardRoute: typeof AppIntegrationsDashboardRoute
   AppIntegrationsHealthRoute: typeof AppIntegrationsHealthRoute
   AppIntegrationsHelpRoute: typeof AppIntegrationsHelpRoute
+  AppIntegrationsMappingRoute: typeof AppIntegrationsMappingRoute
   AppIntegrationsOutboxRoute: typeof AppIntegrationsOutboxRoute
   AppIntegrationsTemplatesRoute: typeof AppIntegrationsTemplatesRoute
 }
@@ -2326,8 +2367,10 @@ const AppIntegrationsRouteChildren: AppIntegrationsRouteChildren = {
   AppIntegrationsAdvancedRoute: AppIntegrationsAdvancedRoute,
   AppIntegrationsAppsRoute: AppIntegrationsAppsRoute,
   AppIntegrationsConnectRoute: AppIntegrationsConnectRoute,
+  AppIntegrationsDashboardRoute: AppIntegrationsDashboardRoute,
   AppIntegrationsHealthRoute: AppIntegrationsHealthRoute,
   AppIntegrationsHelpRoute: AppIntegrationsHelpRoute,
+  AppIntegrationsMappingRoute: AppIntegrationsMappingRoute,
   AppIntegrationsOutboxRoute: AppIntegrationsOutboxRoute,
   AppIntegrationsTemplatesRoute: AppIntegrationsTemplatesRoute,
 }
