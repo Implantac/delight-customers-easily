@@ -74,6 +74,20 @@ export type ErpDriverConfig = {
   settings: Record<string, unknown>;
 };
 
+export type ErpCustomerPushInput = {
+  external_id: string | null;       // null = criar; preenchido = atualizar
+  legal_name: string | null;
+  trade_name: string | null;
+  document: string | null;
+  email: string | null;
+  phone: string | null;
+};
+
+export type ErpPushResult = {
+  external_id: string;              // ID retornado pelo ERP (criação ou eco)
+  note?: string;
+};
+
 export interface ErpDriver {
   /** Identificador estável do driver, ex.: "bling", "postgres-direct". */
   readonly id: string;
@@ -89,4 +103,12 @@ export interface ErpDriver {
 
   /** Pull paginado de histórico comercial (pedidos). */
   pullSalesHistory(cfg: ErpDriverConfig, cursor: Record<string, unknown> | null, limit: number, sinceIso: string | null): Promise<ErpPullResult<ErpSalesOrderDTO>>;
+
+  /**
+   * Push de cliente CRM→ERP (criar ou atualizar).
+   * Opcional: drivers que não suportam push devem omitir; o outbox processor
+   * marcará como `needs_manual` automaticamente.
+   * Regra absoluta: NUNCA enviar dados fiscais, estoque ou financeiro.
+   */
+  pushCustomer?(cfg: ErpDriverConfig, input: ErpCustomerPushInput): Promise<ErpPushResult>;
 }
