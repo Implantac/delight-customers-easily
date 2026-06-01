@@ -8,8 +8,8 @@
  * Nada de estoque, fiscal, contábil, RH.
  */
 import type {
-  ErpCustomerDTO, ErpDriver, ErpDriverConfig, ErpPullResult,
-  ErpSalesOrderDTO, ErpSalesRepDTO,
+  ErpCustomerDTO, ErpCustomerPushInput, ErpDriver, ErpDriverConfig,
+  ErpPullResult, ErpPushResult, ErpSalesOrderDTO, ErpSalesRepDTO,
 } from "./types";
 
 async function sCall(cfg: ErpDriverConfig, path: string, body: Record<string, unknown>) {
