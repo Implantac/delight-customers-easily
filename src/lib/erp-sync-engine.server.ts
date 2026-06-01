@@ -13,8 +13,11 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { getDriver, resolveDriverKey } from "./erp-drivers";
 import type { ErpDriverConfig } from "./erp-drivers/types";
+import { decryptCredentials } from "./erp-crypto.server";
 
 const PAGE_SIZE = 100;
+
+type ConflictStrategy = "erp_wins" | "crm_wins" | "last_write_wins" | "manual";
 
 export function adminClient(): SupabaseClient {
   return createClient(
@@ -31,20 +34,28 @@ type JobRow = {
 };
 
 export async function executeJob(supabase: SupabaseClient, job: JobRow): Promise<{
-  ok: boolean; processed: number; failed: number; error?: string;
+  ok: boolean; processed: number; failed: number; error?: string; strategy?: ConflictStrategy;
 }> {
-  const { data: integ, error: ierr } = await supabase
+  const { data: integ, error: ierr } = await (supabase as any)
     .from("erp_integrations")
-    .select("provider,connector_type,app_key,app_secret,settings")
+    .select("provider,connector_type,app_key,app_secret,settings,credentials_enc,conflict_strategy")
     .eq("id", job.integration_id)
     .maybeSingle();
   if (ierr || !integ) return { ok: false, processed: 0, failed: 0, error: "Integração não encontrada" };
 
+  // Resolve credenciais: prioriza credentials_enc (AES-256-GCM); fallback p/ colunas legadas.
+  let creds: Record<string, unknown> = {};
+  if (integ.credentials_enc) {
+    try { creds = decryptCredentials<Record<string, unknown>>(integ.credentials_enc); }
+    catch (e) { return { ok: false, processed: 0, failed: 0, error: `Falha ao decifrar credenciais: ${(e as Error).message}` }; }
+  }
+  const legacySecret = integ.app_secret && integ.app_secret !== "enc::see_credentials_enc" ? integ.app_secret : null;
   const cfg: ErpDriverConfig = {
-    app_key: integ.app_key,
-    app_secret: integ.app_secret ?? null,
-    settings: (integ.settings ?? {}) as Record<string, unknown>,
+    app_key: String(creds.app_key ?? integ.app_key ?? ""),
+    app_secret: (creds.app_secret as string | undefined) ?? legacySecret,
+    settings: { ...((integ.settings ?? {}) as Record<string, unknown>), ...creds },
   };
+  const strategy: ConflictStrategy = (integ.conflict_strategy as ConflictStrategy) ?? "erp_wins";
 
   let driver;
   try {
