@@ -82,7 +82,7 @@ function IAComercialPage() {
 
 
 
-      {/* Stats hero */}
+      {/* Stats hero (clickable → switch tab) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         <StatCard
           loading={isLoading}
@@ -90,6 +90,8 @@ function IAComercialPage() {
           value={data ? `${data.stats.followupOverdue}` : "—"}
           hint="negócios parados 7d+"
           icon={Flame}
+          onClick={() => setTab("followup")}
+          active={tab === "followup"}
         />
         <StatCard
           loading={isLoading}
@@ -97,6 +99,8 @@ function IAComercialPage() {
           value={data ? fmt(data.stats.upsellPotential) : "—"}
           hint="histórico de clientes sem deal aberto"
           icon={TrendingUp}
+          onClick={() => setTab("opportunities")}
+          active={tab === "opportunities"}
         />
         <StatCard
           loading={isLoading}
@@ -105,6 +109,8 @@ function IAComercialPage() {
           hint="títulos vencidos em aberto"
           icon={AlertTriangle}
           tone="danger"
+          onClick={() => setTab("risks")}
+          active={tab === "risks"}
         />
         <StatCard
           loading={isLoading}
@@ -112,8 +118,11 @@ function IAComercialPage() {
           value={data ? `${data.stats.activeReps}` : "—"}
           hint="últimos 30d"
           icon={Users}
+          onClick={() => setTab("reps")}
+          active={tab === "reps"}
         />
       </div>
+
 
       <Tabs value={tab} onValueChange={(v) => setTab(v as AgentKey)}>
         <TabsList className="grid grid-cols-2 lg:grid-cols-4 w-full">
