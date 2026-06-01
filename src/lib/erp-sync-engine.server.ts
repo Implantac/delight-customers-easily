@@ -80,12 +80,21 @@ export async function executeJob(supabase: SupabaseClient, job: JobRow): Promise
         if (existing) {
           // detecta divergência simples
           if (existing.email && c.email && existing.email !== c.email) {
-            await supabase.from("erp_sync_conflicts").insert({
-              organization_id: job.organization_id, integration_id: job.integration_id,
-              resource: "customers", external_id: c.external_id, field: "email",
-              crm_value: { email: existing.email }, erp_value: { email: c.email },
-            });
-            conflicts++;
+            // Só registra conflito quando a estratégia exigir intervenção
+            if (strategy === "manual") {
+              await supabase.from("erp_sync_conflicts").insert({
+                organization_id: job.organization_id, integration_id: job.integration_id,
+                resource: "customers", external_id: c.external_id, field: "email",
+                crm_value: { email: existing.email }, erp_value: { email: c.email },
+              });
+              conflicts++;
+              continue; // não sobrescreve até resolução manual
+            }
+            if (strategy === "crm_wins") {
+              // mantém valor do CRM — pula upsert deste registro
+              continue;
+            }
+            // erp_wins / last_write_wins → segue para upsert (ERP é a fonte mais recente neste pull)
           }
         }
 
@@ -102,7 +111,7 @@ export async function executeJob(supabase: SupabaseClient, job: JobRow): Promise
         }, { onConflict: "organization_id,integration_id,external_id" });
       }
       await scheduleNext(supabase, job, r.next_cursor);
-      return { ok: true, processed: r.rows.length, failed: conflicts };
+      return { ok: true, processed: r.rows.length, failed: conflicts, strategy };
     }
 
     if (job.resource === "sales_reps") {
