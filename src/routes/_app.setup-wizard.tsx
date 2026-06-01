@@ -232,6 +232,30 @@ function SetupWizardPage() {
         icon={Rocket}
       />
 
+      {restored && step > 1 && step < 4 && (
+        <Alert className="border-primary/30 bg-primary/5">
+          <Sparkles className="h-4 w-4 text-primary" />
+          <AlertTitle>Retomando de onde você parou</AlertTitle>
+          <AlertDescription className="flex items-center justify-between gap-2">
+            <span>Progresso anterior carregado. Credenciais por segurança não são guardadas.</span>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => {
+                if (storageKey) localStorage.removeItem(storageKey);
+                setStep(1);
+                setIntegrationId(null);
+                setAppKey("");
+                setAppSecret("");
+                setRestored(false);
+              }}
+            >
+              Recomeçar
+            </Button>
+          </AlertDescription>
+        </Alert>
+      )}
+
       {/* Progress bar */}
       <div className="space-y-2">
         <div className="flex items-center justify-between text-xs text-muted-foreground">
