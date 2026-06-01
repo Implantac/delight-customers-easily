@@ -2,6 +2,7 @@ import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
+import { supabase } from "@/integrations/supabase/client";
 import { useCurrentOrg } from "@/lib/org";
 import {
   searchProspects,
@@ -16,8 +17,10 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Compass, Search, Plus, Sparkles, MapPin, Building, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
+
 
 export const Route = createFileRoute("/_app/geo-prospeccao")({ component: ProspeccaoPage });
 
