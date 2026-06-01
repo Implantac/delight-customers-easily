@@ -327,14 +327,17 @@ function CsvImportTab({ orgId }: { orgId: string | null }) {
   const [mapping, setMapping] = useState<Record<string, string>>({});
   const [targets, setTargets] = useState<string[]>([]);
   const [result, setResult] = useState<{ inserted: number; duplicates: number; errors: number; errorSamples: string[] } | null>(null);
+  const [aiHints, setAiHints] = useState<Record<string, { confidence: number; reason: string }>>({});
+  const [aiLoading, setAiLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const preview = useServerFn(previewCsvImport);
   const run = useServerFn(runCsvImport);
+  const aiSuggest = useServerFn(suggestFieldMapping);
 
   const previewMut = useMutation({
     mutationFn: (h: string[]) => preview({ data: { entity, headers: h } }),
-    onSuccess: (r) => { setMapping(r.suggested); setTargets(r.targets); },
+    onSuccess: (r) => { setMapping(r.suggested); setTargets(r.targets); setAiHints({}); },
   });
 
   const runMut = useMutation({
