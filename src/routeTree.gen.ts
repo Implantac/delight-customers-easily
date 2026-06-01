@@ -112,6 +112,7 @@ import { Route as AppIntegrationsHealthRouteImport } from './routes/_app.integra
 import { Route as AppIntegrationsDiagnosticRouteImport } from './routes/_app.integrations.diagnostic'
 import { Route as AppIntegrationsDashboardRouteImport } from './routes/_app.integrations.dashboard'
 import { Route as AppIntegrationsConnectRouteImport } from './routes/_app.integrations.connect'
+import { Route as AppIntegrationsConflictsRouteImport } from './routes/_app.integrations.conflicts'
 import { Route as AppIntegrationsAppsRouteImport } from './routes/_app.integrations.apps'
 import { Route as AppIntegrationsAgentRouteImport } from './routes/_app.integrations.agent'
 import { Route as AppIntegrationsAdvancedRouteImport } from './routes/_app.integrations.advanced'
@@ -121,6 +122,7 @@ import { Route as ApiPublicHooksRefreshRecommendationsRouteImport } from './rout
 import { Route as ApiPublicHooksPropensityBatchTickRouteImport } from './routes/api/public/hooks/propensity-batch-tick'
 import { Route as ApiPublicHooksGenerateAlertsRouteImport } from './routes/api/public/hooks/generate-alerts'
 import { Route as ApiPublicHooksErpSyncTickRouteImport } from './routes/api/public/hooks/erp-sync-tick'
+import { Route as ApiPublicHooksErpOutboxTickRouteImport } from './routes/api/public/hooks/erp-outbox-tick'
 import { Route as ApiPublicHooksErpInboundRouteImport } from './routes/api/public/hooks/erp-inbound'
 import { Route as ApiPublicHooksErpAgentPushRouteImport } from './routes/api/public/hooks/erp-agent-push'
 import { Route as ApiPublicHooksDailyBriefingRouteImport } from './routes/api/public/hooks/daily-briefing'
@@ -654,6 +656,12 @@ const AppIntegrationsConnectRoute = AppIntegrationsConnectRouteImport.update({
   path: '/connect',
   getParentRoute: () => AppIntegrationsRoute,
 } as any)
+const AppIntegrationsConflictsRoute =
+  AppIntegrationsConflictsRouteImport.update({
+    id: '/conflicts',
+    path: '/conflicts',
+    getParentRoute: () => AppIntegrationsRoute,
+  } as any)
 const AppIntegrationsAppsRoute = AppIntegrationsAppsRouteImport.update({
   id: '/apps',
   path: '/apps',
@@ -701,6 +709,12 @@ const ApiPublicHooksErpSyncTickRoute =
   ApiPublicHooksErpSyncTickRouteImport.update({
     id: '/api/public/hooks/erp-sync-tick',
     path: '/api/public/hooks/erp-sync-tick',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicHooksErpOutboxTickRoute =
+  ApiPublicHooksErpOutboxTickRouteImport.update({
+    id: '/api/public/hooks/erp-outbox-tick',
+    path: '/api/public/hooks/erp-outbox-tick',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ApiPublicHooksErpInboundRoute =
@@ -846,6 +860,7 @@ export interface FileRoutesByFullPath {
   '/integrations/advanced': typeof AppIntegrationsAdvancedRoute
   '/integrations/agent': typeof AppIntegrationsAgentRoute
   '/integrations/apps': typeof AppIntegrationsAppsRoute
+  '/integrations/conflicts': typeof AppIntegrationsConflictsRoute
   '/integrations/connect': typeof AppIntegrationsConnectRouteWithChildren
   '/integrations/dashboard': typeof AppIntegrationsDashboardRoute
   '/integrations/diagnostic': typeof AppIntegrationsDiagnosticRoute
@@ -886,6 +901,7 @@ export interface FileRoutesByFullPath {
   '/api/public/hooks/daily-briefing': typeof ApiPublicHooksDailyBriefingRoute
   '/api/public/hooks/erp-agent-push': typeof ApiPublicHooksErpAgentPushRoute
   '/api/public/hooks/erp-inbound': typeof ApiPublicHooksErpInboundRoute
+  '/api/public/hooks/erp-outbox-tick': typeof ApiPublicHooksErpOutboxTickRoute
   '/api/public/hooks/erp-sync-tick': typeof ApiPublicHooksErpSyncTickRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
   '/api/public/hooks/propensity-batch-tick': typeof ApiPublicHooksPropensityBatchTickRoute
@@ -970,6 +986,7 @@ export interface FileRoutesByTo {
   '/integrations/advanced': typeof AppIntegrationsAdvancedRoute
   '/integrations/agent': typeof AppIntegrationsAgentRoute
   '/integrations/apps': typeof AppIntegrationsAppsRoute
+  '/integrations/conflicts': typeof AppIntegrationsConflictsRoute
   '/integrations/connect': typeof AppIntegrationsConnectRouteWithChildren
   '/integrations/dashboard': typeof AppIntegrationsDashboardRoute
   '/integrations/diagnostic': typeof AppIntegrationsDiagnosticRoute
@@ -1010,6 +1027,7 @@ export interface FileRoutesByTo {
   '/api/public/hooks/daily-briefing': typeof ApiPublicHooksDailyBriefingRoute
   '/api/public/hooks/erp-agent-push': typeof ApiPublicHooksErpAgentPushRoute
   '/api/public/hooks/erp-inbound': typeof ApiPublicHooksErpInboundRoute
+  '/api/public/hooks/erp-outbox-tick': typeof ApiPublicHooksErpOutboxTickRoute
   '/api/public/hooks/erp-sync-tick': typeof ApiPublicHooksErpSyncTickRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
   '/api/public/hooks/propensity-batch-tick': typeof ApiPublicHooksPropensityBatchTickRoute
@@ -1096,6 +1114,7 @@ export interface FileRoutesById {
   '/_app/integrations/advanced': typeof AppIntegrationsAdvancedRoute
   '/_app/integrations/agent': typeof AppIntegrationsAgentRoute
   '/_app/integrations/apps': typeof AppIntegrationsAppsRoute
+  '/_app/integrations/conflicts': typeof AppIntegrationsConflictsRoute
   '/_app/integrations/connect': typeof AppIntegrationsConnectRouteWithChildren
   '/_app/integrations/dashboard': typeof AppIntegrationsDashboardRoute
   '/_app/integrations/diagnostic': typeof AppIntegrationsDiagnosticRoute
@@ -1136,6 +1155,7 @@ export interface FileRoutesById {
   '/api/public/hooks/daily-briefing': typeof ApiPublicHooksDailyBriefingRoute
   '/api/public/hooks/erp-agent-push': typeof ApiPublicHooksErpAgentPushRoute
   '/api/public/hooks/erp-inbound': typeof ApiPublicHooksErpInboundRoute
+  '/api/public/hooks/erp-outbox-tick': typeof ApiPublicHooksErpOutboxTickRoute
   '/api/public/hooks/erp-sync-tick': typeof ApiPublicHooksErpSyncTickRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
   '/api/public/hooks/propensity-batch-tick': typeof ApiPublicHooksPropensityBatchTickRoute
@@ -1222,6 +1242,7 @@ export interface FileRouteTypes {
     | '/integrations/advanced'
     | '/integrations/agent'
     | '/integrations/apps'
+    | '/integrations/conflicts'
     | '/integrations/connect'
     | '/integrations/dashboard'
     | '/integrations/diagnostic'
@@ -1262,6 +1283,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/daily-briefing'
     | '/api/public/hooks/erp-agent-push'
     | '/api/public/hooks/erp-inbound'
+    | '/api/public/hooks/erp-outbox-tick'
     | '/api/public/hooks/erp-sync-tick'
     | '/api/public/hooks/generate-alerts'
     | '/api/public/hooks/propensity-batch-tick'
@@ -1346,6 +1368,7 @@ export interface FileRouteTypes {
     | '/integrations/advanced'
     | '/integrations/agent'
     | '/integrations/apps'
+    | '/integrations/conflicts'
     | '/integrations/connect'
     | '/integrations/dashboard'
     | '/integrations/diagnostic'
@@ -1386,6 +1409,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/daily-briefing'
     | '/api/public/hooks/erp-agent-push'
     | '/api/public/hooks/erp-inbound'
+    | '/api/public/hooks/erp-outbox-tick'
     | '/api/public/hooks/erp-sync-tick'
     | '/api/public/hooks/generate-alerts'
     | '/api/public/hooks/propensity-batch-tick'
@@ -1471,6 +1495,7 @@ export interface FileRouteTypes {
     | '/_app/integrations/advanced'
     | '/_app/integrations/agent'
     | '/_app/integrations/apps'
+    | '/_app/integrations/conflicts'
     | '/_app/integrations/connect'
     | '/_app/integrations/dashboard'
     | '/_app/integrations/diagnostic'
@@ -1511,6 +1536,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/daily-briefing'
     | '/api/public/hooks/erp-agent-push'
     | '/api/public/hooks/erp-inbound'
+    | '/api/public/hooks/erp-outbox-tick'
     | '/api/public/hooks/erp-sync-tick'
     | '/api/public/hooks/generate-alerts'
     | '/api/public/hooks/propensity-batch-tick'
@@ -1534,6 +1560,7 @@ export interface RootRouteChildren {
   ApiPublicHooksDailyBriefingRoute: typeof ApiPublicHooksDailyBriefingRoute
   ApiPublicHooksErpAgentPushRoute: typeof ApiPublicHooksErpAgentPushRoute
   ApiPublicHooksErpInboundRoute: typeof ApiPublicHooksErpInboundRoute
+  ApiPublicHooksErpOutboxTickRoute: typeof ApiPublicHooksErpOutboxTickRoute
   ApiPublicHooksErpSyncTickRoute: typeof ApiPublicHooksErpSyncTickRoute
   ApiPublicHooksGenerateAlertsRoute: typeof ApiPublicHooksGenerateAlertsRoute
   ApiPublicHooksPropensityBatchTickRoute: typeof ApiPublicHooksPropensityBatchTickRoute
@@ -2263,6 +2290,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIntegrationsConnectRouteImport
       parentRoute: typeof AppIntegrationsRoute
     }
+    '/_app/integrations/conflicts': {
+      id: '/_app/integrations/conflicts'
+      path: '/conflicts'
+      fullPath: '/integrations/conflicts'
+      preLoaderRoute: typeof AppIntegrationsConflictsRouteImport
+      parentRoute: typeof AppIntegrationsRoute
+    }
     '/_app/integrations/apps': {
       id: '/_app/integrations/apps'
       path: '/apps'
@@ -2324,6 +2358,13 @@ declare module '@tanstack/react-router' {
       path: '/api/public/hooks/erp-sync-tick'
       fullPath: '/api/public/hooks/erp-sync-tick'
       preLoaderRoute: typeof ApiPublicHooksErpSyncTickRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/hooks/erp-outbox-tick': {
+      id: '/api/public/hooks/erp-outbox-tick'
+      path: '/api/public/hooks/erp-outbox-tick'
+      fullPath: '/api/public/hooks/erp-outbox-tick'
+      preLoaderRoute: typeof ApiPublicHooksErpOutboxTickRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/hooks/erp-inbound': {
@@ -2448,6 +2489,7 @@ interface AppIntegrationsRouteChildren {
   AppIntegrationsAdvancedRoute: typeof AppIntegrationsAdvancedRoute
   AppIntegrationsAgentRoute: typeof AppIntegrationsAgentRoute
   AppIntegrationsAppsRoute: typeof AppIntegrationsAppsRoute
+  AppIntegrationsConflictsRoute: typeof AppIntegrationsConflictsRoute
   AppIntegrationsConnectRoute: typeof AppIntegrationsConnectRouteWithChildren
   AppIntegrationsDashboardRoute: typeof AppIntegrationsDashboardRoute
   AppIntegrationsDiagnosticRoute: typeof AppIntegrationsDiagnosticRoute
@@ -2463,6 +2505,7 @@ const AppIntegrationsRouteChildren: AppIntegrationsRouteChildren = {
   AppIntegrationsAdvancedRoute: AppIntegrationsAdvancedRoute,
   AppIntegrationsAgentRoute: AppIntegrationsAgentRoute,
   AppIntegrationsAppsRoute: AppIntegrationsAppsRoute,
+  AppIntegrationsConflictsRoute: AppIntegrationsConflictsRoute,
   AppIntegrationsConnectRoute: AppIntegrationsConnectRouteWithChildren,
   AppIntegrationsDashboardRoute: AppIntegrationsDashboardRoute,
   AppIntegrationsDiagnosticRoute: AppIntegrationsDiagnosticRoute,
@@ -2771,6 +2814,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicHooksDailyBriefingRoute: ApiPublicHooksDailyBriefingRoute,
   ApiPublicHooksErpAgentPushRoute: ApiPublicHooksErpAgentPushRoute,
   ApiPublicHooksErpInboundRoute: ApiPublicHooksErpInboundRoute,
+  ApiPublicHooksErpOutboxTickRoute: ApiPublicHooksErpOutboxTickRoute,
   ApiPublicHooksErpSyncTickRoute: ApiPublicHooksErpSyncTickRoute,
   ApiPublicHooksGenerateAlertsRoute: ApiPublicHooksGenerateAlertsRoute,
   ApiPublicHooksPropensityBatchTickRoute:
@@ -2781,13 +2825,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
