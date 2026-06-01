@@ -153,6 +153,7 @@ function CampaignsPage() {
   return (
     <div className="space-y-6">
       <PageHeader
+        tone="rose"
         icon={Mail}
         title="Campanhas de Email"
         subtitle="Crie, agende e meça campanhas para seus contatos — segmente, personalize e acompanhe a taxa de abertura."

@@ -78,6 +78,7 @@ function IntelComercialPage() {
   return (
     <div className="page-container">
       <PageHeader
+        tone="violet"
         title="Inteligência Comercial"
         subtitle="Respostas diretas às perguntas que movem a receita."
         action={

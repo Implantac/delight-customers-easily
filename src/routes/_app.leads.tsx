@@ -67,6 +67,7 @@ function LeadsInboxPage() {
   return (
     <div className="space-y-6 p-6">
       <PageHeader
+        tone="accent"
         title="Caixa de Leads"
         subtitle="Tudo que chegou — formulários, indicações, contatos novos. Aja direto daqui."
         icon={Inbox}

@@ -103,6 +103,7 @@ function ContactsPage() {
   return (
     <div className="p-4 md:p-8">
       <PageHeader
+        tone="info"
         icon={Users}
         title="Contatos"
         subtitle={`${contacts?.length ?? 0} contatos na sua base — exporte, filtre ou adicione novos a qualquer momento.`}

@@ -107,6 +107,7 @@ function ReportsPage() {
   return (
     <div className="p-6 space-y-6">
       <PageHeader
+        tone="info"
         title="Relatórios Comerciais"
         subtitle="Funil, forecast 90 dias e ranking de receita — o pulso do time de vendas."
         icon={TrendingUp}
