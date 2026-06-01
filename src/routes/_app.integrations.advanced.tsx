@@ -11,6 +11,7 @@ import {
 import { ERP_CATALOG, getErpHealth, type ErpProviderCatalog } from "@/lib/erp-hub.functions";
 import { testBlingConnection, importContactsFromBling } from "@/lib/bling.functions";
 import { previewCsvImport, runCsvImport } from "@/lib/csv-import.functions";
+import { suggestFieldMapping } from "@/lib/connect-hub-ai-suggest.functions";
 import {
   listFieldMappings, upsertFieldMapping, deleteFieldMapping, listInboundLog,
 } from "@/lib/erp-mappings.functions";
