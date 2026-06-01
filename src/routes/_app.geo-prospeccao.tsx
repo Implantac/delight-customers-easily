@@ -228,18 +228,51 @@ function ProspeccaoPage() {
                 <Sparkles className="h-4 w-4 text-primary" /> Encontrar empresas parecidas
               </CardTitle>
               <CardDescription>
-                Cole o ID de um cliente seu (em <Link to="/companies" className="underline">Contas</Link>)
-                para encontrar empresas com perfil semelhante (segmento, cidade, porte).
+                Escolha um cliente seu — o sistema sugere empresas parecidas no perfil (segmento, cidade, porte).
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="flex gap-2">
-                <Input
-                  placeholder="ID da empresa (UUID)"
-                  value={similarSource}
-                  onChange={(e) => setSimilarSource(e.target.value.trim())}
-                />
+              <div className="space-y-1.5">
+                <Label className="text-xs">Empresa de referência</Label>
+                <Select value={similarSource} onValueChange={setSimilarSource}>
+                  <SelectTrigger>
+                    <SelectValue
+                      placeholder={
+                        myCompaniesQ.isLoading
+                          ? "Carregando suas empresas…"
+                          : (myCompaniesQ.data?.length ?? 0) === 0
+                            ? "Você ainda não tem empresas cadastradas"
+                            : "Selecione uma empresa"
+                      }
+                    />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-72">
+                    {myCompaniesQ.data?.map((c: any) => (
+                      <SelectItem key={c.id} value={c.id}>
+                        {c.name}
+                        {(c.city || c.state) && (
+                          <span className="text-muted-foreground">
+                            {" · "}
+                            {[c.city, c.state].filter(Boolean).join("/")}
+                          </span>
+                        )}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {(myCompaniesQ.data?.length ?? 0) === 0 && !myCompaniesQ.isLoading && (
+                  <p className="text-xs text-muted-foreground">
+                    <Link to="/companies" className="underline">Cadastre uma empresa</Link> ou importe via Connect Hub para usar este recurso.
+                  </p>
+                )}
               </div>
+              {!similarSource && !similarQ.isLoading && (
+                <div className="rounded-md border border-dashed p-6 text-center text-xs text-muted-foreground">
+                  <Sparkles className="mx-auto mb-2 h-5 w-5 text-primary/60" />
+                  Escolha uma empresa acima para ver até 20 prospects semelhantes.
+                </div>
+              )}
+
               {similarQ.isLoading && <Skeleton className="h-32 w-full" />}
               {similarQ.data && (
                 <div className="space-y-2">
