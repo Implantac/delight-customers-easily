@@ -4,7 +4,7 @@ import {
   LayoutDashboard, Users, Briefcase, Check, ChevronsUpDown,
   LogOut, Settings, Upload, BarChart3, Sliders, Webhook, Zap, Sparkles,
   Target, Map, Megaphone, MessageSquare, ShieldCheck,
-  Flame, Calendar as CalendarIcon, Award, Plug, Building, type LucideIcon,
+  Flame, Calendar as CalendarIcon, Award, Plug, Building, Rocket, type LucideIcon,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useCurrentOrg, switchOrganization } from "@/lib/org";
