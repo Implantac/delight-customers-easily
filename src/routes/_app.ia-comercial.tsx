@@ -226,13 +226,18 @@ function IAComercialPage() {
 
 
 function StatCard({
-  label, value, hint, icon: Icon, loading, tone,
+  label, value, hint, icon: Icon, loading, tone, onClick, active,
 }: {
   label: string; value: string; hint: string; icon: typeof Flame; loading?: boolean;
-  tone?: "danger";
+  tone?: "danger"; onClick?: () => void; active?: boolean;
 }) {
   return (
-    <Card className="p-4">
+    <Card
+      onClick={onClick}
+      className={`p-4 transition-all ${
+        onClick ? "cursor-pointer hover:border-primary/40 hover:-translate-y-0.5" : ""
+      } ${active ? "border-primary/60 ring-1 ring-primary/30" : ""}`}
+    >
       <div className="flex items-center justify-between">
         <span className="text-xs text-muted-foreground">{label}</span>
         <Icon className={`h-4 w-4 ${tone === "danger" ? "text-destructive" : "text-primary"}`} />
@@ -246,3 +251,4 @@ function StatCard({
     </Card>
   );
 }
+
