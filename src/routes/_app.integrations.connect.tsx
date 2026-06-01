@@ -137,6 +137,28 @@ function ConnectWizard() {
       setSyncing(false);
     }
   }
+  async function handleAiSuggest() {
+    if (!aiQuery.trim()) return;
+    setAiLoading(true);
+    setAiSuggestion(null);
+    try {
+      const r = await suggestProvider({ data: { description: aiQuery.trim() } });
+      setAiSuggestion(r);
+      // tentar mapear sugestão para um cartão do catálogo
+      const match =
+        FRIENDLY_ERPS.find((e) => e.id === r.provider_id) ??
+        FRIENDLY_ERPS.find((e) => e.name.toLowerCase() === r.provider_name.toLowerCase()) ??
+        FRIENDLY_ERPS.find((e) => e.id === "custom");
+      if (match && r.confidence >= 0.5) {
+        setErp(match);
+      }
+    } catch {
+      toast.error("Não foi possível consultar o assistente. Escolha manualmente abaixo.");
+    } finally {
+      setAiLoading(false);
+    }
+  }
+
 
   return (
     <div className="p-6 max-w-3xl mx-auto space-y-6">
