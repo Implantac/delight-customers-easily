@@ -108,9 +108,11 @@ import { Route as AppIntegrationsOutboxRouteImport } from './routes/_app.integra
 import { Route as AppIntegrationsMappingRouteImport } from './routes/_app.integrations.mapping'
 import { Route as AppIntegrationsHelpRouteImport } from './routes/_app.integrations.help'
 import { Route as AppIntegrationsHealthRouteImport } from './routes/_app.integrations.health'
+import { Route as AppIntegrationsDiagnosticRouteImport } from './routes/_app.integrations.diagnostic'
 import { Route as AppIntegrationsDashboardRouteImport } from './routes/_app.integrations.dashboard'
 import { Route as AppIntegrationsConnectRouteImport } from './routes/_app.integrations.connect'
 import { Route as AppIntegrationsAppsRouteImport } from './routes/_app.integrations.apps'
+import { Route as AppIntegrationsAgentRouteImport } from './routes/_app.integrations.agent'
 import { Route as AppIntegrationsAdvancedRouteImport } from './routes/_app.integrations.advanced'
 import { Route as AppContactsIdRouteImport } from './routes/_app.contacts.$id'
 import { Route as AppCompaniesIdRouteImport } from './routes/_app.companies.$id'
@@ -628,6 +630,12 @@ const AppIntegrationsHealthRoute = AppIntegrationsHealthRouteImport.update({
   path: '/health',
   getParentRoute: () => AppIntegrationsRoute,
 } as any)
+const AppIntegrationsDiagnosticRoute =
+  AppIntegrationsDiagnosticRouteImport.update({
+    id: '/diagnostic',
+    path: '/diagnostic',
+    getParentRoute: () => AppIntegrationsRoute,
+  } as any)
 const AppIntegrationsDashboardRoute =
   AppIntegrationsDashboardRouteImport.update({
     id: '/dashboard',
@@ -642,6 +650,11 @@ const AppIntegrationsConnectRoute = AppIntegrationsConnectRouteImport.update({
 const AppIntegrationsAppsRoute = AppIntegrationsAppsRouteImport.update({
   id: '/apps',
   path: '/apps',
+  getParentRoute: () => AppIntegrationsRoute,
+} as any)
+const AppIntegrationsAgentRoute = AppIntegrationsAgentRouteImport.update({
+  id: '/agent',
+  path: '/agent',
   getParentRoute: () => AppIntegrationsRoute,
 } as any)
 const AppIntegrationsAdvancedRoute = AppIntegrationsAdvancedRouteImport.update({
@@ -824,9 +837,11 @@ export interface FileRoutesByFullPath {
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
   '/integrations/advanced': typeof AppIntegrationsAdvancedRoute
+  '/integrations/agent': typeof AppIntegrationsAgentRoute
   '/integrations/apps': typeof AppIntegrationsAppsRoute
   '/integrations/connect': typeof AppIntegrationsConnectRouteWithChildren
   '/integrations/dashboard': typeof AppIntegrationsDashboardRoute
+  '/integrations/diagnostic': typeof AppIntegrationsDiagnosticRoute
   '/integrations/health': typeof AppIntegrationsHealthRoute
   '/integrations/help': typeof AppIntegrationsHelpRoute
   '/integrations/mapping': typeof AppIntegrationsMappingRoute
@@ -945,9 +960,11 @@ export interface FileRoutesByTo {
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
   '/integrations/advanced': typeof AppIntegrationsAdvancedRoute
+  '/integrations/agent': typeof AppIntegrationsAgentRoute
   '/integrations/apps': typeof AppIntegrationsAppsRoute
   '/integrations/connect': typeof AppIntegrationsConnectRouteWithChildren
   '/integrations/dashboard': typeof AppIntegrationsDashboardRoute
+  '/integrations/diagnostic': typeof AppIntegrationsDiagnosticRoute
   '/integrations/health': typeof AppIntegrationsHealthRoute
   '/integrations/help': typeof AppIntegrationsHelpRoute
   '/integrations/mapping': typeof AppIntegrationsMappingRoute
@@ -1068,9 +1085,11 @@ export interface FileRoutesById {
   '/_app/companies/$id': typeof AppCompaniesIdRoute
   '/_app/contacts/$id': typeof AppContactsIdRoute
   '/_app/integrations/advanced': typeof AppIntegrationsAdvancedRoute
+  '/_app/integrations/agent': typeof AppIntegrationsAgentRoute
   '/_app/integrations/apps': typeof AppIntegrationsAppsRoute
   '/_app/integrations/connect': typeof AppIntegrationsConnectRouteWithChildren
   '/_app/integrations/dashboard': typeof AppIntegrationsDashboardRoute
+  '/_app/integrations/diagnostic': typeof AppIntegrationsDiagnosticRoute
   '/_app/integrations/health': typeof AppIntegrationsHealthRoute
   '/_app/integrations/help': typeof AppIntegrationsHelpRoute
   '/_app/integrations/mapping': typeof AppIntegrationsMappingRoute
@@ -1191,9 +1210,11 @@ export interface FileRouteTypes {
     | '/companies/$id'
     | '/contacts/$id'
     | '/integrations/advanced'
+    | '/integrations/agent'
     | '/integrations/apps'
     | '/integrations/connect'
     | '/integrations/dashboard'
+    | '/integrations/diagnostic'
     | '/integrations/health'
     | '/integrations/help'
     | '/integrations/mapping'
@@ -1312,9 +1333,11 @@ export interface FileRouteTypes {
     | '/companies/$id'
     | '/contacts/$id'
     | '/integrations/advanced'
+    | '/integrations/agent'
     | '/integrations/apps'
     | '/integrations/connect'
     | '/integrations/dashboard'
+    | '/integrations/diagnostic'
     | '/integrations/health'
     | '/integrations/help'
     | '/integrations/mapping'
@@ -1434,9 +1457,11 @@ export interface FileRouteTypes {
     | '/_app/companies/$id'
     | '/_app/contacts/$id'
     | '/_app/integrations/advanced'
+    | '/_app/integrations/agent'
     | '/_app/integrations/apps'
     | '/_app/integrations/connect'
     | '/_app/integrations/dashboard'
+    | '/_app/integrations/diagnostic'
     | '/_app/integrations/health'
     | '/_app/integrations/help'
     | '/_app/integrations/mapping'
@@ -2197,6 +2222,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIntegrationsHealthRouteImport
       parentRoute: typeof AppIntegrationsRoute
     }
+    '/_app/integrations/diagnostic': {
+      id: '/_app/integrations/diagnostic'
+      path: '/diagnostic'
+      fullPath: '/integrations/diagnostic'
+      preLoaderRoute: typeof AppIntegrationsDiagnosticRouteImport
+      parentRoute: typeof AppIntegrationsRoute
+    }
     '/_app/integrations/dashboard': {
       id: '/_app/integrations/dashboard'
       path: '/dashboard'
@@ -2216,6 +2248,13 @@ declare module '@tanstack/react-router' {
       path: '/apps'
       fullPath: '/integrations/apps'
       preLoaderRoute: typeof AppIntegrationsAppsRouteImport
+      parentRoute: typeof AppIntegrationsRoute
+    }
+    '/_app/integrations/agent': {
+      id: '/_app/integrations/agent'
+      path: '/agent'
+      fullPath: '/integrations/agent'
+      preLoaderRoute: typeof AppIntegrationsAgentRouteImport
       parentRoute: typeof AppIntegrationsRoute
     }
     '/_app/integrations/advanced': {
@@ -2387,9 +2426,11 @@ const AppIntegrationsConnectRouteWithChildren =
 
 interface AppIntegrationsRouteChildren {
   AppIntegrationsAdvancedRoute: typeof AppIntegrationsAdvancedRoute
+  AppIntegrationsAgentRoute: typeof AppIntegrationsAgentRoute
   AppIntegrationsAppsRoute: typeof AppIntegrationsAppsRoute
   AppIntegrationsConnectRoute: typeof AppIntegrationsConnectRouteWithChildren
   AppIntegrationsDashboardRoute: typeof AppIntegrationsDashboardRoute
+  AppIntegrationsDiagnosticRoute: typeof AppIntegrationsDiagnosticRoute
   AppIntegrationsHealthRoute: typeof AppIntegrationsHealthRoute
   AppIntegrationsHelpRoute: typeof AppIntegrationsHelpRoute
   AppIntegrationsMappingRoute: typeof AppIntegrationsMappingRoute
@@ -2399,9 +2440,11 @@ interface AppIntegrationsRouteChildren {
 
 const AppIntegrationsRouteChildren: AppIntegrationsRouteChildren = {
   AppIntegrationsAdvancedRoute: AppIntegrationsAdvancedRoute,
+  AppIntegrationsAgentRoute: AppIntegrationsAgentRoute,
   AppIntegrationsAppsRoute: AppIntegrationsAppsRoute,
   AppIntegrationsConnectRoute: AppIntegrationsConnectRouteWithChildren,
   AppIntegrationsDashboardRoute: AppIntegrationsDashboardRoute,
+  AppIntegrationsDiagnosticRoute: AppIntegrationsDiagnosticRoute,
   AppIntegrationsHealthRoute: AppIntegrationsHealthRoute,
   AppIntegrationsHelpRoute: AppIntegrationsHelpRoute,
   AppIntegrationsMappingRoute: AppIntegrationsMappingRoute,
