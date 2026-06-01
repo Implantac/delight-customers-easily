@@ -42,13 +42,41 @@ const QUICK_LINKS = [
 function ConnectHubDashboard() {
   const { orgId } = useCurrentOrg();
   const canManage = useCanManage();
+  const qc = useQueryClient();
   const fetchHealth = useServerFn(getErpHealth);
+  const enqueueSync = useServerFn(enqueueErpSync);
   const health = useQuery({
     queryKey: ["erp-health", orgId],
     queryFn: () => fetchHealth({ data: { organization_id: orgId! } }),
     enabled: !!orgId,
     refetchInterval: 60_000,
   });
+
+  const syncMut = useMutation({
+    mutationFn: (integrationId: string) =>
+      enqueueSync({
+        data: {
+          organizationId: orgId!,
+          integrationId,
+          resources: ["customers", "sales_history"],
+          direction: "pull",
+        },
+      }),
+    onSuccess: () => {
+      toast.success("Sincronização iniciada", {
+        description: "Os cards serão atualizados em instantes.",
+      });
+      // Refresh health a few times to catch the sync completing
+      setTimeout(() => qc.invalidateQueries({ queryKey: ["erp-health", orgId] }), 1500);
+      setTimeout(() => qc.invalidateQueries({ queryKey: ["erp-health", orgId] }), 6000);
+      setTimeout(() => qc.invalidateQueries({ queryKey: ["erp-health", orgId] }), 15000);
+    },
+    onError: (e: any) =>
+      toast.error("Não foi possível iniciar a sincronização", {
+        description: e?.message ?? "Tente novamente em instantes.",
+      }),
+  });
+
 
   if (!canManage) {
     return (
