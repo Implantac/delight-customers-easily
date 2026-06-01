@@ -121,6 +121,7 @@ import { Route as ApiPublicHooksRefreshRecommendationsRouteImport } from './rout
 import { Route as ApiPublicHooksPropensityBatchTickRouteImport } from './routes/api/public/hooks/propensity-batch-tick'
 import { Route as ApiPublicHooksGenerateAlertsRouteImport } from './routes/api/public/hooks/generate-alerts'
 import { Route as ApiPublicHooksErpSyncTickRouteImport } from './routes/api/public/hooks/erp-sync-tick'
+import { Route as ApiPublicHooksErpOutboxTickRouteImport } from './routes/api/public/hooks/erp-outbox-tick'
 import { Route as ApiPublicHooksErpInboundRouteImport } from './routes/api/public/hooks/erp-inbound'
 import { Route as ApiPublicHooksErpAgentPushRouteImport } from './routes/api/public/hooks/erp-agent-push'
 import { Route as ApiPublicHooksDailyBriefingRouteImport } from './routes/api/public/hooks/daily-briefing'
@@ -703,6 +704,12 @@ const ApiPublicHooksErpSyncTickRoute =
     path: '/api/public/hooks/erp-sync-tick',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicHooksErpOutboxTickRoute =
+  ApiPublicHooksErpOutboxTickRouteImport.update({
+    id: '/api/public/hooks/erp-outbox-tick',
+    path: '/api/public/hooks/erp-outbox-tick',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHooksErpInboundRoute =
   ApiPublicHooksErpInboundRouteImport.update({
     id: '/api/public/hooks/erp-inbound',
@@ -886,6 +893,7 @@ export interface FileRoutesByFullPath {
   '/api/public/hooks/daily-briefing': typeof ApiPublicHooksDailyBriefingRoute
   '/api/public/hooks/erp-agent-push': typeof ApiPublicHooksErpAgentPushRoute
   '/api/public/hooks/erp-inbound': typeof ApiPublicHooksErpInboundRoute
+  '/api/public/hooks/erp-outbox-tick': typeof ApiPublicHooksErpOutboxTickRoute
   '/api/public/hooks/erp-sync-tick': typeof ApiPublicHooksErpSyncTickRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
   '/api/public/hooks/propensity-batch-tick': typeof ApiPublicHooksPropensityBatchTickRoute
@@ -1010,6 +1018,7 @@ export interface FileRoutesByTo {
   '/api/public/hooks/daily-briefing': typeof ApiPublicHooksDailyBriefingRoute
   '/api/public/hooks/erp-agent-push': typeof ApiPublicHooksErpAgentPushRoute
   '/api/public/hooks/erp-inbound': typeof ApiPublicHooksErpInboundRoute
+  '/api/public/hooks/erp-outbox-tick': typeof ApiPublicHooksErpOutboxTickRoute
   '/api/public/hooks/erp-sync-tick': typeof ApiPublicHooksErpSyncTickRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
   '/api/public/hooks/propensity-batch-tick': typeof ApiPublicHooksPropensityBatchTickRoute
@@ -1136,6 +1145,7 @@ export interface FileRoutesById {
   '/api/public/hooks/daily-briefing': typeof ApiPublicHooksDailyBriefingRoute
   '/api/public/hooks/erp-agent-push': typeof ApiPublicHooksErpAgentPushRoute
   '/api/public/hooks/erp-inbound': typeof ApiPublicHooksErpInboundRoute
+  '/api/public/hooks/erp-outbox-tick': typeof ApiPublicHooksErpOutboxTickRoute
   '/api/public/hooks/erp-sync-tick': typeof ApiPublicHooksErpSyncTickRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
   '/api/public/hooks/propensity-batch-tick': typeof ApiPublicHooksPropensityBatchTickRoute
@@ -1262,6 +1272,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/daily-briefing'
     | '/api/public/hooks/erp-agent-push'
     | '/api/public/hooks/erp-inbound'
+    | '/api/public/hooks/erp-outbox-tick'
     | '/api/public/hooks/erp-sync-tick'
     | '/api/public/hooks/generate-alerts'
     | '/api/public/hooks/propensity-batch-tick'
@@ -1386,6 +1397,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/daily-briefing'
     | '/api/public/hooks/erp-agent-push'
     | '/api/public/hooks/erp-inbound'
+    | '/api/public/hooks/erp-outbox-tick'
     | '/api/public/hooks/erp-sync-tick'
     | '/api/public/hooks/generate-alerts'
     | '/api/public/hooks/propensity-batch-tick'
@@ -1511,6 +1523,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/daily-briefing'
     | '/api/public/hooks/erp-agent-push'
     | '/api/public/hooks/erp-inbound'
+    | '/api/public/hooks/erp-outbox-tick'
     | '/api/public/hooks/erp-sync-tick'
     | '/api/public/hooks/generate-alerts'
     | '/api/public/hooks/propensity-batch-tick'
@@ -1534,6 +1547,7 @@ export interface RootRouteChildren {
   ApiPublicHooksDailyBriefingRoute: typeof ApiPublicHooksDailyBriefingRoute
   ApiPublicHooksErpAgentPushRoute: typeof ApiPublicHooksErpAgentPushRoute
   ApiPublicHooksErpInboundRoute: typeof ApiPublicHooksErpInboundRoute
+  ApiPublicHooksErpOutboxTickRoute: typeof ApiPublicHooksErpOutboxTickRoute
   ApiPublicHooksErpSyncTickRoute: typeof ApiPublicHooksErpSyncTickRoute
   ApiPublicHooksGenerateAlertsRoute: typeof ApiPublicHooksGenerateAlertsRoute
   ApiPublicHooksPropensityBatchTickRoute: typeof ApiPublicHooksPropensityBatchTickRoute
@@ -2326,6 +2340,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksErpSyncTickRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/erp-outbox-tick': {
+      id: '/api/public/hooks/erp-outbox-tick'
+      path: '/api/public/hooks/erp-outbox-tick'
+      fullPath: '/api/public/hooks/erp-outbox-tick'
+      preLoaderRoute: typeof ApiPublicHooksErpOutboxTickRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/erp-inbound': {
       id: '/api/public/hooks/erp-inbound'
       path: '/api/public/hooks/erp-inbound'
@@ -2771,6 +2792,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicHooksDailyBriefingRoute: ApiPublicHooksDailyBriefingRoute,
   ApiPublicHooksErpAgentPushRoute: ApiPublicHooksErpAgentPushRoute,
   ApiPublicHooksErpInboundRoute: ApiPublicHooksErpInboundRoute,
+  ApiPublicHooksErpOutboxTickRoute: ApiPublicHooksErpOutboxTickRoute,
   ApiPublicHooksErpSyncTickRoute: ApiPublicHooksErpSyncTickRoute,
   ApiPublicHooksGenerateAlertsRoute: ApiPublicHooksGenerateAlertsRoute,
   ApiPublicHooksPropensityBatchTickRoute:
@@ -2781,13 +2803,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
