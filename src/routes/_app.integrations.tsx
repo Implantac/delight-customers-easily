@@ -675,6 +675,72 @@ function ConnectHubDashboard() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Dialog de agendamento */}
+      <Dialog
+        open={!!scheduleDialog}
+        onOpenChange={(o) => !o && !scheduleMut.isPending && setScheduleDialog(null)}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Calendar className="h-4 w-4" />
+              Agendar sync — {scheduleDialog?.providerName}
+            </DialogTitle>
+            <DialogDescription>
+              Escolha a frequência. O ConnectHub roda os syncs automaticamente.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-2 space-y-2">
+            <Label className="text-xs uppercase tracking-wide text-muted-foreground">
+              Frequência
+            </Label>
+            <Select value={schedFreq} onValueChange={(v) => setSchedFreq(v as ScheduleFreq)}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {(Object.keys(FREQ_LABELS) as ScheduleFreq[]).map((k) => (
+                  <SelectItem key={k} value={k}>
+                    {FREQ_LABELS[k]}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-muted-foreground">
+              Sincroniza Clientes + Histórico comercial (ERP→CRM). Para
+              recursos customizados, use o botão Sincronizar.
+            </p>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setScheduleDialog(null)}
+              disabled={scheduleMut.isPending}
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={() =>
+                scheduleDialog &&
+                scheduleMut.mutate({
+                  integrationId: scheduleDialog.integrationId,
+                  frequency: schedFreq,
+                })
+              }
+              disabled={scheduleMut.isPending}
+              className="gap-2"
+            >
+              {scheduleMut.isPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Calendar className="h-4 w-4" />
+              )}
+              Salvar agendamento
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
