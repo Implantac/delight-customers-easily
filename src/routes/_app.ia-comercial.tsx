@@ -13,8 +13,9 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
-  Flame, TrendingUp, AlertTriangle, Users, Sparkles, ArrowRight, Loader2,
+  Flame, TrendingUp, AlertTriangle, Users, Sparkles, ArrowRight, Loader2, Copy,
 } from "lucide-react";
+
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/ia-comercial")({
@@ -81,7 +82,7 @@ function IAComercialPage() {
 
 
 
-      {/* Stats hero */}
+      {/* Stats hero (clickable → switch tab) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         <StatCard
           loading={isLoading}
@@ -89,6 +90,8 @@ function IAComercialPage() {
           value={data ? `${data.stats.followupOverdue}` : "—"}
           hint="negócios parados 7d+"
           icon={Flame}
+          onClick={() => setTab("followup")}
+          active={tab === "followup"}
         />
         <StatCard
           loading={isLoading}
@@ -96,6 +99,8 @@ function IAComercialPage() {
           value={data ? fmt(data.stats.upsellPotential) : "—"}
           hint="histórico de clientes sem deal aberto"
           icon={TrendingUp}
+          onClick={() => setTab("opportunities")}
+          active={tab === "opportunities"}
         />
         <StatCard
           loading={isLoading}
@@ -104,6 +109,8 @@ function IAComercialPage() {
           hint="títulos vencidos em aberto"
           icon={AlertTriangle}
           tone="danger"
+          onClick={() => setTab("risks")}
+          active={tab === "risks"}
         />
         <StatCard
           loading={isLoading}
@@ -111,21 +118,31 @@ function IAComercialPage() {
           value={data ? `${data.stats.activeReps}` : "—"}
           hint="últimos 30d"
           icon={Users}
+          onClick={() => setTab("reps")}
+          active={tab === "reps"}
         />
       </div>
+
 
       <Tabs value={tab} onValueChange={(v) => setTab(v as AgentKey)}>
         <TabsList className="grid grid-cols-2 lg:grid-cols-4 w-full">
           {(Object.keys(AGENT_META) as AgentKey[]).map((k) => {
             const M = AGENT_META[k];
+            const count = data?.[k]?.length ?? 0;
             return (
               <TabsTrigger key={k} value={k} className="gap-2">
                 <M.icon className="h-4 w-4" />
-                {M.label}
+                <span>{M.label}</span>
+                {count > 0 && (
+                  <Badge variant="secondary" className="ml-1 h-5 px-1.5 text-[10px]">
+                    {count}
+                  </Badge>
+                )}
               </TabsTrigger>
             );
           })}
         </TabsList>
+
 
         {(Object.keys(AGENT_META) as AgentKey[]).map((k) => {
           const M = AGENT_META[k];
@@ -157,12 +174,26 @@ function IAComercialPage() {
 
               {briefs[k] && (
                 <Card className="p-4 border-primary/30 bg-primary/5">
-                  <div className="text-xs uppercase tracking-wide text-primary mb-2 flex items-center gap-1">
-                    <Sparkles className="h-3 w-3" /> Brief do agente
+                  <div className="text-xs uppercase tracking-wide text-primary mb-2 flex items-center justify-between">
+                    <span className="flex items-center gap-1">
+                      <Sparkles className="h-3 w-3" /> Brief do agente
+                    </span>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="h-6 px-2 text-[11px]"
+                      onClick={() => {
+                        navigator.clipboard.writeText(briefs[k] ?? "");
+                        toast.success("Brief copiado");
+                      }}
+                    >
+                      <Copy className="h-3 w-3 mr-1" /> Copiar
+                    </Button>
                   </div>
                   <div className="text-sm whitespace-pre-wrap leading-relaxed">{briefs[k]}</div>
                 </Card>
               )}
+
 
               {isLoading ? (
                 <div className="space-y-2">
@@ -216,13 +247,18 @@ function IAComercialPage() {
 
 
 function StatCard({
-  label, value, hint, icon: Icon, loading, tone,
+  label, value, hint, icon: Icon, loading, tone, onClick, active,
 }: {
   label: string; value: string; hint: string; icon: typeof Flame; loading?: boolean;
-  tone?: "danger";
+  tone?: "danger"; onClick?: () => void; active?: boolean;
 }) {
   return (
-    <Card className="p-4">
+    <Card
+      onClick={onClick}
+      className={`p-4 transition-all ${
+        onClick ? "cursor-pointer hover:border-primary/40 hover:-translate-y-0.5" : ""
+      } ${active ? "border-primary/60 ring-1 ring-primary/30" : ""}`}
+    >
       <div className="flex items-center justify-between">
         <span className="text-xs text-muted-foreground">{label}</span>
         <Icon className={`h-4 w-4 ${tone === "danger" ? "text-destructive" : "text-primary"}`} />
@@ -236,3 +272,4 @@ function StatCard({
     </Card>
   );
 }
+

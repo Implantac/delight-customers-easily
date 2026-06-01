@@ -2,6 +2,7 @@ import { useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
+import { supabase } from "@/integrations/supabase/client";
 import { useCurrentOrg } from "@/lib/org";
 import {
   searchProspects,
@@ -16,8 +17,10 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Compass, Search, Plus, Sparkles, MapPin, Building, ArrowRight } from "lucide-react";
 import { toast } from "sonner";
+
 
 export const Route = createFileRoute("/_app/geo-prospeccao")({ component: ProspeccaoPage });
 
@@ -48,12 +51,25 @@ function ProspeccaoPage() {
   });
 
   const [similarSource, setSimilarSource] = useState<string>("");
+  const myCompaniesQ = useQuery({
+    queryKey: ["geo-my-companies", orgId],
+    enabled: !!orgId,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("companies")
+        .select("id, name, city, state")
+        .order("name")
+        .limit(200);
+      return data ?? [];
+    },
+  });
   const similarQ = useQuery({
     queryKey: ["geo-similar", orgId, similarSource],
     enabled: !!orgId && !!similarSource,
     queryFn: () =>
       similar({ data: { organization_id: orgId!, company_id: similarSource, limit: 20 } }),
   });
+
 
   const addM = useMutation({
     mutationFn: (company_id: string) =>
@@ -127,6 +143,21 @@ function ProspeccaoPage() {
               </div>
             </CardContent>
           </Card>
+
+          {!searched && (
+            <Card className="border-dashed">
+              <CardContent className="p-10 text-center">
+                <Compass className="mx-auto h-8 w-8 text-primary/60" />
+                <h3 className="mt-3 font-semibold">Pronto para descobrir novos clientes?</h3>
+                <p className="mx-auto mt-1 max-w-md text-sm text-muted-foreground">
+                  Defina pelo menos um filtro acima (segmento, cidade ou UF) e clique em <strong>Buscar prospects</strong>.
+                  Os resultados aparecem aqui ordenados por potencial.
+                </p>
+              </CardContent>
+            </Card>
+          )}
+
+
 
           {searched && (
             <Card>
@@ -212,18 +243,51 @@ function ProspeccaoPage() {
                 <Sparkles className="h-4 w-4 text-primary" /> Encontrar empresas parecidas
               </CardTitle>
               <CardDescription>
-                Cole o ID de um cliente seu (em <Link to="/companies" className="underline">Contas</Link>)
-                para encontrar empresas com perfil semelhante (segmento, cidade, porte).
+                Escolha um cliente seu — o sistema sugere empresas parecidas no perfil (segmento, cidade, porte).
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="flex gap-2">
-                <Input
-                  placeholder="ID da empresa (UUID)"
-                  value={similarSource}
-                  onChange={(e) => setSimilarSource(e.target.value.trim())}
-                />
+              <div className="space-y-1.5">
+                <Label className="text-xs">Empresa de referência</Label>
+                <Select value={similarSource} onValueChange={setSimilarSource}>
+                  <SelectTrigger>
+                    <SelectValue
+                      placeholder={
+                        myCompaniesQ.isLoading
+                          ? "Carregando suas empresas…"
+                          : (myCompaniesQ.data?.length ?? 0) === 0
+                            ? "Você ainda não tem empresas cadastradas"
+                            : "Selecione uma empresa"
+                      }
+                    />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-72">
+                    {myCompaniesQ.data?.map((c: any) => (
+                      <SelectItem key={c.id} value={c.id}>
+                        {c.name}
+                        {(c.city || c.state) && (
+                          <span className="text-muted-foreground">
+                            {" · "}
+                            {[c.city, c.state].filter(Boolean).join("/")}
+                          </span>
+                        )}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {(myCompaniesQ.data?.length ?? 0) === 0 && !myCompaniesQ.isLoading && (
+                  <p className="text-xs text-muted-foreground">
+                    <Link to="/companies" className="underline">Cadastre uma empresa</Link> ou importe via Connect Hub para usar este recurso.
+                  </p>
+                )}
               </div>
+              {!similarSource && !similarQ.isLoading && (
+                <div className="rounded-md border border-dashed p-6 text-center text-xs text-muted-foreground">
+                  <Sparkles className="mx-auto mb-2 h-5 w-5 text-primary/60" />
+                  Escolha uma empresa acima para ver até 20 prospects semelhantes.
+                </div>
+              )}
+
               {similarQ.isLoading && <Skeleton className="h-32 w-full" />}
               {similarQ.data && (
                 <div className="space-y-2">

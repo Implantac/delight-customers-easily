@@ -16,7 +16,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "@/components/page-header";
 import { NextActionBlock } from "@/components/next-action-block";
 import { EmptyState } from "@/components/empty-state";
-import { Plus, Trash2, Target, TrendingUp, Trophy, Flame, DollarSign } from "lucide-react";
+import { Plus, Trash2, Target, TrendingUp, Trophy, Flame, DollarSign, Search, User, Clock } from "lucide-react";
 import { toast } from "sonner";
 import { dealSchema, fromForm } from "@/lib/validation";
 import { AIInsights } from "@/components/ai-insights";
@@ -52,6 +52,10 @@ function PipelinePage() {
   const [open, setOpen] = useState(false);
   const [dragId, setDragId] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [q, setQ] = useState("");
+  const [minValue, setMinValue] = useState("");
+  const [onlyMine, setOnlyMine] = useState(false);
+
 
   const { data: deals, isLoading } = useQuery({
     queryKey: ["deals"],
@@ -179,6 +183,40 @@ function PipelinePage() {
 
       <div className="mt-4"><NextActionBlock surface="pipeline" /></div>
 
+      {/* Filter bar */}
+      <div className="mt-4 flex flex-wrap items-center gap-2">
+        <div className="relative flex-1 min-w-[220px]">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+          <Input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Buscar por título, contato ou empresa…"
+            className="pl-8 h-9"
+          />
+        </div>
+        <Input
+          type="number"
+          inputMode="numeric"
+          value={minValue}
+          onChange={(e) => setMinValue(e.target.value)}
+          placeholder="Valor mín."
+          className="h-9 w-32"
+        />
+        <Button
+          variant={onlyMine ? "default" : "outline"}
+          size="sm"
+          className="h-9 gap-1.5"
+          onClick={() => setOnlyMine((v) => !v)}
+        >
+          <User className="h-3.5 w-3.5" /> Só meus
+        </Button>
+        {(q || minValue || onlyMine) && (
+          <Button variant="ghost" size="sm" className="h-9" onClick={() => { setQ(""); setMinValue(""); setOnlyMine(false); }}>
+            Limpar
+          </Button>
+        )}
+      </div>
+
       {isLoading ? (
         <div className="mt-6 grid grid-cols-1 gap-3 md:grid-cols-3 lg:grid-cols-6">
           {STAGES.map((s) => <Skeleton key={s.id} className="h-64 w-full" />)}
@@ -190,10 +228,25 @@ function PipelinePage() {
       ) : (
         <div className="mt-6 flex gap-3 overflow-x-auto pb-2 md:grid md:grid-cols-3 md:overflow-visible lg:grid-cols-6">
           {STAGES.map((stage) => {
+            const minV = Number(minValue) || 0;
+            const ql = q.trim().toLowerCase();
             const items = (deals ?? [])
               .filter((d) => d.stage === stage.id)
+              .filter((d) => !onlyMine || d.user_id === user?.id)
+              .filter((d) => !minV || Number(d.value) >= minV)
+              .filter((d) => {
+                if (!ql) return true;
+                const cn = (d.contacts as any)?.name ?? "";
+                const co = (d.companies as any)?.name ?? "";
+                return (
+                  (d.title ?? "").toLowerCase().includes(ql) ||
+                  cn.toLowerCase().includes(ql) ||
+                  co.toLowerCase().includes(ql)
+                );
+              })
               .map((d) => ({ ...d, _score: scoreDeal(d as any) }))
               .sort((a, b) => b._score.probability - a._score.probability);
+
             const sum = items.reduce((s, d) => s + Number(d.value), 0);
             return (
               <div
@@ -243,6 +296,18 @@ function PipelinePage() {
                             {(d.contacts as any)?.name}{(d.contacts as any)?.name && (d.companies as any)?.name ? " · " : ""}{(d.companies as any)?.name}
                           </p>
                         )}
+                        {(() => {
+                          const updated = d.updated_at ?? d.created_at;
+                          if (!updated || d.stage === "won" || d.stage === "lost") return null;
+                          const days = Math.floor((Date.now() - new Date(updated).getTime()) / 86400000);
+                          if (days < 14) return null;
+                          return (
+                            <div className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-medium text-amber-700 dark:text-amber-400">
+                              <Clock className="h-2.5 w-2.5" /> parado {days}d
+                            </div>
+                          );
+                        })()}
+
                       </Card>
                     );
                   })}
