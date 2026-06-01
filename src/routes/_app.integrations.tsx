@@ -66,13 +66,13 @@ export const Route = createFileRoute("/_app/integrations")({
   component: ConnectHubDashboard,
 });
 
-const QUICK_LINKS = [
-  { to: "/integrations/dashboard" as const, icon: BarChart3, label: "Dashboard", desc: "KPIs e SLA" },
-  { to: "/integrations/health" as const, icon: Activity, label: "Saúde", desc: "Status em tempo real" },
-  { to: "/integrations/mapping" as const, icon: GitBranch, label: "Mapeamento", desc: "Campos ERP↔CRM" },
-  { to: "/integrations/outbox" as const, icon: Inbox, label: "Fila", desc: "Envios e retries" },
-  { to: "/integrations/templates" as const, icon: FileText, label: "Templates", desc: "Mapeamentos prontos" },
-  { to: "/integrations/apps" as const, icon: AppWindow, label: "Apps", desc: "Conectores extras" },
+const ADVANCED_LINKS = [
+  { to: "/integrations/dashboard" as const, icon: BarChart3, label: "Painel executivo", desc: "KPIs e SLA da integração" },
+  { to: "/integrations/health" as const, icon: Activity, label: "Diagnóstico detalhado", desc: "Status, latência e conflitos" },
+  { to: "/integrations/mapping" as const, icon: GitBranch, label: "Mapeamento de campos", desc: "Para casos personalizados" },
+  { to: "/integrations/outbox" as const, icon: Inbox, label: "Fila e logs", desc: "Histórico de envios" },
+  { to: "/integrations/templates" as const, icon: FileText, label: "Templates prontos", desc: "Mapeamentos pré-configurados" },
+  { to: "/integrations/apps" as const, icon: AppWindow, label: "Conectores extras", desc: "Outras integrações" },
 ];
 
 type SyncResource =
@@ -88,27 +88,28 @@ const RESOURCE_OPTIONS: Array<{
   desc: string;
   default: boolean;
 }> = [
-  { id: "customers", label: "Clientes", desc: "Cadastros do ERP", default: true },
+  { id: "customers", label: "Clientes", desc: "Cadastro dos seus clientes", default: true },
   {
     id: "sales_history",
-    label: "Histórico comercial",
-    desc: "Pedidos e vendas",
+    label: "Histórico de vendas",
+    desc: "Pedidos e compras anteriores",
     default: true,
   },
   {
     id: "sales_reps",
     label: "Representantes",
-    desc: "Vendedores e equipes",
+    desc: "Vendedores e equipe comercial",
     default: false,
   },
   { id: "products", label: "Produtos", desc: "Catálogo comercial", default: false },
   {
     id: "metrics",
-    label: "Métricas",
-    desc: "RFM, ticket médio, frequência",
+    label: "Indicadores comerciais",
+    desc: "Ticket médio, frequência e recência",
     default: false,
   },
 ];
+
 
 function ConnectHubDashboard() {
   const { orgId } = useCurrentOrg();
