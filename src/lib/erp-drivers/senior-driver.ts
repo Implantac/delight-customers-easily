@@ -133,4 +133,24 @@ export const seniorDriver: ErpDriver = {
       has_more: hasMore,
     };
   },
+
+  async pushCustomer(cfg, input: ErpCustomerPushInput): Promise<ErpPushResult> {
+    const payload = {
+      cliente: {
+        ...(input.external_id ? { codCli: input.external_id } : {}),
+        razaoSocial: input.legal_name ?? undefined,
+        nomeFantasia: input.trade_name ?? undefined,
+        cgcCpf: input.document?.replace(/\D/g, "") ?? undefined,
+        email: input.email ?? undefined,
+        telefone: input.phone ?? undefined,
+      },
+    };
+    const path = input.external_id
+      ? "/t/senior.com.br/bridge/1.0/rest/sapiens/actions/sapiens_Synccom_senior_g5_co_int_cli/atualizarCliente"
+      : "/t/senior.com.br/bridge/1.0/rest/sapiens/actions/sapiens_Synccom_senior_g5_co_int_cli/criarCliente";
+    const resp = await sCall(cfg, path, payload);
+    const id = String(resp?.codCli ?? resp?.cliente?.codCli ?? input.external_id ?? "");
+    if (!id) throw new Error("Senior não retornou codCli.");
+    return { external_id: id, note: input.external_id ? "atualizado" : "criado" };
+  },
 };
