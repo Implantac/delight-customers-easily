@@ -8,6 +8,7 @@ import {
   Building2,
   Database,
   MessageSquare,
+  Rocket,
   Sparkles,
   UserPlus,
   Zap,
