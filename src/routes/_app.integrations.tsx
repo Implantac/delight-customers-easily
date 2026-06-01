@@ -118,10 +118,18 @@ function ConnectHubDashboard() {
   const enqueueSync = useServerFn(enqueueErpSync);
   const fetchJobs = useServerFn(listErpSyncJobs);
 
+  const fetchSchedule = useServerFn(getErpSchedule);
+  const updateSchedule = useServerFn(updateErpSchedule);
+
   const [syncDialog, setSyncDialog] = useState<{
     integrationId: string;
     providerName: string;
   } | null>(null);
+  const [scheduleDialog, setScheduleDialog] = useState<{
+    integrationId: string;
+    providerName: string;
+  } | null>(null);
+  const [schedFreq, setSchedFreq] = useState<ScheduleFreq>("hourly");
   const [selectedResources, setSelectedResources] = useState<
     Record<SyncResource, boolean>
   >({
