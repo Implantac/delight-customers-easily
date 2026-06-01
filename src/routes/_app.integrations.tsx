@@ -7,6 +7,7 @@ import { useCurrentOrg } from "@/lib/org";
 import { useCanManage } from "@/lib/permissions";
 import { getErpHealth } from "@/lib/erp-hub.functions";
 import { enqueueErpSync, listErpSyncJobs } from "@/lib/connect-hub.functions";
+import { getErpSchedule, updateErpSchedule, FREQ_LABELS, type ScheduleFreq } from "@/lib/erp-schedule.functions";
 import { FRIENDLY_ERPS, statusLabel } from "@/lib/connect-hub";
 import {
   Card,
@@ -32,6 +33,13 @@ import {
   RadioGroup,
   RadioGroupItem,
 } from "@/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { PageHeader } from "@/components/page-header";
 import {
   Plug,
@@ -49,6 +57,9 @@ import {
   AlertTriangle,
   ChevronRight,
   Loader2,
+  Calendar,
+  GitBranch,
+  BarChart3,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/integrations")({
@@ -56,36 +67,12 @@ export const Route = createFileRoute("/_app/integrations")({
 });
 
 const QUICK_LINKS = [
-  {
-    to: "/integrations/health" as const,
-    icon: Activity,
-    label: "Saúde",
-    desc: "Status em tempo real",
-  },
-  {
-    to: "/integrations/outbox" as const,
-    icon: Inbox,
-    label: "Fila de eventos",
-    desc: "Envios e retries",
-  },
-  {
-    to: "/integrations/templates" as const,
-    icon: FileText,
-    label: "Templates",
-    desc: "Mapeamentos prontos",
-  },
-  {
-    to: "/integrations/apps" as const,
-    icon: AppWindow,
-    label: "Apps",
-    desc: "Conectores extras",
-  },
-  {
-    to: "/settings/erp-agent" as const,
-    icon: Server,
-    label: "Agente local",
-    desc: "ERPs on-premise",
-  },
+  { to: "/integrations/dashboard" as const, icon: BarChart3, label: "Dashboard", desc: "KPIs e SLA" },
+  { to: "/integrations/health" as const, icon: Activity, label: "Saúde", desc: "Status em tempo real" },
+  { to: "/integrations/mapping" as const, icon: GitBranch, label: "Mapeamento", desc: "Campos ERP↔CRM" },
+  { to: "/integrations/outbox" as const, icon: Inbox, label: "Fila", desc: "Envios e retries" },
+  { to: "/integrations/templates" as const, icon: FileText, label: "Templates", desc: "Mapeamentos prontos" },
+  { to: "/integrations/apps" as const, icon: AppWindow, label: "Apps", desc: "Conectores extras" },
 ];
 
 type SyncResource =
@@ -131,10 +118,18 @@ function ConnectHubDashboard() {
   const enqueueSync = useServerFn(enqueueErpSync);
   const fetchJobs = useServerFn(listErpSyncJobs);
 
+  const fetchSchedule = useServerFn(getErpSchedule);
+  const updateSchedule = useServerFn(updateErpSchedule);
+
   const [syncDialog, setSyncDialog] = useState<{
     integrationId: string;
     providerName: string;
   } | null>(null);
+  const [scheduleDialog, setScheduleDialog] = useState<{
+    integrationId: string;
+    providerName: string;
+  } | null>(null);
+  const [schedFreq, setSchedFreq] = useState<ScheduleFreq>("hourly");
   const [selectedResources, setSelectedResources] = useState<
     Record<SyncResource, boolean>
   >({
@@ -216,6 +211,42 @@ function ConnectHubDashboard() {
         description: e?.message ?? "Tente novamente em instantes.",
       }),
   });
+
+  const scheduleMut = useMutation({
+    mutationFn: (vars: { integrationId: string; frequency: ScheduleFreq }) =>
+      updateSchedule({
+        data: {
+          organizationId: orgId!,
+          integrationId: vars.integrationId,
+          frequency: vars.frequency,
+          resources: ["customers", "sales_history"],
+          direction: "pull",
+        },
+      }),
+    onSuccess: (data) => {
+      toast.success(
+        data.nextRunAt
+          ? `Agendado. Próxima execução: ${new Date(data.nextRunAt).toLocaleString("pt-BR")}`
+          : "Agendamento removido.",
+      );
+      setScheduleDialog(null);
+      qc.invalidateQueries({ queryKey: ["erp-health", orgId] });
+    },
+    onError: (e: any) =>
+      toast.error("Falha ao salvar agendamento", { description: e?.message }),
+  });
+
+  async function openScheduleDialog(integrationId: string, providerName: string) {
+    setScheduleDialog({ integrationId, providerName });
+    try {
+      const cur = await fetchSchedule({
+        data: { organizationId: orgId!, integrationId },
+      });
+      setSchedFreq(cur.frequency);
+    } catch {
+      setSchedFreq("hourly");
+    }
+  }
 
   function openSyncDialog(integrationId: string, providerName: string) {
     setSelectedResources({
@@ -493,6 +524,19 @@ function ConnectHubDashboard() {
                         <RefreshCw className="h-3 w-3" />
                         Sincronizar
                       </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="h-7 gap-1.5 text-xs"
+                        disabled={!r.integration_id || !r.is_active}
+                        onClick={() =>
+                          r.integration_id &&
+                          openScheduleDialog(r.integration_id, providerName)
+                        }
+                      >
+                        <Calendar className="h-3 w-3" />
+                        Agendar
+                      </Button>
                       <Link to="/integrations/outbox">
                         <Button size="sm" variant="ghost" className="h-7 gap-1.5 text-xs">
                           <Inbox className="h-3 w-3" /> Logs
@@ -627,6 +671,72 @@ function ConnectHubDashboard() {
                 <RefreshCw className="h-4 w-4" />
               )}
               {syncMut.isPending ? "Enviando..." : "Iniciar sincronização"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog de agendamento */}
+      <Dialog
+        open={!!scheduleDialog}
+        onOpenChange={(o) => !o && !scheduleMut.isPending && setScheduleDialog(null)}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Calendar className="h-4 w-4" />
+              Agendar sync — {scheduleDialog?.providerName}
+            </DialogTitle>
+            <DialogDescription>
+              Escolha a frequência. O ConnectHub roda os syncs automaticamente.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-2 space-y-2">
+            <Label className="text-xs uppercase tracking-wide text-muted-foreground">
+              Frequência
+            </Label>
+            <Select value={schedFreq} onValueChange={(v) => setSchedFreq(v as ScheduleFreq)}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {(Object.keys(FREQ_LABELS) as ScheduleFreq[]).map((k) => (
+                  <SelectItem key={k} value={k}>
+                    {FREQ_LABELS[k]}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-muted-foreground">
+              Sincroniza Clientes + Histórico comercial (ERP→CRM). Para
+              recursos customizados, use o botão Sincronizar.
+            </p>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setScheduleDialog(null)}
+              disabled={scheduleMut.isPending}
+            >
+              Cancelar
+            </Button>
+            <Button
+              onClick={() =>
+                scheduleDialog &&
+                scheduleMut.mutate({
+                  integrationId: scheduleDialog.integrationId,
+                  frequency: schedFreq,
+                })
+              }
+              disabled={scheduleMut.isPending}
+              className="gap-2"
+            >
+              {scheduleMut.isPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Calendar className="h-4 w-4" />
+              )}
+              Salvar agendamento
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -3579,6 +3579,7 @@ export type Database = {
           is_active: boolean
           last_error: string | null
           last_sync_at: string | null
+          next_sync_at: string | null
           organization_id: string
           provider: string
           resources: string[]
@@ -3596,6 +3597,7 @@ export type Database = {
           is_active?: boolean
           last_error?: string | null
           last_sync_at?: string | null
+          next_sync_at?: string | null
           organization_id: string
           provider: string
           resources?: string[]
@@ -3613,6 +3615,7 @@ export type Database = {
           is_active?: boolean
           last_error?: string | null
           last_sync_at?: string | null
+          next_sync_at?: string | null
           organization_id?: string
           provider?: string
           resources?: string[]

@@ -105,8 +105,10 @@ import { Route as AppInviteTokenRouteImport } from './routes/_app.invite.$token'
 import { Route as AppInteligenciaComercialQualidadeIaRouteImport } from './routes/_app.inteligencia-comercial.qualidade-ia'
 import { Route as AppIntegrationsTemplatesRouteImport } from './routes/_app.integrations.templates'
 import { Route as AppIntegrationsOutboxRouteImport } from './routes/_app.integrations.outbox'
+import { Route as AppIntegrationsMappingRouteImport } from './routes/_app.integrations.mapping'
 import { Route as AppIntegrationsHelpRouteImport } from './routes/_app.integrations.help'
 import { Route as AppIntegrationsHealthRouteImport } from './routes/_app.integrations.health'
+import { Route as AppIntegrationsDashboardRouteImport } from './routes/_app.integrations.dashboard'
 import { Route as AppIntegrationsConnectRouteImport } from './routes/_app.integrations.connect'
 import { Route as AppIntegrationsAppsRouteImport } from './routes/_app.integrations.apps'
 import { Route as AppIntegrationsAdvancedRouteImport } from './routes/_app.integrations.advanced'
@@ -126,6 +128,7 @@ import { Route as ApiOauthGoogleInitiateRouteImport } from './routes/api.oauth.g
 import { Route as ApiOauthGoogleCallbackRouteImport } from './routes/api.oauth.google.callback'
 import { Route as AppSettingsAutomationsRunsRouteImport } from './routes/_app.settings.automations.runs'
 import { Route as AppReportsDashboardsIdRouteImport } from './routes/_app.reports.dashboards.$id'
+import { Route as AppIntegrationsConnectWizardRouteImport } from './routes/_app.integrations.connect.wizard'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -610,6 +613,11 @@ const AppIntegrationsOutboxRoute = AppIntegrationsOutboxRouteImport.update({
   path: '/outbox',
   getParentRoute: () => AppIntegrationsRoute,
 } as any)
+const AppIntegrationsMappingRoute = AppIntegrationsMappingRouteImport.update({
+  id: '/mapping',
+  path: '/mapping',
+  getParentRoute: () => AppIntegrationsRoute,
+} as any)
 const AppIntegrationsHelpRoute = AppIntegrationsHelpRouteImport.update({
   id: '/help',
   path: '/help',
@@ -620,6 +628,12 @@ const AppIntegrationsHealthRoute = AppIntegrationsHealthRouteImport.update({
   path: '/health',
   getParentRoute: () => AppIntegrationsRoute,
 } as any)
+const AppIntegrationsDashboardRoute =
+  AppIntegrationsDashboardRouteImport.update({
+    id: '/dashboard',
+    path: '/dashboard',
+    getParentRoute: () => AppIntegrationsRoute,
+  } as any)
 const AppIntegrationsConnectRoute = AppIntegrationsConnectRouteImport.update({
   id: '/connect',
   path: '/connect',
@@ -726,6 +740,12 @@ const AppReportsDashboardsIdRoute = AppReportsDashboardsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AppReportsDashboardsRoute,
 } as any)
+const AppIntegrationsConnectWizardRoute =
+  AppIntegrationsConnectWizardRouteImport.update({
+    id: '/wizard',
+    path: '/wizard',
+    getParentRoute: () => AppIntegrationsConnectRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -805,9 +825,11 @@ export interface FileRoutesByFullPath {
   '/contacts/$id': typeof AppContactsIdRoute
   '/integrations/advanced': typeof AppIntegrationsAdvancedRoute
   '/integrations/apps': typeof AppIntegrationsAppsRoute
-  '/integrations/connect': typeof AppIntegrationsConnectRoute
+  '/integrations/connect': typeof AppIntegrationsConnectRouteWithChildren
+  '/integrations/dashboard': typeof AppIntegrationsDashboardRoute
   '/integrations/health': typeof AppIntegrationsHealthRoute
   '/integrations/help': typeof AppIntegrationsHelpRoute
+  '/integrations/mapping': typeof AppIntegrationsMappingRoute
   '/integrations/outbox': typeof AppIntegrationsOutboxRoute
   '/integrations/templates': typeof AppIntegrationsTemplatesRoute
   '/inteligencia-comercial/qualidade-ia': typeof AppInteligenciaComercialQualidadeIaRoute
@@ -830,6 +852,7 @@ export interface FileRoutesByFullPath {
   '/api/public/influencer-visit': typeof ApiPublicInfluencerVisitRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/i/$org/$slug': typeof IOrgSlugRoute
+  '/integrations/connect/wizard': typeof AppIntegrationsConnectWizardRoute
   '/reports/dashboards/$id': typeof AppReportsDashboardsIdRoute
   '/settings/automations/runs': typeof AppSettingsAutomationsRunsRoute
   '/api/oauth/google/callback': typeof ApiOauthGoogleCallbackRoute
@@ -923,9 +946,11 @@ export interface FileRoutesByTo {
   '/contacts/$id': typeof AppContactsIdRoute
   '/integrations/advanced': typeof AppIntegrationsAdvancedRoute
   '/integrations/apps': typeof AppIntegrationsAppsRoute
-  '/integrations/connect': typeof AppIntegrationsConnectRoute
+  '/integrations/connect': typeof AppIntegrationsConnectRouteWithChildren
+  '/integrations/dashboard': typeof AppIntegrationsDashboardRoute
   '/integrations/health': typeof AppIntegrationsHealthRoute
   '/integrations/help': typeof AppIntegrationsHelpRoute
+  '/integrations/mapping': typeof AppIntegrationsMappingRoute
   '/integrations/outbox': typeof AppIntegrationsOutboxRoute
   '/integrations/templates': typeof AppIntegrationsTemplatesRoute
   '/inteligencia-comercial/qualidade-ia': typeof AppInteligenciaComercialQualidadeIaRoute
@@ -948,6 +973,7 @@ export interface FileRoutesByTo {
   '/api/public/influencer-visit': typeof ApiPublicInfluencerVisitRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/i/$org/$slug': typeof IOrgSlugRoute
+  '/integrations/connect/wizard': typeof AppIntegrationsConnectWizardRoute
   '/reports/dashboards/$id': typeof AppReportsDashboardsIdRoute
   '/settings/automations/runs': typeof AppSettingsAutomationsRunsRoute
   '/api/oauth/google/callback': typeof ApiOauthGoogleCallbackRoute
@@ -1043,9 +1069,11 @@ export interface FileRoutesById {
   '/_app/contacts/$id': typeof AppContactsIdRoute
   '/_app/integrations/advanced': typeof AppIntegrationsAdvancedRoute
   '/_app/integrations/apps': typeof AppIntegrationsAppsRoute
-  '/_app/integrations/connect': typeof AppIntegrationsConnectRoute
+  '/_app/integrations/connect': typeof AppIntegrationsConnectRouteWithChildren
+  '/_app/integrations/dashboard': typeof AppIntegrationsDashboardRoute
   '/_app/integrations/health': typeof AppIntegrationsHealthRoute
   '/_app/integrations/help': typeof AppIntegrationsHelpRoute
+  '/_app/integrations/mapping': typeof AppIntegrationsMappingRoute
   '/_app/integrations/outbox': typeof AppIntegrationsOutboxRoute
   '/_app/integrations/templates': typeof AppIntegrationsTemplatesRoute
   '/_app/inteligencia-comercial/qualidade-ia': typeof AppInteligenciaComercialQualidadeIaRoute
@@ -1068,6 +1096,7 @@ export interface FileRoutesById {
   '/api/public/influencer-visit': typeof ApiPublicInfluencerVisitRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
   '/i/$org/$slug': typeof IOrgSlugRoute
+  '/_app/integrations/connect/wizard': typeof AppIntegrationsConnectWizardRoute
   '/_app/reports/dashboards/$id': typeof AppReportsDashboardsIdRoute
   '/_app/settings/automations/runs': typeof AppSettingsAutomationsRunsRoute
   '/api/oauth/google/callback': typeof ApiOauthGoogleCallbackRoute
@@ -1164,8 +1193,10 @@ export interface FileRouteTypes {
     | '/integrations/advanced'
     | '/integrations/apps'
     | '/integrations/connect'
+    | '/integrations/dashboard'
     | '/integrations/health'
     | '/integrations/help'
+    | '/integrations/mapping'
     | '/integrations/outbox'
     | '/integrations/templates'
     | '/inteligencia-comercial/qualidade-ia'
@@ -1188,6 +1219,7 @@ export interface FileRouteTypes {
     | '/api/public/influencer-visit'
     | '/api/public/lead-form'
     | '/i/$org/$slug'
+    | '/integrations/connect/wizard'
     | '/reports/dashboards/$id'
     | '/settings/automations/runs'
     | '/api/oauth/google/callback'
@@ -1282,8 +1314,10 @@ export interface FileRouteTypes {
     | '/integrations/advanced'
     | '/integrations/apps'
     | '/integrations/connect'
+    | '/integrations/dashboard'
     | '/integrations/health'
     | '/integrations/help'
+    | '/integrations/mapping'
     | '/integrations/outbox'
     | '/integrations/templates'
     | '/inteligencia-comercial/qualidade-ia'
@@ -1306,6 +1340,7 @@ export interface FileRouteTypes {
     | '/api/public/influencer-visit'
     | '/api/public/lead-form'
     | '/i/$org/$slug'
+    | '/integrations/connect/wizard'
     | '/reports/dashboards/$id'
     | '/settings/automations/runs'
     | '/api/oauth/google/callback'
@@ -1401,8 +1436,10 @@ export interface FileRouteTypes {
     | '/_app/integrations/advanced'
     | '/_app/integrations/apps'
     | '/_app/integrations/connect'
+    | '/_app/integrations/dashboard'
     | '/_app/integrations/health'
     | '/_app/integrations/help'
+    | '/_app/integrations/mapping'
     | '/_app/integrations/outbox'
     | '/_app/integrations/templates'
     | '/_app/inteligencia-comercial/qualidade-ia'
@@ -1425,6 +1462,7 @@ export interface FileRouteTypes {
     | '/api/public/influencer-visit'
     | '/api/public/lead-form'
     | '/i/$org/$slug'
+    | '/_app/integrations/connect/wizard'
     | '/_app/reports/dashboards/$id'
     | '/_app/settings/automations/runs'
     | '/api/oauth/google/callback'
@@ -2138,6 +2176,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIntegrationsOutboxRouteImport
       parentRoute: typeof AppIntegrationsRoute
     }
+    '/_app/integrations/mapping': {
+      id: '/_app/integrations/mapping'
+      path: '/mapping'
+      fullPath: '/integrations/mapping'
+      preLoaderRoute: typeof AppIntegrationsMappingRouteImport
+      parentRoute: typeof AppIntegrationsRoute
+    }
     '/_app/integrations/help': {
       id: '/_app/integrations/help'
       path: '/help'
@@ -2150,6 +2195,13 @@ declare module '@tanstack/react-router' {
       path: '/health'
       fullPath: '/integrations/health'
       preLoaderRoute: typeof AppIntegrationsHealthRouteImport
+      parentRoute: typeof AppIntegrationsRoute
+    }
+    '/_app/integrations/dashboard': {
+      id: '/_app/integrations/dashboard'
+      path: '/dashboard'
+      fullPath: '/integrations/dashboard'
+      preLoaderRoute: typeof AppIntegrationsDashboardRouteImport
       parentRoute: typeof AppIntegrationsRoute
     }
     '/_app/integrations/connect': {
@@ -2285,6 +2337,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppReportsDashboardsIdRouteImport
       parentRoute: typeof AppReportsDashboardsRoute
     }
+    '/_app/integrations/connect/wizard': {
+      id: '/_app/integrations/connect/wizard'
+      path: '/wizard'
+      fullPath: '/integrations/connect/wizard'
+      preLoaderRoute: typeof AppIntegrationsConnectWizardRouteImport
+      parentRoute: typeof AppIntegrationsConnectRoute
+    }
   }
 }
 
@@ -2312,12 +2371,28 @@ const AppContactsRouteWithChildren = AppContactsRoute._addFileChildren(
   AppContactsRouteChildren,
 )
 
+interface AppIntegrationsConnectRouteChildren {
+  AppIntegrationsConnectWizardRoute: typeof AppIntegrationsConnectWizardRoute
+}
+
+const AppIntegrationsConnectRouteChildren: AppIntegrationsConnectRouteChildren =
+  {
+    AppIntegrationsConnectWizardRoute: AppIntegrationsConnectWizardRoute,
+  }
+
+const AppIntegrationsConnectRouteWithChildren =
+  AppIntegrationsConnectRoute._addFileChildren(
+    AppIntegrationsConnectRouteChildren,
+  )
+
 interface AppIntegrationsRouteChildren {
   AppIntegrationsAdvancedRoute: typeof AppIntegrationsAdvancedRoute
   AppIntegrationsAppsRoute: typeof AppIntegrationsAppsRoute
-  AppIntegrationsConnectRoute: typeof AppIntegrationsConnectRoute
+  AppIntegrationsConnectRoute: typeof AppIntegrationsConnectRouteWithChildren
+  AppIntegrationsDashboardRoute: typeof AppIntegrationsDashboardRoute
   AppIntegrationsHealthRoute: typeof AppIntegrationsHealthRoute
   AppIntegrationsHelpRoute: typeof AppIntegrationsHelpRoute
+  AppIntegrationsMappingRoute: typeof AppIntegrationsMappingRoute
   AppIntegrationsOutboxRoute: typeof AppIntegrationsOutboxRoute
   AppIntegrationsTemplatesRoute: typeof AppIntegrationsTemplatesRoute
 }
@@ -2325,9 +2400,11 @@ interface AppIntegrationsRouteChildren {
 const AppIntegrationsRouteChildren: AppIntegrationsRouteChildren = {
   AppIntegrationsAdvancedRoute: AppIntegrationsAdvancedRoute,
   AppIntegrationsAppsRoute: AppIntegrationsAppsRoute,
-  AppIntegrationsConnectRoute: AppIntegrationsConnectRoute,
+  AppIntegrationsConnectRoute: AppIntegrationsConnectRouteWithChildren,
+  AppIntegrationsDashboardRoute: AppIntegrationsDashboardRoute,
   AppIntegrationsHealthRoute: AppIntegrationsHealthRoute,
   AppIntegrationsHelpRoute: AppIntegrationsHelpRoute,
+  AppIntegrationsMappingRoute: AppIntegrationsMappingRoute,
   AppIntegrationsOutboxRoute: AppIntegrationsOutboxRoute,
   AppIntegrationsTemplatesRoute: AppIntegrationsTemplatesRoute,
 }
