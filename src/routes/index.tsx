@@ -460,12 +460,12 @@ function Features() {
           {features.map((f) => (
             <div
               key={f.title}
-              className="group rounded-2xl border border-border/70 bg-card p-6 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg"
+              className="group rounded-2xl border border-border/70 bg-card p-6 transition-all hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-lg"
             >
-              <div className="grid h-10 w-10 place-items-center rounded-lg bg-primary/10 text-primary">
+              <div className="grid h-10 w-10 place-items-center rounded-lg bg-accent/15 text-accent ring-1 ring-accent/20 transition-all group-hover:bg-accent/20">
                 {f.icon}
               </div>
-              <h3 className="mt-4 text-lg font-semibold tracking-tight">{f.title}</h3>
+              <h3 className="mt-4 font-display text-lg font-semibold tracking-tight">{f.title}</h3>
               <p className="mt-1.5 text-sm text-muted-foreground">{f.desc}</p>
             </div>
           ))}
