@@ -8,6 +8,7 @@ import {
   Building2,
   Database,
   MessageSquare,
+  Rocket,
   Sparkles,
   UserPlus,
   Zap,
@@ -38,6 +39,28 @@ function WelcomePage() {
           próximos passos abaixo — pode pular e voltar quando quiser.
         </p>
       </div>
+
+      <Card className="border-primary/40 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent">
+        <CardContent className="flex flex-col items-start gap-4 p-6 md:flex-row md:items-center md:justify-between">
+          <div className="flex items-start gap-3">
+            <div className="grid h-11 w-11 place-items-center rounded-lg bg-primary text-primary-foreground shadow-lg shadow-primary/30">
+              <Rocket className="h-5 w-5" />
+            </div>
+            <div>
+              <h3 className="font-semibold">Setup guiado em 4 passos</h3>
+              <p className="text-sm text-muted-foreground">
+                Workspace → conectar ERP → primeiro sync → atalhos. Leva ~5 min.
+              </p>
+            </div>
+          </div>
+          <Button asChild size="lg">
+            <Link to="/setup-wizard">
+              Iniciar setup guiado <ArrowRight className="ml-1.5 h-4 w-4" />
+            </Link>
+          </Button>
+        </CardContent>
+      </Card>
+
 
       <div className="grid gap-6 md:grid-cols-[1fr_320px]">
         <OnboardingChecklist />
