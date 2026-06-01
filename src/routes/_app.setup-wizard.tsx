@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
@@ -88,13 +88,15 @@ const STEPS = [
 function SetupWizardPage() {
   const navigate = useNavigate();
   const { org, orgId } = useCurrentOrg();
+  const storageKey = orgId ? `setup-wizard:${orgId}` : null;
+
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
 
   // Step 1
   const [orgName, setOrgName] = useState(org?.name ?? "");
   const [savingOrg, setSavingOrg] = useState(false);
 
-  // Step 2
+  // Step 2 (secrets never persisted)
   const [provider, setProvider] = useState<ProviderKey>("bling");
   const [appKey, setAppKey] = useState("");
   const [appSecret, setAppSecret] = useState("");
@@ -103,6 +105,43 @@ function SetupWizardPage() {
   const [integrationId, setIntegrationId] = useState<string | null>(null);
   const [testLatency, setTestLatency] = useState<number | null>(null);
   const [connError, setConnError] = useState<string | null>(null);
+  const [restored, setRestored] = useState(false);
+
+  // Restore non-sensitive draft once orgId is known
+  useEffect(() => {
+    if (!storageKey) return;
+    try {
+      const raw = localStorage.getItem(storageKey);
+      if (!raw) return;
+      const s = JSON.parse(raw) as {
+        step?: 1 | 2 | 3 | 4;
+        orgName?: string;
+        provider?: ProviderKey;
+        integrationId?: string | null;
+      };
+      if (s.step) setStep(s.step);
+      if (s.orgName) setOrgName(s.orgName);
+      if (s.provider) setProvider(s.provider);
+      if (s.integrationId) setIntegrationId(s.integrationId);
+      setRestored(true);
+    } catch {
+      /* ignore */
+    }
+  }, [storageKey]);
+
+  // Persist progress (no secrets)
+  useEffect(() => {
+    if (!storageKey) return;
+    try {
+      localStorage.setItem(
+        storageKey,
+        JSON.stringify({ step, orgName, provider, integrationId }),
+      );
+    } catch {
+      /* ignore */
+    }
+  }, [storageKey, step, orgName, provider, integrationId]);
+
 
   const spec = PROVIDERS.find((p) => p.key === provider)!;
 
@@ -192,6 +231,30 @@ function SetupWizardPage() {
         subtitle="Quatro passos para colocar seu CRM operando com dados reais do ERP."
         icon={Rocket}
       />
+
+      {restored && step > 1 && step < 4 && (
+        <Alert className="border-primary/30 bg-primary/5">
+          <Sparkles className="h-4 w-4 text-primary" />
+          <AlertTitle>Retomando de onde você parou</AlertTitle>
+          <AlertDescription className="flex items-center justify-between gap-2">
+            <span>Progresso anterior carregado. Credenciais por segurança não são guardadas.</span>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => {
+                if (storageKey) localStorage.removeItem(storageKey);
+                setStep(1);
+                setIntegrationId(null);
+                setAppKey("");
+                setAppSecret("");
+                setRestored(false);
+              }}
+            >
+              Recomeçar
+            </Button>
+          </AlertDescription>
+        </Alert>
+      )}
 
       {/* Progress bar */}
       <div className="space-y-2">
@@ -483,7 +546,7 @@ function SetupWizardPage() {
           </div>
 
           <div className="flex justify-end pt-2">
-            <Button onClick={() => navigate({ to: "/dashboard" })}>
+            <Button onClick={() => { if (storageKey) localStorage.removeItem(storageKey); navigate({ to: "/dashboard" }); }}>
               Ir para o dashboard <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </div>
