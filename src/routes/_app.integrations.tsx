@@ -51,6 +51,8 @@ import {
   CheckCircle2,
   RefreshCw,
   Inbox,
+  AlertTriangle,
+  FlaskConical,
   FileText,
   AppWindow,
   Server,
@@ -83,6 +85,8 @@ const ADVANCED_LINKS = [
   { to: "/integrations/agent" as const, icon: Server, label: "Agente Local", desc: "Para ERPs locais (Firebird, SQL Server)" },
   { to: "/integrations/mapping" as const, icon: GitBranch, label: "Mapeamento de campos", desc: "Para casos personalizados" },
   { to: "/integrations/outbox" as const, icon: Inbox, label: "Fila e logs", desc: "Histórico de envios" },
+  { to: "/integrations/conflicts" as const, icon: AlertTriangle, label: "Conflitos", desc: "Resolver divergências CRM × ERP" },
+  { to: "/integrations/smoke-test" as const, icon: FlaskConical, label: "Smoke test", desc: "Validar drivers sem credenciais" },
   { to: "/integrations/templates" as const, icon: FileText, label: "Templates prontos", desc: "Mapeamentos pré-configurados" },
   { to: "/integrations/apps" as const, icon: AppWindow, label: "Conectores extras", desc: "Outras integrações" },
 ];
