@@ -13,7 +13,7 @@ export const Route = createFileRoute("/_app/integrations/smoke-test")({
 
 function SmokeTestPage() {
   const run = useServerFn(runErpSmokeTest);
-  const m = useMutation<SmokeReport>({ mutationFn: () => run({ data: {} }) });
+  const m = useMutation<SmokeReport>({ mutationFn: () => run() });
 
   return (
     <div className="space-y-6 p-6 max-w-4xl mx-auto">

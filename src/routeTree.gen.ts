@@ -104,6 +104,7 @@ import { Route as AppKbIdRouteImport } from './routes/_app.kb.$id'
 import { Route as AppInviteTokenRouteImport } from './routes/_app.invite.$token'
 import { Route as AppInteligenciaComercialQualidadeIaRouteImport } from './routes/_app.inteligencia-comercial.qualidade-ia'
 import { Route as AppIntegrationsTemplatesRouteImport } from './routes/_app.integrations.templates'
+import { Route as AppIntegrationsSmokeTestRouteImport } from './routes/_app.integrations.smoke-test'
 import { Route as AppIntegrationsOutboxRouteImport } from './routes/_app.integrations.outbox'
 import { Route as AppIntegrationsMappingRouteImport } from './routes/_app.integrations.mapping'
 import { Route as AppIntegrationsHelpRouteImport } from './routes/_app.integrations.help'
@@ -610,6 +611,12 @@ const AppIntegrationsTemplatesRoute =
     path: '/templates',
     getParentRoute: () => AppIntegrationsRoute,
   } as any)
+const AppIntegrationsSmokeTestRoute =
+  AppIntegrationsSmokeTestRouteImport.update({
+    id: '/smoke-test',
+    path: '/smoke-test',
+    getParentRoute: () => AppIntegrationsRoute,
+  } as any)
 const AppIntegrationsOutboxRoute = AppIntegrationsOutboxRouteImport.update({
   id: '/outbox',
   path: '/outbox',
@@ -846,6 +853,7 @@ export interface FileRoutesByFullPath {
   '/integrations/help': typeof AppIntegrationsHelpRoute
   '/integrations/mapping': typeof AppIntegrationsMappingRoute
   '/integrations/outbox': typeof AppIntegrationsOutboxRoute
+  '/integrations/smoke-test': typeof AppIntegrationsSmokeTestRoute
   '/integrations/templates': typeof AppIntegrationsTemplatesRoute
   '/inteligencia-comercial/qualidade-ia': typeof AppInteligenciaComercialQualidadeIaRoute
   '/invite/$token': typeof AppInviteTokenRoute
@@ -969,6 +977,7 @@ export interface FileRoutesByTo {
   '/integrations/help': typeof AppIntegrationsHelpRoute
   '/integrations/mapping': typeof AppIntegrationsMappingRoute
   '/integrations/outbox': typeof AppIntegrationsOutboxRoute
+  '/integrations/smoke-test': typeof AppIntegrationsSmokeTestRoute
   '/integrations/templates': typeof AppIntegrationsTemplatesRoute
   '/inteligencia-comercial/qualidade-ia': typeof AppInteligenciaComercialQualidadeIaRoute
   '/invite/$token': typeof AppInviteTokenRoute
@@ -1094,6 +1103,7 @@ export interface FileRoutesById {
   '/_app/integrations/help': typeof AppIntegrationsHelpRoute
   '/_app/integrations/mapping': typeof AppIntegrationsMappingRoute
   '/_app/integrations/outbox': typeof AppIntegrationsOutboxRoute
+  '/_app/integrations/smoke-test': typeof AppIntegrationsSmokeTestRoute
   '/_app/integrations/templates': typeof AppIntegrationsTemplatesRoute
   '/_app/inteligencia-comercial/qualidade-ia': typeof AppInteligenciaComercialQualidadeIaRoute
   '/_app/invite/$token': typeof AppInviteTokenRoute
@@ -1219,6 +1229,7 @@ export interface FileRouteTypes {
     | '/integrations/help'
     | '/integrations/mapping'
     | '/integrations/outbox'
+    | '/integrations/smoke-test'
     | '/integrations/templates'
     | '/inteligencia-comercial/qualidade-ia'
     | '/invite/$token'
@@ -1342,6 +1353,7 @@ export interface FileRouteTypes {
     | '/integrations/help'
     | '/integrations/mapping'
     | '/integrations/outbox'
+    | '/integrations/smoke-test'
     | '/integrations/templates'
     | '/inteligencia-comercial/qualidade-ia'
     | '/invite/$token'
@@ -1466,6 +1478,7 @@ export interface FileRouteTypes {
     | '/_app/integrations/help'
     | '/_app/integrations/mapping'
     | '/_app/integrations/outbox'
+    | '/_app/integrations/smoke-test'
     | '/_app/integrations/templates'
     | '/_app/inteligencia-comercial/qualidade-ia'
     | '/_app/invite/$token'
@@ -2194,6 +2207,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIntegrationsTemplatesRouteImport
       parentRoute: typeof AppIntegrationsRoute
     }
+    '/_app/integrations/smoke-test': {
+      id: '/_app/integrations/smoke-test'
+      path: '/smoke-test'
+      fullPath: '/integrations/smoke-test'
+      preLoaderRoute: typeof AppIntegrationsSmokeTestRouteImport
+      parentRoute: typeof AppIntegrationsRoute
+    }
     '/_app/integrations/outbox': {
       id: '/_app/integrations/outbox'
       path: '/outbox'
@@ -2435,6 +2455,7 @@ interface AppIntegrationsRouteChildren {
   AppIntegrationsHelpRoute: typeof AppIntegrationsHelpRoute
   AppIntegrationsMappingRoute: typeof AppIntegrationsMappingRoute
   AppIntegrationsOutboxRoute: typeof AppIntegrationsOutboxRoute
+  AppIntegrationsSmokeTestRoute: typeof AppIntegrationsSmokeTestRoute
   AppIntegrationsTemplatesRoute: typeof AppIntegrationsTemplatesRoute
 }
 
@@ -2449,6 +2470,7 @@ const AppIntegrationsRouteChildren: AppIntegrationsRouteChildren = {
   AppIntegrationsHelpRoute: AppIntegrationsHelpRoute,
   AppIntegrationsMappingRoute: AppIntegrationsMappingRoute,
   AppIntegrationsOutboxRoute: AppIntegrationsOutboxRoute,
+  AppIntegrationsSmokeTestRoute: AppIntegrationsSmokeTestRoute,
   AppIntegrationsTemplatesRoute: AppIntegrationsTemplatesRoute,
 }
 
