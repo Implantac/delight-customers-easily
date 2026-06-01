@@ -546,7 +546,7 @@ function SetupWizardPage() {
           </div>
 
           <div className="flex justify-end pt-2">
-            <Button onClick={() => navigate({ to: "/dashboard" })}>
+            <Button onClick={() => { if (storageKey) localStorage.removeItem(storageKey); navigate({ to: "/dashboard" }); }}>
               Ir para o dashboard <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </div>
