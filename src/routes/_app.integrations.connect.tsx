@@ -211,7 +211,53 @@ function ConnectWizard() {
             <CardTitle>Qual é o seu ERP?</CardTitle>
             <CardDescription>Escolha o sistema que você usa hoje.</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
+            {/* Assistente IA — sugestão de ERP por descrição livre */}
+            <div className="rounded-lg border border-primary/30 bg-primary/5 p-4 space-y-2">
+              <div className="flex items-center gap-2 text-sm font-medium">
+                <Sparkles className="h-4 w-4 text-primary" />
+                Não sabe qual escolher? Descreva e a IA sugere
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Ex: "uso um sistema antigo da TOTVS instalado no servidor" ou "exporto planilhas do meu sistema fiscal".
+              </p>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <Input
+                  value={aiQuery}
+                  onChange={(e) => setAiQuery(e.target.value)}
+                  placeholder="Descreva seu ERP em uma frase..."
+                  onKeyDown={(e) => { if (e.key === "Enter") handleAiSuggest(); }}
+                  disabled={aiLoading}
+                />
+                <Button onClick={handleAiSuggest} disabled={aiLoading || !aiQuery.trim()} className="gap-2 shrink-0">
+                  {aiLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                  Sugerir
+                </Button>
+              </div>
+              {aiSuggestion && (
+                <div className="rounded-md border bg-background p-3 text-sm space-y-1.5">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-green-600" />
+                    <span className="font-medium">Recomendação:</span>
+                    <span>{aiSuggestion.provider_name}</span>
+                    <Badge variant="outline" className="text-[10px] ml-auto">
+                      {Math.round(aiSuggestion.confidence * 100)}% confiança
+                    </Badge>
+                  </div>
+                  {aiSuggestion.reasoning && (
+                    <p className="text-xs text-muted-foreground">{aiSuggestion.reasoning}</p>
+                  )}
+                  <p className="text-xs">
+                    Método sugerido: <strong>{
+                      aiSuggestion.connection_method === "api" ? "API (chave de acesso)" :
+                      aiSuggestion.connection_method === "db" ? "Banco de dados" :
+                      aiSuggestion.connection_method === "csv" ? "Planilha CSV" : "Agente Local"
+                    }</strong>
+                  </p>
+                </div>
+              )}
+            </div>
+
             <div className="grid gap-3 sm:grid-cols-2">
               {FRIENDLY_ERPS.map((e) => (
                 <button
