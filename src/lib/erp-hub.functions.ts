@@ -96,7 +96,7 @@ export const getErpHealth = createServerFn({ method: "POST" })
 
     const { data: integs } = await supabase
       .from("erp_integrations")
-      .select("provider,app_key,app_secret,is_active,last_sync_at,last_error")
+      .select("id,provider,app_key,app_secret,is_active,last_sync_at,last_error")
       .eq("organization_id", data.organization_id);
 
     const rows: ErpHealthRow[] = [];
