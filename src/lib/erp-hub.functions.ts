@@ -173,6 +173,7 @@ export const getErpHealth = createServerFn({ method: "POST" })
 
       rows.push({
         provider: catalog.id,
+        integration_id: (integ as any)?.id ?? null,
         is_configured: !!integ,
         is_active: !!integ?.is_active,
         last_sync_at: integ?.last_sync_at ?? null,
