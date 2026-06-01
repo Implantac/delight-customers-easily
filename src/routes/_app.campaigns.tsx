@@ -107,7 +107,7 @@ function CampaignsPage() {
 
   const sendNow = useMutation({
     mutationFn: (id: string) => sendFn({ data: { id } }),
-    onSuccess: (r) => { toast.success(`Disparada para ${r.sent} destinatário(s)`); qc.invalidateQueries(); },
+    onSuccess: () => { toast.success("Campanha enfileirada — o disparo começa no próximo tick."); qc.invalidateQueries(); },
     onError: (e: any) => toast.error(e.message),
   });
 
