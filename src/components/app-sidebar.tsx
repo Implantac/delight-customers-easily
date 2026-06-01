@@ -237,13 +237,13 @@ export function AppSidebar() {
   );
 }
 
-type NavItemProps = { to: string; label: string; Icon: LucideIcon; active: boolean };
-const NavItem = memo(function NavItem({ to, label, Icon, active }: NavItemProps) {
+type NavItemProps = { to: string; label: string; Icon: LucideIcon; active: boolean; tone: NavTone };
+const NavItem = memo(function NavItem({ to, label, Icon, active, tone }: NavItemProps) {
   return (
     <SidebarMenuItem>
       <SidebarMenuButton asChild isActive={active} tooltip={label}>
         <Link to={to as any} preload="intent">
-          <Icon className="h-4 w-4" />
+          <Icon className={`h-4 w-4 transition-colors ${TONE_CLASS[tone]}`} />
           <span>{label}</span>
         </Link>
       </SidebarMenuButton>
