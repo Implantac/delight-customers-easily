@@ -89,16 +89,16 @@ export const runErpSmokeTest = createServerFn({ method: "POST" })
     try {
       const { supabase } = context;
       const { error, count } = await supabase
-        .from("erp_sync_outbox")
-        .select("*", { count: "exact", head: true });
+        .from("erp_outbox")
+        .select("id", { count: "exact", head: true });
       checks.push({
-        name: "Acesso à fila erp_sync_outbox",
+        name: "Acesso à fila erp_outbox",
         ok: !error,
         detail: error ? `Falha: ${error.message}` : `Acesso OK. ${count ?? 0} jobs visíveis.`,
       });
     } catch (e: any) {
       checks.push({
-        name: "Acesso à fila erp_sync_outbox",
+        name: "Acesso à fila erp_outbox",
         ok: false,
         detail: `Falha: ${e?.message ?? String(e)}`,
       });
