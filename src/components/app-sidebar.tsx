@@ -22,11 +22,22 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { toast } from "sonner";
 
+type NavTone = "primary" | "info" | "success" | "violet" | "accent" | "rose";
 type NavEntry = {
   to: string;
   label: string;
   icon: LucideIcon;
+  tone?: NavTone;
   managerOnly?: boolean;
+};
+
+const TONE_CLASS: Record<NavTone, string> = {
+  primary: "text-sidebar-foreground/70 group-data-[active=true]/menu-item:text-[color:var(--accent-glow)]",
+  info:    "text-[#7aa9d9] group-data-[active=true]/menu-item:text-[color:var(--accent-glow)]",
+  success: "text-[#7cc095] group-data-[active=true]/menu-item:text-[color:var(--accent-glow)]",
+  violet:  "text-[#a89bd6] group-data-[active=true]/menu-item:text-[color:var(--accent-glow)]",
+  accent:  "text-[color:var(--accent-glow)]",
+  rose:    "text-[#d49aae] group-data-[active=true]/menu-item:text-[color:var(--accent-glow)]",
 };
 
 /**
