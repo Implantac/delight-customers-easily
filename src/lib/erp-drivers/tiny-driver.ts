@@ -10,9 +10,29 @@
  *                  Sync Engine, fora deste driver)
  */
 import type {
-  ErpCustomerDTO, ErpDriver, ErpDriverConfig, ErpPullResult,
-  ErpSalesOrderDTO, ErpSalesRepDTO,
+  ErpCustomerDTO, ErpCustomerPushInput, ErpDriver, ErpDriverConfig,
+  ErpPullResult, ErpPushResult, ErpSalesOrderDTO, ErpSalesRepDTO,
 } from "./types";
+
+async function tinyWrite(cfg: ErpDriverConfig, method: "POST" | "PUT", path: string, body: unknown) {
+  if (!cfg.app_key) throw new Error("Tiny requer access_token (app_key).");
+  const res = await fetch(`${BASE}${path}`, {
+    method,
+    headers: {
+      Authorization: `Bearer ${cfg.app_key}`,
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const text = await res.text();
+  let parsed: any; try { parsed = text ? JSON.parse(text) : {}; } catch { parsed = { raw: text }; }
+  if (!res.ok) {
+    const msg = parsed?.error?.message || parsed?.message || `Tiny HTTP ${res.status}`;
+    throw new Error(msg);
+  }
+  return parsed;
+}
 
 const BASE = "https://api.tiny.com.br/public-api/v3";
 
