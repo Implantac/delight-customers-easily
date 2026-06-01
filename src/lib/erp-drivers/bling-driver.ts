@@ -4,15 +4,21 @@
  * Apenas leitura comercial — sem estoque, sem fiscal, sem compras.
  */
 import type {
-  ErpCustomerDTO, ErpDriver, ErpDriverConfig, ErpPullResult,
-  ErpSalesOrderDTO, ErpSalesRepDTO,
+  ErpCustomerDTO, ErpCustomerPushInput, ErpDriver, ErpDriverConfig, ErpPullResult,
+  ErpPushResult, ErpSalesOrderDTO, ErpSalesRepDTO,
 } from "./types";
 
 const BASE = "https://www.bling.com.br/Api/v3";
 
-async function call(token: string, path: string) {
+async function call(token: string, path: string, init?: RequestInit) {
   const res = await fetch(`${BASE}${path}`, {
-    headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+    ...init,
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/json",
+      ...(init?.body ? { "Content-Type": "application/json" } : {}),
+      ...(init?.headers ?? {}),
+    },
   });
   const text = await res.text();
   let body: any; try { body = text ? JSON.parse(text) : {}; } catch { body = { raw: text }; }
@@ -88,5 +94,30 @@ export const blingDriver: ErpDriver = {
     }));
     const hasMore = rows.length === Math.min(limit, 100);
     return { rows, next_cursor: hasMore ? { page: page + 1 } : null, has_more: hasMore };
+  },
+
+  async pushCustomer(cfg, input): Promise<ErpPushResult> {
+    const payload: Record<string, unknown> = {
+      nome: input.legal_name ?? input.trade_name ?? "Cliente CRM",
+      fantasia: input.trade_name ?? undefined,
+      numeroDocumento: input.document ?? undefined,
+      email: input.email ?? undefined,
+      telefone: input.phone ?? undefined,
+      situacao: "A",
+    };
+    if (input.external_id) {
+      const j = await call(cfg.app_key, `/contatos/${input.external_id}`, {
+        method: "PUT",
+        body: JSON.stringify(payload),
+      });
+      return { external_id: String(j?.data?.id ?? input.external_id), note: "updated" };
+    }
+    const j = await call(cfg.app_key, `/contatos`, {
+      method: "POST",
+      body: JSON.stringify(payload),
+    });
+    const id = j?.data?.id;
+    if (!id) throw new Error("Bling não retornou data.id");
+    return { external_id: String(id), note: "created" };
   },
 };

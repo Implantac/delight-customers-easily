@@ -10,8 +10,8 @@
  * cfg.app_secret → APP SECRET do Omie
  */
 import type {
-  ErpCustomerDTO, ErpDriver, ErpDriverConfig, ErpPullResult,
-  ErpSalesOrderDTO, ErpSalesRepDTO,
+  ErpCustomerDTO, ErpCustomerPushInput, ErpDriver, ErpDriverConfig, ErpPullResult,
+  ErpPushResult, ErpSalesOrderDTO, ErpSalesRepDTO,
 } from "./types";
 
 const BASE = "https://app.omie.com.br/api/v1";
@@ -161,5 +161,31 @@ export const omieDriver: ErpDriver = {
       next_cursor: hasMore ? { pagina: pagina + 1 } : null,
       has_more: hasMore,
     };
+  },
+
+  async pushCustomer(cfg, input): Promise<ErpPushResult> {
+    // Mapeia para payload Omie. Apenas campos comerciais — sem fiscal/estoque.
+    const param: Record<string, unknown> = {
+      razao_social: input.legal_name ?? input.trade_name ?? "Cliente CRM",
+      nome_fantasia: input.trade_name ?? input.legal_name ?? null,
+      cnpj_cpf: input.document ?? "",
+      email: input.email ?? "",
+    };
+    if (input.phone) {
+      const digits = input.phone.replace(/\D/g, "");
+      param.telefone1_ddd = digits.slice(0, 2);
+      param.telefone1_numero = digits.slice(2);
+    }
+    if (input.external_id) {
+      param.codigo_cliente_omie = Number(input.external_id);
+      const j = await omieCall(cfg, "/geral/clientes/", "AlterarCliente", param);
+      return { external_id: String(j?.codigo_cliente_omie ?? input.external_id), note: "updated" };
+    }
+    // Sem external_id ainda → criação. Usa codigo_cliente_integracao = UUID temporário.
+    param.codigo_cliente_integracao = `crm-${Date.now().toString(36)}`;
+    const j = await omieCall(cfg, "/geral/clientes/", "IncluirCliente", param);
+    const id = j?.codigo_cliente_omie;
+    if (!id) throw new Error("Omie não retornou codigo_cliente_omie");
+    return { external_id: String(id), note: "created" };
   },
 };
