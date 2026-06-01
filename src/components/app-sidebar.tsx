@@ -56,6 +56,7 @@ const primaryNav: NavEntry[] = [
 ];
 
 const adminNav: NavEntry[] = [
+  { to: "/setup-wizard",             label: "Setup guiado",       icon: Rocket, managerOnly: true },
   { to: "/integrations",             label: "Integrações ERP",    icon: Plug, managerOnly: true },
   { to: "/companies",                label: "Empresas",           icon: Building },
   { to: "/settings/organization",    label: "Usuários",           icon: Users, managerOnly: true },
