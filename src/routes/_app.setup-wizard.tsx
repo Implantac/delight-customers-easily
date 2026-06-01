@@ -98,22 +98,41 @@ function SetupWizardPage() {
   const [provider, setProvider] = useState<ProviderKey>("bling");
   const [appKey, setAppKey] = useState("");
   const [appSecret, setAppSecret] = useState("");
+  const [showKey, setShowKey] = useState(false);
+  const [showSecret, setShowSecret] = useState(false);
   const [integrationId, setIntegrationId] = useState<string | null>(null);
   const [testLatency, setTestLatency] = useState<number | null>(null);
+  const [connError, setConnError] = useState<string | null>(null);
+
+  const spec = PROVIDERS.find((p) => p.key === provider)!;
 
   const saveFn = useServerFn(saveErpIntegration);
   const testFn = useServerFn(testErpConnection);
   const syncFn = useServerFn(enqueueErpSync);
 
+  const friendlyError = (raw: string): string => {
+    const m = raw.toLowerCase();
+    if (m.includes("401") || m.includes("unauthor")) return "Credencial recusada pelo ERP (401). Verifique se o token está válido e tem permissão de leitura.";
+    if (m.includes("403") || m.includes("forbidden")) return "Acesso negado (403). O token existe mas não tem escopo para clientes/vendas.";
+    if (m.includes("404")) return "Endpoint não encontrado (404). Confirme se a API do provedor está habilitada na sua conta.";
+    if (m.includes("429")) return "Rate limit atingido (429). Aguarde alguns segundos e tente novamente.";
+    if (m.includes("timeout") || m.includes("etimedout")) return "Tempo esgotado conectando ao ERP. Tente novamente; se persistir, o ERP pode estar fora do ar.";
+    if (m.includes("network") || m.includes("fetch failed")) return "Falha de rede ao chamar o ERP. Verifique conectividade e tente novamente.";
+    if (m.includes("app_key") || m.includes("app_secret")) return raw;
+    return raw;
+  };
+
   const saveConn = useMutation({
     mutationFn: async () => {
-      if (!orgId) throw new Error("Sem organização");
+      if (!orgId) throw new Error("Sem organização ativa. Recarregue a página.");
+      if (!appKey.trim()) throw new Error(`Informe o ${spec.keyLabel}.`);
+      if (spec.needsSecret && !appSecret.trim()) throw new Error(`Informe o ${spec.secretLabel}.`);
       const r = await saveFn({
         data: {
           organization_id: orgId,
           provider: provider as any,
           app_key: appKey.trim(),
-          app_secret: appSecret.trim() || appKey.trim(),
+          app_secret: spec.needsSecret ? appSecret.trim() : appKey.trim(),
           is_active: true,
         },
       });
@@ -123,10 +142,15 @@ function SetupWizardPage() {
     onSuccess: (r) => {
       setIntegrationId(r.id);
       setTestLatency(r.latency);
-      toast.success(`Conexão OK${r.latency != null ? ` (${r.latency}ms)` : ""}`);
+      setConnError(null);
+      toast.success(`Conexão OK${r.latency != null ? ` · ${r.latency}ms` : ""}`);
       setStep(3);
     },
-    onError: (e: any) => toast.error(e?.message ?? "Falha na conexão"),
+    onError: (e: any) => {
+      const msg = friendlyError(e?.message ?? "Falha desconhecida ao conectar.");
+      setConnError(msg);
+      toast.error(msg);
+    },
   });
 
   const runSync = useMutation({
@@ -156,7 +180,9 @@ function SetupWizardPage() {
     setStep(2);
   };
 
-  const canSaveConn = appKey.trim().length > 4;
+  const canSaveConn =
+    appKey.trim().length >= 8 && (!spec.needsSecret || appSecret.trim().length >= 8);
+
 
   return (
     <div className="mx-auto max-w-3xl space-y-6 p-6">
