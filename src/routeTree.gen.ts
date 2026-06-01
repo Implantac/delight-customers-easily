@@ -100,6 +100,7 @@ import { Route as AppProposalsIdRouteImport } from './routes/_app.proposals.$id'
 import { Route as AppMultiEmpresaOrgIdRouteImport } from './routes/_app.multi-empresa.$orgId'
 import { Route as AppKbIdRouteImport } from './routes/_app.kb.$id'
 import { Route as AppInviteTokenRouteImport } from './routes/_app.invite.$token'
+import { Route as AppInteligenciaComercialQualidadeIaRouteImport } from './routes/_app.inteligencia-comercial.qualidade-ia'
 import { Route as AppIntegrationsTemplatesRouteImport } from './routes/_app.integrations.templates'
 import { Route as AppIntegrationsOutboxRouteImport } from './routes/_app.integrations.outbox'
 import { Route as AppIntegrationsHelpRouteImport } from './routes/_app.integrations.help'
@@ -580,6 +581,12 @@ const AppInviteTokenRoute = AppInviteTokenRouteImport.update({
   path: '/invite/$token',
   getParentRoute: () => AppRoute,
 } as any)
+const AppInteligenciaComercialQualidadeIaRoute =
+  AppInteligenciaComercialQualidadeIaRouteImport.update({
+    id: '/qualidade-ia',
+    path: '/qualidade-ia',
+    getParentRoute: () => AppInteligenciaComercialRoute,
+  } as any)
 const AppIntegrationsTemplatesRoute =
   AppIntegrationsTemplatesRouteImport.update({
     id: '/templates',
@@ -736,7 +743,7 @@ export interface FileRoutesByFullPath {
   '/ia-comercial': typeof AppIaComercialRoute
   '/influencers': typeof AppInfluencersRoute
   '/integrations': typeof AppIntegrationsRouteWithChildren
-  '/inteligencia-comercial': typeof AppInteligenciaComercialRoute
+  '/inteligencia-comercial': typeof AppInteligenciaComercialRouteWithChildren
   '/kb': typeof AppKbRouteWithChildren
   '/lead-forms': typeof AppLeadFormsRoute
   '/lead-scoring': typeof AppLeadScoringRoute
@@ -789,6 +796,7 @@ export interface FileRoutesByFullPath {
   '/integrations/help': typeof AppIntegrationsHelpRoute
   '/integrations/outbox': typeof AppIntegrationsOutboxRoute
   '/integrations/templates': typeof AppIntegrationsTemplatesRoute
+  '/inteligencia-comercial/qualidade-ia': typeof AppInteligenciaComercialQualidadeIaRoute
   '/invite/$token': typeof AppInviteTokenRoute
   '/kb/$id': typeof AppKbIdRoute
   '/multi-empresa/$orgId': typeof AppMultiEmpresaOrgIdRoute
@@ -851,7 +859,7 @@ export interface FileRoutesByTo {
   '/ia-comercial': typeof AppIaComercialRoute
   '/influencers': typeof AppInfluencersRoute
   '/integrations': typeof AppIntegrationsRouteWithChildren
-  '/inteligencia-comercial': typeof AppInteligenciaComercialRoute
+  '/inteligencia-comercial': typeof AppInteligenciaComercialRouteWithChildren
   '/kb': typeof AppKbRouteWithChildren
   '/lead-forms': typeof AppLeadFormsRoute
   '/lead-scoring': typeof AppLeadScoringRoute
@@ -904,6 +912,7 @@ export interface FileRoutesByTo {
   '/integrations/help': typeof AppIntegrationsHelpRoute
   '/integrations/outbox': typeof AppIntegrationsOutboxRoute
   '/integrations/templates': typeof AppIntegrationsTemplatesRoute
+  '/inteligencia-comercial/qualidade-ia': typeof AppInteligenciaComercialQualidadeIaRoute
   '/invite/$token': typeof AppInviteTokenRoute
   '/kb/$id': typeof AppKbIdRoute
   '/multi-empresa/$orgId': typeof AppMultiEmpresaOrgIdRoute
@@ -968,7 +977,7 @@ export interface FileRoutesById {
   '/_app/ia-comercial': typeof AppIaComercialRoute
   '/_app/influencers': typeof AppInfluencersRoute
   '/_app/integrations': typeof AppIntegrationsRouteWithChildren
-  '/_app/inteligencia-comercial': typeof AppInteligenciaComercialRoute
+  '/_app/inteligencia-comercial': typeof AppInteligenciaComercialRouteWithChildren
   '/_app/kb': typeof AppKbRouteWithChildren
   '/_app/lead-forms': typeof AppLeadFormsRoute
   '/_app/lead-scoring': typeof AppLeadScoringRoute
@@ -1021,6 +1030,7 @@ export interface FileRoutesById {
   '/_app/integrations/help': typeof AppIntegrationsHelpRoute
   '/_app/integrations/outbox': typeof AppIntegrationsOutboxRoute
   '/_app/integrations/templates': typeof AppIntegrationsTemplatesRoute
+  '/_app/inteligencia-comercial/qualidade-ia': typeof AppInteligenciaComercialQualidadeIaRoute
   '/_app/invite/$token': typeof AppInviteTokenRoute
   '/_app/kb/$id': typeof AppKbIdRoute
   '/_app/multi-empresa/$orgId': typeof AppMultiEmpresaOrgIdRoute
@@ -1138,6 +1148,7 @@ export interface FileRouteTypes {
     | '/integrations/help'
     | '/integrations/outbox'
     | '/integrations/templates'
+    | '/inteligencia-comercial/qualidade-ia'
     | '/invite/$token'
     | '/kb/$id'
     | '/multi-empresa/$orgId'
@@ -1253,6 +1264,7 @@ export interface FileRouteTypes {
     | '/integrations/help'
     | '/integrations/outbox'
     | '/integrations/templates'
+    | '/inteligencia-comercial/qualidade-ia'
     | '/invite/$token'
     | '/kb/$id'
     | '/multi-empresa/$orgId'
@@ -1369,6 +1381,7 @@ export interface FileRouteTypes {
     | '/_app/integrations/help'
     | '/_app/integrations/outbox'
     | '/_app/integrations/templates'
+    | '/_app/inteligencia-comercial/qualidade-ia'
     | '/_app/invite/$token'
     | '/_app/kb/$id'
     | '/_app/multi-empresa/$orgId'
@@ -2066,6 +2079,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppInviteTokenRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/inteligencia-comercial/qualidade-ia': {
+      id: '/_app/inteligencia-comercial/qualidade-ia'
+      path: '/qualidade-ia'
+      fullPath: '/inteligencia-comercial/qualidade-ia'
+      preLoaderRoute: typeof AppInteligenciaComercialQualidadeIaRouteImport
+      parentRoute: typeof AppInteligenciaComercialRoute
+    }
     '/_app/integrations/templates': {
       id: '/_app/integrations/templates'
       path: '/templates'
@@ -2278,6 +2298,21 @@ const AppIntegrationsRouteWithChildren = AppIntegrationsRoute._addFileChildren(
   AppIntegrationsRouteChildren,
 )
 
+interface AppInteligenciaComercialRouteChildren {
+  AppInteligenciaComercialQualidadeIaRoute: typeof AppInteligenciaComercialQualidadeIaRoute
+}
+
+const AppInteligenciaComercialRouteChildren: AppInteligenciaComercialRouteChildren =
+  {
+    AppInteligenciaComercialQualidadeIaRoute:
+      AppInteligenciaComercialQualidadeIaRoute,
+  }
+
+const AppInteligenciaComercialRouteWithChildren =
+  AppInteligenciaComercialRoute._addFileChildren(
+    AppInteligenciaComercialRouteChildren,
+  )
+
 interface AppKbRouteChildren {
   AppKbIdRoute: typeof AppKbIdRoute
 }
@@ -2401,7 +2436,7 @@ interface AppRouteChildren {
   AppIaComercialRoute: typeof AppIaComercialRoute
   AppInfluencersRoute: typeof AppInfluencersRoute
   AppIntegrationsRoute: typeof AppIntegrationsRouteWithChildren
-  AppInteligenciaComercialRoute: typeof AppInteligenciaComercialRoute
+  AppInteligenciaComercialRoute: typeof AppInteligenciaComercialRouteWithChildren
   AppKbRoute: typeof AppKbRouteWithChildren
   AppLeadFormsRoute: typeof AppLeadFormsRoute
   AppLeadScoringRoute: typeof AppLeadScoringRoute
@@ -2480,7 +2515,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppIaComercialRoute: AppIaComercialRoute,
   AppInfluencersRoute: AppInfluencersRoute,
   AppIntegrationsRoute: AppIntegrationsRouteWithChildren,
-  AppInteligenciaComercialRoute: AppInteligenciaComercialRoute,
+  AppInteligenciaComercialRoute: AppInteligenciaComercialRouteWithChildren,
   AppKbRoute: AppKbRouteWithChildren,
   AppLeadFormsRoute: AppLeadFormsRoute,
   AppLeadScoringRoute: AppLeadScoringRoute,
