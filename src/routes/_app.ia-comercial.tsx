@@ -174,12 +174,26 @@ function IAComercialPage() {
 
               {briefs[k] && (
                 <Card className="p-4 border-primary/30 bg-primary/5">
-                  <div className="text-xs uppercase tracking-wide text-primary mb-2 flex items-center gap-1">
-                    <Sparkles className="h-3 w-3" /> Brief do agente
+                  <div className="text-xs uppercase tracking-wide text-primary mb-2 flex items-center justify-between">
+                    <span className="flex items-center gap-1">
+                      <Sparkles className="h-3 w-3" /> Brief do agente
+                    </span>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="h-6 px-2 text-[11px]"
+                      onClick={() => {
+                        navigator.clipboard.writeText(briefs[k] ?? "");
+                        toast.success("Brief copiado");
+                      }}
+                    >
+                      <Copy className="h-3 w-3 mr-1" /> Copiar
+                    </Button>
                   </div>
                   <div className="text-sm whitespace-pre-wrap leading-relaxed">{briefs[k]}</div>
                 </Card>
               )}
+
 
               {isLoading ? (
                 <div className="space-y-2">
