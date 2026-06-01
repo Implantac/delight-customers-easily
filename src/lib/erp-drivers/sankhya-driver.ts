@@ -9,8 +9,8 @@
  * Nada de estoque, fiscal, NFe, compras, contábil.
  */
 import type {
-  ErpCustomerDTO, ErpDriver, ErpDriverConfig, ErpPullResult,
-  ErpSalesOrderDTO, ErpSalesRepDTO,
+  ErpCustomerDTO, ErpCustomerPushInput, ErpDriver, ErpDriverConfig,
+  ErpPullResult, ErpPushResult, ErpSalesOrderDTO, ErpSalesRepDTO,
 } from "./types";
 
 type SankhyaResp = {
