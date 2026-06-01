@@ -262,19 +262,19 @@ function Hero({ ctaHref, ctaLabel }: { ctaHref: string; ctaLabel: string }) {
                     <div className="mt-3 space-y-2">
                       <div className="h-2 rounded-full bg-muted">
                         <div
-                          className="h-2 rounded-full bg-primary/80"
+                          className="h-2 rounded-full bg-accent"
                           style={{ width: `${[80, 60, 40, 25][i]}%` }}
                         />
                       </div>
                       <div className="h-2 rounded-full bg-muted">
                         <div
-                          className="h-2 rounded-full bg-primary/60"
+                          className="h-2 rounded-full bg-accent/70"
                           style={{ width: `${[60, 45, 30, 15][i]}%` }}
                         />
                       </div>
                       <div className="h-2 rounded-full bg-muted">
                         <div
-                          className="h-2 rounded-full bg-primary/40"
+                          className="h-2 rounded-full bg-accent/40"
                           style={{ width: `${[40, 30, 20, 10][i]}%` }}
                         />
                       </div>
