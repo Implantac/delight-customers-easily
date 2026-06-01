@@ -304,8 +304,8 @@ function ConnectHubDashboard() {
     <div className="p-6 space-y-6 max-w-6xl mx-auto">
       <PageHeader
         icon={Plug}
-        title="ConnectHub"
-        subtitle="Conecte, sincronize e monitore seus ERPs em um só lugar."
+        title="Integração com ERP"
+        subtitle="Conecte seu ERP ao CRM em poucos minutos."
         action={
           <div className="flex items-center gap-2">
             <Button
@@ -323,9 +323,9 @@ function ConnectHubDashboard() {
               />
               Atualizar
             </Button>
-            <Link to="/integrations/connect">
+            <Link to="/integrations/connect/wizard">
               <Button size="sm" className="gap-2">
-                <Plus className="h-4 w-4" /> Conectar ERP
+                <Plus className="h-4 w-4" /> Conectar novo ERP
               </Button>
             </Link>
           </div>
@@ -335,15 +335,15 @@ function ConnectHubDashboard() {
       {/* Resumo de status */}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="ERPs conectados" value={rows.length} tone="primary" icon={Plug} />
-        <StatCard label="Online" value={online} tone="green" icon={CheckCircle2} />
+        <StatCard label="Funcionando bem" value={online} tone="green" icon={CheckCircle2} />
         <StatCard
-          label="Precisa atenção"
+          label="Precisam de atenção"
           value={needsAttention}
           tone="amber"
           icon={AlertTriangle}
         />
         <StatCard
-          label="Jobs em andamento"
+          label="Sincronizando agora"
           value={totalOpenJobs}
           tone={totalOpenJobs > 0 ? "primary" : "muted"}
           icon={Loader2}
@@ -351,29 +351,6 @@ function ConnectHubDashboard() {
         />
       </div>
 
-      {/* Quick links */}
-      <Card>
-        <CardContent className="p-2">
-          <div className="grid gap-1 sm:grid-cols-2 lg:grid-cols-5">
-            {QUICK_LINKS.map((q) => (
-              <Link
-                key={q.to}
-                to={q.to}
-                className="group flex items-center gap-3 rounded-md px-3 py-2.5 hover:bg-accent transition-colors"
-              >
-                <div className="h-9 w-9 rounded-md bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                  <q.icon className="h-4 w-4 text-muted-foreground group-hover:text-primary" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="text-sm font-medium truncate">{q.label}</div>
-                  <div className="text-xs text-muted-foreground truncate">{q.desc}</div>
-                </div>
-                <ChevronRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-              </Link>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
 
       {/* ERPs conectados */}
       <div className="space-y-3">
