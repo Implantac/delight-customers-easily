@@ -49,29 +49,29 @@ const TONE_CLASS: Record<NavTone, string> = {
  * via a entrada "Integrações ERP".
  */
 const primaryNav: NavEntry[] = [
-  { to: "/dashboard",                label: "Dashboard",          icon: LayoutDashboard },
-  { to: "/dashboard-executivo",      label: "Dashboard Executivo", icon: Building, managerOnly: true },
-  { to: "/carteira",                 label: "Carteira Comercial", icon: Briefcase },
-  { to: "/leads",                    label: "Leads",              icon: Flame },
-  { to: "/contacts",                 label: "Clientes",           icon: Users },
-  { to: "/oportunidades",            label: "Oportunidades",      icon: Target },
-  { to: "/representantes",           label: "Representantes",     icon: Award, managerOnly: true },
-  { to: "/calendar",                 label: "Agenda",             icon: CalendarIcon },
-  { to: "/whatsapp",                 label: "WhatsApp",           icon: MessageSquare },
-  { to: "/campaigns",                label: "Marketing",          icon: Megaphone },
-  { to: "/influencers",              label: "Influencers",        icon: Sparkles },
-  { to: "/geo",                      label: "Geointeligência",    icon: Map },
-  { to: "/inteligencia-comercial",   label: "IA Comercial",       icon: Sparkles },
-  { to: "/inteligencia-comercial/qualidade-ia", label: "Qualidade da IA", icon: Sparkles, managerOnly: true },
-  { to: "/reports",                  label: "Relatórios",         icon: BarChart3, managerOnly: true },
+  { to: "/dashboard",                label: "Dashboard",          icon: LayoutDashboard, tone: "primary" },
+  { to: "/dashboard-executivo",      label: "Dashboard Executivo", icon: Building,       tone: "primary", managerOnly: true },
+  { to: "/carteira",                 label: "Carteira Comercial", icon: Briefcase,       tone: "info" },
+  { to: "/leads",                    label: "Leads",              icon: Flame,           tone: "accent" },
+  { to: "/contacts",                 label: "Clientes",           icon: Users,           tone: "info" },
+  { to: "/oportunidades",            label: "Oportunidades",      icon: Target,          tone: "accent" },
+  { to: "/representantes",           label: "Representantes",     icon: Award,           tone: "success", managerOnly: true },
+  { to: "/calendar",                 label: "Agenda",             icon: CalendarIcon,    tone: "primary" },
+  { to: "/whatsapp",                 label: "WhatsApp",           icon: MessageSquare,   tone: "success" },
+  { to: "/campaigns",                label: "Marketing",          icon: Megaphone,       tone: "rose" },
+  { to: "/influencers",              label: "Influencers",        icon: Sparkles,        tone: "violet" },
+  { to: "/geo",                      label: "Geointeligência",    icon: Map,             tone: "info" },
+  { to: "/inteligencia-comercial",   label: "IA Comercial",       icon: Sparkles,        tone: "violet" },
+  { to: "/inteligencia-comercial/qualidade-ia", label: "Qualidade da IA", icon: Sparkles, tone: "violet", managerOnly: true },
+  { to: "/reports",                  label: "Relatórios",         icon: BarChart3,       tone: "info", managerOnly: true },
 ];
 
 const adminNav: NavEntry[] = [
-  { to: "/setup-wizard",             label: "Setup guiado",       icon: Rocket, managerOnly: true },
-  { to: "/integrations",             label: "Integrações ERP",    icon: Plug, managerOnly: true },
-  { to: "/companies",                label: "Empresas",           icon: Building },
-  { to: "/settings/organization",    label: "Usuários",           icon: Users, managerOnly: true },
-  { to: "/settings/organization",    label: "Configurações",      icon: Settings },
+  { to: "/setup-wizard",             label: "Setup guiado",       icon: Rocket,          tone: "accent", managerOnly: true },
+  { to: "/integrations",             label: "Integrações ERP",    icon: Plug,            tone: "primary", managerOnly: true },
+  { to: "/companies",                label: "Empresas",           icon: Building,        tone: "primary" },
+  { to: "/settings/organization",    label: "Usuários",           icon: Users,           tone: "primary", managerOnly: true },
+  { to: "/settings/organization",    label: "Configurações",      icon: Settings,        tone: "primary" },
 ];
 
 export function AppSidebar() {
