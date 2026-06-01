@@ -66,13 +66,13 @@ export const Route = createFileRoute("/_app/integrations")({
   component: ConnectHubDashboard,
 });
 
-const QUICK_LINKS = [
-  { to: "/integrations/dashboard" as const, icon: BarChart3, label: "Dashboard", desc: "KPIs e SLA" },
-  { to: "/integrations/health" as const, icon: Activity, label: "Saúde", desc: "Status em tempo real" },
-  { to: "/integrations/mapping" as const, icon: GitBranch, label: "Mapeamento", desc: "Campos ERP↔CRM" },
-  { to: "/integrations/outbox" as const, icon: Inbox, label: "Fila", desc: "Envios e retries" },
-  { to: "/integrations/templates" as const, icon: FileText, label: "Templates", desc: "Mapeamentos prontos" },
-  { to: "/integrations/apps" as const, icon: AppWindow, label: "Apps", desc: "Conectores extras" },
+const ADVANCED_LINKS = [
+  { to: "/integrations/dashboard" as const, icon: BarChart3, label: "Painel executivo", desc: "KPIs e SLA da integração" },
+  { to: "/integrations/health" as const, icon: Activity, label: "Diagnóstico detalhado", desc: "Status, latência e conflitos" },
+  { to: "/integrations/mapping" as const, icon: GitBranch, label: "Mapeamento de campos", desc: "Para casos personalizados" },
+  { to: "/integrations/outbox" as const, icon: Inbox, label: "Fila e logs", desc: "Histórico de envios" },
+  { to: "/integrations/templates" as const, icon: FileText, label: "Templates prontos", desc: "Mapeamentos pré-configurados" },
+  { to: "/integrations/apps" as const, icon: AppWindow, label: "Conectores extras", desc: "Outras integrações" },
 ];
 
 type SyncResource =
@@ -88,27 +88,28 @@ const RESOURCE_OPTIONS: Array<{
   desc: string;
   default: boolean;
 }> = [
-  { id: "customers", label: "Clientes", desc: "Cadastros do ERP", default: true },
+  { id: "customers", label: "Clientes", desc: "Cadastro dos seus clientes", default: true },
   {
     id: "sales_history",
-    label: "Histórico comercial",
-    desc: "Pedidos e vendas",
+    label: "Histórico de vendas",
+    desc: "Pedidos e compras anteriores",
     default: true,
   },
   {
     id: "sales_reps",
     label: "Representantes",
-    desc: "Vendedores e equipes",
+    desc: "Vendedores e equipe comercial",
     default: false,
   },
   { id: "products", label: "Produtos", desc: "Catálogo comercial", default: false },
   {
     id: "metrics",
-    label: "Métricas",
-    desc: "RFM, ticket médio, frequência",
+    label: "Indicadores comerciais",
+    desc: "Ticket médio, frequência e recência",
     default: false,
   },
 ];
+
 
 function ConnectHubDashboard() {
   const { orgId } = useCurrentOrg();
@@ -303,8 +304,8 @@ function ConnectHubDashboard() {
     <div className="p-6 space-y-6 max-w-6xl mx-auto">
       <PageHeader
         icon={Plug}
-        title="ConnectHub"
-        subtitle="Conecte, sincronize e monitore seus ERPs em um só lugar."
+        title="Integração com ERP"
+        subtitle="Conecte seu ERP ao CRM em poucos minutos."
         action={
           <div className="flex items-center gap-2">
             <Button
@@ -322,9 +323,9 @@ function ConnectHubDashboard() {
               />
               Atualizar
             </Button>
-            <Link to="/integrations/connect">
+            <Link to="/integrations/connect/wizard">
               <Button size="sm" className="gap-2">
-                <Plus className="h-4 w-4" /> Conectar ERP
+                <Plus className="h-4 w-4" /> Conectar novo ERP
               </Button>
             </Link>
           </div>
@@ -334,15 +335,15 @@ function ConnectHubDashboard() {
       {/* Resumo de status */}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="ERPs conectados" value={rows.length} tone="primary" icon={Plug} />
-        <StatCard label="Online" value={online} tone="green" icon={CheckCircle2} />
+        <StatCard label="Funcionando bem" value={online} tone="green" icon={CheckCircle2} />
         <StatCard
-          label="Precisa atenção"
+          label="Precisam de atenção"
           value={needsAttention}
           tone="amber"
           icon={AlertTriangle}
         />
         <StatCard
-          label="Jobs em andamento"
+          label="Sincronizando agora"
           value={totalOpenJobs}
           tone={totalOpenJobs > 0 ? "primary" : "muted"}
           icon={Loader2}
@@ -350,29 +351,6 @@ function ConnectHubDashboard() {
         />
       </div>
 
-      {/* Quick links */}
-      <Card>
-        <CardContent className="p-2">
-          <div className="grid gap-1 sm:grid-cols-2 lg:grid-cols-5">
-            {QUICK_LINKS.map((q) => (
-              <Link
-                key={q.to}
-                to={q.to}
-                className="group flex items-center gap-3 rounded-md px-3 py-2.5 hover:bg-accent transition-colors"
-              >
-                <div className="h-9 w-9 rounded-md bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                  <q.icon className="h-4 w-4 text-muted-foreground group-hover:text-primary" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="text-sm font-medium truncate">{q.label}</div>
-                  <div className="text-xs text-muted-foreground truncate">{q.desc}</div>
-                </div>
-                <ChevronRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-              </Link>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
 
       {/* ERPs conectados */}
       <div className="space-y-3">
@@ -411,15 +389,24 @@ function ConnectHubDashboard() {
               </div>
               <p className="font-medium">Nenhum ERP conectado ainda</p>
               <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                Comece conectando seu primeiro ERP. Importamos clientes, representantes e histórico comercial — sem mexer em estoque, fiscal ou financeiro.
+                Conectar é simples: escolha o ERP, informe poucos dados e nós cuidamos do resto.
+                Não mexemos em estoque, fiscal ou financeiro — apenas clientes, representantes e histórico de vendas.
               </p>
-              <Link to="/integrations/connect">
-                <Button className="gap-2">
-                  <Plus className="h-4 w-4" /> Conectar meu primeiro ERP
-                </Button>
-              </Link>
+              <div className="flex items-center justify-center gap-2 pt-1">
+                <Link to="/integrations/connect/wizard">
+                  <Button className="gap-2">
+                    <Plus className="h-4 w-4" /> Conectar meu primeiro ERP
+                  </Button>
+                </Link>
+                <Link to="/integrations/help">
+                  <Button variant="ghost" className="gap-2">
+                    <HelpCircle className="h-4 w-4" /> Preciso de ajuda
+                  </Button>
+                </Link>
+              </div>
             </CardContent>
           </Card>
+
         ) : (
           <div className="grid gap-4 md:grid-cols-2">
             {rows.map((r) => {
@@ -537,14 +524,14 @@ function ConnectHubDashboard() {
                         <Calendar className="h-3 w-3" />
                         Agendar
                       </Button>
+                      <Link to="/integrations/health">
+                        <Button size="sm" variant="ghost" className="h-7 gap-1.5 text-xs">
+                          <Activity className="h-3 w-3" /> Diagnóstico
+                        </Button>
+                      </Link>
                       <Link to="/integrations/outbox">
                         <Button size="sm" variant="ghost" className="h-7 gap-1.5 text-xs">
                           <Inbox className="h-3 w-3" /> Logs
-                        </Button>
-                      </Link>
-                      <Link to="/integrations/connect">
-                        <Button size="sm" variant="ghost" className="h-7 gap-1.5 text-xs">
-                          <Settings2 className="h-3 w-3" /> Configurar
                         </Button>
                       </Link>
                     </div>
@@ -556,20 +543,70 @@ function ConnectHubDashboard() {
         )}
       </div>
 
-      {/* Footer actions */}
+      {/* Footer — ajuda em destaque + recursos avançados */}
       <Separator />
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <Link to="/integrations/help">
-          <Button variant="ghost" size="sm" className="gap-2">
-            <HelpCircle className="h-4 w-4" /> Preciso de ajuda
-          </Button>
-        </Link>
-        <Link to="/integrations/advanced">
-          <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground">
-            <Settings2 className="h-4 w-4" /> Configurações avançadas
-          </Button>
-        </Link>
-      </div>
+      <Card className="bg-muted/30">
+        <CardContent className="p-4 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="h-9 w-9 rounded-md bg-primary/10 flex items-center justify-center">
+              <HelpCircle className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <p className="font-medium text-sm">Precisa de ajuda para conectar?</p>
+              <p className="text-xs text-muted-foreground">
+                Guia passo a passo para qualquer ERP, mesmo sem conhecimento técnico.
+              </p>
+            </div>
+          </div>
+          <Link to="/integrations/help">
+            <Button size="sm" className="gap-2">
+              <HelpCircle className="h-4 w-4" /> Abrir guia de ajuda
+            </Button>
+          </Link>
+        </CardContent>
+      </Card>
+
+      <details className="group">
+        <summary className="cursor-pointer text-sm text-muted-foreground hover:text-foreground flex items-center gap-2 select-none">
+          <Settings2 className="h-4 w-4" />
+          Mais recursos (administradores)
+          <ChevronRight className="h-4 w-4 transition-transform group-open:rotate-90" />
+        </summary>
+        <Card className="mt-3">
+          <CardContent className="p-2">
+            <div className="grid gap-1 sm:grid-cols-2 lg:grid-cols-3">
+              {ADVANCED_LINKS.map((q) => (
+                <Link
+                  key={q.to}
+                  to={q.to}
+                  className="group/link flex items-center gap-3 rounded-md px-3 py-2.5 hover:bg-accent transition-colors"
+                >
+                  <div className="h-9 w-9 rounded-md bg-muted flex items-center justify-center group-hover/link:bg-primary/10 transition-colors">
+                    <q.icon className="h-4 w-4 text-muted-foreground group-hover/link:text-primary" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-sm font-medium truncate">{q.label}</div>
+                    <div className="text-xs text-muted-foreground truncate">{q.desc}</div>
+                  </div>
+                </Link>
+              ))}
+              <Link
+                to="/integrations/advanced"
+                className="group/link flex items-center gap-3 rounded-md px-3 py-2.5 hover:bg-accent transition-colors"
+              >
+                <div className="h-9 w-9 rounded-md bg-muted flex items-center justify-center group-hover/link:bg-primary/10 transition-colors">
+                  <Settings2 className="h-4 w-4 text-muted-foreground group-hover/link:text-primary" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="text-sm font-medium truncate">Configurações avançadas</div>
+                  <div className="text-xs text-muted-foreground truncate">Conexão direta, SSH, VPN</div>
+                </div>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+      </details>
+
 
       {/* Dialog de opções de sincronização */}
       <Dialog

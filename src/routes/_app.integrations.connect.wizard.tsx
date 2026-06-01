@@ -85,16 +85,24 @@ function ConnectWizard() {
     <div className="p-6 space-y-6 max-w-3xl mx-auto">
       <PageHeader
         icon={Plug}
-        title="Novo conector ERP"
-        subtitle="Wizard guiado em 4 passos."
+        title="Conectar meu ERP"
+        subtitle="Em 4 passos simples, sem precisar de conhecimento técnico."
         action={
-          <Link to="/integrations">
-            <Button variant="ghost" size="sm">
-              ← Voltar
-            </Button>
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link to="/integrations/help">
+              <Button variant="ghost" size="sm" className="gap-2">
+                Preciso de ajuda
+              </Button>
+            </Link>
+            <Link to="/integrations">
+              <Button variant="ghost" size="sm">
+                ← Voltar
+              </Button>
+            </Link>
+          </div>
         }
       />
+
 
       {/* Stepper */}
       <div className="flex items-center justify-between">
