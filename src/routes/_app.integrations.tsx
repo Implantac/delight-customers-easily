@@ -389,15 +389,24 @@ function ConnectHubDashboard() {
               </div>
               <p className="font-medium">Nenhum ERP conectado ainda</p>
               <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                Comece conectando seu primeiro ERP. Importamos clientes, representantes e histórico comercial — sem mexer em estoque, fiscal ou financeiro.
+                Conectar é simples: escolha o ERP, informe poucos dados e nós cuidamos do resto.
+                Não mexemos em estoque, fiscal ou financeiro — apenas clientes, representantes e histórico de vendas.
               </p>
-              <Link to="/integrations/connect">
-                <Button className="gap-2">
-                  <Plus className="h-4 w-4" /> Conectar meu primeiro ERP
-                </Button>
-              </Link>
+              <div className="flex items-center justify-center gap-2 pt-1">
+                <Link to="/integrations/connect/wizard">
+                  <Button className="gap-2">
+                    <Plus className="h-4 w-4" /> Conectar meu primeiro ERP
+                  </Button>
+                </Link>
+                <Link to="/integrations/help">
+                  <Button variant="ghost" className="gap-2">
+                    <HelpCircle className="h-4 w-4" /> Preciso de ajuda
+                  </Button>
+                </Link>
+              </div>
             </CardContent>
           </Card>
+
         ) : (
           <div className="grid gap-4 md:grid-cols-2">
             {rows.map((r) => {
