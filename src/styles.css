@@ -54,70 +54,74 @@
 }
 
 /* =========================================================
-   MIDNIGHT INDIGO — Light mode
-   Inspirado em Attio / Linear / Notion. Branco crisp + indigo elétrico.
+   EXECUTIVE NAVY — Light mode
+   Navy profundo (#1a2234) + laranja assinatura (#ff9800).
+   Estilo executivo, sério, profissional. Bloomberg meets Linear.
    ========================================================= */
 :root {
-  --radius: 0.625rem; /* mais discreto, estilo Linear */
+  --radius: 0.625rem;
 
-  --background: oklch(0.992 0.003 260);
-  --foreground: oklch(0.18 0.04 265);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.04 265);
-  --popover: oklch(0.998 0.002 260);
-  --popover-foreground: oklch(0.18 0.04 265);
+  --background: #fafafa;
+  --foreground: #1a2234;
+  --card: #ffffff;
+  --card-foreground: #1a2234;
+  --popover: #ffffff;
+  --popover-foreground: #1a2234;
 
-  /* Indigo elétrico — assinatura Midnight Indigo */
-  --primary: oklch(0.52 0.24 268);
-  --primary-foreground: oklch(0.99 0 0);
+  /* Navy profundo — assinatura executiva */
+  --primary: #1a2234;
+  --primary-foreground: #ffffff;
 
-  --secondary: oklch(0.965 0.01 260);
-  --secondary-foreground: oklch(0.22 0.05 265);
-  --muted: oklch(0.97 0.008 260);
-  --muted-foreground: oklch(0.50 0.03 262);
-  --accent: oklch(0.955 0.03 268);
-  --accent-foreground: oklch(0.30 0.14 268);
+  --secondary: #f1f3f7;
+  --secondary-foreground: #1a2234;
+  --muted: #f4f5f8;
+  --muted-foreground: #5a6478;
+  --accent: #ff9800;
+  --accent-foreground: #1a2234;
 
-  --destructive: oklch(0.60 0.22 25);
-  --destructive-foreground: oklch(0.99 0 0);
-  --success: oklch(0.65 0.16 155);
-  --success-foreground: oklch(0.99 0 0);
-  --warning: oklch(0.78 0.16 75);
-  --warning-foreground: oklch(0.20 0.04 260);
+  --destructive: #F44336;
+  --destructive-foreground: #ffffff;
+  --success: #4CAF50;
+  --success-foreground: #ffffff;
+  --warning: #FFC107;
+  --warning-foreground: #1a2234;
+  --info: #2196F3;
+  --info-foreground: #ffffff;
 
-  --border: oklch(0.925 0.008 262);
-  --input: oklch(0.93 0.008 262);
-  --ring: oklch(0.52 0.24 268);
+  --border: #e4e7ec;
+  --input: #e4e7ec;
+  --ring: #ff9800;
 
-  /* Sidebar minimal — fundo sutilmente mais escuro que o canvas */
-  --sidebar: oklch(0.97 0.008 262);
-  --sidebar-foreground: oklch(0.30 0.04 265);
-  --sidebar-primary: oklch(0.52 0.24 268);
-  --sidebar-primary-foreground: oklch(0.99 0 0);
-  --sidebar-accent: oklch(0.93 0.025 268);
-  --sidebar-accent-foreground: oklch(0.28 0.14 268);
-  --sidebar-border: oklch(0.92 0.008 262);
-  --sidebar-ring: oklch(0.52 0.24 268);
+  /* Sidebar — navy profundo (sidebar dark mesmo em light mode, padrão enterprise) */
+  --sidebar: #1a2234;
+  --sidebar-foreground: #c5cad6;
+  --sidebar-primary: #ff9800;
+  --sidebar-primary-foreground: #1a2234;
+  --sidebar-accent: #2a3245;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #2a3245;
+  --sidebar-ring: #ff9800;
 
-  --chart-1: oklch(0.58 0.22 268);
-  --chart-2: oklch(0.68 0.16 195);
-  --chart-3: oklch(0.72 0.18 155);
-  --chart-4: oklch(0.65 0.20 305);
-  --chart-5: oklch(0.72 0.18 50);
+  --chart-1: #ff9800;
+  --chart-2: #2196F3;
+  --chart-3: #4CAF50;
+  --chart-4: #8B5CF6;
+  --chart-5: #EC4899;
 
-  --primary-glow: oklch(0.72 0.20 280);
-  --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-glow));
-  --gradient-subtle: linear-gradient(180deg, color-mix(in oklab, var(--primary) 5%, transparent), transparent);
+  --primary-glow: #2a3245;
+  --accent-glow: #ffb84d;
+  --gradient-primary: linear-gradient(135deg, #1a2234, #2a3245);
+  --gradient-accent: linear-gradient(135deg, #ff9800, #ffb84d);
+  --gradient-subtle: linear-gradient(180deg, color-mix(in oklab, #1a2234 4%, transparent), transparent);
   --gradient-mesh:
-    radial-gradient(ellipse 90% 60% at 50% -10%, color-mix(in oklab, var(--primary) 10%, transparent), transparent 60%),
-    radial-gradient(ellipse 70% 50% at 100% 0%, color-mix(in oklab, var(--primary-glow) 7%, transparent), transparent 55%);
+    radial-gradient(ellipse 90% 60% at 50% -10%, color-mix(in oklab, #1a2234 8%, transparent), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 100% 0%, color-mix(in oklab, #ff9800 6%, transparent), transparent 55%);
 
-  /* Sombras refinadas — mais sutis no light mode */
-  --shadow-xs: 0 1px 1px 0 color-mix(in oklab, var(--foreground) 4%, transparent);
-  --shadow-sm: 0 1px 2px 0 color-mix(in oklab, var(--foreground) 6%, transparent), 0 1px 1px -0.5px color-mix(in oklab, var(--foreground) 4%, transparent);
-  --shadow-md: 0 4px 12px -3px color-mix(in oklab, var(--foreground) 10%, transparent), 0 2px 4px -2px color-mix(in oklab, var(--foreground) 6%, transparent);
-  --shadow-lg: 0 16px 32px -8px color-mix(in oklab, var(--foreground) 14%, transparent), 0 4px 10px -4px color-mix(in oklab, var(--foreground) 8%, transparent);
-  --shadow-glow: 0 8px 28px -6px color-mix(in oklab, var(--primary) 32%, transparent);
+  --shadow-xs: 0 1px 1px 0 color-mix(in oklab, #1a2234 5%, transparent);
+  --shadow-sm: 0 1px 2px 0 color-mix(in oklab, #1a2234 8%, transparent), 0 1px 1px -0.5px color-mix(in oklab, #1a2234 5%, transparent);
+  --shadow-md: 0 4px 12px -3px color-mix(in oklab, #1a2234 12%, transparent), 0 2px 4px -2px color-mix(in oklab, #1a2234 7%, transparent);
+  --shadow-lg: 0 16px 32px -8px color-mix(in oklab, #1a2234 18%, transparent), 0 4px 10px -4px color-mix(in oklab, #1a2234 10%, transparent);
+  --shadow-glow: 0 8px 28px -6px color-mix(in oklab, #ff9800 35%, transparent);
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
@@ -125,66 +129,69 @@
 }
 
 /* =========================================================
-   MIDNIGHT INDIGO — Dark mode (modo nativo do produto)
-   Navy profundo, quase preto, com indigo elétrico nos accents.
-   Estilo Linear / Vercel.
+   EXECUTIVE NAVY — Dark mode
+   Navy profundo como background, laranja vibrante como assinatura.
    ========================================================= */
 .dark {
-  --background: oklch(0.12 0.022 265);          /* navy quase-preto */
-  --foreground: oklch(0.96 0.012 255);
-  --card: oklch(0.155 0.025 265);                /* card eleva-se sutilmente */
-  --card-foreground: oklch(0.96 0.012 255);
-  --popover: oklch(0.175 0.028 265);
-  --popover-foreground: oklch(0.96 0.012 255);
+  --background: #131826;
+  --foreground: #eef0f4;
+  --card: #1a2234;
+  --card-foreground: #eef0f4;
+  --popover: #1a2234;
+  --popover-foreground: #eef0f4;
 
-  --primary: oklch(0.70 0.20 270);               /* indigo elétrico vibrante */
-  --primary-foreground: oklch(0.12 0.022 265);
+  --primary: #ff9800;
+  --primary-foreground: #1a2234;
 
-  --secondary: oklch(0.20 0.025 265);
-  --secondary-foreground: oklch(0.95 0.012 255);
-  --muted: oklch(0.195 0.025 265);
-  --muted-foreground: oklch(0.66 0.025 260);
-  --accent: oklch(0.26 0.06 270);
-  --accent-foreground: oklch(0.92 0.04 268);
+  --secondary: #2a3245;
+  --secondary-foreground: #eef0f4;
+  --muted: #232a3d;
+  --muted-foreground: #8a94a8;
+  --accent: #ff9800;
+  --accent-foreground: #1a2234;
 
-  --destructive: oklch(0.68 0.22 25);
-  --destructive-foreground: oklch(0.99 0 0);
-  --success: oklch(0.72 0.17 155);
-  --success-foreground: oklch(0.12 0.022 265);
-  --warning: oklch(0.80 0.16 75);
-  --warning-foreground: oklch(0.12 0.022 265);
+  --destructive: #F44336;
+  --destructive-foreground: #ffffff;
+  --success: #4CAF50;
+  --success-foreground: #ffffff;
+  --warning: #FFC107;
+  --warning-foreground: #1a2234;
+  --info: #2196F3;
+  --info-foreground: #ffffff;
 
-  --border: oklch(0.245 0.025 265);
-  --input: oklch(0.225 0.025 265);
-  --ring: oklch(0.70 0.20 270);
+  --border: #2a3245;
+  --input: #232a3d;
+  --ring: #ff9800;
 
-  --sidebar: oklch(0.105 0.022 265);            /* sidebar mais escura que canvas */
-  --sidebar-foreground: oklch(0.78 0.02 258);
-  --sidebar-primary: oklch(0.70 0.20 270);
-  --sidebar-primary-foreground: oklch(0.12 0.022 265);
-  --sidebar-accent: oklch(0.20 0.04 268);
-  --sidebar-accent-foreground: oklch(0.95 0.03 268);
-  --sidebar-border: oklch(0.20 0.022 265);
-  --sidebar-ring: oklch(0.70 0.20 270);
+  --sidebar: #0f1422;
+  --sidebar-foreground: #c5cad6;
+  --sidebar-primary: #ff9800;
+  --sidebar-primary-foreground: #1a2234;
+  --sidebar-accent: #2a3245;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #232a3d;
+  --sidebar-ring: #ff9800;
 
-  --chart-1: oklch(0.72 0.20 270);
-  --chart-2: oklch(0.74 0.16 195);
-  --chart-3: oklch(0.76 0.18 155);
-  --chart-4: oklch(0.72 0.20 305);
-  --chart-5: oklch(0.78 0.18 50);
+  --chart-1: #ff9800;
+  --chart-2: #2196F3;
+  --chart-3: #4CAF50;
+  --chart-4: #8B5CF6;
+  --chart-5: #EC4899;
 
-  --primary-glow: oklch(0.80 0.16 285);
-  --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-glow));
-  --gradient-subtle: linear-gradient(180deg, color-mix(in oklab, var(--primary) 14%, transparent), transparent);
+  --primary-glow: #ffb84d;
+  --accent-glow: #ffb84d;
+  --gradient-primary: linear-gradient(135deg, #ff9800, #ffb84d);
+  --gradient-accent: linear-gradient(135deg, #ff9800, #e08800);
+  --gradient-subtle: linear-gradient(180deg, color-mix(in oklab, #ff9800 10%, transparent), transparent);
   --gradient-mesh:
-    radial-gradient(ellipse 90% 60% at 50% -10%, color-mix(in oklab, var(--primary) 18%, transparent), transparent 60%),
-    radial-gradient(ellipse 70% 50% at 100% 0%, color-mix(in oklab, var(--primary-glow) 14%, transparent), transparent 55%);
+    radial-gradient(ellipse 90% 60% at 50% -10%, color-mix(in oklab, #ff9800 12%, transparent), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 100% 0%, color-mix(in oklab, #2a3245 50%, transparent), transparent 55%);
 
-  --shadow-xs: 0 1px 2px 0 color-mix(in oklab, #000 35%, transparent);
-  --shadow-sm: 0 1px 3px 0 color-mix(in oklab, #000 45%, transparent), 0 1px 2px -1px color-mix(in oklab, #000 35%, transparent);
-  --shadow-md: 0 6px 16px -4px color-mix(in oklab, #000 55%, transparent), 0 2px 5px -2px color-mix(in oklab, #000 40%, transparent);
-  --shadow-lg: 0 18px 36px -8px color-mix(in oklab, #000 65%, transparent), 0 6px 12px -4px color-mix(in oklab, #000 45%, transparent);
-  --shadow-glow: 0 8px 32px -6px color-mix(in oklab, var(--primary) 45%, transparent);
+  --shadow-xs: 0 1px 2px 0 color-mix(in oklab, #000 40%, transparent);
+  --shadow-sm: 0 1px 3px 0 color-mix(in oklab, #000 50%, transparent), 0 1px 2px -1px color-mix(in oklab, #000 40%, transparent);
+  --shadow-md: 0 6px 16px -4px color-mix(in oklab, #000 60%, transparent), 0 2px 5px -2px color-mix(in oklab, #000 45%, transparent);
+  --shadow-lg: 0 18px 36px -8px color-mix(in oklab, #000 70%, transparent), 0 6px 12px -4px color-mix(in oklab, #000 50%, transparent);
+  --shadow-glow: 0 8px 32px -6px color-mix(in oklab, #ff9800 45%, transparent);
 }
 
 @layer base {
