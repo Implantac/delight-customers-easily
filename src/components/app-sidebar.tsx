@@ -39,6 +39,7 @@ type NavEntry = {
  */
 const primaryNav: NavEntry[] = [
   { to: "/dashboard",                label: "Dashboard",          icon: LayoutDashboard },
+  { to: "/dashboard-executivo",      label: "Dashboard Executivo", icon: Building, managerOnly: true },
   { to: "/carteira",                 label: "Carteira Comercial", icon: Briefcase },
   { to: "/leads",                    label: "Leads",              icon: Flame },
   { to: "/contacts",                 label: "Clientes",           icon: Users },
