@@ -413,29 +413,47 @@ function CsvImportTab({ orgId }: { orgId: string | null }) {
             <>
               <Separator />
               <div>
-                <div className="flex items-center justify-between mb-2">
+                <div className="flex items-center justify-between mb-2 gap-2 flex-wrap">
                   <div className="text-sm font-medium">Mapeamento de colunas</div>
-                  <Badge variant="outline" className="text-xs">{parsed.rows.length} linhas detectadas</Badge>
+                  <div className="flex items-center gap-2">
+                    <Button size="sm" variant="outline" onClick={handleAiSuggest} disabled={aiLoading} className="gap-1.5 h-7">
+                      {aiLoading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Sparkles className="h-3.5 w-3.5" />}
+                      Auto-mapear com IA
+                    </Button>
+                    <Badge variant="outline" className="text-xs">{parsed.rows.length} linhas</Badge>
+                  </div>
                 </div>
                 <div className="rounded-md border divide-y text-sm max-h-72 overflow-y-auto">
-                  {parsed.headers.map((h) => (
-                    <div key={h} className="p-2 grid grid-cols-12 gap-2 items-center">
-                      <code className="col-span-5 text-xs text-muted-foreground truncate" title={h}>{h}</code>
-                      <ArrowRight className="col-span-1 h-3 w-3 text-muted-foreground mx-auto" />
-                      <div className="col-span-6">
-                        <Select
-                          value={mapping[h] ?? "__skip"}
-                          onValueChange={(v) => setMapping((m) => ({ ...m, [h]: v === "__skip" ? "" : v }))}
-                        >
-                          <SelectTrigger className="h-8 text-xs"><SelectValue /></SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="__skip">— ignorar —</SelectItem>
-                            {targets.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}
-                          </SelectContent>
-                        </Select>
+                  {parsed.headers.map((h) => {
+                    const hint = aiHints[h];
+                    return (
+                      <div key={h} className="p-2 grid grid-cols-12 gap-2 items-center">
+                        <div className="col-span-5 min-w-0">
+                          <code className="text-xs text-muted-foreground truncate block" title={h}>{h}</code>
+                          {hint && (
+                            <div className="text-[10px] text-muted-foreground/80 truncate flex items-center gap-1">
+                              <Sparkles className="h-2.5 w-2.5 text-primary shrink-0" />
+                              <span className="truncate">{hint.reason}</span>
+                              <span className="shrink-0">· {Math.round(hint.confidence * 100)}%</span>
+                            </div>
+                          )}
+                        </div>
+                        <ArrowRight className="col-span-1 h-3 w-3 text-muted-foreground mx-auto" />
+                        <div className="col-span-6">
+                          <Select
+                            value={mapping[h] ?? "__skip"}
+                            onValueChange={(v) => setMapping((m) => ({ ...m, [h]: v === "__skip" ? "" : v }))}
+                          >
+                            <SelectTrigger className={`h-8 text-xs ${hint && hint.confidence >= 0.7 ? "border-primary/40" : ""}`}><SelectValue /></SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="__skip">— ignorar —</SelectItem>
+                              {targets.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}
+                            </SelectContent>
+                          </Select>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 
