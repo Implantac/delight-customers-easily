@@ -69,6 +69,8 @@ export const Route = createFileRoute("/_app/integrations")({
 const ADVANCED_LINKS = [
   { to: "/integrations/dashboard" as const, icon: BarChart3, label: "Painel executivo", desc: "KPIs e SLA da integração" },
   { to: "/integrations/health" as const, icon: Activity, label: "Diagnóstico detalhado", desc: "Status, latência e conflitos" },
+  { to: "/integrations/diagnostic" as const, icon: HelpCircle, label: "Diagnóstico por chat", desc: "Pergunte à IA o que está errado" },
+  { to: "/integrations/agent" as const, icon: Server, label: "Agente Local", desc: "Para ERPs locais (Firebird, SQL Server)" },
   { to: "/integrations/mapping" as const, icon: GitBranch, label: "Mapeamento de campos", desc: "Para casos personalizados" },
   { to: "/integrations/outbox" as const, icon: Inbox, label: "Fila e logs", desc: "Histórico de envios" },
   { to: "/integrations/templates" as const, icon: FileText, label: "Templates prontos", desc: "Mapeamentos pré-configurados" },
