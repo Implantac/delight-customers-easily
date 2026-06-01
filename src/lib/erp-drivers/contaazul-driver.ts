@@ -7,9 +7,26 @@
  * Nada de estoque, financeiro, fiscal, compras.
  */
 import type {
-  ErpCustomerDTO, ErpDriver, ErpDriverConfig, ErpPullResult,
-  ErpSalesOrderDTO, ErpSalesRepDTO,
+  ErpCustomerDTO, ErpCustomerPushInput, ErpDriver, ErpDriverConfig,
+  ErpPullResult, ErpPushResult, ErpSalesOrderDTO, ErpSalesRepDTO,
 } from "./types";
+
+async function caWrite(cfg: ErpDriverConfig, method: "POST" | "PUT", path: string, body: unknown) {
+  if (!cfg.app_key) throw new Error("Conta Azul requer app_key (access_token).");
+  const res = await fetch(`${BASE}${path}`, {
+    method,
+    headers: {
+      Authorization: `Bearer ${cfg.app_key}`,
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+  const text = await res.text();
+  let parsed: any; try { parsed = text ? JSON.parse(text) : {}; } catch { parsed = { raw: text }; }
+  if (!res.ok) throw new Error(parsed?.message || parsed?.error || `Conta Azul HTTP ${res.status}`);
+  return parsed;
+}
 
 const BASE = "https://api.contaazul.com/v1";
 
@@ -108,5 +125,23 @@ export const contaAzulDriver: ErpDriver = {
       next_cursor: dtos.length === limit ? { page: page + 1 } : null,
       has_more: dtos.length === limit,
     };
+  },
+
+  async pushCustomer(cfg, input): Promise<ErpPushResult> {
+    const payload = {
+      name: input.trade_name ?? input.legal_name ?? "Cliente CRM",
+      business_name: input.legal_name ?? undefined,
+      document: input.document ?? undefined,
+      email: input.email ?? undefined,
+      cell_phone: input.phone ?? undefined,
+    };
+    if (input.external_id) {
+      await caWrite(cfg, "PUT", `/customers/${encodeURIComponent(input.external_id)}`, payload);
+      return { external_id: input.external_id, note: "Conta Azul: cliente atualizado" };
+    }
+    const res = await caWrite(cfg, "POST", "/customers", payload);
+    const id = String(res?.id ?? res?.uuid ?? "");
+    if (!id) throw new Error("Conta Azul: resposta sem id");
+    return { external_id: id, note: "Conta Azul: cliente criado" };
   },
 };
