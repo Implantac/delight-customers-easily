@@ -9,6 +9,7 @@ import {
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/lib/auth";
 import { ThemeProvider } from "@/lib/theme";
+import { LgpdConsentBanner } from "@/components/lgpd-consent-banner";
 
 import appCss from "../styles.css?url";
 
@@ -118,6 +119,7 @@ function RootComponent() {
         <AuthProvider>
           <Outlet />
           <Toaster richColors position="top-right" />
+          <LgpdConsentBanner />
         </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>
