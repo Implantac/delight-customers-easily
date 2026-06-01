@@ -75,6 +75,7 @@ export const ERP_CATALOG: ErpProviderCatalog[] = [
 
 export type ErpHealthRow = {
   provider: string;
+  integration_id: string | null;
   is_configured: boolean;
   is_active: boolean;
   last_sync_at: string | null;
@@ -95,7 +96,7 @@ export const getErpHealth = createServerFn({ method: "POST" })
 
     const { data: integs } = await supabase
       .from("erp_integrations")
-      .select("provider,app_key,app_secret,is_active,last_sync_at,last_error")
+      .select("id,provider,app_key,app_secret,is_active,last_sync_at,last_error")
       .eq("organization_id", data.organization_id);
 
     const rows: ErpHealthRow[] = [];
@@ -172,6 +173,7 @@ export const getErpHealth = createServerFn({ method: "POST" })
 
       rows.push({
         provider: catalog.id,
+        integration_id: (integ as any)?.id ?? null,
         is_configured: !!integ,
         is_active: !!integ?.is_active,
         last_sync_at: integ?.last_sync_at ?? null,

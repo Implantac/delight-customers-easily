@@ -1,9 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
+import { toast } from "sonner";
 import { useCurrentOrg } from "@/lib/org";
 import { useCanManage } from "@/lib/permissions";
 import { getErpHealth } from "@/lib/erp-hub.functions";
+import { enqueueErpSync } from "@/lib/connect-hub.functions";
 import { FRIENDLY_ERPS, statusLabel } from "@/lib/connect-hub";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -40,13 +42,41 @@ const QUICK_LINKS = [
 function ConnectHubDashboard() {
   const { orgId } = useCurrentOrg();
   const canManage = useCanManage();
+  const qc = useQueryClient();
   const fetchHealth = useServerFn(getErpHealth);
+  const enqueueSync = useServerFn(enqueueErpSync);
   const health = useQuery({
     queryKey: ["erp-health", orgId],
     queryFn: () => fetchHealth({ data: { organization_id: orgId! } }),
     enabled: !!orgId,
     refetchInterval: 60_000,
   });
+
+  const syncMut = useMutation({
+    mutationFn: (integrationId: string) =>
+      enqueueSync({
+        data: {
+          organizationId: orgId!,
+          integrationId,
+          resources: ["customers", "sales_history"],
+          direction: "pull",
+        },
+      }),
+    onSuccess: () => {
+      toast.success("Sincronização iniciada", {
+        description: "Os cards serão atualizados em instantes.",
+      });
+      // Refresh health a few times to catch the sync completing
+      setTimeout(() => qc.invalidateQueries({ queryKey: ["erp-health", orgId] }), 1500);
+      setTimeout(() => qc.invalidateQueries({ queryKey: ["erp-health", orgId] }), 6000);
+      setTimeout(() => qc.invalidateQueries({ queryKey: ["erp-health", orgId] }), 15000);
+    },
+    onError: (e: any) =>
+      toast.error("Não foi possível iniciar a sincronização", {
+        description: e?.message ?? "Tente novamente em instantes.",
+      }),
+  });
+
 
   if (!canManage) {
     return (
@@ -235,11 +265,28 @@ function ConnectHubDashboard() {
                     <Separator />
 
                     <div className="flex flex-wrap gap-1.5">
-                      <Link to="/integrations/health">
-                        <Button size="sm" variant="outline" className="h-7 gap-1.5 text-xs">
-                          <RefreshCw className="h-3 w-3" /> Sincronizar
-                        </Button>
-                      </Link>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="h-7 gap-1.5 text-xs"
+                        disabled={
+                          !r.integration_id ||
+                          !r.is_active ||
+                          (syncMut.isPending && syncMut.variables === r.integration_id)
+                        }
+                        onClick={() => r.integration_id && syncMut.mutate(r.integration_id)}
+                      >
+                        <RefreshCw
+                          className={`h-3 w-3 ${
+                            syncMut.isPending && syncMut.variables === r.integration_id
+                              ? "animate-spin"
+                              : ""
+                          }`}
+                        />
+                        {syncMut.isPending && syncMut.variables === r.integration_id
+                          ? "Enviando..."
+                          : "Sincronizar"}
+                      </Button>
                       <Link to="/integrations/outbox">
                         <Button size="sm" variant="ghost" className="h-7 gap-1.5 text-xs">
                           <Inbox className="h-3 w-3" /> Logs
