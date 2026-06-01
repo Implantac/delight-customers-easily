@@ -4,7 +4,7 @@ import {
   LayoutDashboard, Users, Briefcase, Check, ChevronsUpDown,
   LogOut, Settings, Upload, BarChart3, Sliders, Webhook, Zap, Sparkles,
   Target, Map, Megaphone, MessageSquare, ShieldCheck,
-  Flame, Calendar as CalendarIcon, Award, Plug, Building, type LucideIcon,
+  Flame, Calendar as CalendarIcon, Award, Plug, Building, Rocket, type LucideIcon,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useCurrentOrg, switchOrganization } from "@/lib/org";
@@ -56,6 +56,7 @@ const primaryNav: NavEntry[] = [
 ];
 
 const adminNav: NavEntry[] = [
+  { to: "/setup-wizard",             label: "Setup guiado",       icon: Rocket, managerOnly: true },
   { to: "/integrations",             label: "Integrações ERP",    icon: Plug, managerOnly: true },
   { to: "/companies",                label: "Empresas",           icon: Building },
   { to: "/settings/organization",    label: "Usuários",           icon: Users, managerOnly: true },
