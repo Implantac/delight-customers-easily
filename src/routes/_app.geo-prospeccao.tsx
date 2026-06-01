@@ -51,12 +51,25 @@ function ProspeccaoPage() {
   });
 
   const [similarSource, setSimilarSource] = useState<string>("");
+  const myCompaniesQ = useQuery({
+    queryKey: ["geo-my-companies", orgId],
+    enabled: !!orgId,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("companies")
+        .select("id, name, city, state")
+        .order("name")
+        .limit(200);
+      return data ?? [];
+    },
+  });
   const similarQ = useQuery({
     queryKey: ["geo-similar", orgId, similarSource],
     enabled: !!orgId && !!similarSource,
     queryFn: () =>
       similar({ data: { organization_id: orgId!, company_id: similarSource, limit: 20 } }),
   });
+
 
   const addM = useMutation({
     mutationFn: (company_id: string) =>
