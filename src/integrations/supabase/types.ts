@@ -9111,6 +9111,10 @@ export type Database = {
     }
     Functions: {
       accept_org_invite: { Args: { _token: string }; Returns: string }
+      can_see_all_in_org: {
+        Args: { _org: string; _user: string }
+        Returns: boolean
+      }
       close_ai_prediction_outcomes: {
         Args: { _tenant_id: string }
         Returns: {
