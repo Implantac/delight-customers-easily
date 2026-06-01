@@ -282,15 +282,28 @@ function PipelinePage() {
                 </div>
 
                 <div className="flex-1 space-y-2">
+                  {items.length === 0 && (
+                    <div className={`flex h-20 items-center justify-center rounded-lg border-2 border-dashed text-xs transition-colors ${
+                      dragOverStage === stage.id && dragId
+                        ? "border-primary/60 text-primary"
+                        : "border-border/40 text-muted-foreground/60"
+                    }`}>
+                      {dragOverStage === stage.id && dragId ? "Solte aqui" : "Vazio"}
+                    </div>
+                  )}
                   {items.map((d) => {
                     const heat = HEAT_STYLES[d._score.heat];
+                    const isDragging = dragId === d.id;
                     return (
                       <Card
                         key={d.id}
                         draggable
                         onDragStart={() => setDragId(d.id)}
+                        onDragEnd={() => { setDragId(null); setDragOverStage(null); }}
                         onClick={() => setSelectedId(d.id)}
-                        className={`group cursor-grab border-l-4 p-3 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)] active:cursor-grabbing ${stage.color}`}
+                        className={`group cursor-grab border-l-4 p-3 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)] active:cursor-grabbing ${stage.color} ${
+                          isDragging ? "opacity-40 rotate-1 scale-95" : ""
+                        }`}
                         title={d._score.reasons.join(" · ")}
                       >
                         <div className="flex items-start justify-between gap-2">
@@ -331,6 +344,7 @@ function PipelinePage() {
           })}
         </div>
       )}
+
 
       <DealDrawer
         deal={selected}
