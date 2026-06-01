@@ -17,13 +17,14 @@ export function PageHeader({
   return (
     <div
       className={cn(
-        "flex items-start justify-between gap-4 border-b border-border/50 pb-5 mb-6",
+        "relative flex items-start justify-between gap-4 border-b border-border/60 pb-5 mb-6 pl-4",
+        "before:absolute before:left-0 before:top-1 before:bottom-5 before:w-[3px] before:rounded-full before:bg-[var(--gradient-accent)]",
         className,
       )}
     >
       <div className="flex min-w-0 items-start gap-3">
         {Icon && (
-          <div className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border/60 bg-card text-primary shadow-[var(--shadow-xs)] sm:flex">
+          <div className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border/60 bg-card text-accent shadow-[var(--shadow-xs)] sm:flex">
             <Icon className="h-[18px] w-[18px]" />
           </div>
         )}

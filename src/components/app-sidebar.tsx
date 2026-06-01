@@ -104,7 +104,7 @@ export function AppSidebar() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton size="lg" className="data-[state=open]:bg-sidebar-accent">
-              <div className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--gradient-primary)] text-sidebar-primary-foreground shadow-[var(--shadow-glow)] ring-1 ring-white/10">
+              <div className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--gradient-accent)] text-[#1a2234] shadow-[var(--shadow-glow)] ring-1 ring-white/15">
                 <Sparkles className="h-4 w-4" />
               </div>
               {!collapsed && (
