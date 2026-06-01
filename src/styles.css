@@ -517,3 +517,57 @@
 #lovable-badge {
   display: none !important;
 }
+
+/* =========================================================
+   Responsive safeguards — mobile-first hardening
+   ========================================================= */
+@layer base {
+  /* Prevent any element from forcing horizontal scroll */
+  img, video, canvas, svg, iframe, table, pre, code {
+    max-width: 100%;
+  }
+  pre { overflow-x: auto; }
+
+  /* Touch-friendly tap targets on coarse pointers */
+  @media (pointer: coarse) {
+    button, [role="button"], a, [data-sidebar="menu-button"],
+    input[type="checkbox"], input[type="radio"] {
+      min-height: 40px;
+    }
+    button.h-7, button.h-8, [role="button"].h-7, [role="button"].h-8 {
+      min-height: 36px;
+    }
+  }
+
+  /* Inputs never overflow on small screens */
+  input, textarea, select { max-width: 100%; }
+
+  /* Dialog / Sheet — full bleed on tiny screens */
+  @media (max-width: 480px) {
+    [data-slot="dialog-content"], [role="dialog"] > [data-state] {
+      width: calc(100vw - 1rem) !important;
+      max-width: calc(100vw - 1rem) !important;
+    }
+  }
+
+  /* Cards default to fluid width */
+  [data-slot="card"] { max-width: 100%; }
+
+  /* Sticky table headers can cause overflow on iOS — clamp */
+  thead { max-width: 100%; }
+}
+
+@layer utilities {
+  /* Use on any horizontally-scrolling region (filters, tabs, chips) */
+  .scroll-x-snap {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+  .scroll-x-snap > * { scroll-snap-align: start; }
+
+  /* Hide scrollbar but keep scrolling — mobile filter rows */
+  .no-scrollbar { scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+}
