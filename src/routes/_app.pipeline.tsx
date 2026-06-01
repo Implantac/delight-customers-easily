@@ -296,6 +296,18 @@ function PipelinePage() {
                             {(d.contacts as any)?.name}{(d.contacts as any)?.name && (d.companies as any)?.name ? " · " : ""}{(d.companies as any)?.name}
                           </p>
                         )}
+                        {(() => {
+                          const updated = d.updated_at ?? d.created_at;
+                          if (!updated || d.stage === "won" || d.stage === "lost") return null;
+                          const days = Math.floor((Date.now() - new Date(updated).getTime()) / 86400000);
+                          if (days < 14) return null;
+                          return (
+                            <div className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-medium text-amber-700 dark:text-amber-400">
+                              <Clock className="h-2.5 w-2.5" /> parado {days}d
+                            </div>
+                          );
+                        })()}
+
                       </Card>
                     );
                   })}
