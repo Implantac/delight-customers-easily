@@ -178,7 +178,7 @@ function OutboxPage() {
         {/* Contagem por status */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
           {STATUS.map((s, idx) => {
-            const c = countsBig[idx]?.data ?? counts[idx]?.data ?? 0;
+            const c = countsBig[idx]?.data ?? 0;
             const active = tab === s;
             const tone =
               s === "failed" || s === "needs_manual"
