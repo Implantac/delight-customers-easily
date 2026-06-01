@@ -144,6 +144,21 @@ function ProspeccaoPage() {
             </CardContent>
           </Card>
 
+          {!searched && (
+            <Card className="border-dashed">
+              <CardContent className="p-10 text-center">
+                <Compass className="mx-auto h-8 w-8 text-primary/60" />
+                <h3 className="mt-3 font-semibold">Pronto para descobrir novos clientes?</h3>
+                <p className="mx-auto mt-1 max-w-md text-sm text-muted-foreground">
+                  Defina pelo menos um filtro acima (segmento, cidade ou UF) e clique em <strong>Buscar prospects</strong>.
+                  Os resultados aparecem aqui ordenados por potencial.
+                </p>
+              </CardContent>
+            </Card>
+          )}
+
+
+
           {searched && (
             <Card>
               <CardHeader className="pb-2">
