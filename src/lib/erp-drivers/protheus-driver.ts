@@ -138,4 +138,22 @@ export const protheusDriver: ErpDriver = {
       has_more: hasMore,
     };
   },
+
+  async pushCustomer(cfg, input: ErpCustomerPushInput): Promise<ErpPushResult> {
+    const payload: Record<string, unknown> = {
+      legalName: input.legal_name,
+      tradeName: input.trade_name,
+      document: input.document,
+      email: input.email,
+      phone: input.phone,
+    };
+    if (input.external_id) {
+      await pWrite(cfg, `/api/framework/v1/customers/${encodeURIComponent(input.external_id)}`, "PUT", payload);
+      return { external_id: input.external_id, note: "atualizado" };
+    }
+    const body = await pWrite(cfg, "/api/framework/v1/customers", "POST", payload);
+    const id = String(body?.code ?? body?.id ?? body?.A1_COD ?? "");
+    if (!id) throw new Error("Protheus não retornou código do cliente criado.");
+    return { external_id: id, note: "criado" };
+  },
 };
