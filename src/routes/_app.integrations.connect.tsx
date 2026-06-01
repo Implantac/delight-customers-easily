@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useLocation, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 
@@ -25,7 +25,17 @@ import { toast } from "sonner";
 
 const STEP_LABELS = ["Seu ERP", "Como conectar", "Acesso", "Teste", "Dados", "Pronto"];
 
-export const Route = createFileRoute("/_app/integrations/connect")({ component: ConnectWizard });
+export const Route = createFileRoute("/_app/integrations/connect")({ component: ConnectRoute });
+
+function ConnectRoute() {
+  const pathname = useLocation({ select: (location) => location.pathname });
+
+  if (pathname !== "/integrations/connect") {
+    return <Outlet />;
+  }
+
+  return <ConnectWizard />;
+}
 
 type Step = 1 | 2 | 3 | 4 | 5 | 6;
 type Method = "api" | "db" | "agent" | "csv";
