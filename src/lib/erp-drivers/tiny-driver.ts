@@ -152,6 +152,7 @@ export const tinyDriver: ErpDriver = {
       rows,
       next_cursor: hasMore ? { offset: offset + lim } : null,
       has_more: hasMore,
+    };
   },
 
   async pushCustomer(cfg, input): Promise<ErpPushResult> {
@@ -172,7 +173,5 @@ export const tinyDriver: ErpDriver = {
     const id = String(res?.id ?? res?.data?.id ?? "");
     if (!id) throw new Error("Tiny: resposta sem id");
     return { external_id: id, note: "Tiny: contato criado" };
-  },
-};
   },
 };
