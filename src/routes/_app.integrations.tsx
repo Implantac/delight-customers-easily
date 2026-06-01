@@ -524,14 +524,14 @@ function ConnectHubDashboard() {
                         <Calendar className="h-3 w-3" />
                         Agendar
                       </Button>
+                      <Link to="/integrations/health">
+                        <Button size="sm" variant="ghost" className="h-7 gap-1.5 text-xs">
+                          <Activity className="h-3 w-3" /> Diagnóstico
+                        </Button>
+                      </Link>
                       <Link to="/integrations/outbox">
                         <Button size="sm" variant="ghost" className="h-7 gap-1.5 text-xs">
                           <Inbox className="h-3 w-3" /> Logs
-                        </Button>
-                      </Link>
-                      <Link to="/integrations/connect">
-                        <Button size="sm" variant="ghost" className="h-7 gap-1.5 text-xs">
-                          <Settings2 className="h-3 w-3" /> Configurar
                         </Button>
                       </Link>
                     </div>
@@ -543,20 +543,70 @@ function ConnectHubDashboard() {
         )}
       </div>
 
-      {/* Footer actions */}
+      {/* Footer — ajuda em destaque + recursos avançados */}
       <Separator />
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <Link to="/integrations/help">
-          <Button variant="ghost" size="sm" className="gap-2">
-            <HelpCircle className="h-4 w-4" /> Preciso de ajuda
-          </Button>
-        </Link>
-        <Link to="/integrations/advanced">
-          <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground">
-            <Settings2 className="h-4 w-4" /> Configurações avançadas
-          </Button>
-        </Link>
-      </div>
+      <Card className="bg-muted/30">
+        <CardContent className="p-4 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="h-9 w-9 rounded-md bg-primary/10 flex items-center justify-center">
+              <HelpCircle className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <p className="font-medium text-sm">Precisa de ajuda para conectar?</p>
+              <p className="text-xs text-muted-foreground">
+                Guia passo a passo para qualquer ERP, mesmo sem conhecimento técnico.
+              </p>
+            </div>
+          </div>
+          <Link to="/integrations/help">
+            <Button size="sm" className="gap-2">
+              <HelpCircle className="h-4 w-4" /> Abrir guia de ajuda
+            </Button>
+          </Link>
+        </CardContent>
+      </Card>
+
+      <details className="group">
+        <summary className="cursor-pointer text-sm text-muted-foreground hover:text-foreground flex items-center gap-2 select-none">
+          <Settings2 className="h-4 w-4" />
+          Mais recursos (administradores)
+          <ChevronRight className="h-4 w-4 transition-transform group-open:rotate-90" />
+        </summary>
+        <Card className="mt-3">
+          <CardContent className="p-2">
+            <div className="grid gap-1 sm:grid-cols-2 lg:grid-cols-3">
+              {ADVANCED_LINKS.map((q) => (
+                <Link
+                  key={q.to}
+                  to={q.to}
+                  className="group/link flex items-center gap-3 rounded-md px-3 py-2.5 hover:bg-accent transition-colors"
+                >
+                  <div className="h-9 w-9 rounded-md bg-muted flex items-center justify-center group-hover/link:bg-primary/10 transition-colors">
+                    <q.icon className="h-4 w-4 text-muted-foreground group-hover/link:text-primary" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="text-sm font-medium truncate">{q.label}</div>
+                    <div className="text-xs text-muted-foreground truncate">{q.desc}</div>
+                  </div>
+                </Link>
+              ))}
+              <Link
+                to="/integrations/advanced"
+                className="group/link flex items-center gap-3 rounded-md px-3 py-2.5 hover:bg-accent transition-colors"
+              >
+                <div className="h-9 w-9 rounded-md bg-muted flex items-center justify-center group-hover/link:bg-primary/10 transition-colors">
+                  <Settings2 className="h-4 w-4 text-muted-foreground group-hover/link:text-primary" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="text-sm font-medium truncate">Configurações avançadas</div>
+                  <div className="text-xs text-muted-foreground truncate">Conexão direta, SSH, VPN</div>
+                </div>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+      </details>
+
 
       {/* Dialog de opções de sincronização */}
       <Dialog
