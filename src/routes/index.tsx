@@ -304,14 +304,14 @@ function MockCard({
   positive?: boolean;
 }) {
   return (
-    <div className="rounded-xl border border-border/70 bg-card p-5">
+    <div className="rounded-xl border border-border/70 bg-card p-5 transition-all hover:-translate-y-0.5 hover:border-accent/40 hover:shadow-[var(--shadow-md)]">
       <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-        <span className="grid h-7 w-7 place-items-center rounded-md bg-primary/10 text-primary">
+        <span className="grid h-7 w-7 place-items-center rounded-md bg-accent/15 text-accent ring-1 ring-accent/20">
           {icon}
         </span>
         {label}
       </div>
-      <div className="mt-3 text-2xl font-semibold tracking-tight">{value}</div>
+      <div className="mt-3 font-display text-2xl font-semibold tracking-tight tabular-nums">{value}</div>
       <div
         className={`mt-1 text-xs ${positive ? "text-success" : "text-muted-foreground"}`}
       >
