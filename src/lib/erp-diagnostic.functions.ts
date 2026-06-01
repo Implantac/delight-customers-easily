@@ -89,13 +89,16 @@ export const sendDiagnosticMessage = createServerFn({ method: 'POST' })
     }
 
     // 3) Histórico curto
-    const { data: history } = await supabase
+    let histQ = supabase
       .from('erp_diagnostic_messages')
       .select('role, content')
       .eq('organization_id', data.organizationId)
-      .eq('integration_id', data.integrationId ?? null)
       .order('created_at', { ascending: true })
       .limit(20);
+    histQ = data.integrationId
+      ? histQ.eq('integration_id', data.integrationId)
+      : histQ.is('integration_id', null);
+    const { data: history } = await histQ;
 
     const messages = [
       { role: 'system', content: SYSTEM_PROMPT + ctxBlock },
