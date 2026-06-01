@@ -61,67 +61,68 @@
 :root {
   --radius: 0.625rem;
 
-  --background: #fafafa;
-  --foreground: #1a2234;
+  --background: #fbfaf7;
+  --foreground: #1f2740;
   --card: #ffffff;
-  --card-foreground: #1a2234;
+  --card-foreground: #1f2740;
   --popover: #ffffff;
-  --popover-foreground: #1a2234;
+  --popover-foreground: #1f2740;
 
-  /* Navy profundo — assinatura executiva */
-  --primary: #1a2234;
-  --primary-foreground: #ffffff;
+  /* Navy suavizado — menos pesado, com leve nuance fria */
+  --primary: #2a3556;
+  --primary-foreground: #fbfaf7;
 
-  --secondary: #f1f3f7;
-  --secondary-foreground: #1a2234;
-  --muted: #f4f5f8;
-  --muted-foreground: #5a6478;
-  --accent: #ff9800;
-  --accent-foreground: #1a2234;
+  --secondary: #eef0f5;
+  --secondary-foreground: #2a3556;
+  --muted: #f3f2ee;
+  --muted-foreground: #6b7589;
+  /* Âmbar refinado — substitui o laranja "neon" por um tom mais executivo */
+  --accent: #d98a3d;
+  --accent-foreground: #ffffff;
 
-  --destructive: #F44336;
+  --destructive: #d94d4d;
   --destructive-foreground: #ffffff;
-  --success: #4CAF50;
+  --success: #4a9d6a;
   --success-foreground: #ffffff;
-  --warning: #FFC107;
-  --warning-foreground: #1a2234;
-  --info: #2196F3;
+  --warning: #e0a93a;
+  --warning-foreground: #1f2740;
+  --info: #4a7ec0;
   --info-foreground: #ffffff;
 
-  --border: #e4e7ec;
-  --input: #e4e7ec;
-  --ring: #ff9800;
+  --border: #e5e3dd;
+  --input: #e5e3dd;
+  --ring: #d98a3d;
 
-  /* Sidebar — navy profundo (sidebar dark mesmo em light mode, padrão enterprise) */
-  --sidebar: #1a2234;
-  --sidebar-foreground: #c5cad6;
-  --sidebar-primary: #ff9800;
-  --sidebar-primary-foreground: #1a2234;
-  --sidebar-accent: #2a3245;
+  /* Sidebar — navy suave com warm tint, menos contraste agressivo */
+  --sidebar: #232c47;
+  --sidebar-foreground: #c8ccd8;
+  --sidebar-primary: #e8a05a;
+  --sidebar-primary-foreground: #232c47;
+  --sidebar-accent: #2f3a58;
   --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: #2a3245;
-  --sidebar-ring: #ff9800;
+  --sidebar-border: #2f3a58;
+  --sidebar-ring: #e8a05a;
 
-  --chart-1: #ff9800;
-  --chart-2: #2196F3;
-  --chart-3: #4CAF50;
-  --chart-4: #8B5CF6;
-  --chart-5: #EC4899;
+  --chart-1: #d98a3d;
+  --chart-2: #4a7ec0;
+  --chart-3: #4a9d6a;
+  --chart-4: #8a7cc0;
+  --chart-5: #c46a8a;
 
-  --primary-glow: #2a3245;
-  --accent-glow: #ffb84d;
-  --gradient-primary: linear-gradient(135deg, #1a2234, #2a3245);
-  --gradient-accent: linear-gradient(135deg, #ff9800, #ffb84d);
-  --gradient-subtle: linear-gradient(180deg, color-mix(in oklab, #1a2234 4%, transparent), transparent);
+  --primary-glow: #3a4670;
+  --accent-glow: #e8a05a;
+  --gradient-primary: linear-gradient(135deg, #2a3556, #3a4670);
+  --gradient-accent: linear-gradient(135deg, #d98a3d, #e8a05a);
+  --gradient-subtle: linear-gradient(180deg, color-mix(in oklab, #2a3556 3%, transparent), transparent);
   --gradient-mesh:
-    radial-gradient(ellipse 90% 60% at 50% -10%, color-mix(in oklab, #1a2234 8%, transparent), transparent 60%),
-    radial-gradient(ellipse 70% 50% at 100% 0%, color-mix(in oklab, #ff9800 6%, transparent), transparent 55%);
+    radial-gradient(ellipse 90% 60% at 50% -10%, color-mix(in oklab, #2a3556 5%, transparent), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 100% 0%, color-mix(in oklab, #d98a3d 4%, transparent), transparent 55%);
 
-  --shadow-xs: 0 1px 1px 0 color-mix(in oklab, #1a2234 5%, transparent);
-  --shadow-sm: 0 1px 2px 0 color-mix(in oklab, #1a2234 8%, transparent), 0 1px 1px -0.5px color-mix(in oklab, #1a2234 5%, transparent);
-  --shadow-md: 0 4px 12px -3px color-mix(in oklab, #1a2234 12%, transparent), 0 2px 4px -2px color-mix(in oklab, #1a2234 7%, transparent);
-  --shadow-lg: 0 16px 32px -8px color-mix(in oklab, #1a2234 18%, transparent), 0 4px 10px -4px color-mix(in oklab, #1a2234 10%, transparent);
-  --shadow-glow: 0 8px 28px -6px color-mix(in oklab, #ff9800 35%, transparent);
+  --shadow-xs: 0 1px 1px 0 color-mix(in oklab, #2a3556 4%, transparent);
+  --shadow-sm: 0 1px 2px 0 color-mix(in oklab, #2a3556 6%, transparent), 0 1px 1px -0.5px color-mix(in oklab, #2a3556 4%, transparent);
+  --shadow-md: 0 4px 12px -3px color-mix(in oklab, #2a3556 10%, transparent), 0 2px 4px -2px color-mix(in oklab, #2a3556 5%, transparent);
+  --shadow-lg: 0 16px 32px -8px color-mix(in oklab, #2a3556 14%, transparent), 0 4px 10px -4px color-mix(in oklab, #2a3556 8%, transparent);
+  --shadow-glow: 0 8px 24px -8px color-mix(in oklab, #d98a3d 28%, transparent);
 
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
