@@ -118,6 +118,7 @@ import { Route as AppIntegrationsAgentRouteImport } from './routes/_app.integrat
 import { Route as AppIntegrationsAdvancedRouteImport } from './routes/_app.integrations.advanced'
 import { Route as AppContactsIdRouteImport } from './routes/_app.contacts.$id'
 import { Route as AppCompaniesIdRouteImport } from './routes/_app.companies.$id'
+import { Route as ApiPublicHooksWhatsappOutboxTickRouteImport } from './routes/api/public/hooks/whatsapp-outbox-tick'
 import { Route as ApiPublicHooksSequenceTickRouteImport } from './routes/api/public/hooks/sequence-tick'
 import { Route as ApiPublicHooksRefreshRecommendationsRouteImport } from './routes/api/public/hooks/refresh-recommendations'
 import { Route as ApiPublicHooksPropensityBatchTickRouteImport } from './routes/api/public/hooks/propensity-batch-tick'
@@ -136,6 +137,7 @@ import { Route as ApiOauthGoogleCallbackRouteImport } from './routes/api.oauth.g
 import { Route as AppSettingsAutomationsRunsRouteImport } from './routes/_app.settings.automations.runs'
 import { Route as AppReportsDashboardsIdRouteImport } from './routes/_app.reports.dashboards.$id'
 import { Route as AppIntegrationsConnectWizardRouteImport } from './routes/_app.integrations.connect.wizard'
+import { Route as ApiPublicHooksWhatsappWebhookChannelIdRouteImport } from './routes/api/public/hooks/whatsapp-webhook.$channelId'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -689,6 +691,12 @@ const AppCompaniesIdRoute = AppCompaniesIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AppCompaniesRoute,
 } as any)
+const ApiPublicHooksWhatsappOutboxTickRoute =
+  ApiPublicHooksWhatsappOutboxTickRouteImport.update({
+    id: '/api/public/hooks/whatsapp-outbox-tick',
+    path: '/api/public/hooks/whatsapp-outbox-tick',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHooksSequenceTickRoute =
   ApiPublicHooksSequenceTickRouteImport.update({
     id: '/api/public/hooks/sequence-tick',
@@ -793,6 +801,12 @@ const AppIntegrationsConnectWizardRoute =
     id: '/wizard',
     path: '/wizard',
     getParentRoute: () => AppIntegrationsConnectRoute,
+  } as any)
+const ApiPublicHooksWhatsappWebhookChannelIdRoute =
+  ApiPublicHooksWhatsappWebhookChannelIdRouteImport.update({
+    id: '/api/public/hooks/whatsapp-webhook/$channelId',
+    path: '/api/public/hooks/whatsapp-webhook/$channelId',
+    getParentRoute: () => rootRouteImport,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -922,6 +936,8 @@ export interface FileRoutesByFullPath {
   '/api/public/hooks/propensity-batch-tick': typeof ApiPublicHooksPropensityBatchTickRoute
   '/api/public/hooks/refresh-recommendations': typeof ApiPublicHooksRefreshRecommendationsRoute
   '/api/public/hooks/sequence-tick': typeof ApiPublicHooksSequenceTickRoute
+  '/api/public/hooks/whatsapp-outbox-tick': typeof ApiPublicHooksWhatsappOutboxTickRoute
+  '/api/public/hooks/whatsapp-webhook/$channelId': typeof ApiPublicHooksWhatsappWebhookChannelIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -1050,6 +1066,8 @@ export interface FileRoutesByTo {
   '/api/public/hooks/propensity-batch-tick': typeof ApiPublicHooksPropensityBatchTickRoute
   '/api/public/hooks/refresh-recommendations': typeof ApiPublicHooksRefreshRecommendationsRoute
   '/api/public/hooks/sequence-tick': typeof ApiPublicHooksSequenceTickRoute
+  '/api/public/hooks/whatsapp-outbox-tick': typeof ApiPublicHooksWhatsappOutboxTickRoute
+  '/api/public/hooks/whatsapp-webhook/$channelId': typeof ApiPublicHooksWhatsappWebhookChannelIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -1180,6 +1198,8 @@ export interface FileRoutesById {
   '/api/public/hooks/propensity-batch-tick': typeof ApiPublicHooksPropensityBatchTickRoute
   '/api/public/hooks/refresh-recommendations': typeof ApiPublicHooksRefreshRecommendationsRoute
   '/api/public/hooks/sequence-tick': typeof ApiPublicHooksSequenceTickRoute
+  '/api/public/hooks/whatsapp-outbox-tick': typeof ApiPublicHooksWhatsappOutboxTickRoute
+  '/api/public/hooks/whatsapp-webhook/$channelId': typeof ApiPublicHooksWhatsappWebhookChannelIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -1310,6 +1330,8 @@ export interface FileRouteTypes {
     | '/api/public/hooks/propensity-batch-tick'
     | '/api/public/hooks/refresh-recommendations'
     | '/api/public/hooks/sequence-tick'
+    | '/api/public/hooks/whatsapp-outbox-tick'
+    | '/api/public/hooks/whatsapp-webhook/$channelId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -1438,6 +1460,8 @@ export interface FileRouteTypes {
     | '/api/public/hooks/propensity-batch-tick'
     | '/api/public/hooks/refresh-recommendations'
     | '/api/public/hooks/sequence-tick'
+    | '/api/public/hooks/whatsapp-outbox-tick'
+    | '/api/public/hooks/whatsapp-webhook/$channelId'
   id:
     | '__root__'
     | '/'
@@ -1567,6 +1591,8 @@ export interface FileRouteTypes {
     | '/api/public/hooks/propensity-batch-tick'
     | '/api/public/hooks/refresh-recommendations'
     | '/api/public/hooks/sequence-tick'
+    | '/api/public/hooks/whatsapp-outbox-tick'
+    | '/api/public/hooks/whatsapp-webhook/$channelId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1593,6 +1619,8 @@ export interface RootRouteChildren {
   ApiPublicHooksPropensityBatchTickRoute: typeof ApiPublicHooksPropensityBatchTickRoute
   ApiPublicHooksRefreshRecommendationsRoute: typeof ApiPublicHooksRefreshRecommendationsRoute
   ApiPublicHooksSequenceTickRoute: typeof ApiPublicHooksSequenceTickRoute
+  ApiPublicHooksWhatsappOutboxTickRoute: typeof ApiPublicHooksWhatsappOutboxTickRoute
+  ApiPublicHooksWhatsappWebhookChannelIdRoute: typeof ApiPublicHooksWhatsappWebhookChannelIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -2360,6 +2388,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCompaniesIdRouteImport
       parentRoute: typeof AppCompaniesRoute
     }
+    '/api/public/hooks/whatsapp-outbox-tick': {
+      id: '/api/public/hooks/whatsapp-outbox-tick'
+      path: '/api/public/hooks/whatsapp-outbox-tick'
+      fullPath: '/api/public/hooks/whatsapp-outbox-tick'
+      preLoaderRoute: typeof ApiPublicHooksWhatsappOutboxTickRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/sequence-tick': {
       id: '/api/public/hooks/sequence-tick'
       path: '/api/public/hooks/sequence-tick'
@@ -2485,6 +2520,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/integrations/connect/wizard'
       preLoaderRoute: typeof AppIntegrationsConnectWizardRouteImport
       parentRoute: typeof AppIntegrationsConnectRoute
+    }
+    '/api/public/hooks/whatsapp-webhook/$channelId': {
+      id: '/api/public/hooks/whatsapp-webhook/$channelId'
+      path: '/api/public/hooks/whatsapp-webhook/$channelId'
+      fullPath: '/api/public/hooks/whatsapp-webhook/$channelId'
+      preLoaderRoute: typeof ApiPublicHooksWhatsappWebhookChannelIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -2865,6 +2907,9 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicHooksRefreshRecommendationsRoute:
     ApiPublicHooksRefreshRecommendationsRoute,
   ApiPublicHooksSequenceTickRoute: ApiPublicHooksSequenceTickRoute,
+  ApiPublicHooksWhatsappOutboxTickRoute: ApiPublicHooksWhatsappOutboxTickRoute,
+  ApiPublicHooksWhatsappWebhookChannelIdRoute:
+    ApiPublicHooksWhatsappWebhookChannelIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
