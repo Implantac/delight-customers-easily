@@ -524,6 +524,19 @@ function ConnectHubDashboard() {
                         <RefreshCw className="h-3 w-3" />
                         Sincronizar
                       </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="h-7 gap-1.5 text-xs"
+                        disabled={!r.integration_id || !r.is_active}
+                        onClick={() =>
+                          r.integration_id &&
+                          openScheduleDialog(r.integration_id, providerName)
+                        }
+                      >
+                        <Calendar className="h-3 w-3" />
+                        Agendar
+                      </Button>
                       <Link to="/integrations/outbox">
                         <Button size="sm" variant="ghost" className="h-7 gap-1.5 text-xs">
                           <Inbox className="h-3 w-3" /> Logs
