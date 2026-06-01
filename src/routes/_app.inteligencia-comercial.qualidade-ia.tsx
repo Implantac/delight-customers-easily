@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useCurrentOrg } from "@/lib/org";
-import { getAIBacktestMetrics, closeAIPredictionOutcomes } from "@/lib/ai-quality.functions";
+import { getAIBacktestMetrics, closeAIPredictionOutcomes, type BacktestMetric } from "@/lib/ai-quality.functions";
 import { PageHeader } from "@/components/page-header";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -25,17 +25,7 @@ export const Route = createFileRoute("/_app/inteligencia-comercial/qualidade-ia"
 const pct = (n: number | null | undefined) =>
   n == null ? "—" : `${(Number(n) * 100).toFixed(1)}%`;
 
-type Metric = {
-  total: number;
-  with_outcome: number;
-  accuracy: number | null;
-  precision_pos: number | null;
-  recall_pos: number | null;
-  avg_predicted: number | null;
-  positive_rate: number | null;
-} | null;
-
-function MetricCard({ title, m }: { title: string; m: Metric }) {
+function MetricCard({ title, m }: { title: string; m: BacktestMetric }) {
   if (!m) {
     return (
       <Card className="p-5">
@@ -62,33 +52,33 @@ function MetricCard({ title, m }: { title: string; m: Metric }) {
 }
 
 function QualidadeIAPage() {
-  const { currentOrg } = useCurrentOrg();
+  const { org } = useCurrentOrg();
   const fetchMetrics = useServerFn(getAIBacktestMetrics);
   const closeFn = useServerFn(closeAIPredictionOutcomes);
 
   const q = useQuery({
-    queryKey: ["ai-backtest", currentOrg?.id],
-    queryFn: () => fetchMetrics({ data: { orgId: currentOrg!.id, sinceDays: 90 } }),
-    enabled: !!currentOrg?.id,
+    queryKey: ["ai-backtest", org?.id],
+    queryFn: () => fetchMetrics({ data: { orgId: org!.id, sinceDays: 90 } }),
+    enabled: !!org?.id,
   });
 
   const closeMut = useMutation({
-    mutationFn: () => closeFn({ data: { orgId: currentOrg!.id } }),
-    onSuccess: (r: any) => {
+    mutationFn: () => closeFn({ data: { orgId: org!.id } }),
+    onSuccess: (r) => {
       toast.success(`Fechadas ${r.closed} previsões (churn ${r.churn_closed}, recompra ${r.repurchase_closed})`);
       q.refetch();
     },
-    onError: (e: any) => toast.error(e.message),
+    onError: (e: Error) => toast.error(e.message),
   });
 
   return (
     <div className="space-y-6 p-6">
       <PageHeader
         title="Qualidade da IA"
-        description="Backtesting dos modelos comerciais (últimos 90 dias) contra o histórico real do ERP."
+        subtitle="Backtesting dos modelos comerciais (últimos 90 dias) contra o histórico real do ERP."
         icon={Brain}
-        actions={
-          <Button onClick={() => closeMut.mutate()} disabled={closeMut.isPending || !currentOrg}>
+        action={
+          <Button onClick={() => closeMut.mutate()} disabled={closeMut.isPending || !org}>
             {closeMut.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <RefreshCw className="h-4 w-4 mr-2" />}
             Fechar previsões vencidas
           </Button>
@@ -101,9 +91,9 @@ function QualidadeIAPage() {
         </div>
       ) : (
         <div className="grid md:grid-cols-3 gap-4">
-          <MetricCard title="Churn (risco de saída)" m={(q.data?.metrics as any)?.churn as Metric} />
-          <MetricCard title="Recompra (próxima compra)" m={(q.data?.metrics as any)?.repurchase as Metric} />
-          <MetricCard title="Lead Score" m={(q.data?.metrics as any)?.leadscore as Metric} />
+          <MetricCard title="Churn (risco de saída)" m={q.data?.metrics.churn ?? null} />
+          <MetricCard title="Recompra (próxima compra)" m={q.data?.metrics.repurchase ?? null} />
+          <MetricCard title="Lead Score" m={q.data?.metrics.leadscore ?? null} />
         </div>
       )}
 
