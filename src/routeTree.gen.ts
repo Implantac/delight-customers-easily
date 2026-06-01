@@ -88,6 +88,7 @@ import { Route as ApiPublicLeadFormRouteImport } from './routes/api/public/lead-
 import { Route as ApiPublicInfluencerVisitRouteImport } from './routes/api/public/influencer-visit'
 import { Route as ApiPublicInboundEmailRouteImport } from './routes/api/public/inbound-email'
 import { Route as AppTicketsIdRouteImport } from './routes/_app.tickets.$id'
+import { Route as AppSettingsWhatsappRouteImport } from './routes/_app.settings.whatsapp'
 import { Route as AppSettingsWebhooksRouteImport } from './routes/_app.settings.webhooks'
 import { Route as AppSettingsSecurityRouteImport } from './routes/_app.settings.security'
 import { Route as AppSettingsOrganizationRouteImport } from './routes/_app.settings.organization'
@@ -535,6 +536,11 @@ const AppTicketsIdRoute = AppTicketsIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AppTicketsRoute,
 } as any)
+const AppSettingsWhatsappRoute = AppSettingsWhatsappRouteImport.update({
+  id: '/settings/whatsapp',
+  path: '/settings/whatsapp',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppSettingsWebhooksRoute = AppSettingsWebhooksRouteImport.update({
   id: '/settings/webhooks',
   path: '/settings/webhooks',
@@ -913,6 +919,7 @@ export interface FileRoutesByFullPath {
   '/settings/organization': typeof AppSettingsOrganizationRoute
   '/settings/security': typeof AppSettingsSecurityRoute
   '/settings/webhooks': typeof AppSettingsWebhooksRoute
+  '/settings/whatsapp': typeof AppSettingsWhatsappRoute
   '/tickets/$id': typeof AppTicketsIdRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/api/public/influencer-visit': typeof ApiPublicInfluencerVisitRoute
@@ -1043,6 +1050,7 @@ export interface FileRoutesByTo {
   '/settings/organization': typeof AppSettingsOrganizationRoute
   '/settings/security': typeof AppSettingsSecurityRoute
   '/settings/webhooks': typeof AppSettingsWebhooksRoute
+  '/settings/whatsapp': typeof AppSettingsWhatsappRoute
   '/tickets/$id': typeof AppTicketsIdRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/api/public/influencer-visit': typeof ApiPublicInfluencerVisitRoute
@@ -1175,6 +1183,7 @@ export interface FileRoutesById {
   '/_app/settings/organization': typeof AppSettingsOrganizationRoute
   '/_app/settings/security': typeof AppSettingsSecurityRoute
   '/_app/settings/webhooks': typeof AppSettingsWebhooksRoute
+  '/_app/settings/whatsapp': typeof AppSettingsWhatsappRoute
   '/_app/tickets/$id': typeof AppTicketsIdRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/api/public/influencer-visit': typeof ApiPublicInfluencerVisitRoute
@@ -1307,6 +1316,7 @@ export interface FileRouteTypes {
     | '/settings/organization'
     | '/settings/security'
     | '/settings/webhooks'
+    | '/settings/whatsapp'
     | '/tickets/$id'
     | '/api/public/inbound-email'
     | '/api/public/influencer-visit'
@@ -1437,6 +1447,7 @@ export interface FileRouteTypes {
     | '/settings/organization'
     | '/settings/security'
     | '/settings/webhooks'
+    | '/settings/whatsapp'
     | '/tickets/$id'
     | '/api/public/inbound-email'
     | '/api/public/influencer-visit'
@@ -1568,6 +1579,7 @@ export interface FileRouteTypes {
     | '/_app/settings/organization'
     | '/_app/settings/security'
     | '/_app/settings/webhooks'
+    | '/_app/settings/whatsapp'
     | '/_app/tickets/$id'
     | '/api/public/inbound-email'
     | '/api/public/influencer-visit'
@@ -2177,6 +2189,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/tickets/$id'
       preLoaderRoute: typeof AppTicketsIdRouteImport
       parentRoute: typeof AppTicketsRoute
+    }
+    '/_app/settings/whatsapp': {
+      id: '/_app/settings/whatsapp'
+      path: '/settings/whatsapp'
+      fullPath: '/settings/whatsapp'
+      preLoaderRoute: typeof AppSettingsWhatsappRouteImport
+      parentRoute: typeof AppRoute
     }
     '/_app/settings/webhooks': {
       id: '/_app/settings/webhooks'
@@ -2796,6 +2815,7 @@ interface AppRouteChildren {
   AppSettingsOrganizationRoute: typeof AppSettingsOrganizationRoute
   AppSettingsSecurityRoute: typeof AppSettingsSecurityRoute
   AppSettingsWebhooksRoute: typeof AppSettingsWebhooksRoute
+  AppSettingsWhatsappRoute: typeof AppSettingsWhatsappRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -2877,6 +2897,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSettingsOrganizationRoute: AppSettingsOrganizationRoute,
   AppSettingsSecurityRoute: AppSettingsSecurityRoute,
   AppSettingsWebhooksRoute: AppSettingsWebhooksRoute,
+  AppSettingsWhatsappRoute: AppSettingsWhatsappRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
@@ -2914,13 +2935,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

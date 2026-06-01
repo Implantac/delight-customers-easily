@@ -82,7 +82,7 @@ function WhatsAppChannelsPage() {
     <div className="container mx-auto p-6 max-w-5xl space-y-4">
       <PageHeader
         title="Canais de WhatsApp"
-        description="Conecte um ou mais números (Meta Cloud API, Evolution, UAZAPI, Twilio). Os tokens são guardados criptografados no backend."
+        subtitle="Conecte um ou mais números (Meta Cloud API, Evolution, UAZAPI, Twilio). Os tokens são guardados criptografados no backend."
         action={
           <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) setEditing(null); }}>
             <DialogTrigger asChild>
