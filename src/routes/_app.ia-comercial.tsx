@@ -13,8 +13,9 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
-  Flame, TrendingUp, AlertTriangle, Users, Sparkles, ArrowRight, Loader2,
+  Flame, TrendingUp, AlertTriangle, Users, Sparkles, ArrowRight, Loader2, Copy,
 } from "lucide-react";
+
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/ia-comercial")({
