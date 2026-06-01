@@ -201,8 +201,11 @@
     -webkit-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
     font-family: var(--font-sans);
+    overflow-x: hidden;
   }
   body {
+    overflow-x: hidden;
+    max-width: 100vw;
     background-color: var(--color-background);
     background-image: var(--gradient-mesh);
     background-attachment: fixed;
