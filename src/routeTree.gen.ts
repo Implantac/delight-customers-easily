@@ -108,6 +108,7 @@ import { Route as AppIntegrationsOutboxRouteImport } from './routes/_app.integra
 import { Route as AppIntegrationsMappingRouteImport } from './routes/_app.integrations.mapping'
 import { Route as AppIntegrationsHelpRouteImport } from './routes/_app.integrations.help'
 import { Route as AppIntegrationsHealthRouteImport } from './routes/_app.integrations.health'
+import { Route as AppIntegrationsDiagnosticRouteImport } from './routes/_app.integrations.diagnostic'
 import { Route as AppIntegrationsDashboardRouteImport } from './routes/_app.integrations.dashboard'
 import { Route as AppIntegrationsConnectRouteImport } from './routes/_app.integrations.connect'
 import { Route as AppIntegrationsAppsRouteImport } from './routes/_app.integrations.apps'
@@ -629,6 +630,12 @@ const AppIntegrationsHealthRoute = AppIntegrationsHealthRouteImport.update({
   path: '/health',
   getParentRoute: () => AppIntegrationsRoute,
 } as any)
+const AppIntegrationsDiagnosticRoute =
+  AppIntegrationsDiagnosticRouteImport.update({
+    id: '/diagnostic',
+    path: '/diagnostic',
+    getParentRoute: () => AppIntegrationsRoute,
+  } as any)
 const AppIntegrationsDashboardRoute =
   AppIntegrationsDashboardRouteImport.update({
     id: '/dashboard',
@@ -834,6 +841,7 @@ export interface FileRoutesByFullPath {
   '/integrations/apps': typeof AppIntegrationsAppsRoute
   '/integrations/connect': typeof AppIntegrationsConnectRouteWithChildren
   '/integrations/dashboard': typeof AppIntegrationsDashboardRoute
+  '/integrations/diagnostic': typeof AppIntegrationsDiagnosticRoute
   '/integrations/health': typeof AppIntegrationsHealthRoute
   '/integrations/help': typeof AppIntegrationsHelpRoute
   '/integrations/mapping': typeof AppIntegrationsMappingRoute
@@ -956,6 +964,7 @@ export interface FileRoutesByTo {
   '/integrations/apps': typeof AppIntegrationsAppsRoute
   '/integrations/connect': typeof AppIntegrationsConnectRouteWithChildren
   '/integrations/dashboard': typeof AppIntegrationsDashboardRoute
+  '/integrations/diagnostic': typeof AppIntegrationsDiagnosticRoute
   '/integrations/health': typeof AppIntegrationsHealthRoute
   '/integrations/help': typeof AppIntegrationsHelpRoute
   '/integrations/mapping': typeof AppIntegrationsMappingRoute
@@ -1080,6 +1089,7 @@ export interface FileRoutesById {
   '/_app/integrations/apps': typeof AppIntegrationsAppsRoute
   '/_app/integrations/connect': typeof AppIntegrationsConnectRouteWithChildren
   '/_app/integrations/dashboard': typeof AppIntegrationsDashboardRoute
+  '/_app/integrations/diagnostic': typeof AppIntegrationsDiagnosticRoute
   '/_app/integrations/health': typeof AppIntegrationsHealthRoute
   '/_app/integrations/help': typeof AppIntegrationsHelpRoute
   '/_app/integrations/mapping': typeof AppIntegrationsMappingRoute
@@ -1204,6 +1214,7 @@ export interface FileRouteTypes {
     | '/integrations/apps'
     | '/integrations/connect'
     | '/integrations/dashboard'
+    | '/integrations/diagnostic'
     | '/integrations/health'
     | '/integrations/help'
     | '/integrations/mapping'
@@ -1326,6 +1337,7 @@ export interface FileRouteTypes {
     | '/integrations/apps'
     | '/integrations/connect'
     | '/integrations/dashboard'
+    | '/integrations/diagnostic'
     | '/integrations/health'
     | '/integrations/help'
     | '/integrations/mapping'
@@ -1449,6 +1461,7 @@ export interface FileRouteTypes {
     | '/_app/integrations/apps'
     | '/_app/integrations/connect'
     | '/_app/integrations/dashboard'
+    | '/_app/integrations/diagnostic'
     | '/_app/integrations/health'
     | '/_app/integrations/help'
     | '/_app/integrations/mapping'
@@ -2209,6 +2222,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIntegrationsHealthRouteImport
       parentRoute: typeof AppIntegrationsRoute
     }
+    '/_app/integrations/diagnostic': {
+      id: '/_app/integrations/diagnostic'
+      path: '/diagnostic'
+      fullPath: '/integrations/diagnostic'
+      preLoaderRoute: typeof AppIntegrationsDiagnosticRouteImport
+      parentRoute: typeof AppIntegrationsRoute
+    }
     '/_app/integrations/dashboard': {
       id: '/_app/integrations/dashboard'
       path: '/dashboard'
@@ -2410,6 +2430,7 @@ interface AppIntegrationsRouteChildren {
   AppIntegrationsAppsRoute: typeof AppIntegrationsAppsRoute
   AppIntegrationsConnectRoute: typeof AppIntegrationsConnectRouteWithChildren
   AppIntegrationsDashboardRoute: typeof AppIntegrationsDashboardRoute
+  AppIntegrationsDiagnosticRoute: typeof AppIntegrationsDiagnosticRoute
   AppIntegrationsHealthRoute: typeof AppIntegrationsHealthRoute
   AppIntegrationsHelpRoute: typeof AppIntegrationsHelpRoute
   AppIntegrationsMappingRoute: typeof AppIntegrationsMappingRoute
@@ -2423,6 +2444,7 @@ const AppIntegrationsRouteChildren: AppIntegrationsRouteChildren = {
   AppIntegrationsAppsRoute: AppIntegrationsAppsRoute,
   AppIntegrationsConnectRoute: AppIntegrationsConnectRouteWithChildren,
   AppIntegrationsDashboardRoute: AppIntegrationsDashboardRoute,
+  AppIntegrationsDiagnosticRoute: AppIntegrationsDiagnosticRoute,
   AppIntegrationsHealthRoute: AppIntegrationsHealthRoute,
   AppIntegrationsHelpRoute: AppIntegrationsHelpRoute,
   AppIntegrationsMappingRoute: AppIntegrationsMappingRoute,
