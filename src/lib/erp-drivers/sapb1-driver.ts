@@ -9,9 +9,29 @@
  * SalesPersons, Orders. Nada de estoque, financeiro, fiscal.
  */
 import type {
-  ErpCustomerDTO, ErpDriver, ErpDriverConfig, ErpPullResult,
-  ErpSalesOrderDTO, ErpSalesRepDTO,
+  ErpCustomerDTO, ErpCustomerPushInput, ErpDriver, ErpDriverConfig,
+  ErpPullResult, ErpPushResult, ErpSalesOrderDTO, ErpSalesRepDTO,
 } from "./types";
+
+async function slWrite(cfg: ErpDriverConfig, path: string, method: "POST" | "PATCH", payload: unknown) {
+  if (!cfg.app_key || !cfg.app_secret) {
+    throw new Error("SAP B1 requer app_key (Service Layer URL) e app_secret (cookies de sessão).");
+  }
+  const base = cfg.app_key.replace(/\/$/, "");
+  const res = await fetch(`${base}${path}`, {
+    method,
+    headers: {
+      Cookie: cfg.app_secret,
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+  const text = await res.text();
+  let body: any; try { body = text ? JSON.parse(text) : {}; } catch { body = { raw: text }; }
+  if (!res.ok) throw new Error(body?.error?.message?.value || body?.error?.message || `SAP B1 HTTP ${res.status}`);
+  return body;
+}
 
 async function slGet(cfg: ErpDriverConfig, path: string) {
   if (!cfg.app_key || !cfg.app_secret) {
@@ -126,5 +146,24 @@ export const sapb1Driver: ErpDriver = {
       next_cursor: hasMore ? { skip: skip + top } : null,
       has_more: hasMore,
     };
+  },
+
+  async pushCustomer(cfg, input: ErpCustomerPushInput): Promise<ErpPushResult> {
+    const payload: Record<string, unknown> = {
+      CardType: "cCustomer",
+      CardName: input.legal_name ?? input.trade_name,
+      FederalTaxID: input.document ?? undefined,
+      EmailAddress: input.email ?? undefined,
+      Phone1: input.phone ?? undefined,
+    };
+    if (input.external_id) {
+      await slWrite(cfg, `/BusinessPartners('${encodeURIComponent(input.external_id)}')`, "PATCH", payload);
+      return { external_id: input.external_id, note: "atualizado" };
+    }
+    // CardCode é obrigatório para criar; usar documento como base se não vier external_id
+    const cardCode = (input.document?.replace(/\D/g, "") ?? "").slice(0, 15) || `CRM${Date.now()}`;
+    const body = await slWrite(cfg, "/BusinessPartners", "POST", { CardCode: cardCode, ...payload });
+    const id = String(body?.CardCode ?? cardCode);
+    return { external_id: id, note: "criado" };
   },
 };

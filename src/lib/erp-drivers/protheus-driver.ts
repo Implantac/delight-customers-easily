@@ -9,9 +9,29 @@
  * Nada de estoque (SB*), fiscal, financeiro (SE*), compras (SC7).
  */
 import type {
-  ErpCustomerDTO, ErpDriver, ErpDriverConfig, ErpPullResult,
-  ErpSalesOrderDTO, ErpSalesRepDTO,
+  ErpCustomerDTO, ErpCustomerPushInput, ErpDriver, ErpDriverConfig,
+  ErpPullResult, ErpPushResult, ErpSalesOrderDTO, ErpSalesRepDTO,
 } from "./types";
+
+async function pWrite(cfg: ErpDriverConfig, path: string, method: "POST" | "PUT", payload: unknown) {
+  if (!cfg.app_key || !cfg.app_secret) {
+    throw new Error("Protheus requer app_key (base URL) e app_secret (Bearer token).");
+  }
+  const base = cfg.app_key.replace(/\/$/, "");
+  const res = await fetch(`${base}${path}`, {
+    method,
+    headers: {
+      Authorization: `Bearer ${cfg.app_secret}`,
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+  const text = await res.text();
+  let body: any; try { body = text ? JSON.parse(text) : {}; } catch { body = { raw: text }; }
+  if (!res.ok) throw new Error(body?.errorMessage || body?.message || `Protheus HTTP ${res.status}`);
+  return body;
+}
 
 async function pGet(cfg: ErpDriverConfig, path: string, query: Record<string, string | number> = {}) {
   if (!cfg.app_key || !cfg.app_secret) {
@@ -117,5 +137,23 @@ export const protheusDriver: ErpDriver = {
       next_cursor: hasMore ? { page: page + 1 } : null,
       has_more: hasMore,
     };
+  },
+
+  async pushCustomer(cfg, input: ErpCustomerPushInput): Promise<ErpPushResult> {
+    const payload: Record<string, unknown> = {
+      legalName: input.legal_name,
+      tradeName: input.trade_name,
+      document: input.document,
+      email: input.email,
+      phone: input.phone,
+    };
+    if (input.external_id) {
+      await pWrite(cfg, `/api/framework/v1/customers/${encodeURIComponent(input.external_id)}`, "PUT", payload);
+      return { external_id: input.external_id, note: "atualizado" };
+    }
+    const body = await pWrite(cfg, "/api/framework/v1/customers", "POST", payload);
+    const id = String(body?.code ?? body?.id ?? body?.A1_COD ?? "");
+    if (!id) throw new Error("Protheus não retornou código do cliente criado.");
+    return { external_id: id, note: "criado" };
   },
 };

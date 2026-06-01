@@ -9,8 +9,8 @@
  * Nada de estoque, fiscal, NFe, compras, contábil.
  */
 import type {
-  ErpCustomerDTO, ErpDriver, ErpDriverConfig, ErpPullResult,
-  ErpSalesOrderDTO, ErpSalesRepDTO,
+  ErpCustomerDTO, ErpCustomerPushInput, ErpDriver, ErpDriverConfig,
+  ErpPullResult, ErpPushResult, ErpSalesOrderDTO, ErpSalesRepDTO,
 } from "./types";
 
 type SankhyaResp = {
@@ -160,5 +160,40 @@ export const sankhyaDriver: ErpDriver = {
       next_cursor: dtos.length === limit ? { page: page + 1 } : null,
       has_more: dtos.length === limit,
     };
+  },
+
+  async pushCustomer(cfg, input: ErpCustomerPushInput): Promise<ErpPushResult> {
+    const fields: Record<string, string> = {};
+    if (input.legal_name) fields.RAZAOSOCIAL = input.legal_name;
+    if (input.trade_name) fields.NOMEPARC = input.trade_name;
+    if (input.document) fields.CGC_CPF = input.document.replace(/\D/g, "");
+    if (input.email) fields.EMAIL = input.email;
+    if (input.phone) fields.TELEFONE = input.phone;
+    fields.CLIENTE = "S";
+
+    const body: Record<string, unknown> = {
+      serviceName: "CRUDServiceProvider.saveRecord",
+      requestBody: {
+        dataSet: {
+          rootEntity: "Parceiro",
+          includePresentationFields: "N",
+          dataRow: {
+            ...(input.external_id ? { key: { CODPARC: { $: input.external_id } } } : {}),
+            localFields: Object.fromEntries(
+              Object.entries(fields).map(([k, v]) => [k, { $: v }]),
+            ),
+          },
+          entity: { fieldset: { list: "CODPARC" } },
+        },
+      },
+    };
+    const resp = await sankhyaCall(cfg, "CRUDServiceProvider.saveRecord", body);
+    if (resp.status !== "1") {
+      throw new Error(resp.statusMessage || "Sankhya rejeitou saveRecord");
+    }
+    const ent = resp.responseBody?.entities?.entity?.[0] as Record<string, any> | undefined;
+    const id = ent ? flat(ent).CODPARC : input.external_id ?? "";
+    if (!id) throw new Error("Sankhya não retornou CODPARC.");
+    return { external_id: id, note: input.external_id ? "atualizado" : "criado" };
   },
 };
