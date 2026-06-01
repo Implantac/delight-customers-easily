@@ -46,11 +46,20 @@ function ConnectWizard() {
   const [syncing, setSyncing] = useState(false);
   const [syncResult, setSyncResult] = useState<{ inserted: number; skipped: number } | null>(null);
 
+  // Sugestão IA de ERP a partir de descrição livre
+  const [aiQuery, setAiQuery] = useState("");
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiSuggestion, setAiSuggestion] = useState<{
+    provider_id: string; provider_name: string; connection_method: "api" | "db" | "csv" | "agent";
+    confidence: number; reasoning: string;
+  } | null>(null);
+
   const save = useServerFn(saveErpIntegration);
   const testOmie = useServerFn(testErpConnection);
   const testBling = useServerFn(testBlingConnection);
   const importBling = useServerFn(importContactsFromBling);
   const diagnose = useServerFn(diagnoseConnectionError);
+  const suggestProvider = useServerFn(suggestErpProvider);
 
   if (!canManage) {
     return (
