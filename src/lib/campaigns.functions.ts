@@ -127,41 +127,38 @@ export const populateRecipients = createServerFn({ method: "POST" })
     return { added: fresh.length, total };
   });
 
+/**
+ * Dispara o envio IMEDIATO de uma campanha (botão "Enviar agora").
+ * Marca a campanha como 'scheduled' com scheduled_at=now() e delega ao
+ * worker (`processScheduledCampaigns`) o disparo real via Resend. O
+ * cron `campaign-tick` (a cada minuto) processará. Para envio na hora
+ * mesmo, o usuário pode chamar `triggerCampaignTick` em seguida.
+ */
 export const sendCampaignNow = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: { id: string }) => d)
   .handler(async ({ data, context }) => {
-    const { supabase } = context;
     const now = new Date().toISOString();
-    // Mark all pending recipients as sent (simulation - no actual SMTP).
-    const { data: recs, error: rErr } = await supabase
-      .from("email_campaign_recipients")
-      .select("id")
-      .eq("campaign_id", data.id)
-      .eq("status", "pending");
-    if (rErr) throw new Error(rErr.message);
-    const ids = (recs ?? []).map((r: any) => r.id);
-    if (ids.length) {
-      await supabase
-        .from("email_campaign_recipients")
-        .update({ status: "sent", sent_at: now })
-        .in("id", ids);
-    }
-    const { count } = await supabase
-      .from("email_campaign_recipients")
-      .select("id", { count: "exact", head: true })
-      .eq("campaign_id", data.id);
-    const { error } = await supabase
+    const { error } = await context.supabase
       .from("email_campaigns")
-      .update({
-        status: "sent",
-        sent_at: now,
-        total_sent: count ?? 0,
-        total_delivered: count ?? 0,
-      })
-      .eq("id", data.id);
+      .update({ status: "scheduled", scheduled_at: now })
+      .eq("id", data.id)
+      .in("status", ["draft", "scheduled"]);
     if (error) throw new Error(error.message);
-    return { ok: true, sent: ids.length };
+    return { ok: true, queued_at: now };
+  });
+
+/**
+ * Aciona manualmente o worker (mesmo código usado pelo cron). Útil para
+ * "Enviar agora" disparar de imediato em vez de esperar o tick.
+ * Usa o supabase autenticado do request — só processa o que o usuário
+ * tem permissão de enxergar via RLS.
+ */
+export const triggerCampaignTick = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { processScheduledCampaigns } = await import("./campaigns-worker.server");
+    return processScheduledCampaigns(context.supabase);
   });
 
 export const recordEngagement = createServerFn({ method: "POST" })

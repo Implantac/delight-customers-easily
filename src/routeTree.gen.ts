@@ -118,6 +118,7 @@ import { Route as AppIntegrationsAgentRouteImport } from './routes/_app.integrat
 import { Route as AppIntegrationsAdvancedRouteImport } from './routes/_app.integrations.advanced'
 import { Route as AppContactsIdRouteImport } from './routes/_app.contacts.$id'
 import { Route as AppCompaniesIdRouteImport } from './routes/_app.companies.$id'
+import { Route as ApiPublicHooksSequenceTickRouteImport } from './routes/api/public/hooks/sequence-tick'
 import { Route as ApiPublicHooksRefreshRecommendationsRouteImport } from './routes/api/public/hooks/refresh-recommendations'
 import { Route as ApiPublicHooksPropensityBatchTickRouteImport } from './routes/api/public/hooks/propensity-batch-tick'
 import { Route as ApiPublicHooksGenerateAlertsRouteImport } from './routes/api/public/hooks/generate-alerts'
@@ -127,6 +128,7 @@ import { Route as ApiPublicHooksErpInboundRouteImport } from './routes/api/publi
 import { Route as ApiPublicHooksErpAgentPushRouteImport } from './routes/api/public/hooks/erp-agent-push'
 import { Route as ApiPublicHooksDailyBriefingRouteImport } from './routes/api/public/hooks/daily-briefing'
 import { Route as ApiPublicHooksCustomer360RefreshRouteImport } from './routes/api/public/hooks/customer-360-refresh'
+import { Route as ApiPublicHooksCampaignTickRouteImport } from './routes/api/public/hooks/campaign-tick'
 import { Route as ApiPublicHooksAiPurgeExpiredRouteImport } from './routes/api/public/hooks/ai-purge-expired'
 import { Route as ApiPublicHooksActivityRemindersRouteImport } from './routes/api/public/hooks/activity-reminders'
 import { Route as ApiOauthGoogleInitiateRouteImport } from './routes/api.oauth.google.initiate'
@@ -687,6 +689,12 @@ const AppCompaniesIdRoute = AppCompaniesIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AppCompaniesRoute,
 } as any)
+const ApiPublicHooksSequenceTickRoute =
+  ApiPublicHooksSequenceTickRouteImport.update({
+    id: '/api/public/hooks/sequence-tick',
+    path: '/api/public/hooks/sequence-tick',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHooksRefreshRecommendationsRoute =
   ApiPublicHooksRefreshRecommendationsRouteImport.update({
     id: '/api/public/hooks/refresh-recommendations',
@@ -739,6 +747,12 @@ const ApiPublicHooksCustomer360RefreshRoute =
   ApiPublicHooksCustomer360RefreshRouteImport.update({
     id: '/api/public/hooks/customer-360-refresh',
     path: '/api/public/hooks/customer-360-refresh',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicHooksCampaignTickRoute =
+  ApiPublicHooksCampaignTickRouteImport.update({
+    id: '/api/public/hooks/campaign-tick',
+    path: '/api/public/hooks/campaign-tick',
     getParentRoute: () => rootRouteImport,
   } as any)
 const ApiPublicHooksAiPurgeExpiredRoute =
@@ -897,6 +911,7 @@ export interface FileRoutesByFullPath {
   '/api/oauth/google/initiate': typeof ApiOauthGoogleInitiateRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
   '/api/public/hooks/ai-purge-expired': typeof ApiPublicHooksAiPurgeExpiredRoute
+  '/api/public/hooks/campaign-tick': typeof ApiPublicHooksCampaignTickRoute
   '/api/public/hooks/customer-360-refresh': typeof ApiPublicHooksCustomer360RefreshRoute
   '/api/public/hooks/daily-briefing': typeof ApiPublicHooksDailyBriefingRoute
   '/api/public/hooks/erp-agent-push': typeof ApiPublicHooksErpAgentPushRoute
@@ -906,6 +921,7 @@ export interface FileRoutesByFullPath {
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
   '/api/public/hooks/propensity-batch-tick': typeof ApiPublicHooksPropensityBatchTickRoute
   '/api/public/hooks/refresh-recommendations': typeof ApiPublicHooksRefreshRecommendationsRoute
+  '/api/public/hooks/sequence-tick': typeof ApiPublicHooksSequenceTickRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -1023,6 +1039,7 @@ export interface FileRoutesByTo {
   '/api/oauth/google/initiate': typeof ApiOauthGoogleInitiateRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
   '/api/public/hooks/ai-purge-expired': typeof ApiPublicHooksAiPurgeExpiredRoute
+  '/api/public/hooks/campaign-tick': typeof ApiPublicHooksCampaignTickRoute
   '/api/public/hooks/customer-360-refresh': typeof ApiPublicHooksCustomer360RefreshRoute
   '/api/public/hooks/daily-briefing': typeof ApiPublicHooksDailyBriefingRoute
   '/api/public/hooks/erp-agent-push': typeof ApiPublicHooksErpAgentPushRoute
@@ -1032,6 +1049,7 @@ export interface FileRoutesByTo {
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
   '/api/public/hooks/propensity-batch-tick': typeof ApiPublicHooksPropensityBatchTickRoute
   '/api/public/hooks/refresh-recommendations': typeof ApiPublicHooksRefreshRecommendationsRoute
+  '/api/public/hooks/sequence-tick': typeof ApiPublicHooksSequenceTickRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -1151,6 +1169,7 @@ export interface FileRoutesById {
   '/api/oauth/google/initiate': typeof ApiOauthGoogleInitiateRoute
   '/api/public/hooks/activity-reminders': typeof ApiPublicHooksActivityRemindersRoute
   '/api/public/hooks/ai-purge-expired': typeof ApiPublicHooksAiPurgeExpiredRoute
+  '/api/public/hooks/campaign-tick': typeof ApiPublicHooksCampaignTickRoute
   '/api/public/hooks/customer-360-refresh': typeof ApiPublicHooksCustomer360RefreshRoute
   '/api/public/hooks/daily-briefing': typeof ApiPublicHooksDailyBriefingRoute
   '/api/public/hooks/erp-agent-push': typeof ApiPublicHooksErpAgentPushRoute
@@ -1160,6 +1179,7 @@ export interface FileRoutesById {
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
   '/api/public/hooks/propensity-batch-tick': typeof ApiPublicHooksPropensityBatchTickRoute
   '/api/public/hooks/refresh-recommendations': typeof ApiPublicHooksRefreshRecommendationsRoute
+  '/api/public/hooks/sequence-tick': typeof ApiPublicHooksSequenceTickRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -1279,6 +1299,7 @@ export interface FileRouteTypes {
     | '/api/oauth/google/initiate'
     | '/api/public/hooks/activity-reminders'
     | '/api/public/hooks/ai-purge-expired'
+    | '/api/public/hooks/campaign-tick'
     | '/api/public/hooks/customer-360-refresh'
     | '/api/public/hooks/daily-briefing'
     | '/api/public/hooks/erp-agent-push'
@@ -1288,6 +1309,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/generate-alerts'
     | '/api/public/hooks/propensity-batch-tick'
     | '/api/public/hooks/refresh-recommendations'
+    | '/api/public/hooks/sequence-tick'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -1405,6 +1427,7 @@ export interface FileRouteTypes {
     | '/api/oauth/google/initiate'
     | '/api/public/hooks/activity-reminders'
     | '/api/public/hooks/ai-purge-expired'
+    | '/api/public/hooks/campaign-tick'
     | '/api/public/hooks/customer-360-refresh'
     | '/api/public/hooks/daily-briefing'
     | '/api/public/hooks/erp-agent-push'
@@ -1414,6 +1437,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/generate-alerts'
     | '/api/public/hooks/propensity-batch-tick'
     | '/api/public/hooks/refresh-recommendations'
+    | '/api/public/hooks/sequence-tick'
   id:
     | '__root__'
     | '/'
@@ -1532,6 +1556,7 @@ export interface FileRouteTypes {
     | '/api/oauth/google/initiate'
     | '/api/public/hooks/activity-reminders'
     | '/api/public/hooks/ai-purge-expired'
+    | '/api/public/hooks/campaign-tick'
     | '/api/public/hooks/customer-360-refresh'
     | '/api/public/hooks/daily-briefing'
     | '/api/public/hooks/erp-agent-push'
@@ -1541,6 +1566,7 @@ export interface FileRouteTypes {
     | '/api/public/hooks/generate-alerts'
     | '/api/public/hooks/propensity-batch-tick'
     | '/api/public/hooks/refresh-recommendations'
+    | '/api/public/hooks/sequence-tick'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -1556,6 +1582,7 @@ export interface RootRouteChildren {
   ApiOauthGoogleInitiateRoute: typeof ApiOauthGoogleInitiateRoute
   ApiPublicHooksActivityRemindersRoute: typeof ApiPublicHooksActivityRemindersRoute
   ApiPublicHooksAiPurgeExpiredRoute: typeof ApiPublicHooksAiPurgeExpiredRoute
+  ApiPublicHooksCampaignTickRoute: typeof ApiPublicHooksCampaignTickRoute
   ApiPublicHooksCustomer360RefreshRoute: typeof ApiPublicHooksCustomer360RefreshRoute
   ApiPublicHooksDailyBriefingRoute: typeof ApiPublicHooksDailyBriefingRoute
   ApiPublicHooksErpAgentPushRoute: typeof ApiPublicHooksErpAgentPushRoute
@@ -1565,6 +1592,7 @@ export interface RootRouteChildren {
   ApiPublicHooksGenerateAlertsRoute: typeof ApiPublicHooksGenerateAlertsRoute
   ApiPublicHooksPropensityBatchTickRoute: typeof ApiPublicHooksPropensityBatchTickRoute
   ApiPublicHooksRefreshRecommendationsRoute: typeof ApiPublicHooksRefreshRecommendationsRoute
+  ApiPublicHooksSequenceTickRoute: typeof ApiPublicHooksSequenceTickRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -2332,6 +2360,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCompaniesIdRouteImport
       parentRoute: typeof AppCompaniesRoute
     }
+    '/api/public/hooks/sequence-tick': {
+      id: '/api/public/hooks/sequence-tick'
+      path: '/api/public/hooks/sequence-tick'
+      fullPath: '/api/public/hooks/sequence-tick'
+      preLoaderRoute: typeof ApiPublicHooksSequenceTickRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/refresh-recommendations': {
       id: '/api/public/hooks/refresh-recommendations'
       path: '/api/public/hooks/refresh-recommendations'
@@ -2393,6 +2428,13 @@ declare module '@tanstack/react-router' {
       path: '/api/public/hooks/customer-360-refresh'
       fullPath: '/api/public/hooks/customer-360-refresh'
       preLoaderRoute: typeof ApiPublicHooksCustomer360RefreshRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/hooks/campaign-tick': {
+      id: '/api/public/hooks/campaign-tick'
+      path: '/api/public/hooks/campaign-tick'
+      fullPath: '/api/public/hooks/campaign-tick'
+      preLoaderRoute: typeof ApiPublicHooksCampaignTickRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/hooks/ai-purge-expired': {
@@ -2810,6 +2852,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiOauthGoogleInitiateRoute: ApiOauthGoogleInitiateRoute,
   ApiPublicHooksActivityRemindersRoute: ApiPublicHooksActivityRemindersRoute,
   ApiPublicHooksAiPurgeExpiredRoute: ApiPublicHooksAiPurgeExpiredRoute,
+  ApiPublicHooksCampaignTickRoute: ApiPublicHooksCampaignTickRoute,
   ApiPublicHooksCustomer360RefreshRoute: ApiPublicHooksCustomer360RefreshRoute,
   ApiPublicHooksDailyBriefingRoute: ApiPublicHooksDailyBriefingRoute,
   ApiPublicHooksErpAgentPushRoute: ApiPublicHooksErpAgentPushRoute,
@@ -2821,17 +2864,8 @@ const rootRouteChildren: RootRouteChildren = {
     ApiPublicHooksPropensityBatchTickRoute,
   ApiPublicHooksRefreshRecommendationsRoute:
     ApiPublicHooksRefreshRecommendationsRoute,
+  ApiPublicHooksSequenceTickRoute: ApiPublicHooksSequenceTickRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
