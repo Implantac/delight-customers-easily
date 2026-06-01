@@ -8,9 +8,34 @@ import { FRIENDLY_ERPS, statusLabel } from "@/lib/connect-hub";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Plug, Plus, HelpCircle, Settings2, Activity, Clock, CheckCircle2 } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { PageHeader } from "@/components/page-header";
+import {
+  Plug,
+  Plus,
+  HelpCircle,
+  Settings2,
+  Activity,
+  Clock,
+  CheckCircle2,
+  RefreshCw,
+  Inbox,
+  FileText,
+  AppWindow,
+  Server,
+  AlertTriangle,
+  ChevronRight,
+} from "lucide-react";
 
 export const Route = createFileRoute("/_app/integrations")({ component: ConnectHubDashboard });
+
+const QUICK_LINKS = [
+  { to: "/integrations/health" as const, icon: Activity, label: "Saúde", desc: "Status em tempo real" },
+  { to: "/integrations/outbox" as const, icon: Inbox, label: "Fila de eventos", desc: "Envios e retries" },
+  { to: "/integrations/templates" as const, icon: FileText, label: "Templates", desc: "Mapeamentos prontos" },
+  { to: "/integrations/apps" as const, icon: AppWindow, label: "Apps", desc: "Conectores extras" },
+  { to: "/settings/erp-agent" as const, icon: Server, label: "Agente local", desc: "ERPs on-premise" },
+];
 
 function ConnectHubDashboard() {
   const { orgId } = useCurrentOrg();
@@ -20,6 +45,7 @@ function ConnectHubDashboard() {
     queryKey: ["erp-health", orgId],
     queryFn: () => fetchHealth({ data: { organization_id: orgId! } }),
     enabled: !!orgId,
+    refetchInterval: 60_000,
   });
 
   if (!canManage) {
@@ -35,123 +61,214 @@ function ConnectHubDashboard() {
   }
 
   const rows = (health.data?.rows ?? []).filter((r) => r.is_configured);
+  const online = rows.filter((r) => r.status === "online").length;
+  const degraded = rows.filter((r) => r.status === "degraded").length;
+  const offline = rows.filter((r) => r.status === "offline").length;
+  const needsAttention = degraded + offline;
 
   return (
-    <div className="p-6 space-y-6 max-w-5xl mx-auto">
-      {/* Hero */}
-      <Card className="bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border-primary/20">
-        <CardContent className="p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div className="space-y-2">
-            <div className="flex items-center gap-2 text-primary">
-              <Plug className="h-6 w-6" />
-              <span className="text-sm font-medium uppercase tracking-wide">ConnectHub</span>
-            </div>
-            <h1 className="text-3xl font-semibold">Conecte seu ERP em poucos minutos</h1>
-            <p className="text-muted-foreground max-w-xl">
-              Escolha seu ERP, informe os dados de acesso e o CRM organiza tudo para você.
-              Sem precisar entender de banco de dados, API ou integração.
-            </p>
-          </div>
-          <Link to="/integrations/connect">
-            <Button size="lg" className="gap-2">
-              <Plus className="h-5 w-5" /> Conectar novo ERP
+    <div className="p-6 space-y-6 max-w-6xl mx-auto">
+      <PageHeader
+        icon={Plug}
+        title="ConnectHub"
+        subtitle="Conecte, sincronize e monitore seus ERPs em um só lugar."
+        action={
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-2"
+              onClick={() => health.refetch()}
+              disabled={health.isFetching}
+            >
+              <RefreshCw className={`h-4 w-4 ${health.isFetching ? "animate-spin" : ""}`} />
+              Atualizar
             </Button>
-          </Link>
+            <Link to="/integrations/connect">
+              <Button size="sm" className="gap-2">
+                <Plus className="h-4 w-4" /> Conectar ERP
+              </Button>
+            </Link>
+          </div>
+        }
+      />
+
+      {/* Resumo de status */}
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <StatCard label="ERPs conectados" value={rows.length} tone="primary" icon={Plug} />
+        <StatCard label="Online" value={online} tone="green" icon={CheckCircle2} />
+        <StatCard label="Precisa atenção" value={needsAttention} tone="amber" icon={AlertTriangle} />
+        <StatCard label="Total de eventos hoje" value={"—"} tone="muted" icon={Activity} hint="Veja em Saúde" />
+      </div>
+
+      {/* Quick links */}
+      <Card>
+        <CardContent className="p-2">
+          <div className="grid gap-1 sm:grid-cols-2 lg:grid-cols-5">
+            {QUICK_LINKS.map((q) => (
+              <Link
+                key={q.to}
+                to={q.to}
+                className="group flex items-center gap-3 rounded-md px-3 py-2.5 hover:bg-accent transition-colors"
+              >
+                <div className="h-9 w-9 rounded-md bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+                  <q.icon className="h-4 w-4 text-muted-foreground group-hover:text-primary" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="text-sm font-medium truncate">{q.label}</div>
+                  <div className="text-xs text-muted-foreground truncate">{q.desc}</div>
+                </div>
+                <ChevronRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+              </Link>
+            ))}
+          </div>
         </CardContent>
       </Card>
 
       {/* ERPs conectados */}
-      <div>
-        <h2 className="text-lg font-semibold mb-3">Seus ERPs conectados</h2>
-        {health.isLoading && (
-          <Card><CardContent className="p-6 text-center text-muted-foreground">Carregando...</CardContent></Card>
-        )}
-        {!health.isLoading && rows.length === 0 && (
-          <Card>
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-semibold">Seus ERPs conectados</h2>
+            <p className="text-sm text-muted-foreground">Status, última sincronização e ações rápidas por conector.</p>
+          </div>
+          {rows.length > 0 && (
+            <Link to="/integrations/health">
+              <Button variant="ghost" size="sm" className="gap-1">
+                Ver tudo <ChevronRight className="h-4 w-4" />
+              </Button>
+            </Link>
+          )}
+        </div>
+
+        {health.isLoading ? (
+          <div className="grid gap-4 md:grid-cols-2">
+            {[0, 1].map((i) => (
+              <Card key={i}>
+                <CardContent className="p-6">
+                  <div className="h-5 w-32 bg-muted rounded animate-pulse mb-3" />
+                  <div className="h-4 w-48 bg-muted rounded animate-pulse" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : rows.length === 0 ? (
+          <Card className="border-dashed">
             <CardContent className="p-10 text-center space-y-3">
               <div className="mx-auto h-12 w-12 rounded-full bg-muted flex items-center justify-center">
                 <Plug className="h-6 w-6 text-muted-foreground" />
               </div>
               <p className="font-medium">Nenhum ERP conectado ainda</p>
-              <p className="text-sm text-muted-foreground">Comece conectando seu primeiro ERP.</p>
+              <p className="text-sm text-muted-foreground max-w-md mx-auto">
+                Comece conectando seu primeiro ERP. Importamos clientes, representantes e histórico comercial — sem mexer em estoque, fiscal ou financeiro.
+              </p>
               <Link to="/integrations/connect">
-                <Button className="gap-2"><Plus className="h-4 w-4" /> Conectar novo ERP</Button>
+                <Button className="gap-2">
+                  <Plus className="h-4 w-4" /> Conectar meu primeiro ERP
+                </Button>
               </Link>
             </CardContent>
           </Card>
-        )}
-        <div className="grid gap-4 md:grid-cols-2">
-          {rows.map((r) => {
-            const friendly = FRIENDLY_ERPS.find((f) => f.id === r.provider);
-            const st = statusLabel(r.status);
-            return (
-              <Card key={r.provider}>
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-base flex items-center gap-2">
-                      <span className="text-xl">{friendly?.logo ?? "🔌"}</span>
-                      {friendly?.name ?? r.provider}
-                    </CardTitle>
-                    <Badge variant="outline" className={
-                      st.tone === "green" ? "border-green-500/40 text-green-700 dark:text-green-400" :
-                      st.tone === "yellow" ? "border-amber-500/40 text-amber-700 dark:text-amber-400" :
-                      st.tone === "red" ? "border-red-500/40 text-red-700 dark:text-red-400" :
-                      "border-muted-foreground/40 text-muted-foreground"
-                    }>
-                      {st.label}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent className="space-y-3 text-sm">
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Clock className="h-4 w-4" />
-                    {r.last_sync_at
-                      ? `Última sincronização: ${new Date(r.last_sync_at).toLocaleString("pt-BR")}`
-                      : "Nunca sincronizado"}
-                  </div>
-                  {(r.contacts_synced > 0 || r.companies_synced > 0) && (
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <CheckCircle2 className="h-4 w-4 text-green-600" />
-                      {r.contacts_synced} clientes · {r.companies_synced} empresas
+        ) : (
+          <div className="grid gap-4 md:grid-cols-2">
+            {rows.map((r) => {
+              const friendly = FRIENDLY_ERPS.find((f) => f.id === r.provider);
+              const st = statusLabel(r.status);
+              const tone =
+                st.tone === "green"
+                  ? "border-emerald-500/40 bg-emerald-500/5 text-emerald-700 dark:text-emerald-400"
+                  : st.tone === "yellow"
+                  ? "border-amber-500/40 bg-amber-500/5 text-amber-700 dark:text-amber-400"
+                  : st.tone === "red"
+                  ? "border-red-500/40 bg-red-500/5 text-red-700 dark:text-red-400"
+                  : "border-muted-foreground/40 text-muted-foreground";
+
+              return (
+                <Card key={r.provider} className="overflow-hidden">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="h-10 w-10 rounded-lg bg-muted flex items-center justify-center text-xl shrink-0">
+                          {friendly?.logo ?? "🔌"}
+                        </div>
+                        <div className="min-w-0">
+                          <CardTitle className="text-base truncate">
+                            {friendly?.name ?? r.provider}
+                          </CardTitle>
+                          <CardDescription className="text-xs">
+                            {r.latency_ms != null ? `${r.latency_ms} ms` : "—"}
+                          </CardDescription>
+                        </div>
+                      </div>
+                      <Badge variant="outline" className={tone}>
+                        {st.label}
+                      </Badge>
                     </div>
-                  )}
-                  {r.last_error && (
-                    <p className="text-xs text-red-600 line-clamp-2">{r.last_error}</p>
-                  )}
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
+                  </CardHeader>
+                  <CardContent className="space-y-3 text-sm pb-4">
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Clock className="h-4 w-4 shrink-0" />
+                      <span className="truncate">
+                        {r.last_sync_at
+                          ? `Última sync: ${new Date(r.last_sync_at).toLocaleString("pt-BR")}`
+                          : "Nunca sincronizado"}
+                      </span>
+                    </div>
+                    {(r.contacts_synced > 0 || r.companies_synced > 0) && (
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
+                        <span>
+                          {r.contacts_synced.toLocaleString("pt-BR")} clientes ·{" "}
+                          {r.companies_synced.toLocaleString("pt-BR")} empresas
+                        </span>
+                      </div>
+                    )}
+                    {r.last_error && (
+                      <div className="flex items-start gap-2 rounded-md border border-red-500/30 bg-red-500/5 p-2">
+                        <AlertTriangle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
+                        <p className="text-xs text-red-700 dark:text-red-400 line-clamp-2">
+                          {r.last_error}
+                        </p>
+                      </div>
+                    )}
+
+                    <Separator />
+
+                    <div className="flex flex-wrap gap-1.5">
+                      <Link to="/integrations/health">
+                        <Button size="sm" variant="outline" className="h-7 gap-1.5 text-xs">
+                          <RefreshCw className="h-3 w-3" /> Sincronizar
+                        </Button>
+                      </Link>
+                      <Link to="/integrations/outbox">
+                        <Button size="sm" variant="ghost" className="h-7 gap-1.5 text-xs">
+                          <Inbox className="h-3 w-3" /> Logs
+                        </Button>
+                      </Link>
+                      <Link to="/integrations/connect">
+                        <Button size="sm" variant="ghost" className="h-7 gap-1.5 text-xs">
+                          <Settings2 className="h-3 w-3" /> Configurar
+                        </Button>
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        )}
       </div>
 
-      {/* Saúde geral */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base flex items-center gap-2">
-            <Activity className="h-4 w-4" /> Saúde da conexão
-          </CardTitle>
-          <CardDescription>Visão rápida do status de todos os ERPs.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-4">
-            <Stat label="Conectados" value={rows.filter((r) => r.status === "online").length} tone="green" />
-            <Stat label="Precisam atenção" value={rows.filter((r) => r.status === "degraded").length} tone="yellow" />
-            <Stat label="Desconectados" value={rows.filter((r) => r.status === "offline").length} tone="red" />
-            <Stat label="Total" value={rows.length} tone="gray" />
-          </div>
-        </CardContent>
-      </Card>
-
       {/* Footer actions */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pt-4">
+      <Separator />
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <Link to="/integrations/help">
-          <Button variant="ghost" className="gap-2">
+          <Button variant="ghost" size="sm" className="gap-2">
             <HelpCircle className="h-4 w-4" /> Preciso de ajuda
           </Button>
         </Link>
         <Link to="/integrations/advanced">
-          <Button variant="ghost" className="gap-2 text-muted-foreground">
+          <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground">
             <Settings2 className="h-4 w-4" /> Configurações avançadas
           </Button>
         </Link>
@@ -160,15 +277,38 @@ function ConnectHubDashboard() {
   );
 }
 
-function Stat({ label, value, tone }: { label: string; value: number; tone: "green" | "yellow" | "red" | "gray" }) {
+function StatCard({
+  label,
+  value,
+  tone,
+  icon: Icon,
+  hint,
+}: {
+  label: string;
+  value: number | string;
+  tone: "primary" | "green" | "amber" | "muted";
+  icon: React.ComponentType<{ className?: string }>;
+  hint?: string;
+}) {
   const color =
-    tone === "green" ? "text-green-600" :
-    tone === "yellow" ? "text-amber-600" :
-    tone === "red" ? "text-red-600" : "text-muted-foreground";
+    tone === "primary"
+      ? "text-primary bg-primary/10"
+      : tone === "green"
+      ? "text-emerald-600 bg-emerald-500/10"
+      : tone === "amber"
+      ? "text-amber-600 bg-amber-500/10"
+      : "text-muted-foreground bg-muted";
   return (
-    <div className="rounded-md border p-3">
-      <div className={`text-2xl font-semibold ${color}`}>{value}</div>
-      <div className="text-xs text-muted-foreground">{label}</div>
-    </div>
+    <Card>
+      <CardContent className="p-4 flex items-center gap-3">
+        <div className={`h-10 w-10 rounded-md flex items-center justify-center ${color}`}>
+          <Icon className="h-5 w-5" />
+        </div>
+        <div className="min-w-0">
+          <div className="text-2xl font-semibold leading-none">{value}</div>
+          <div className="text-xs text-muted-foreground mt-1 truncate">{hint ?? label}</div>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
