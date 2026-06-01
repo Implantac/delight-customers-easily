@@ -39,14 +39,14 @@ export function PageHeader({
   return (
     <div
       className={cn(
-        "relative flex items-start justify-between gap-4 border-b border-border/60 pb-5 mb-6 pl-4",
+        "relative flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4 border-b border-border/60 pb-4 sm:pb-5 mb-5 sm:mb-6 pl-3 sm:pl-4",
         className,
       )}
     >
       <span
         aria-hidden
         className={cn(
-          "absolute left-0 top-1 bottom-5 w-[3px] rounded-full",
+          "absolute left-0 top-1 bottom-4 sm:bottom-5 w-[3px] rounded-full",
           TONE_BAR[tone],
         )}
       />
@@ -56,18 +56,22 @@ export function PageHeader({
             <Icon className={cn("h-[18px] w-[18px]", TONE_ICON[tone])} />
           </div>
         )}
-        <div className="min-w-0">
-          <h1 className="font-display text-[1.5rem] md:text-[1.75rem] font-semibold leading-[1.1] tracking-[-0.025em] text-foreground">
+        <div className="min-w-0 flex-1">
+          <h1 className="font-display text-[1.25rem] sm:text-[1.5rem] md:text-[1.75rem] font-semibold leading-[1.15] tracking-[-0.025em] text-foreground break-words">
             {title}
           </h1>
           {subtitle && (
-            <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+            <p className="mt-1.5 max-w-2xl text-[13px] sm:text-sm leading-relaxed text-muted-foreground break-words">
               {subtitle}
             </p>
           )}
         </div>
       </div>
-      {action && <div className="shrink-0">{action}</div>}
+      {action && (
+        <div className="flex flex-wrap items-center gap-2 sm:shrink-0 sm:justify-end [&>*]:min-w-0">
+          {action}
+        </div>
+      )}
     </div>
   );
 }

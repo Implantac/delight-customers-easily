@@ -22,11 +22,14 @@ export function CommandPaletteTrigger() {
       <Button
         variant="outline"
         size="sm"
-        className="h-9 w-full max-w-xs justify-start gap-2 text-muted-foreground"
+        className="h-9 w-full max-w-xs justify-start gap-2 text-muted-foreground px-2 sm:px-3"
         onClick={() => setOpen(true)}
       >
-        <Search className="h-4 w-4" />
-        <span className="flex-1 text-left">Buscar ou comando…</span>
+        <Search className="h-4 w-4 shrink-0" />
+        <span className="flex-1 text-left truncate text-xs sm:text-sm">
+          <span className="sm:hidden">Buscar…</span>
+          <span className="hidden sm:inline">Buscar ou comando…</span>
+        </span>
         <kbd className="hidden rounded border bg-muted px-1.5 py-0.5 text-[10px] font-medium md:inline">⌘K</kbd>
       </Button>
       <CommandPalette open={open} onOpenChange={setOpen} />
