@@ -357,6 +357,29 @@ function CsvImportTab({ orgId }: { orgId: string | null }) {
     previewMut.mutate(p.headers);
   };
 
+  async function handleAiSuggest() {
+    if (!parsed) return;
+    setAiLoading(true);
+    try {
+      const samples = parsed.rows.slice(0, 3).map((r) => parsed.headers.map((h) => String(r[h] ?? "").slice(0, 200)));
+      const r = await aiSuggest({ data: { entity, headers: parsed.headers, sample_rows: samples } });
+      const newMapping: Record<string, string> = { ...mapping };
+      const hints: Record<string, { confidence: number; reason: string }> = {};
+      for (const [col, info] of Object.entries(r.mapping)) {
+        newMapping[col] = info.field;
+        hints[col] = { confidence: info.confidence, reason: info.reason };
+      }
+      setMapping(newMapping);
+      setAiHints(hints);
+      setTargets(r.targets.map((t) => t.field));
+      toast.success(`IA mapeou ${Object.keys(r.mapping).length} colunas`);
+    } catch {
+      toast.error("Falha ao consultar a IA. Mapeie manualmente.");
+    } finally {
+      setAiLoading(false);
+    }
+  }
+
   return (
     <div className="space-y-4">
       <Card>
