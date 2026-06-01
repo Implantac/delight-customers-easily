@@ -183,6 +183,7 @@ function SetupWizardPage() {
   const canSaveConn =
     appKey.trim().length >= 8 && (!spec.needsSecret || appSecret.trim().length >= 8);
 
+  const progressPct = ((step - 1) / (STEPS.length - 1)) * 100;
 
   return (
     <div className="mx-auto max-w-3xl space-y-6 p-6">
@@ -192,29 +193,59 @@ function SetupWizardPage() {
         icon={Rocket}
       />
 
-      {/* Stepper */}
+      {/* Progress bar */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between text-xs text-muted-foreground">
+          <span>Passo {step} de {STEPS.length}</span>
+          <span>{Math.round(progressPct)}% completo</span>
+        </div>
+        <div className="h-1.5 rounded-full bg-muted overflow-hidden">
+          <div
+            className="h-full bg-gradient-to-r from-primary to-primary/70 transition-all duration-500 ease-out"
+            style={{ width: `${progressPct}%` }}
+          />
+        </div>
+      </div>
+
+      {/* Stepper (clickable to go back to any completed step) */}
       <div className="flex items-center gap-2">
         {STEPS.map((s, i) => {
           const Active = s.n === step;
           const Done = s.n < step;
           const Icon = s.icon;
+          const clickable = Done;
           return (
             <div key={s.n} className="flex items-center gap-2 flex-1">
-              <div
+              <button
+                type="button"
+                disabled={!clickable}
+                onClick={() => clickable && setStep(s.n as 1 | 2 | 3 | 4)}
                 className={[
                   "flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium border transition-all",
-                  Active ? "bg-primary text-primary-foreground border-primary" :
-                  Done ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30" :
-                  "bg-muted text-muted-foreground border-border",
+                  Active ? "bg-primary text-primary-foreground border-primary shadow-sm" :
+                  Done ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 hover:bg-emerald-500/25 cursor-pointer" :
+                  "bg-muted text-muted-foreground border-border cursor-not-allowed opacity-60",
                 ].join(" ")}
               >
                 <Icon className="h-3.5 w-3.5" /> {s.n}. {s.label}
-              </div>
-              {i < STEPS.length - 1 && <div className="h-px flex-1 bg-border" />}
+              </button>
+              {i < STEPS.length - 1 && (
+                <div
+                  className={[
+                    "h-0.5 flex-1 rounded-full transition-colors duration-500",
+                    s.n < step ? "bg-emerald-500/40" : "bg-border",
+                  ].join(" ")}
+                />
+              )}
             </div>
           );
         })}
       </div>
+
+      {/* Animated step container */}
+      <div key={step} className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+
+
 
       {step === 1 && (
         <Card className="p-6 space-y-4">
