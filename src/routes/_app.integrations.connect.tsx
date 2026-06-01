@@ -7,6 +7,7 @@ import { useCanManage } from "@/lib/permissions";
 import { saveErpIntegration, testErpConnection } from "@/lib/erp.functions";
 import { testBlingConnection, importContactsFromBling } from "@/lib/bling.functions";
 import { diagnoseConnectionError } from "@/lib/connect-hub-ai.functions";
+import { suggestErpProvider } from "@/lib/connect-hub-ai-suggest.functions";
 import { FRIENDLY_ERPS, translateError, type FriendlyErp } from "@/lib/connect-hub";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
