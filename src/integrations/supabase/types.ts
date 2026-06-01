@@ -8679,6 +8679,14 @@ export type Database = {
     }
     Functions: {
       accept_org_invite: { Args: { _token: string }; Returns: string }
+      close_ai_prediction_outcomes: {
+        Args: { _tenant_id: string }
+        Returns: {
+          churn_closed: number
+          closed: number
+          repurchase_closed: number
+        }[]
+      }
       compute_sales_forecast: {
         Args: {
           _org: string
