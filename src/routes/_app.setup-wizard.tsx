@@ -11,12 +11,14 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+// select removed: provider is picked via card grid in step 2
 import { Badge } from "@/components/ui/badge";
 import {
   Rocket, Building2, Plug, RefreshCw, CheckCircle2, ArrowRight, ArrowLeft, Loader2, Sparkles,
+  Eye, EyeOff, AlertCircle, ExternalLink, ShieldCheck,
 } from "lucide-react";
 import { toast } from "sonner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export const Route = createFileRoute("/_app/setup-wizard")({
   component: SetupWizardPage,
@@ -24,11 +26,55 @@ export const Route = createFileRoute("/_app/setup-wizard")({
 
 type ProviderKey = "bling" | "omie" | "tiny" | "contaazul";
 
-const PROVIDERS: Array<{ key: ProviderKey; label: string; hint: string }> = [
-  { key: "bling",     label: "Bling v3",     hint: "Token Bearer obtido no painel do Bling." },
-  { key: "omie",      label: "Omie",         hint: "APP KEY + APP SECRET do painel Omie." },
-  { key: "tiny",      label: "Tiny ERP v3",  hint: "Access Token OAuth2 do Tiny." },
-  { key: "contaazul", label: "Conta Azul",   hint: "Access Token OAuth2 da Conta Azul." },
+type ProviderSpec = {
+  key: ProviderKey;
+  label: string;
+  short: string;
+  keyLabel: string;
+  secretLabel?: string;
+  needsSecret: boolean;
+  docsUrl: string;
+  docsHint: string;
+};
+
+const PROVIDERS: ProviderSpec[] = [
+  {
+    key: "bling",
+    label: "Bling v3",
+    short: "PMEs · varejo · e-commerce",
+    keyLabel: "Access Token (Bearer)",
+    needsSecret: false,
+    docsUrl: "https://developer.bling.com.br/aplicativos",
+    docsHint: "Painel Bling → Preferências → Integrações → API → gerar Access Token.",
+  },
+  {
+    key: "omie",
+    label: "Omie",
+    short: "PMEs · serviços · indústria",
+    keyLabel: "APP KEY",
+    secretLabel: "APP SECRET",
+    needsSecret: true,
+    docsUrl: "https://app.omie.com.br/aplicativos/api",
+    docsHint: "Omie → Aplicativos → API → criar credencial (APP KEY + APP SECRET).",
+  },
+  {
+    key: "tiny",
+    label: "Tiny ERP v3",
+    short: "E-commerce · marketplaces",
+    keyLabel: "Access Token (OAuth2)",
+    needsSecret: false,
+    docsUrl: "https://tiny.com.br/ajuda/integracao-api-v3",
+    docsHint: "Tiny → Configurações → API v3 → autorizar app e copiar o token.",
+  },
+  {
+    key: "contaazul",
+    label: "Conta Azul",
+    short: "Contabilidade · PMEs",
+    keyLabel: "Access Token (OAuth2)",
+    needsSecret: false,
+    docsUrl: "https://developers.contaazul.com/",
+    docsHint: "Conta Azul Developers → app OAuth → autorizar e copiar o token.",
+  },
 ];
 
 const STEPS = [
@@ -37,6 +83,7 @@ const STEPS = [
   { n: 3, label: "Primeiro sync", icon: RefreshCw },
   { n: 4, label: "Pronto",       icon: CheckCircle2 },
 ] as const;
+
 
 function SetupWizardPage() {
   const navigate = useNavigate();
@@ -51,22 +98,41 @@ function SetupWizardPage() {
   const [provider, setProvider] = useState<ProviderKey>("bling");
   const [appKey, setAppKey] = useState("");
   const [appSecret, setAppSecret] = useState("");
+  const [showKey, setShowKey] = useState(false);
+  const [showSecret, setShowSecret] = useState(false);
   const [integrationId, setIntegrationId] = useState<string | null>(null);
   const [testLatency, setTestLatency] = useState<number | null>(null);
+  const [connError, setConnError] = useState<string | null>(null);
+
+  const spec = PROVIDERS.find((p) => p.key === provider)!;
 
   const saveFn = useServerFn(saveErpIntegration);
   const testFn = useServerFn(testErpConnection);
   const syncFn = useServerFn(enqueueErpSync);
 
+  const friendlyError = (raw: string): string => {
+    const m = raw.toLowerCase();
+    if (m.includes("401") || m.includes("unauthor")) return "Credencial recusada pelo ERP (401). Verifique se o token está válido e tem permissão de leitura.";
+    if (m.includes("403") || m.includes("forbidden")) return "Acesso negado (403). O token existe mas não tem escopo para clientes/vendas.";
+    if (m.includes("404")) return "Endpoint não encontrado (404). Confirme se a API do provedor está habilitada na sua conta.";
+    if (m.includes("429")) return "Rate limit atingido (429). Aguarde alguns segundos e tente novamente.";
+    if (m.includes("timeout") || m.includes("etimedout")) return "Tempo esgotado conectando ao ERP. Tente novamente; se persistir, o ERP pode estar fora do ar.";
+    if (m.includes("network") || m.includes("fetch failed")) return "Falha de rede ao chamar o ERP. Verifique conectividade e tente novamente.";
+    if (m.includes("app_key") || m.includes("app_secret")) return raw;
+    return raw;
+  };
+
   const saveConn = useMutation({
     mutationFn: async () => {
-      if (!orgId) throw new Error("Sem organização");
+      if (!orgId) throw new Error("Sem organização ativa. Recarregue a página.");
+      if (!appKey.trim()) throw new Error(`Informe o ${spec.keyLabel}.`);
+      if (spec.needsSecret && !appSecret.trim()) throw new Error(`Informe o ${spec.secretLabel}.`);
       const r = await saveFn({
         data: {
           organization_id: orgId,
           provider: provider as any,
           app_key: appKey.trim(),
-          app_secret: appSecret.trim() || appKey.trim(),
+          app_secret: spec.needsSecret ? appSecret.trim() : appKey.trim(),
           is_active: true,
         },
       });
@@ -76,10 +142,15 @@ function SetupWizardPage() {
     onSuccess: (r) => {
       setIntegrationId(r.id);
       setTestLatency(r.latency);
-      toast.success(`Conexão OK${r.latency != null ? ` (${r.latency}ms)` : ""}`);
+      setConnError(null);
+      toast.success(`Conexão OK${r.latency != null ? ` · ${r.latency}ms` : ""}`);
       setStep(3);
     },
-    onError: (e: any) => toast.error(e?.message ?? "Falha na conexão"),
+    onError: (e: any) => {
+      const msg = friendlyError(e?.message ?? "Falha desconhecida ao conectar.");
+      setConnError(msg);
+      toast.error(msg);
+    },
   });
 
   const runSync = useMutation({
@@ -109,7 +180,9 @@ function SetupWizardPage() {
     setStep(2);
   };
 
-  const canSaveConn = appKey.trim().length > 4;
+  const canSaveConn =
+    appKey.trim().length >= 8 && (!spec.needsSecret || appSecret.trim().length >= 8);
+
 
   return (
     <div className="mx-auto max-w-3xl space-y-6 p-6">
@@ -171,7 +244,7 @@ function SetupWizardPage() {
       )}
 
       {step === 2 && (
-        <Card className="p-6 space-y-4">
+        <Card className="p-6 space-y-5">
           <div>
             <h3 className="text-lg font-semibold">Conecte seu ERP</h3>
             <p className="text-sm text-muted-foreground mt-1">
@@ -180,54 +253,152 @@ function SetupWizardPage() {
             </p>
           </div>
 
-          <div className="space-y-3">
-            <div>
-              <Label>Provedor</Label>
-              <Select value={provider} onValueChange={(v) => setProvider(v as ProviderKey)}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  {PROVIDERS.map(p => <SelectItem key={p.key} value={p.key}>{p.label}</SelectItem>)}
-                </SelectContent>
-              </Select>
-              <p className="text-xs text-muted-foreground mt-1">
-                {PROVIDERS.find(p => p.key === provider)?.hint}
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-3">
-              <div>
-                <Label>{provider === "omie" ? "APP KEY" : "Access Token / Bearer"}</Label>
-                <Input value={appKey} onChange={(e) => setAppKey(e.target.value)} placeholder="••••••••" />
-              </div>
-              {provider === "omie" && (
-                <div>
-                  <Label>APP SECRET</Label>
-                  <Input value={appSecret} onChange={(e) => setAppSecret(e.target.value)} placeholder="••••••••" />
-                </div>
-              )}
-            </div>
-
-            <p className="text-xs text-muted-foreground">
-              Não tem token? Use a tela completa de <Link to="/integrations/connect" className="underline">Connect Hub</Link> depois.
-            </p>
+          {/* Provider catalog as selectable cards */}
+          <div className="grid sm:grid-cols-2 gap-2">
+            {PROVIDERS.map((p) => {
+              const active = p.key === provider;
+              return (
+                <button
+                  key={p.key}
+                  type="button"
+                  onClick={() => { setProvider(p.key); setConnError(null); }}
+                  className={[
+                    "text-left rounded-lg border p-3 transition-all",
+                    active
+                      ? "border-primary bg-primary/5 ring-1 ring-primary"
+                      : "border-border hover:border-primary/40",
+                  ].join(" ")}
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium text-sm">{p.label}</span>
+                    {active && <CheckCircle2 className="h-4 w-4 text-primary" />}
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-0.5">{p.short}</p>
+                </button>
+              );
+            })}
           </div>
+
+          {/* Where to get token */}
+          <Alert>
+            <ShieldCheck className="h-4 w-4" />
+            <AlertTitle className="text-sm">Onde obter as credenciais</AlertTitle>
+            <AlertDescription className="text-xs text-muted-foreground">
+              {spec.docsHint}{" "}
+              <a
+                href={spec.docsUrl}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="inline-flex items-center gap-1 underline text-primary"
+              >
+                Abrir documentação <ExternalLink className="h-3 w-3" />
+              </a>
+            </AlertDescription>
+          </Alert>
+
+          {/* Credential fields */}
+          <div className="grid md:grid-cols-2 gap-3">
+            <div>
+              <Label>{spec.keyLabel}</Label>
+              <div className="relative">
+                <Input
+                  type={showKey ? "text" : "password"}
+                  autoComplete="off"
+                  value={appKey}
+                  onChange={(e) => { setAppKey(e.target.value); setConnError(null); }}
+                  placeholder="cole aqui"
+                  className="pr-9"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowKey((v) => !v)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  aria-label={showKey ? "Ocultar" : "Mostrar"}
+                >
+                  {showKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+            </div>
+
+            {spec.needsSecret && (
+              <div>
+                <Label>{spec.secretLabel}</Label>
+                <div className="relative">
+                  <Input
+                    type={showSecret ? "text" : "password"}
+                    autoComplete="off"
+                    value={appSecret}
+                    onChange={(e) => { setAppSecret(e.target.value); setConnError(null); }}
+                    placeholder="cole aqui"
+                    className="pr-9"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowSecret((v) => !v)}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    aria-label={showSecret ? "Ocultar" : "Mostrar"}
+                  >
+                    {showSecret ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Inline error */}
+          {connError && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Não foi possível conectar</AlertTitle>
+              <AlertDescription className="text-xs">
+                {connError}
+                <div className="mt-2 text-muted-foreground">
+                  Dica: confira se o token foi copiado inteiro (sem espaços) e se o app está
+                  autorizado a ler clientes e pedidos no painel do {spec.label}.
+                </div>
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {/* Success indicator if already tested */}
+          {integrationId && !connError && (
+            <Alert className="border-emerald-500/30 bg-emerald-500/10">
+              <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+              <AlertTitle className="text-emerald-700 dark:text-emerald-400">Conexão validada</AlertTitle>
+              <AlertDescription className="text-xs">
+                Resposta em {testLatency ?? "—"}ms. Pode avançar para o primeiro sync.
+              </AlertDescription>
+            </Alert>
+          )}
+
+          <p className="text-xs text-muted-foreground">
+            Precisa de outro provedor (Sankhya, Protheus, SAP B1, Senior, banco direto)?{" "}
+            <Link to="/integrations/connect" className="underline">Abra o Connect Hub</Link>.
+          </p>
 
           <div className="flex justify-between pt-2">
             <Button variant="ghost" onClick={() => setStep(1)}>
               <ArrowLeft className="mr-2 h-4 w-4" /> Voltar
             </Button>
             <div className="flex gap-2">
-              <Button variant="outline" onClick={() => setStep(3)} disabled={!integrationId}>
-                Já tenho integração
-              </Button>
-              <Button onClick={() => saveConn.mutate()} disabled={!canSaveConn || saveConn.isPending}>
+              {integrationId && (
+                <Button variant="outline" onClick={() => setStep(3)}>
+                  Avançar <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              )}
+              <Button
+                onClick={() => saveConn.mutate()}
+                disabled={!canSaveConn || saveConn.isPending}
+              >
                 {saveConn.isPending && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-                Salvar e testar <ArrowRight className="ml-2 h-4 w-4" />
+                {integrationId ? "Testar novamente" : "Salvar e testar"}
+                {!saveConn.isPending && <ArrowRight className="ml-2 h-4 w-4" />}
               </Button>
             </div>
           </div>
         </Card>
       )}
+
 
       {step === 3 && (
         <Card className="p-6 space-y-4">

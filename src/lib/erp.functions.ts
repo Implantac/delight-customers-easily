@@ -95,7 +95,7 @@ export const saveErpIntegration = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: {
     organization_id: string;
-    provider?: "omie" | "bling" | "custom";
+    provider?: "omie" | "bling" | "tiny" | "contaazul" | "sankhya" | "custom";
     app_key: string;
     app_secret: string;
     is_active?: boolean;
@@ -123,6 +123,7 @@ export const saveErpIntegration = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { integration: row as ErpIntegration };
   });
+
 
 export const deleteErpIntegration = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
