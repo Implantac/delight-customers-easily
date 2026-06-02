@@ -1,7 +1,7 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQueries, useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useCurrentOrg } from "@/lib/org";
 import { PageHeader } from "@/components/page-header";
@@ -193,8 +193,9 @@ function OutboxPage() {
     });
   }
   // Limpa seleção ao trocar de aba
-  const tabRef = useState(tab)[0];
-  if (tabRef !== tab && selected.size) setSelected(new Set());
+  useEffect(() => {
+    setSelected(new Set());
+  }, [tab]);
 
   return (
     <RequireManager>
