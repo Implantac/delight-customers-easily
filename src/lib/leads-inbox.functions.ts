@@ -298,9 +298,10 @@ export const markLeadContacted = createServerFn({ method: "POST" })
       contact_id: contactId,
       user_id: userId,
       type: "note",
-      subject: "Lead contatado",
+      title: "Lead contatado",
       description: "Movido para a coluna Contatado no pipeline de leads.",
     });
+
     if (actErr) throw new Error(actErr.message);
 
     return { ok: true, contact_id: contactId };
