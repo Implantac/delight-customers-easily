@@ -110,6 +110,34 @@ function CommissionsPage() {
                 </Card>
               </div>
 
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <Simulator rule={report.data.rule} rows={report.data.rows} />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const csv = toCSV(
+                      report.data!.rows.map((r) => ({
+                        vendedor: r.name,
+                        vendido: r.sold,
+                        meta: r.goal,
+                        atingimento_pct: r.attainment != null ? Math.round(r.attainment * 100) : "",
+                        base: r.baseCommission,
+                        acelerador: r.accelerator,
+                        bonus: r.bonus,
+                        total: r.total,
+                      })),
+                      ["vendedor", "vendido", "meta", "atingimento_pct", "base", "acelerador", "bonus", "total"],
+                    );
+                    downloadCSV(`comissoes-${period}.csv`, csv);
+                  }}
+                  disabled={!report.data.rows.length}
+                >
+                  <Download className="h-4 w-4 mr-1.5" />
+                  Exportar CSV
+                </Button>
+              </div>
+
               <Card className="p-0 overflow-hidden">
                 <table className="w-full text-sm">
                   <thead className="bg-muted/40 text-xs uppercase text-muted-foreground">
