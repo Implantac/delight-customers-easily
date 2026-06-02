@@ -27,6 +27,10 @@ import {
   Sparkles,
   Loader2,
   CheckCircle2,
+  Database,
+  GitMerge,
+  Stethoscope,
+  Rocket,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/integrations/connect/wizard")({
