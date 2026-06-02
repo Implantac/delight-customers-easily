@@ -15,9 +15,10 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Coins, Trophy, Target, TrendingUp } from "lucide-react";
+import { Coins, Trophy, Target, TrendingUp, Download, Calculator } from "lucide-react";
 import { getCommissionReport, listCommissionRules, upsertCommissionRule } from "@/lib/commissions.functions";
 import { generatePayouts, listPayouts, setPayoutStatus } from "@/lib/payouts.functions";
+import { toCSV, downloadCSV } from "@/lib/csv";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/commissions")({ component: CommissionsPage });
@@ -107,6 +108,34 @@ function CommissionsPage() {
                   <div className="mt-2 text-3xl font-semibold">{BRL(Number(report.data.rule.quota_bonus))}</div>
                   <div className="mt-1 text-xs text-muted-foreground">pago a quem bateu a meta</div>
                 </Card>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <Simulator rule={report.data.rule} rows={report.data.rows} />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const csv = toCSV(
+                      report.data!.rows.map((r) => ({
+                        vendedor: r.name,
+                        vendido: r.sold,
+                        meta: r.goal,
+                        atingimento_pct: r.attainment != null ? Math.round(r.attainment * 100) : "",
+                        base: r.baseCommission,
+                        acelerador: r.accelerator,
+                        bonus: r.bonus,
+                        total: r.total,
+                      })),
+                      ["vendedor", "vendido", "meta", "atingimento_pct", "base", "acelerador", "bonus", "total"],
+                    );
+                    downloadCSV(`comissoes-${period}.csv`, csv);
+                  }}
+                  disabled={!report.data.rows.length}
+                >
+                  <Download className="h-4 w-4 mr-1.5" />
+                  Exportar CSV
+                </Button>
               </div>
 
               <Card className="p-0 overflow-hidden">
@@ -304,15 +333,43 @@ function PayoutsTab({ orgId, period, canManage }: { orgId: string; period: strin
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-2 flex-wrap">
         <div className="text-sm text-muted-foreground">
           Snapshots do mês — trave para congelar o cálculo e marque como pago após o pagamento.
         </div>
-        {canManage && (
-          <Button onClick={() => gen.mutate()} disabled={gen.isPending}>
-            {gen.isPending ? "Gerando…" : "Gerar / recalcular payouts"}
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              const rows = q.data?.payouts ?? [];
+              if (!rows.length) return;
+              const csv = toCSV(
+                rows.map((r: any) => ({
+                  vendedor: r.name,
+                  vendido: Number(r.sold_value),
+                  meta: Number(r.goal_value),
+                  base: Number(r.base_commission),
+                  acelerador: Number(r.accelerator),
+                  bonus: Number(r.bonus),
+                  total: Number(r.total),
+                  status: r.status,
+                })),
+                ["vendedor", "vendido", "meta", "base", "acelerador", "bonus", "total", "status"],
+              );
+              downloadCSV(`payouts-${period}.csv`, csv);
+            }}
+            disabled={!q.data?.payouts?.length}
+          >
+            <Download className="h-4 w-4 mr-1.5" />
+            Exportar CSV
           </Button>
-        )}
+          {canManage && (
+            <Button onClick={() => gen.mutate()} disabled={gen.isPending}>
+              {gen.isPending ? "Gerando…" : "Gerar / recalcular payouts"}
+            </Button>
+          )}
+        </div>
       </div>
 
       {q.isLoading || !q.data ? (
@@ -401,3 +458,106 @@ function PayoutsTab({ orgId, period, canManage }: { orgId: string; period: strin
     </div>
   );
 }
+
+/**
+ * Simulador what-if: ajusta % base / acelerador / bônus e mostra o impacto
+ * sobre as vendas JÁ realizadas no mês exibido. Não persiste nada.
+ */
+function Simulator({ rule, rows }: { rule: any; rows: any[] }) {
+  const [open, setOpen] = useState(false);
+  const [base, setBase] = useState(String(Number(rule?.base_percent ?? 0)));
+  const [accel, setAccel] = useState(String(Number(rule?.accelerator_percent ?? 0)));
+  const [bonus, setBonus] = useState(String(Number(rule?.quota_bonus ?? 0)));
+
+  const basePct = (Number(base) || 0) / 100;
+  const accelPct = (Number(accel) || 0) / 100;
+  const bonusVal = Number(bonus) || 0;
+
+  const sim = rows.map((r) => {
+    const reached = r.goal > 0 && r.sold >= r.goal;
+    const excess = reached ? Math.max(0, r.sold - r.goal) : 0;
+    const baseC = r.sold * basePct;
+    const accelC = excess * accelPct;
+    const bonusC = reached ? bonusVal : 0;
+    const total = baseC + accelC + bonusC;
+    return { ...r, _new: total, _delta: total - Number(r.total || 0) };
+  });
+  const totalNew = sim.reduce((a, r) => a + r._new, 0);
+  const totalCurrent = rows.reduce((a, r) => a + Number(r.total || 0), 0);
+  const delta = totalNew - totalCurrent;
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="outline" size="sm" disabled={!rows.length}>
+          <Calculator className="h-4 w-4 mr-1.5" /> Simulador what-if
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-2xl">
+        <DialogHeader>
+          <DialogTitle>Simulador de regra — sem salvar</DialogTitle>
+        </DialogHeader>
+        <div className="grid grid-cols-3 gap-2">
+          <div className="space-y-1">
+            <Label>% Base</Label>
+            <Input type="number" step="0.1" value={base} onChange={(e) => setBase(e.target.value)} />
+          </div>
+          <div className="space-y-1">
+            <Label>% Acelerador</Label>
+            <Input type="number" step="0.1" value={accel} onChange={(e) => setAccel(e.target.value)} />
+          </div>
+          <div className="space-y-1">
+            <Label>Bônus (R$)</Label>
+            <Input type="number" step="100" value={bonus} onChange={(e) => setBonus(e.target.value)} />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-3 pt-2">
+          <Card className="p-3">
+            <div className="text-xs text-muted-foreground">Comissão hoje</div>
+            <div className="text-lg font-semibold">{BRL(totalCurrent)}</div>
+          </Card>
+          <Card className="p-3">
+            <div className="text-xs text-muted-foreground">Comissão simulada</div>
+            <div className="text-lg font-semibold">{BRL(totalNew)}</div>
+          </Card>
+          <Card className="p-3">
+            <div className="text-xs text-muted-foreground">Variação</div>
+            <div className={`text-lg font-semibold ${delta > 0 ? "text-emerald-600" : delta < 0 ? "text-red-600" : ""}`}>
+              {delta >= 0 ? "+" : ""}{BRL(delta)}
+            </div>
+          </Card>
+        </div>
+
+        <div className="max-h-64 overflow-auto rounded-md border">
+          <table className="w-full text-xs">
+            <thead className="bg-muted/40 uppercase">
+              <tr>
+                <th className="px-3 py-2 text-left">Vendedor</th>
+                <th className="px-3 py-2 text-right">Hoje</th>
+                <th className="px-3 py-2 text-right">Simulado</th>
+                <th className="px-3 py-2 text-right">Δ</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sim.map((r) => (
+                <tr key={r.user_id} className="border-t">
+                  <td className="px-3 py-1.5">{r.name}</td>
+                  <td className="px-3 py-1.5 text-right">{BRL(Number(r.total || 0))}</td>
+                  <td className="px-3 py-1.5 text-right">{BRL(r._new)}</td>
+                  <td className={`px-3 py-1.5 text-right ${r._delta > 0 ? "text-emerald-600" : r._delta < 0 ? "text-red-600" : "text-muted-foreground"}`}>
+                    {r._delta >= 0 ? "+" : ""}{BRL(r._delta)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="text-[11px] text-muted-foreground">
+          Simulação aplica os percentuais sobre as vendas já realizadas neste mês. Para tornar permanente, crie uma nova regra na aba Regras.
+        </p>
+      </DialogContent>
+    </Dialog>
+  );
+}
+

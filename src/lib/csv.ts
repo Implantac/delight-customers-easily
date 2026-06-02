@@ -1,11 +1,43 @@
-// Lightweight RFC4180-ish CSV parser. Handles quoted fields, commas, newlines, escaped quotes.
+// Tiny CSV utilities (no deps).
+
+// Escapes fields per RFC 4180.
+function esc(v: unknown): string {
+  if (v == null) return "";
+  const s = String(v);
+  return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+
+export function toCSV(rows: Record<string, unknown>[], headers?: string[]): string {
+  if (!rows.length) return (headers ?? []).join(",");
+  const cols = headers ?? Object.keys(rows[0]);
+  const head = cols.join(",");
+  const body = rows.map((r) => cols.map((c) => esc((r as any)[c])).join(",")).join("\n");
+  return `${head}\n${body}`;
+}
+
+export function downloadCSV(filename: string, csv: string) {
+  // BOM helps Excel pt-BR detect UTF-8.
+  const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+// ---------- Parser (used by /settings/import) ----------
+
+/** Parses a CSV string into rows of cells. Handles quoted fields, escaped quotes, CRLF. */
 export function parseCSV(text: string): string[][] {
   const rows: string[][] = [];
   let row: string[] = [];
   let field = "";
-  let inQuotes = false;
   let i = 0;
-  const src = text.replace(/\r\n?/g, "\n");
+  let inQuotes = false;
+  const src = text.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
   while (i < src.length) {
     const c = src[i];
     if (inQuotes) {
@@ -20,18 +52,20 @@ export function parseCSV(text: string): string[][] {
     if (c === "\n") { row.push(field); rows.push(row); row = []; field = ""; i++; continue; }
     field += c; i++;
   }
+  // flush last
   if (field.length > 0 || row.length > 0) { row.push(field); rows.push(row); }
-  return rows.filter((r) => r.some((v) => v.trim().length > 0));
+  return rows.filter((r) => !(r.length === 1 && r[0] === ""));
 }
 
+/** Parses CSV text into { headers, rows } where rows are objects keyed by the header row. */
 export function csvToObjects(text: string): { headers: string[]; rows: Record<string, string>[] } {
-  const parsed = parseCSV(text);
-  if (parsed.length === 0) return { headers: [], rows: [] };
-  const headers = parsed[0].map((h) => h.trim());
-  const rows = parsed.slice(1).map((r) => {
-    const obj: Record<string, string> = {};
-    headers.forEach((h, idx) => { obj[h] = (r[idx] ?? "").trim(); });
-    return obj;
+  const raw = parseCSV(text);
+  if (raw.length === 0) return { headers: [], rows: [] };
+  const headers = raw[0].map((h) => h.trim());
+  const rows = raw.slice(1).map((r) => {
+    const o: Record<string, string> = {};
+    headers.forEach((h, idx) => { o[h] = (r[idx] ?? "").trim(); });
+    return o;
   });
   return { headers, rows };
 }
