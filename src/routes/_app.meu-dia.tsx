@@ -6,6 +6,7 @@ import { useAuth } from "@/lib/auth";
 import { useCurrentOrg } from "@/lib/org";
 import { PageHeader } from "@/components/page-header";
 import { NextActionBlock } from "@/components/next-action-block";
+import { CheckinButton } from "@/components/checkin-button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
