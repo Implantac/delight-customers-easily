@@ -76,8 +76,9 @@ export function Company360Panel({
     );
   }
 
-  const segCls = SEGMENT_COLORS[snap.rfm_segment] ?? "bg-muted text-muted-foreground border-muted";
-  const segLbl = SEGMENT_LABEL[snap.rfm_segment] ?? snap.rfm_segment ?? "—";
+  const segKey = snap.rfm_segment ?? "";
+  const segCls = SEGMENT_COLORS[segKey] ?? "bg-muted text-muted-foreground border-muted";
+  const segLbl = SEGMENT_LABEL[segKey] ?? snap.rfm_segment ?? "—";
   const TrendIcon = snap.trend === "up" ? TrendingUp : snap.trend === "down" ? TrendingDown : Minus;
   const trendCls = snap.trend === "up" ? "text-emerald-600" : snap.trend === "down" ? "text-red-600" : "text-muted-foreground";
 
