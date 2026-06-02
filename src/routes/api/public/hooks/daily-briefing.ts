@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 import { requireCronApiKey } from "@/lib/cron-auth.server";
+import { runAutomationsForOrg } from "@/lib/automations-runner.server";
 
 // Daily briefing — uma notificação por usuário às 07:30 BRT:
 // Pipeline, tarefas hoje, atrasadas, top oportunidade, top 3 riscos,
@@ -134,20 +135,81 @@ export const Route = createFileRoute("/api/public/hooks/daily-briefing")({
           if (error) throw error;
           let totalGenerated = 0;
           let totalOrgs = 0;
+          let totalWA = 0;
+          let totalAutomationMatches = 0;
           for (const o of orgs ?? []) {
             totalOrgs++;
             const rows = await briefForOrg(o.id);
             const fresh = await dedupeToday(rows);
-            if (!fresh.length) continue;
-            for (let i = 0; i < fresh.length; i += 500) {
-              const chunk = fresh.slice(i, i + 500);
-              const { error: insErr } = await supabaseAdmin.from("notifications").insert(chunk);
-              if (insErr) throw insErr;
-              totalGenerated += chunk.length;
+
+            // 1) Insert in-app notifications
+            if (fresh.length) {
+              for (let i = 0; i < fresh.length; i += 500) {
+                const chunk = fresh.slice(i, i + 500);
+                const { error: insErr } = await supabaseAdmin.from("notifications").insert(chunk);
+                if (insErr) throw insErr;
+                totalGenerated += chunk.length;
+              }
+
+              // 2) Enqueue WhatsApp briefings for users that opted in
+              const userIds = fresh.map((r) => r.user_id);
+              const { data: prefs } = await (supabaseAdmin as any)
+                .from("briefing_preferences")
+                .select("user_id, channel, whatsapp_phone, enabled")
+                .in("user_id", userIds)
+                .eq("enabled", true);
+              const prefMap = new Map<string, any>(
+                (prefs ?? []).map((p: any) => [p.user_id, p]),
+              );
+
+              const { data: ch } = await supabaseAdmin
+                .from("whatsapp_channels")
+                .select("id, is_default")
+                .eq("organization_id", o.id)
+                .eq("status", "active")
+                .order("is_default", { ascending: false })
+                .limit(1);
+              const channelId = (ch?.[0]?.id as string | undefined) ?? null;
+
+              if (channelId) {
+                const waRows = fresh
+                  .map((r) => {
+                    const p = prefMap.get(r.user_id);
+                    if (!p || !p.whatsapp_phone) return null;
+                    if (p.channel !== "whatsapp" && p.channel !== "both") return null;
+                    return {
+                      organization_id: o.id,
+                      channel_id: channelId,
+                      to_phone: p.whatsapp_phone,
+                      body: `*${r.title}*\n\n${r.body}`,
+                    };
+                  })
+                  .filter(Boolean) as any[];
+                if (waRows.length) {
+                  const { error: waErr } = await supabaseAdmin
+                    .from("whatsapp_outbox")
+                    .insert(waRows);
+                  if (!waErr) totalWA += waRows.length;
+                }
+              }
+            }
+
+            // 3) Run commercial automations for this org
+            try {
+              const r = await runAutomationsForOrg(supabaseAdmin, o.id);
+              totalAutomationMatches += r.matched;
+            } catch (autoErr) {
+              console.error("automations failed for org", o.id, autoErr);
             }
           }
           return new Response(
-            JSON.stringify({ success: true, orgs_processed: totalOrgs, briefings_sent: totalGenerated }),
+            JSON.stringify({
+              success: true,
+              orgs_processed: totalOrgs,
+              briefings_sent: totalGenerated,
+              whatsapp_enqueued: totalWA,
+              automations_matched: totalAutomationMatches,
+            }),
             { status: 200, headers: { "Content-Type": "application/json" } },
           );
         } catch (e: any) {
