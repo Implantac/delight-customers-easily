@@ -3,7 +3,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import {
   LayoutDashboard, Users, Briefcase, Check, ChevronsUpDown,
   LogOut, Settings, Upload, BarChart3, Sliders, Webhook, Zap, Sparkles,
-  Target, Map, Megaphone, MessageSquare, ShieldCheck,
+  Target, Map, Megaphone, MessageSquare, ShieldCheck, Route as RouteIcon, GitBranch,
   Flame, Calendar as CalendarIcon, Award, Plug, Building, Rocket, type LucideIcon,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
@@ -53,10 +53,12 @@ const primaryNav: NavEntry[] = [
   { to: "/dashboard-executivo",      label: "Dashboard Executivo", icon: Building,       tone: "primary", managerOnly: true },
   { to: "/carteira",                 label: "Carteira Comercial", icon: Briefcase,       tone: "info" },
   { to: "/leads",                    label: "Leads",              icon: Flame,           tone: "accent" },
+  { to: "/leads-pipeline",           label: "Pipeline de Leads",  icon: GitBranch,       tone: "accent" },
   { to: "/contacts",                 label: "Clientes",           icon: Users,           tone: "info" },
   { to: "/oportunidades",            label: "Oportunidades",      icon: Target,          tone: "accent" },
   { to: "/representantes",           label: "Representantes",     icon: Award,           tone: "success", managerOnly: true },
   { to: "/calendar",                 label: "Agenda",             icon: CalendarIcon,    tone: "primary" },
+  { to: "/geo-rota",                 label: "Visitas e Rotas",    icon: RouteIcon,       tone: "info" },
   { to: "/whatsapp",                 label: "WhatsApp",           icon: MessageSquare,   tone: "success" },
   { to: "/campaigns",                label: "Marketing",          icon: Megaphone,       tone: "rose" },
   { to: "/influencers",              label: "Influencers",        icon: Sparkles,        tone: "violet" },
