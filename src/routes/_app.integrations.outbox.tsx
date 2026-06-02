@@ -1,7 +1,7 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQueries, useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useCurrentOrg } from "@/lib/org";
 import { PageHeader } from "@/components/page-header";
@@ -113,6 +113,32 @@ function OutboxPage() {
       refetchInterval: 30_000,
     })),
   });
+
+  // Alerta proativo: dispara toast quando aparecem novas falhas entre polls
+  const failedIdx = STATUS.indexOf("failed");
+  const manualIdx = STATUS.indexOf("needs_manual");
+  const failedCount = countsBig[failedIdx]?.data ?? 0;
+  const manualCount = countsBig[manualIdx]?.data ?? 0;
+  const prevFailedRef = useRef<number | null>(null);
+  const prevManualRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (prevFailedRef.current !== null && failedCount > prevFailedRef.current) {
+      const delta = failedCount - prevFailedRef.current;
+      toast.error(`${delta} nova${delta > 1 ? "s" : ""} falha${delta > 1 ? "s" : ""} na fila ERP`, {
+        action: { label: "Ver", onClick: () => setTab("failed") },
+      });
+    }
+    prevFailedRef.current = failedCount;
+  }, [failedCount]);
+  useEffect(() => {
+    if (prevManualRef.current !== null && manualCount > prevManualRef.current) {
+      const delta = manualCount - prevManualRef.current;
+      toast.warning(`${delta} item${delta > 1 ? "s" : ""} requer${delta > 1 ? "em" : ""} revisão manual`, {
+        action: { label: "Revisar", onClick: () => setTab("needs_manual") },
+      });
+    }
+    prevManualRef.current = manualCount;
+  }, [manualCount]);
 
   const { data, isLoading, refetch, isFetching } = useQuery({
     queryKey: ["erp-outbox", orgId, tab],
