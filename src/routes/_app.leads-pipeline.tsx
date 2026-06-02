@@ -132,7 +132,7 @@ function LeadsPipelinePage() {
         title="Pipeline de Leads"
         subtitle="Arraste leads entre as etapas para avançar no funil."
         icon={LayoutList}
-        actions={
+        action={
           <Button asChild variant="outline" size="sm">
             <Link to="/leads"><Inbox className="h-4 w-4 mr-2" /> Ver lista</Link>
           </Button>
