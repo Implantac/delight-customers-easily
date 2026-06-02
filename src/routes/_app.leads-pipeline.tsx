@@ -204,13 +204,13 @@ function LeadsPipelinePage() {
       <LeadDetailsDrawer
         item={detailItem}
         onClose={() => setDetailItem(null)}
-        onConvert={(it) => { setDetailItem(null); setConvertItem(it); }}
-        onContact={(it) => {
+        onConvert={(it: LeadInboxItem) => { setDetailItem(null); setConvertItem(it); }}
+        onContact={(it: LeadInboxItem) => {
           setLocalStatus((s) => ({ ...s, [it.id]: "contacted" }));
           contactMut.mutate(it.id);
           setDetailItem(null);
         }}
-        onDiscard={(it) => {
+        onDiscard={(it: LeadInboxItem) => {
           if (it.kind !== "form_submission") {
             toast.error("Apenas leads de formulário podem ser descartados.");
             return;
