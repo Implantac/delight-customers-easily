@@ -458,3 +458,106 @@ function PayoutsTab({ orgId, period, canManage }: { orgId: string; period: strin
     </div>
   );
 }
+
+/**
+ * Simulador what-if: ajusta % base / acelerador / bônus e mostra o impacto
+ * sobre as vendas JÁ realizadas no mês exibido. Não persiste nada.
+ */
+function Simulator({ rule, rows }: { rule: any; rows: any[] }) {
+  const [open, setOpen] = useState(false);
+  const [base, setBase] = useState(String(Number(rule?.base_percent ?? 0)));
+  const [accel, setAccel] = useState(String(Number(rule?.accelerator_percent ?? 0)));
+  const [bonus, setBonus] = useState(String(Number(rule?.quota_bonus ?? 0)));
+
+  const basePct = (Number(base) || 0) / 100;
+  const accelPct = (Number(accel) || 0) / 100;
+  const bonusVal = Number(bonus) || 0;
+
+  const sim = rows.map((r) => {
+    const reached = r.goal > 0 && r.sold >= r.goal;
+    const excess = reached ? Math.max(0, r.sold - r.goal) : 0;
+    const baseC = r.sold * basePct;
+    const accelC = excess * accelPct;
+    const bonusC = reached ? bonusVal : 0;
+    const total = baseC + accelC + bonusC;
+    return { ...r, _new: total, _delta: total - Number(r.total || 0) };
+  });
+  const totalNew = sim.reduce((a, r) => a + r._new, 0);
+  const totalCurrent = rows.reduce((a, r) => a + Number(r.total || 0), 0);
+  const delta = totalNew - totalCurrent;
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="outline" size="sm" disabled={!rows.length}>
+          <Calculator className="h-4 w-4 mr-1.5" /> Simulador what-if
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-w-2xl">
+        <DialogHeader>
+          <DialogTitle>Simulador de regra — sem salvar</DialogTitle>
+        </DialogHeader>
+        <div className="grid grid-cols-3 gap-2">
+          <div className="space-y-1">
+            <Label>% Base</Label>
+            <Input type="number" step="0.1" value={base} onChange={(e) => setBase(e.target.value)} />
+          </div>
+          <div className="space-y-1">
+            <Label>% Acelerador</Label>
+            <Input type="number" step="0.1" value={accel} onChange={(e) => setAccel(e.target.value)} />
+          </div>
+          <div className="space-y-1">
+            <Label>Bônus (R$)</Label>
+            <Input type="number" step="100" value={bonus} onChange={(e) => setBonus(e.target.value)} />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-3 pt-2">
+          <Card className="p-3">
+            <div className="text-xs text-muted-foreground">Comissão hoje</div>
+            <div className="text-lg font-semibold">{BRL(totalCurrent)}</div>
+          </Card>
+          <Card className="p-3">
+            <div className="text-xs text-muted-foreground">Comissão simulada</div>
+            <div className="text-lg font-semibold">{BRL(totalNew)}</div>
+          </Card>
+          <Card className="p-3">
+            <div className="text-xs text-muted-foreground">Variação</div>
+            <div className={`text-lg font-semibold ${delta > 0 ? "text-emerald-600" : delta < 0 ? "text-red-600" : ""}`}>
+              {delta >= 0 ? "+" : ""}{BRL(delta)}
+            </div>
+          </Card>
+        </div>
+
+        <div className="max-h-64 overflow-auto rounded-md border">
+          <table className="w-full text-xs">
+            <thead className="bg-muted/40 uppercase">
+              <tr>
+                <th className="px-3 py-2 text-left">Vendedor</th>
+                <th className="px-3 py-2 text-right">Hoje</th>
+                <th className="px-3 py-2 text-right">Simulado</th>
+                <th className="px-3 py-2 text-right">Δ</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sim.map((r) => (
+                <tr key={r.user_id} className="border-t">
+                  <td className="px-3 py-1.5">{r.name}</td>
+                  <td className="px-3 py-1.5 text-right">{BRL(Number(r.total || 0))}</td>
+                  <td className="px-3 py-1.5 text-right">{BRL(r._new)}</td>
+                  <td className={`px-3 py-1.5 text-right ${r._delta > 0 ? "text-emerald-600" : r._delta < 0 ? "text-red-600" : "text-muted-foreground"}`}>
+                    {r._delta >= 0 ? "+" : ""}{BRL(r._delta)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="text-[11px] text-muted-foreground">
+          Simulação aplica os percentuais sobre as vendas já realizadas neste mês. Para tornar permanente, crie uma nova regra na aba Regras.
+        </p>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
