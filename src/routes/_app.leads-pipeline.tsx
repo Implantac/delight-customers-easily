@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import {
   Flame, Mail, Phone, ExternalLink, Trash2, Sparkles, GripVertical, Inbox, LayoutList,
+  Calendar, Tag, FileText,
 } from "lucide-react";
 import { useCurrentOrg } from "@/lib/org";
 import { PageHeader } from "@/components/page-header";
@@ -13,6 +14,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Separator } from "@/components/ui/separator";
+import {
+  Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetFooter,
+} from "@/components/ui/sheet";
 import {
   Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription,
 } from "@/components/ui/dialog";
@@ -43,6 +48,7 @@ function LeadsPipelinePage() {
   const [dragId, setDragId] = useState<string | null>(null);
   const [overCol, setOverCol] = useState<Status | null>(null);
   const [convertItem, setConvertItem] = useState<LeadInboxItem | null>(null);
+  const [detailItem, setDetailItem] = useState<LeadInboxItem | null>(null);
   // Sobreposição local de status (otimista). Persistência real apenas para
   // ações suportadas (contatado / convertido / descartado).
   const [localStatus, setLocalStatus] = useState<Record<string, Status>>({});
@@ -176,6 +182,7 @@ function LeadsPipelinePage() {
                       isDragging={dragId === it.id}
                       onDragStart={() => setDragId(it.id)}
                       onDragEnd={() => { setDragId(null); setOverCol(null); }}
+                      onClick={() => setDetailItem(it)}
                     />
                   ))}
                 </div>
@@ -193,23 +200,45 @@ function LeadsPipelinePage() {
           qc.invalidateQueries({ queryKey: ["leads-inbox", orgId] });
         }}
       />
+
+      <LeadDetailsDrawer
+        item={detailItem}
+        onClose={() => setDetailItem(null)}
+        onConvert={(it: LeadInboxItem) => { setDetailItem(null); setConvertItem(it); }}
+        onContact={(it: LeadInboxItem) => {
+          setLocalStatus((s) => ({ ...s, [it.id]: "contacted" }));
+          contactMut.mutate(it.id);
+          setDetailItem(null);
+        }}
+        onDiscard={(it: LeadInboxItem) => {
+          if (it.kind !== "form_submission") {
+            toast.error("Apenas leads de formulário podem ser descartados.");
+            return;
+          }
+          setLocalStatus((s) => ({ ...s, [it.id]: "discarded" }));
+          discardMut.mutate(it.id);
+          setDetailItem(null);
+        }}
+      />
     </div>
   );
 }
 
 function LeadCard({
-  item, isDragging, onDragStart, onDragEnd,
+  item, isDragging, onDragStart, onDragEnd, onClick,
 }: {
   item: LeadInboxItem;
   isDragging: boolean;
   onDragStart: () => void;
   onDragEnd: () => void;
+  onClick: () => void;
 }) {
   return (
     <Card
       draggable
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
+      onClick={onClick}
       className={`cursor-grab active:cursor-grabbing transition ${isDragging ? "opacity-50 ring-2 ring-primary" : "hover:bg-accent/40"}`}
     >
       <CardContent className="p-3">
@@ -235,7 +264,7 @@ function LeadCard({
               <div>{new Date(item.created_at).toLocaleDateString("pt-BR")}</div>
             </div>
             {item.contact_id && (
-              <div className="mt-2">
+              <div className="mt-2" onClick={(e) => e.stopPropagation()}>
                 <Button asChild size="sm" variant="ghost" className="h-6 px-2 text-[11px]">
                   <Link to="/contacts/$id" params={{ id: item.contact_id }}>
                     <ExternalLink className="h-3 w-3 mr-1" /> Abrir contato
@@ -308,5 +337,120 @@ function ConvertDialog({
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  );
+}
+
+function statusLabel(s: Status) {
+  return s === "new" ? "Novo" : s === "contacted" ? "Contatado" : s === "converted" ? "Convertido" : "Descartado";
+}
+
+function LeadDetailsDrawer({
+  item, onClose, onConvert, onContact, onDiscard,
+}: {
+  item: LeadInboxItem | null;
+  onClose: () => void;
+  onConvert: (it: LeadInboxItem) => void;
+  onContact: (it: LeadInboxItem) => void;
+  onDiscard: (it: LeadInboxItem) => void;
+}) {
+  return (
+    <Sheet open={!!item} onOpenChange={(o) => !o && onClose()}>
+      <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto">
+        {item && (
+          <>
+            <SheetHeader>
+              <SheetTitle className="flex items-center gap-2">
+                <Flame className="h-4 w-4 text-primary" />
+                {item.name}
+              </SheetTitle>
+              <SheetDescription className="flex flex-wrap items-center gap-2">
+                <Badge variant="secondary">{statusLabel(item.status)}</Badge>
+                {item.source && <Badge variant="outline">{item.source}</Badge>}
+                {item.form_name && (
+                  <span className="text-xs text-muted-foreground inline-flex items-center gap-1">
+                    <FileText className="h-3 w-3" /> {item.form_name}
+                  </span>
+                )}
+              </SheetDescription>
+            </SheetHeader>
+
+            <div className="mt-4 space-y-4">
+              <section className="space-y-2 text-sm">
+                {item.email && (
+                  <div className="flex items-center gap-2">
+                    <Mail className="h-4 w-4 text-muted-foreground" />
+                    <a href={`mailto:${item.email}`} className="hover:underline truncate">{item.email}</a>
+                  </div>
+                )}
+                {item.phone && (
+                  <div className="flex items-center gap-2">
+                    <Phone className="h-4 w-4 text-muted-foreground" />
+                    <a href={`tel:${item.phone}`} className="hover:underline">{item.phone}</a>
+                  </div>
+                )}
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Calendar className="h-4 w-4" />
+                  <span>Criado em {new Date(item.created_at).toLocaleString("pt-BR")}</span>
+                </div>
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Tag className="h-4 w-4" />
+                  <span className="text-xs">
+                    Tipo: {item.kind === "form_submission" ? "Submissão de formulário" : "Contato"}
+                  </span>
+                </div>
+              </section>
+
+              {item.payload && Object.keys(item.payload).length > 0 && (
+                <>
+                  <Separator />
+                  <section>
+                    <p className="text-xs font-semibold uppercase text-muted-foreground mb-2">
+                      Dados do formulário
+                    </p>
+                    <dl className="space-y-1.5 text-sm">
+                      {Object.entries(item.payload).map(([k, v]) => (
+                        <div key={k} className="grid grid-cols-3 gap-2">
+                          <dt className="text-muted-foreground truncate">{k}</dt>
+                          <dd className="col-span-2 break-words">{String(v ?? "—")}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </section>
+                </>
+              )}
+
+              {item.contact_id && (
+                <>
+                  <Separator />
+                  <Button asChild variant="outline" size="sm" className="w-full">
+                    <Link to="/contacts/$id" params={{ id: item.contact_id }}>
+                      <ExternalLink className="h-4 w-4 mr-2" /> Abrir contato completo
+                    </Link>
+                  </Button>
+                </>
+              )}
+            </div>
+
+            <SheetFooter className="mt-6 flex flex-col gap-2 sm:flex-col sm:space-x-0">
+              {item.status !== "contacted" && item.status !== "converted" && (
+                <Button variant="outline" onClick={() => onContact(item)}>
+                  <Mail className="h-4 w-4 mr-2" /> Marcar como contatado
+                </Button>
+              )}
+              {item.status !== "converted" && !item.deal_id && (
+                <Button onClick={() => onConvert(item)}>
+                  <Sparkles className="h-4 w-4 mr-2" /> Converter em oportunidade
+                </Button>
+              )}
+              {item.kind === "form_submission" && item.status !== "discarded" && (
+                <Button variant="destructive" onClick={() => onDiscard(item)}>
+                  <Trash2 className="h-4 w-4 mr-2" /> Descartar
+                </Button>
+              )}
+            </SheetFooter>
+          </>
+        )}
+      </SheetContent>
+    </Sheet>
   );
 }
