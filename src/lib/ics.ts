@@ -30,7 +30,7 @@ export function buildICS(ev: ICSEvent): string {
   return [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//Lovable CRM//PT-BR//EN",
+    "PRODID:-//USE CRM//PT-BR//EN",
     "CALSCALE:GREGORIAN",
     "BEGIN:VEVENT",
     `UID:${ev.uid}@lovable-crm`,

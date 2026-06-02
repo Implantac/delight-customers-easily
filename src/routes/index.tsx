@@ -34,7 +34,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "Funciona para times com poucos vendedores?",
-    a: "Sim. O Lovable CRM foi pensado para escalar de 1 vendedor a operações com dezenas de equipes.",
+    a: "Sim. O USE CRM foi pensado para escalar de 1 vendedor a operações com dezenas de equipes.",
   },
   {
     q: "Meus dados ficam isolados de outras empresas?",
@@ -54,7 +54,7 @@ export const Route = createFileRoute("/")({
   component: LandingPage,
   head: () => ({
     meta: [
-      { title: "CRM comercial com IA para times que vendem mais — Lovable CRM" },
+      { title: "CRM comercial com IA para times que vendem mais — USE CRM" },
       {
         name: "description",
         content:
@@ -81,7 +81,7 @@ export const Route = createFileRoute("/")({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "SoftwareApplication",
-          name: "Lovable CRM",
+          name: "USE CRM",
           applicationCategory: "BusinessApplication",
           operatingSystem: "Web",
           url: SITE_URL,
@@ -148,7 +148,7 @@ function SiteHeader({ ctaHref, ctaLabel }: { ctaHref: string; ctaLabel: string }
           <span className="grid h-8 w-8 place-items-center rounded-lg bg-[var(--gradient-accent)] text-[#1f2740] shadow-[var(--shadow-glow)] ring-1 ring-white/15">
             <Sparkles className="h-4 w-4" />
           </span>
-          <span>Lovable CRM</span>
+          <span>USE CRM</span>
         </Link>
         <nav className="hidden items-center gap-7 text-sm text-muted-foreground md:flex">
           <a href="#features" className="transition-colors hover:text-foreground">Recursos</a>
@@ -334,7 +334,7 @@ function StatsStrip() {
     <section className="border-b border-border/60 bg-muted/30 py-12">
       <div className="mx-auto max-w-6xl px-4">
         <p className="text-center text-xs uppercase tracking-widest text-muted-foreground">
-          Resultados observados em times que adotaram o Lovable CRM
+          Resultados observados em times que adotaram o USE CRM
         </p>
         <div className="mt-8 grid grid-cols-2 gap-6 md:grid-cols-4">
           {stats.map((s) => (
@@ -760,9 +760,9 @@ function SiteFooter() {
           <span className="grid h-7 w-7 place-items-center rounded-md bg-primary text-primary-foreground">
             <Sparkles className="h-3.5 w-3.5" />
           </span>
-          <span className="font-medium text-foreground">Lovable CRM</span>
+          <span className="font-medium text-foreground">USE CRM</span>
         </div>
-        <p>© {new Date().getFullYear()} Lovable CRM. Todos os direitos reservados.</p>
+        <p>© {new Date().getFullYear()} USE CRM. Todos os direitos reservados.</p>
         <div className="flex gap-5">
           <Link to="/login" className="hover:text-foreground">Entrar</Link>
           <a href="#pricing" className="hover:text-foreground">Planos</a>
