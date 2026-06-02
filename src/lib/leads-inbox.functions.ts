@@ -247,3 +247,63 @@ export const discardLead = createServerFn({ method: "POST" })
     }
     return { ok: true };
   });
+
+const ContactedInput = z.object({
+  organization_id: z.string().uuid(),
+  item_id: z.string(),
+});
+
+// Marca um lead como "contatado" registrando uma atividade leve no contato.
+// Se a submissão ainda não tem contact_id, cria o contato antes.
+export const markLeadContacted = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i) => ContactedInput.parse(i))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const [kind, rawId] = data.item_id.split(":");
+    let contactId: string | null = null;
+
+    if (kind === "contact") {
+      contactId = rawId;
+    } else if (kind === "sub") {
+      const { data: sub } = await supabase
+        .from("lead_form_submissions")
+        .select("id, contact_id, email, name, phone")
+        .eq("id", rawId)
+        .maybeSingle();
+      if (!sub) throw new Error("Submissão não encontrada");
+      contactId = sub.contact_id;
+      if (!contactId) {
+        const { data: c, error } = await supabase
+          .from("contacts")
+          .insert({
+            organization_id: data.organization_id,
+            name: sub.name ?? sub.email ?? "Lead",
+            email: sub.email,
+            phone: sub.phone,
+            user_id: userId,
+          })
+          .select("id")
+          .single();
+        if (error) throw new Error(error.message);
+        contactId = c.id;
+        await supabase.from("lead_form_submissions").update({ contact_id: contactId }).eq("id", rawId);
+      }
+    } else {
+      throw new Error("Tipo inválido");
+    }
+
+    const { error: actErr } = await supabase.from("activities").insert({
+      organization_id: data.organization_id,
+      contact_id: contactId,
+      user_id: userId,
+      type: "note",
+      title: "Lead contatado",
+      description: "Movido para a coluna Contatado no pipeline de leads.",
+    });
+
+    if (actErr) throw new Error(actErr.message);
+
+    return { ok: true, contact_id: contactId };
+  });
+
