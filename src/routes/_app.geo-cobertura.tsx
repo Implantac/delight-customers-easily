@@ -1,13 +1,15 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useCurrentOrg } from "@/lib/org";
 import { getTerritorialCoverage, getProspectingInsights } from "@/lib/geo-prospect.functions";
+import { listSilentCities } from "@/lib/geo-silent-cities.functions";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Map, Sparkles, TrendingUp, Target, AlertTriangle } from "lucide-react";
+import { Map, Sparkles, TrendingUp, Target, AlertTriangle, Clock, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/_app/geo-cobertura")({ component: CoberturaPage });
 
