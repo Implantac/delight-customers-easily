@@ -12,6 +12,15 @@ function applyTheme(theme: Theme) {
   const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
   const resolved = theme === "system" ? (prefersDark ? "dark" : "light") : theme;
   root.classList.toggle("dark", resolved === "dark");
+  // Sync mobile/PWA status bar with the active theme
+  const color = resolved === "dark" ? "#181d2e" : "#fbfaf7";
+  let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]:not([media])');
+  if (!meta) {
+    meta = document.createElement("meta");
+    meta.name = "theme-color";
+    document.head.appendChild(meta);
+  }
+  meta.content = color;
   return resolved;
 }
 
