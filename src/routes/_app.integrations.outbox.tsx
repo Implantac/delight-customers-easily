@@ -1,7 +1,7 @@
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQueries, useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useCurrentOrg } from "@/lib/org";
 import { PageHeader } from "@/components/page-header";
@@ -31,8 +31,9 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { listOutbox, resolveOutbox } from "@/lib/erp-outbox.functions";
-import { Inbox, Eye, Search, RefreshCw } from "lucide-react";
+import { listOutbox, resolveOutbox, resolveOutboxBulk } from "@/lib/erp-outbox.functions";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Inbox, Eye, Search, RefreshCw, Zap, X, CheckCircle2 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/integrations/outbox")({
   component: OutboxPage,
@@ -90,10 +91,13 @@ function OutboxPage() {
   const router = useRouter();
   const listFn = useServerFn(listOutbox);
   const resolveFn = useServerFn(resolveOutbox);
+  const bulkFn = useServerFn(resolveOutboxBulk);
   const [tab, setTab] = useState<Status>("needs_manual");
   const [busy, setBusy] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [detail, setDetail] = useState<OutboxItem | null>(null);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [bulkBusy, setBulkBusy] = useState(false);
 
   // Contagem por status (busca em paralelo, com limit alto)
   const countsBig = useQueries({
@@ -141,6 +145,26 @@ function OutboxPage() {
     }
   }
 
+  async function bulk(strategy: "retry" | "cancel" | "mark_succeeded") {
+    if (!selected.size) return;
+    setBulkBusy(true);
+    try {
+      const r = await bulkFn({ data: { ids: Array.from(selected), strategy } });
+      toast.success(
+        `${r.count} ${
+          strategy === "retry" ? "reenfileirados" : strategy === "cancel" ? "cancelados" : "marcados como concluído"
+        }`,
+      );
+      setSelected(new Set());
+      await refetch();
+      router.invalidate();
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setBulkBusy(false);
+    }
+  }
+
   const items = (data?.items ?? []) as OutboxItem[];
   const filtered = search
     ? items.filter((it) => {
@@ -153,6 +177,25 @@ function OutboxPage() {
         );
       })
     : items;
+
+  const allSelected = filtered.length > 0 && filtered.every((it) => selected.has(it.id));
+  const someSelected = selected.size > 0 && !allSelected;
+  function toggleAll() {
+    if (allSelected) setSelected(new Set());
+    else setSelected(new Set(filtered.map((it) => it.id)));
+  }
+  function toggleOne(id: string) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+  // Limpa seleção ao trocar de aba
+  useEffect(() => {
+    setSelected(new Set());
+  }, [tab]);
 
   return (
     <RequireManager>
@@ -240,6 +283,53 @@ function OutboxPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
+                {/* Barra de ação em massa */}
+                {selected.size > 0 && (
+                  <div className="mb-3 flex flex-wrap items-center justify-between gap-2 rounded-md border border-primary/40 bg-primary/5 px-3 py-2">
+                    <div className="text-sm font-medium">
+                      {selected.size} selecionado{selected.size > 1 ? "s" : ""}
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        disabled={bulkBusy}
+                        onClick={() => bulk("retry")}
+                        className="gap-1.5"
+                      >
+                        <Zap className="h-3.5 w-3.5" /> Retentar em massa
+                      </Button>
+                      {(tab === "needs_manual" || tab === "failed") && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          disabled={bulkBusy}
+                          onClick={() => bulk("mark_succeeded")}
+                          className="gap-1.5"
+                        >
+                          <CheckCircle2 className="h-3.5 w-3.5" /> Marcar concluído
+                        </Button>
+                      )}
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        disabled={bulkBusy}
+                        onClick={() => bulk("cancel")}
+                        className="gap-1.5"
+                      >
+                        <X className="h-3.5 w-3.5" /> Cancelar
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        disabled={bulkBusy}
+                        onClick={() => setSelected(new Set())}
+                      >
+                        Limpar
+                      </Button>
+                    </div>
+                  </div>
+                )}
                 {isLoading ? (
                   <p className="text-muted-foreground">Carregando…</p>
                 ) : !filtered.length ? (
@@ -250,6 +340,13 @@ function OutboxPage() {
                   <Table>
                     <TableHeader>
                       <TableRow>
+                        <TableHead className="w-8">
+                          <Checkbox
+                            checked={allSelected ? true : someSelected ? "indeterminate" : false}
+                            onCheckedChange={toggleAll}
+                            aria-label="Selecionar todos"
+                          />
+                        </TableHead>
                         <TableHead>Entidade</TableHead>
                         <TableHead>Ação</TableHead>
                         <TableHead>External ID</TableHead>
@@ -261,7 +358,14 @@ function OutboxPage() {
                     </TableHeader>
                     <TableBody>
                       {filtered.map((it) => (
-                        <TableRow key={it.id}>
+                        <TableRow key={it.id} data-state={selected.has(it.id) ? "selected" : undefined}>
+                          <TableCell>
+                            <Checkbox
+                              checked={selected.has(it.id)}
+                              onCheckedChange={() => toggleOne(it.id)}
+                              aria-label="Selecionar"
+                            />
+                          </TableCell>
                           <TableCell>
                             <Badge variant="outline">{it.entity}</Badge>
                           </TableCell>

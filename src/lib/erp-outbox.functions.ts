@@ -78,3 +78,27 @@ export const resolveOutbox = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+export const resolveOutboxBulk = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i) =>
+    z.object({
+      ids: z.array(z.string().uuid()).min(1).max(500),
+      strategy: z.enum(["retry", "cancel", "mark_succeeded"]),
+    }).parse(i),
+  )
+  .handler(async ({ data, context }) => {
+    const nowIso = new Date().toISOString();
+    const patch =
+      data.strategy === "retry"
+        ? { status: "pending", attempts: 0, last_error: null, scheduled_at: nowIso }
+        : data.strategy === "cancel"
+        ? { status: "cancelled", finished_at: nowIso }
+        : { status: "succeeded", finished_at: nowIso };
+    const { error, count } = await context.supabase
+      .from("erp_outbox")
+      .update(patch, { count: "exact" })
+      .in("id", data.ids);
+    if (error) throw new Error(error.message);
+    return { ok: true, count: count ?? data.ids.length };
+  });
