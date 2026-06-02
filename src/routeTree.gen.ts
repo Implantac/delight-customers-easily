@@ -127,6 +127,8 @@ import { Route as ApiPublicHooksPropensityBatchTickRouteImport } from './routes/
 import { Route as ApiPublicHooksGenerateAlertsRouteImport } from './routes/api/public/hooks/generate-alerts'
 import { Route as ApiPublicHooksErpSyncTickRouteImport } from './routes/api/public/hooks/erp-sync-tick'
 import { Route as ApiPublicHooksErpOutboxTickRouteImport } from './routes/api/public/hooks/erp-outbox-tick'
+import { Route as ApiPublicHooksErpLocalAgentPairRouteImport } from './routes/api/public/hooks/erp-local-agent-pair'
+import { Route as ApiPublicHooksErpLocalAgentHeartbeatRouteImport } from './routes/api/public/hooks/erp-local-agent-heartbeat'
 import { Route as ApiPublicHooksErpInboundRouteImport } from './routes/api/public/hooks/erp-inbound'
 import { Route as ApiPublicHooksErpAgentPushRouteImport } from './routes/api/public/hooks/erp-agent-push'
 import { Route as ApiPublicHooksDailyBriefingRouteImport } from './routes/api/public/hooks/daily-briefing'
@@ -745,6 +747,18 @@ const ApiPublicHooksErpOutboxTickRoute =
     path: '/api/public/hooks/erp-outbox-tick',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicHooksErpLocalAgentPairRoute =
+  ApiPublicHooksErpLocalAgentPairRouteImport.update({
+    id: '/api/public/hooks/erp-local-agent-pair',
+    path: '/api/public/hooks/erp-local-agent-pair',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicHooksErpLocalAgentHeartbeatRoute =
+  ApiPublicHooksErpLocalAgentHeartbeatRouteImport.update({
+    id: '/api/public/hooks/erp-local-agent-heartbeat',
+    path: '/api/public/hooks/erp-local-agent-heartbeat',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHooksErpInboundRoute =
   ApiPublicHooksErpInboundRouteImport.update({
     id: '/api/public/hooks/erp-inbound',
@@ -944,6 +958,8 @@ export interface FileRoutesByFullPath {
   '/api/public/hooks/daily-briefing': typeof ApiPublicHooksDailyBriefingRoute
   '/api/public/hooks/erp-agent-push': typeof ApiPublicHooksErpAgentPushRoute
   '/api/public/hooks/erp-inbound': typeof ApiPublicHooksErpInboundRoute
+  '/api/public/hooks/erp-local-agent-heartbeat': typeof ApiPublicHooksErpLocalAgentHeartbeatRoute
+  '/api/public/hooks/erp-local-agent-pair': typeof ApiPublicHooksErpLocalAgentPairRoute
   '/api/public/hooks/erp-outbox-tick': typeof ApiPublicHooksErpOutboxTickRoute
   '/api/public/hooks/erp-sync-tick': typeof ApiPublicHooksErpSyncTickRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
@@ -1076,6 +1092,8 @@ export interface FileRoutesByTo {
   '/api/public/hooks/daily-briefing': typeof ApiPublicHooksDailyBriefingRoute
   '/api/public/hooks/erp-agent-push': typeof ApiPublicHooksErpAgentPushRoute
   '/api/public/hooks/erp-inbound': typeof ApiPublicHooksErpInboundRoute
+  '/api/public/hooks/erp-local-agent-heartbeat': typeof ApiPublicHooksErpLocalAgentHeartbeatRoute
+  '/api/public/hooks/erp-local-agent-pair': typeof ApiPublicHooksErpLocalAgentPairRoute
   '/api/public/hooks/erp-outbox-tick': typeof ApiPublicHooksErpOutboxTickRoute
   '/api/public/hooks/erp-sync-tick': typeof ApiPublicHooksErpSyncTickRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
@@ -1210,6 +1228,8 @@ export interface FileRoutesById {
   '/api/public/hooks/daily-briefing': typeof ApiPublicHooksDailyBriefingRoute
   '/api/public/hooks/erp-agent-push': typeof ApiPublicHooksErpAgentPushRoute
   '/api/public/hooks/erp-inbound': typeof ApiPublicHooksErpInboundRoute
+  '/api/public/hooks/erp-local-agent-heartbeat': typeof ApiPublicHooksErpLocalAgentHeartbeatRoute
+  '/api/public/hooks/erp-local-agent-pair': typeof ApiPublicHooksErpLocalAgentPairRoute
   '/api/public/hooks/erp-outbox-tick': typeof ApiPublicHooksErpOutboxTickRoute
   '/api/public/hooks/erp-sync-tick': typeof ApiPublicHooksErpSyncTickRoute
   '/api/public/hooks/generate-alerts': typeof ApiPublicHooksGenerateAlertsRoute
@@ -1344,6 +1364,8 @@ export interface FileRouteTypes {
     | '/api/public/hooks/daily-briefing'
     | '/api/public/hooks/erp-agent-push'
     | '/api/public/hooks/erp-inbound'
+    | '/api/public/hooks/erp-local-agent-heartbeat'
+    | '/api/public/hooks/erp-local-agent-pair'
     | '/api/public/hooks/erp-outbox-tick'
     | '/api/public/hooks/erp-sync-tick'
     | '/api/public/hooks/generate-alerts'
@@ -1476,6 +1498,8 @@ export interface FileRouteTypes {
     | '/api/public/hooks/daily-briefing'
     | '/api/public/hooks/erp-agent-push'
     | '/api/public/hooks/erp-inbound'
+    | '/api/public/hooks/erp-local-agent-heartbeat'
+    | '/api/public/hooks/erp-local-agent-pair'
     | '/api/public/hooks/erp-outbox-tick'
     | '/api/public/hooks/erp-sync-tick'
     | '/api/public/hooks/generate-alerts'
@@ -1609,6 +1633,8 @@ export interface FileRouteTypes {
     | '/api/public/hooks/daily-briefing'
     | '/api/public/hooks/erp-agent-push'
     | '/api/public/hooks/erp-inbound'
+    | '/api/public/hooks/erp-local-agent-heartbeat'
+    | '/api/public/hooks/erp-local-agent-pair'
     | '/api/public/hooks/erp-outbox-tick'
     | '/api/public/hooks/erp-sync-tick'
     | '/api/public/hooks/generate-alerts'
@@ -1637,6 +1663,8 @@ export interface RootRouteChildren {
   ApiPublicHooksDailyBriefingRoute: typeof ApiPublicHooksDailyBriefingRoute
   ApiPublicHooksErpAgentPushRoute: typeof ApiPublicHooksErpAgentPushRoute
   ApiPublicHooksErpInboundRoute: typeof ApiPublicHooksErpInboundRoute
+  ApiPublicHooksErpLocalAgentHeartbeatRoute: typeof ApiPublicHooksErpLocalAgentHeartbeatRoute
+  ApiPublicHooksErpLocalAgentPairRoute: typeof ApiPublicHooksErpLocalAgentPairRoute
   ApiPublicHooksErpOutboxTickRoute: typeof ApiPublicHooksErpOutboxTickRoute
   ApiPublicHooksErpSyncTickRoute: typeof ApiPublicHooksErpSyncTickRoute
   ApiPublicHooksGenerateAlertsRoute: typeof ApiPublicHooksGenerateAlertsRoute
@@ -2475,6 +2503,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksErpOutboxTickRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/erp-local-agent-pair': {
+      id: '/api/public/hooks/erp-local-agent-pair'
+      path: '/api/public/hooks/erp-local-agent-pair'
+      fullPath: '/api/public/hooks/erp-local-agent-pair'
+      preLoaderRoute: typeof ApiPublicHooksErpLocalAgentPairRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/hooks/erp-local-agent-heartbeat': {
+      id: '/api/public/hooks/erp-local-agent-heartbeat'
+      path: '/api/public/hooks/erp-local-agent-heartbeat'
+      fullPath: '/api/public/hooks/erp-local-agent-heartbeat'
+      preLoaderRoute: typeof ApiPublicHooksErpLocalAgentHeartbeatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/erp-inbound': {
       id: '/api/public/hooks/erp-inbound'
       path: '/api/public/hooks/erp-inbound'
@@ -2941,6 +2983,9 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicHooksDailyBriefingRoute: ApiPublicHooksDailyBriefingRoute,
   ApiPublicHooksErpAgentPushRoute: ApiPublicHooksErpAgentPushRoute,
   ApiPublicHooksErpInboundRoute: ApiPublicHooksErpInboundRoute,
+  ApiPublicHooksErpLocalAgentHeartbeatRoute:
+    ApiPublicHooksErpLocalAgentHeartbeatRoute,
+  ApiPublicHooksErpLocalAgentPairRoute: ApiPublicHooksErpLocalAgentPairRoute,
   ApiPublicHooksErpOutboxTickRoute: ApiPublicHooksErpOutboxTickRoute,
   ApiPublicHooksErpSyncTickRoute: ApiPublicHooksErpSyncTickRoute,
   ApiPublicHooksGenerateAlertsRoute: ApiPublicHooksGenerateAlertsRoute,
