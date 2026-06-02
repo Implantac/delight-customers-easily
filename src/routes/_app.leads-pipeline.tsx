@@ -264,7 +264,7 @@ function LeadCard({
               <div>{new Date(item.created_at).toLocaleDateString("pt-BR")}</div>
             </div>
             {item.contact_id && (
-              <div className="mt-2">
+              <div className="mt-2" onClick={(e) => e.stopPropagation()}>
                 <Button asChild size="sm" variant="ghost" className="h-6 px-2 text-[11px]">
                   <Link to="/contacts/$id" params={{ id: item.contact_id }}>
                     <ExternalLink className="h-3 w-3 mr-1" /> Abrir contato
