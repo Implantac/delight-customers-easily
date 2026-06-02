@@ -2,9 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Sparkles, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { Sparkles, TrendingUp, TrendingDown, Minus, Lightbulb, MessageSquare } from "lucide-react";
 import { getCustomer360 } from "@/lib/customer360.functions";
+import { whatsappLink } from "@/lib/wa";
 
 const SEGMENT_LABEL: Record<string, string> = {
   campeoes: "Campeão",
