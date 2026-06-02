@@ -145,6 +145,26 @@ function OutboxPage() {
     }
   }
 
+  async function bulk(strategy: "retry" | "cancel" | "mark_succeeded") {
+    if (!selected.size) return;
+    setBulkBusy(true);
+    try {
+      const r = await bulkFn({ data: { ids: Array.from(selected), strategy } });
+      toast.success(
+        `${r.count} ${
+          strategy === "retry" ? "reenfileirados" : strategy === "cancel" ? "cancelados" : "marcados como concluído"
+        }`,
+      );
+      setSelected(new Set());
+      await refetch();
+      router.invalidate();
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setBulkBusy(false);
+    }
+  }
+
   const items = (data?.items ?? []) as OutboxItem[];
   const filtered = search
     ? items.filter((it) => {
@@ -157,6 +177,24 @@ function OutboxPage() {
         );
       })
     : items;
+
+  const allSelected = filtered.length > 0 && filtered.every((it) => selected.has(it.id));
+  const someSelected = selected.size > 0 && !allSelected;
+  function toggleAll() {
+    if (allSelected) setSelected(new Set());
+    else setSelected(new Set(filtered.map((it) => it.id)));
+  }
+  function toggleOne(id: string) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  }
+  // Limpa seleção ao trocar de aba
+  const tabRef = useState(tab)[0];
+  if (tabRef !== tab && selected.size) setSelected(new Set());
 
   return (
     <RequireManager>
