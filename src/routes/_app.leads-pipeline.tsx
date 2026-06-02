@@ -200,6 +200,26 @@ function LeadsPipelinePage() {
           qc.invalidateQueries({ queryKey: ["leads-inbox", orgId] });
         }}
       />
+
+      <LeadDetailsDrawer
+        item={detailItem}
+        onClose={() => setDetailItem(null)}
+        onConvert={(it) => { setDetailItem(null); setConvertItem(it); }}
+        onContact={(it) => {
+          setLocalStatus((s) => ({ ...s, [it.id]: "contacted" }));
+          contactMut.mutate(it.id);
+          setDetailItem(null);
+        }}
+        onDiscard={(it) => {
+          if (it.kind !== "form_submission") {
+            toast.error("Apenas leads de formulário podem ser descartados.");
+            return;
+          }
+          setLocalStatus((s) => ({ ...s, [it.id]: "discarded" }));
+          discardMut.mutate(it.id);
+          setDetailItem(null);
+        }}
+      />
     </div>
   );
 }
