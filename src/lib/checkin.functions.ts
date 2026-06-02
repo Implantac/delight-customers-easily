@@ -46,7 +46,7 @@ export const createCheckin = createServerFn({ method: "POST" })
         organization_id: data.organization_id,
         user_id: userId,
         contact_id: data.contact_id ?? null,
-        type: "visit",
+        type: "meeting",
         title: data.title,
         description: parts.join("\n"),
         completed: true,
