@@ -2,82 +2,161 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-const ActionSchema = z.object({
-  type: z.enum(["create_task", "send_whatsapp", "create_notification", "suggest_visit"]),
-  template: z.string().max(500).optional(),
-});
-
-const upsertInput = z.object({
-  id: z.string().uuid().optional(),
+const input = z.object({
   organization_id: z.string().uuid(),
-  name: z.string().min(1).max(120),
-  description: z.string().max(500).nullable().optional(),
-  trigger_type: z.enum([
-    "no_purchase_days",
-    "churn_risk_high",
-    "high_potential_no_visit",
-    "birthday",
-    "new_lead_no_contact",
-  ]),
-  threshold: z.number().int().min(0).max(3650).nullable().optional(),
-  actions: z.array(ActionSchema).min(1).max(5),
-  enabled: z.boolean(),
+  event: z.string().min(1).max(64),
+  payload: z.record(z.string(), z.any()),
 });
 
-export const listAutomations = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((i: { organization_id: string }) =>
-    z.object({ organization_id: z.string().uuid() }).parse(i),
-  )
-  .handler(async ({ data, context }) => {
-    const { supabase } = context;
-    const { data: rows, error } = await supabase
-      .from("commercial_automations")
-      .select("*")
-      .eq("organization_id", data.organization_id)
-      .order("created_at", { ascending: false });
-    if (error) throw new Error(error.message);
-    return { automations: rows ?? [] };
-  });
+/**
+ * Avalia uma condição muito simples: cada chave em `conditions` deve casar
+ * com o mesmo caminho em `payload`. Suporta apenas igualdade exata.
+ * Ex: conditions = { "to_stage": "won" }, payload = { to_stage: "won", ... } → match.
+ */
+function matches(conditions: Record<string, unknown>, payload: Record<string, unknown>): boolean {
+  for (const [k, v] of Object.entries(conditions ?? {})) {
+    if (v === "" || v === null || v === undefined) continue;
+    if (payload[k] !== v) return false;
+  }
+  return true;
+}
 
-export const upsertAutomation = createServerFn({ method: "POST" })
+export const runAutomations = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((i) => upsertInput.parse(i))
+  .inputValidator((i) => input.parse(i))
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-    const payload: Record<string, unknown> = {
-      organization_id: data.organization_id,
-      name: data.name,
-      description: data.description ?? null,
-      trigger_type: data.trigger_type,
-      threshold: data.threshold ?? null,
-      actions: data.actions,
-      enabled: data.enabled,
-    };
-    if (data.id) {
-      const { error } = await supabase
-        .from("commercial_automations")
-        .update(payload)
-        .eq("id", data.id);
-      if (error) throw new Error(error.message);
-      return { id: data.id };
-    }
-    payload.created_by = userId;
-    const { data: row, error } = await supabase
-      .from("commercial_automations")
-      .insert(payload)
-      .select("id")
-      .single();
+
+    const { data: rules, error } = await supabase
+      .from("automations")
+      .select("id, trigger_event, conditions, action_type, action_config, run_count")
+      .eq("organization_id", data.organization_id)
+      .eq("enabled", true)
+      .eq("trigger_event", data.event);
+
     if (error) throw new Error(error.message);
-    return { id: row.id };
+    if (!rules || rules.length === 0) return { matched: 0, executed: 0 };
+
+    let executed = 0;
+    for (const rule of rules) {
+      const cond = (rule.conditions ?? {}) as Record<string, unknown>;
+      if (!matches(cond, data.payload)) {
+        await supabase.from("automation_runs").insert({
+          organization_id: data.organization_id,
+          automation_id: rule.id,
+          trigger_event: data.event,
+          payload: data.payload,
+          status: "skipped",
+          duration_ms: 0,
+        });
+        continue;
+      }
+
+      const cfg = (rule.action_config ?? {}) as Record<string, any>;
+      const t0 = Date.now();
+      let runStatus: "success" | "error" = "success";
+      let runErr: string | null = null;
+
+      try {
+        if (rule.action_type === "create_activity") {
+          await supabase.from("activities").insert({
+            organization_id: data.organization_id,
+            user_id: userId,
+            type: ((cfg.type as "call" | "email" | "meeting" | "note" | "task" | undefined) ?? "task"),
+            title: String(cfg.title ?? "Tarefa automática"),
+            description: cfg.description ? String(cfg.description) : null,
+            contact_id: (data.payload.contact_id as string | undefined) ?? null,
+            deal_id: (data.payload.deal_id as string | undefined) ?? null,
+            due_date: cfg.due_in_days
+              ? new Date(Date.now() + Number(cfg.due_in_days) * 86400000).toISOString()
+              : null,
+            completed: false,
+          });
+        } else if (rule.action_type === "create_notification") {
+          await supabase.from("notifications").insert({
+            organization_id: data.organization_id,
+            user_id: userId,
+            type: "automation",
+            title: String(cfg.title ?? "Automação acionada"),
+            body: cfg.body ? String(cfg.body) : `Evento: ${data.event}`,
+            link: cfg.link ? String(cfg.link) : null,
+          });
+        } else if (rule.action_type === "change_deal_stage") {
+          const dealId = data.payload.deal_id as string | undefined;
+          const toStage = cfg.to_stage as string | undefined;
+          if (dealId && toStage) {
+            await supabase
+              .from("deals")
+              .update({ stage: toStage as any, updated_at: new Date().toISOString() })
+              .eq("id", dealId)
+              .eq("organization_id", data.organization_id);
+          } else { runStatus = "error"; runErr = "deal_id/to_stage ausente"; }
+        } else if (rule.action_type === "assign_owner") {
+          const dealId = data.payload.deal_id as string | undefined;
+          const newOwner = (cfg.user_id as string | undefined) ?? userId;
+          if (dealId && newOwner) {
+            await supabase
+              .from("deals")
+              .update({ user_id: newOwner, updated_at: new Date().toISOString() })
+              .eq("id", dealId)
+              .eq("organization_id", data.organization_id);
+          } else { runStatus = "error"; runErr = "deal_id ausente"; }
+        } else if (rule.action_type === "create_recommendation") {
+          await supabase.from("recommendations").insert({
+            organization_id: data.organization_id,
+            surface: String(cfg.surface ?? "dashboard"),
+            title: String(cfg.title ?? "Ação recomendada"),
+            reason: cfg.reason ? String(cfg.reason) : `Disparado por ${data.event}`,
+            action_label: String(cfg.action_label ?? "Abrir"),
+            action_href: cfg.action_href ? String(cfg.action_href) : null,
+            priority: Math.max(50, Math.min(99, Number(cfg.priority ?? 75))),
+            source: "automation",
+            expires_at: new Date(Date.now() + 7 * 86400000).toISOString(),
+          });
+        } else {
+          runStatus = "error";
+          runErr = `Tipo de ação desconhecido: ${rule.action_type}`;
+        }
+
+        if (runStatus === "success") {
+          await supabase
+            .from("automations")
+            .update({ run_count: (rule.run_count ?? 0) + 1, last_run_at: new Date().toISOString() })
+            .eq("id", rule.id);
+          executed++;
+        }
+      } catch (e: any) {
+        runStatus = "error";
+        runErr = e?.message ?? String(e);
+        console.error("automation execution failed", rule.id, e);
+      }
+
+      await supabase.from("automation_runs").insert({
+        organization_id: data.organization_id,
+        automation_id: rule.id,
+        trigger_event: data.event,
+        payload: data.payload,
+        status: runStatus,
+        error: runErr,
+        duration_ms: Date.now() - t0,
+      });
+    }
+
+    return { matched: rules.length, executed };
   });
 
-export const deleteAutomation = createServerFn({ method: "POST" })
+const listInput = z.object({ organization_id: z.string().uuid(), limit: z.number().min(1).max(200).default(50) });
+export const listAutomationRuns = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((i: { id: string }) => z.object({ id: z.string().uuid() }).parse(i))
+  .inputValidator((i) => listInput.parse(i))
   .handler(async ({ data, context }) => {
-    const { supabase } = context;
-    const { error } = await supabase.from("commercial_automations").delete().eq("id", data.id);
+    const { data: runs, error } = await context.supabase
+      .from("automation_runs")
+      .select("*, automations(name, action_type)")
+      .eq("organization_id", data.organization_id)
+      .order("started_at", { ascending: false })
+      .limit(data.limit);
     if (error) throw new Error(error.message);
-    return { ok: true };
+    return { runs: runs ?? [] };
   });
+
