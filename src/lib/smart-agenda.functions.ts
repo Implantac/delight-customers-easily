@@ -134,7 +134,7 @@ Distribua horários comerciais (09:00-18:00).`,
           due_date: dueDate,
         };
       });
-      const { error } = await supabase.from("activities").insert(rows);
+      const { error } = await (supabase as any).from("activities").insert(rows);
       if (!error) persisted = rows.length;
     }
 

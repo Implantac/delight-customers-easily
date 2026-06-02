@@ -16,10 +16,10 @@ import { Zap, Plus, Trash2, Edit3 } from "lucide-react";
 import { toast } from "sonner";
 import { useCurrentOrg } from "@/lib/org";
 import {
-  listAutomations,
-  upsertAutomation,
-  deleteAutomation,
-} from "@/lib/automations.functions";
+  listCommercialAutomations as listAutomations,
+  upsertCommercialAutomation as upsertAutomation,
+  deleteCommercialAutomation as deleteAutomation,
+} from "@/lib/commercial-automations.functions";
 
 export const Route = createFileRoute("/_app/automacoes")({ component: AutomationsPage });
 
