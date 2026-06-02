@@ -182,6 +182,7 @@ function LeadsPipelinePage() {
                       isDragging={dragId === it.id}
                       onDragStart={() => setDragId(it.id)}
                       onDragEnd={() => { setDragId(null); setOverCol(null); }}
+                      onClick={() => setDetailItem(it)}
                     />
                   ))}
                 </div>
