@@ -298,10 +298,12 @@ function DashboardPage() {
         </Card>
       </div>
 
-      {/* Customer 360 — top campeões + em risco */}
-      <div className="mt-6">
+      {/* Customer 360 + Churn — IA comercial em destaque */}
+      <div className="mt-6 grid gap-6 lg:grid-cols-2">
         <Customer360Mini />
+        <ChurnRiskCard />
       </div>
+
 
       {/* Clientes em risco — call-to-action de retenção */}
       <Card className="mt-6 p-6">
