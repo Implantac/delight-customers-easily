@@ -119,12 +119,7 @@ function MyDayPage() {
         icon={Sun}
         title={`${greeting}${first ? `, ${first}` : ""}`}
         subtitle={new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long" })}
-        action={
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <Sun className="h-4 w-4 text-amber-500" />
-            <span className="text-sm">Seu plano do dia</span>
-          </div>
-        }
+        action={<CheckinButton size="default" />}
       />
 
       {/* Métricas pessoais — meta, gap, atingimento */}
