@@ -70,6 +70,7 @@ import { Route as AppForecastRouteImport } from './routes/_app.forecast'
 import { Route as AppDataQualityRouteImport } from './routes/_app.data-quality'
 import { Route as AppDashboardExecutivoRouteImport } from './routes/_app.dashboard-executivo'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
+import { Route as AppCustomer360RouteImport } from './routes/_app.customer-360'
 import { Route as AppContractsRouteImport } from './routes/_app.contracts'
 import { Route as AppContactsRouteImport } from './routes/_app.contacts'
 import { Route as AppCompaniesRouteImport } from './routes/_app.companies'
@@ -446,6 +447,11 @@ const AppDashboardExecutivoRoute = AppDashboardExecutivoRouteImport.update({
 const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppCustomer360Route = AppCustomer360RouteImport.update({
+  id: '/customer-360',
+  path: '/customer-360',
   getParentRoute: () => AppRoute,
 } as any)
 const AppContractsRoute = AppContractsRouteImport.update({
@@ -852,6 +858,7 @@ export interface FileRoutesByFullPath {
   '/companies': typeof AppCompaniesRouteWithChildren
   '/contacts': typeof AppContactsRouteWithChildren
   '/contracts': typeof AppContractsRoute
+  '/customer-360': typeof AppCustomer360Route
   '/dashboard': typeof AppDashboardRoute
   '/dashboard-executivo': typeof AppDashboardExecutivoRoute
   '/data-quality': typeof AppDataQualityRoute
@@ -986,6 +993,7 @@ export interface FileRoutesByTo {
   '/companies': typeof AppCompaniesRouteWithChildren
   '/contacts': typeof AppContactsRouteWithChildren
   '/contracts': typeof AppContractsRoute
+  '/customer-360': typeof AppCustomer360Route
   '/dashboard': typeof AppDashboardRoute
   '/dashboard-executivo': typeof AppDashboardExecutivoRoute
   '/data-quality': typeof AppDataQualityRoute
@@ -1122,6 +1130,7 @@ export interface FileRoutesById {
   '/_app/companies': typeof AppCompaniesRouteWithChildren
   '/_app/contacts': typeof AppContactsRouteWithChildren
   '/_app/contracts': typeof AppContractsRoute
+  '/_app/customer-360': typeof AppCustomer360Route
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/dashboard-executivo': typeof AppDashboardExecutivoRoute
   '/_app/data-quality': typeof AppDataQualityRoute
@@ -1258,6 +1267,7 @@ export interface FileRouteTypes {
     | '/companies'
     | '/contacts'
     | '/contracts'
+    | '/customer-360'
     | '/dashboard'
     | '/dashboard-executivo'
     | '/data-quality'
@@ -1392,6 +1402,7 @@ export interface FileRouteTypes {
     | '/companies'
     | '/contacts'
     | '/contracts'
+    | '/customer-360'
     | '/dashboard'
     | '/dashboard-executivo'
     | '/data-quality'
@@ -1527,6 +1538,7 @@ export interface FileRouteTypes {
     | '/_app/companies'
     | '/_app/contacts'
     | '/_app/contracts'
+    | '/_app/customer-360'
     | '/_app/dashboard'
     | '/_app/dashboard-executivo'
     | '/_app/data-quality'
@@ -2102,6 +2114,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/customer-360': {
+      id: '/_app/customer-360'
+      path: '/customer-360'
+      fullPath: '/customer-360'
+      preLoaderRoute: typeof AppCustomer360RouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/contracts': {
@@ -2812,6 +2831,7 @@ interface AppRouteChildren {
   AppCompaniesRoute: typeof AppCompaniesRouteWithChildren
   AppContactsRoute: typeof AppContactsRouteWithChildren
   AppContractsRoute: typeof AppContractsRoute
+  AppCustomer360Route: typeof AppCustomer360Route
   AppDashboardRoute: typeof AppDashboardRoute
   AppDashboardExecutivoRoute: typeof AppDashboardExecutivoRoute
   AppDataQualityRoute: typeof AppDataQualityRoute
@@ -2895,6 +2915,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppCompaniesRoute: AppCompaniesRouteWithChildren,
   AppContactsRoute: AppContactsRouteWithChildren,
   AppContractsRoute: AppContractsRoute,
+  AppCustomer360Route: AppCustomer360Route,
   AppDashboardRoute: AppDashboardRoute,
   AppDashboardExecutivoRoute: AppDashboardExecutivoRoute,
   AppDataQualityRoute: AppDataQualityRoute,
@@ -3001,13 +3022,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
