@@ -31,8 +31,9 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { listOutbox, resolveOutbox } from "@/lib/erp-outbox.functions";
-import { Inbox, Eye, Search, RefreshCw } from "lucide-react";
+import { listOutbox, resolveOutbox, resolveOutboxBulk } from "@/lib/erp-outbox.functions";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Inbox, Eye, Search, RefreshCw, Zap, X, CheckCircle2 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/integrations/outbox")({
   component: OutboxPage,
@@ -90,10 +91,13 @@ function OutboxPage() {
   const router = useRouter();
   const listFn = useServerFn(listOutbox);
   const resolveFn = useServerFn(resolveOutbox);
+  const bulkFn = useServerFn(resolveOutboxBulk);
   const [tab, setTab] = useState<Status>("needs_manual");
   const [busy, setBusy] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [detail, setDetail] = useState<OutboxItem | null>(null);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [bulkBusy, setBulkBusy] = useState(false);
 
   // Contagem por status (busca em paralelo, com limit alto)
   const countsBig = useQueries({
