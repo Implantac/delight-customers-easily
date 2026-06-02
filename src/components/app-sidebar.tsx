@@ -4,7 +4,7 @@ import {
   LayoutDashboard, Users, Briefcase, Check, ChevronsUpDown,
   LogOut, Settings, Upload, BarChart3, Sliders, Webhook, Zap, Sparkles,
   Target, Map, Megaphone, MessageSquare, ShieldCheck, Route as RouteIcon, GitBranch,
-  Flame, Calendar as CalendarIcon, Award, Plug, Building, Rocket, type LucideIcon,
+  Flame, Calendar as CalendarIcon, Award, Plug, Building, Rocket, Sun, type LucideIcon,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useCurrentOrg, switchOrganization } from "@/lib/org";
@@ -51,6 +51,7 @@ const TONE_CLASS: Record<NavTone, string> = {
 const primaryNav: NavEntry[] = [
   { to: "/dashboard",                label: "Dashboard",          icon: LayoutDashboard, tone: "primary" },
   { to: "/dashboard-executivo",      label: "Dashboard Executivo", icon: Building,       tone: "primary", managerOnly: true },
+  { to: "/gestao-visao-global",      label: "Visão Global",       icon: Map,             tone: "violet", managerOnly: true },
   { to: "/carteira",                 label: "Carteira Comercial", icon: Briefcase,       tone: "info" },
   { to: "/leads",                    label: "Leads",              icon: Flame,           tone: "accent" },
   { to: "/leads-pipeline",           label: "Pipeline de Leads",  icon: GitBranch,       tone: "accent" },
@@ -71,9 +72,11 @@ const primaryNav: NavEntry[] = [
 
 const adminNav: NavEntry[] = [
   { to: "/setup-wizard",             label: "Setup guiado",       icon: Rocket,          tone: "accent", managerOnly: true },
+  { to: "/automacoes",               label: "Automações",         icon: Zap,             tone: "accent", managerOnly: true },
   { to: "/integrations",             label: "Integrações ERP",    icon: Plug,            tone: "primary", managerOnly: true },
   { to: "/companies",                label: "Empresas",           icon: Building,        tone: "primary" },
   { to: "/settings/organization",    label: "Usuários",           icon: Users,           tone: "primary", managerOnly: true },
+  { to: "/settings/briefing",        label: "Briefing diário",    icon: Sun,             tone: "primary" },
   { to: "/settings/organization",    label: "Configurações",      icon: Settings,        tone: "primary" },
 ];
 
