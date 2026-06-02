@@ -225,18 +225,20 @@ function LeadsPipelinePage() {
 }
 
 function LeadCard({
-  item, isDragging, onDragStart, onDragEnd,
+  item, isDragging, onDragStart, onDragEnd, onClick,
 }: {
   item: LeadInboxItem;
   isDragging: boolean;
   onDragStart: () => void;
   onDragEnd: () => void;
+  onClick: () => void;
 }) {
   return (
     <Card
       draggable
       onDragStart={onDragStart}
       onDragEnd={onDragEnd}
+      onClick={onClick}
       className={`cursor-grab active:cursor-grabbing transition ${isDragging ? "opacity-50 ring-2 ring-primary" : "hover:bg-accent/40"}`}
     >
       <CardContent className="p-3">
