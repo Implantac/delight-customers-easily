@@ -13,10 +13,13 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Sun, CheckSquare, Target, MessageSquare, Calendar as CalIcon,
-  ArrowRight, Trophy, Flame,
+  ArrowRight, Trophy, Flame, Sparkles,
 } from "lucide-react";
+import { toast } from "sonner";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { listMyTasks } from "@/lib/mytasks.functions";
 import { getForecast } from "@/lib/forecast.functions";
+import { generateSmartAgenda } from "@/lib/smart-agenda.functions";
 
 export const Route = createFileRoute("/_app/meu-dia")({ component: MyDayPage });
 
@@ -113,13 +116,44 @@ function MyDayPage() {
   })();
   const first = (user?.user_metadata?.full_name ?? user?.email ?? "").split(" ")[0];
 
+  const qc = useQueryClient();
+  const callAgenda = useServerFn(generateSmartAgenda);
+  const genAgenda = useMutation({
+    mutationFn: () => callAgenda({
+      data: {
+        organization_id: orgId!,
+        date: new Date().toISOString().slice(0, 10),
+        mode: "day",
+        persist: true,
+      },
+    }),
+    onSuccess: (r: any) => {
+      toast.success(`Agenda gerada: ${r.persisted ?? 0} sugestões adicionadas`);
+      qc.invalidateQueries({ queryKey: ["my-day-tasks"] });
+    },
+    onError: (e: any) => toast.error(e?.message ?? "Falha ao gerar agenda"),
+  });
+
   return (
     <div className="p-4 md:p-8 space-y-6">
       <PageHeader
         icon={Sun}
         title={`${greeting}${first ? `, ${first}` : ""}`}
         subtitle={new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long" })}
-        action={<CheckinButton size="default" />}
+        action={
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="default"
+              onClick={() => genAgenda.mutate()}
+              disabled={genAgenda.isPending || !orgId}
+            >
+              <Sparkles className="h-4 w-4 mr-1" />
+              {genAgenda.isPending ? "Gerando…" : "Gerar agenda IA"}
+            </Button>
+            <CheckinButton size="default" />
+          </div>
+        }
       />
 
       {/* Métricas pessoais — meta, gap, atingimento */}
