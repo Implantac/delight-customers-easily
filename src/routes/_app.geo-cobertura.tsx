@@ -20,6 +20,7 @@ function CoberturaPage() {
   const { orgId } = useCurrentOrg();
   const fetchCov = useServerFn(getTerritorialCoverage);
   const fetchAI = useServerFn(getProspectingInsights);
+  const fetchSilent = useServerFn(listSilentCities);
 
   const covQ = useQuery({
     queryKey: ["geo-coverage", orgId],
@@ -32,6 +33,13 @@ function CoberturaPage() {
     enabled: !!orgId,
     queryFn: () => fetchAI({ data: { organization_id: orgId! } }),
     staleTime: 1000 * 60 * 30,
+  });
+
+  const silentQ = useQuery({
+    queryKey: ["geo-silent-cities", orgId],
+    enabled: !!orgId,
+    queryFn: () => fetchSilent({ data: { organization_id: orgId!, limit: 20 } }),
+    staleTime: 1000 * 60 * 10,
   });
 
   return (
