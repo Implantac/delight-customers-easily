@@ -48,6 +48,7 @@ function LeadsPipelinePage() {
   const [dragId, setDragId] = useState<string | null>(null);
   const [overCol, setOverCol] = useState<Status | null>(null);
   const [convertItem, setConvertItem] = useState<LeadInboxItem | null>(null);
+  const [detailItem, setDetailItem] = useState<LeadInboxItem | null>(null);
   // Sobreposição local de status (otimista). Persistência real apenas para
   // ações suportadas (contatado / convertido / descartado).
   const [localStatus, setLocalStatus] = useState<Record<string, Status>>({});
