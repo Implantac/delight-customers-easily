@@ -62,6 +62,7 @@ import { Route as AppIntegrationsRouteImport } from './routes/_app.integrations'
 import { Route as AppInfluencersRouteImport } from './routes/_app.influencers'
 import { Route as AppIaComercialRouteImport } from './routes/_app.ia-comercial'
 import { Route as AppGoalsRouteImport } from './routes/_app.goals'
+import { Route as AppGestaoVisaoGlobalRouteImport } from './routes/_app.gestao-visao-global'
 import { Route as AppGeoRotaRouteImport } from './routes/_app.geo-rota'
 import { Route as AppGeoProspeccaoRouteImport } from './routes/_app.geo-prospeccao'
 import { Route as AppGeoCoberturaRouteImport } from './routes/_app.geo-cobertura'
@@ -83,6 +84,7 @@ import { Route as AppCarteiraRouteImport } from './routes/_app.carteira'
 import { Route as AppCampaignsRouteImport } from './routes/_app.campaigns'
 import { Route as AppCalendarRouteImport } from './routes/_app.calendar'
 import { Route as AppBenchmarkRouteImport } from './routes/_app.benchmark'
+import { Route as AppAutomacoesRouteImport } from './routes/_app.automacoes'
 import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
 import { Route as AppActivitiesRouteImport } from './routes/_app.activities'
 import { Route as IOrgSlugRouteImport } from './routes/i.$org.$slug'
@@ -97,6 +99,7 @@ import { Route as AppSettingsOrganizationRouteImport } from './routes/_app.setti
 import { Route as AppSettingsImportRouteImport } from './routes/_app.settings.import'
 import { Route as AppSettingsFieldsRouteImport } from './routes/_app.settings.fields'
 import { Route as AppSettingsErpAgentRouteImport } from './routes/_app.settings.erp-agent'
+import { Route as AppSettingsBriefingRouteImport } from './routes/_app.settings.briefing'
 import { Route as AppSettingsAutomationsRouteImport } from './routes/_app.settings.automations'
 import { Route as AppSequencesIdRouteImport } from './routes/_app.sequences.$id'
 import { Route as AppReportsWeeklyRouteImport } from './routes/_app.reports.weekly'
@@ -409,6 +412,11 @@ const AppGoalsRoute = AppGoalsRouteImport.update({
   path: '/goals',
   getParentRoute: () => AppRoute,
 } as any)
+const AppGestaoVisaoGlobalRoute = AppGestaoVisaoGlobalRouteImport.update({
+  id: '/gestao-visao-global',
+  path: '/gestao-visao-global',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppGeoRotaRoute = AppGeoRotaRouteImport.update({
   id: '/geo-rota',
   path: '/geo-rota',
@@ -514,6 +522,11 @@ const AppBenchmarkRoute = AppBenchmarkRouteImport.update({
   path: '/benchmark',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAutomacoesRoute = AppAutomacoesRouteImport.update({
+  id: '/automacoes',
+  path: '/automacoes',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppAlertsRoute = AppAlertsRouteImport.update({
   id: '/alerts',
   path: '/alerts',
@@ -583,6 +596,11 @@ const AppSettingsFieldsRoute = AppSettingsFieldsRouteImport.update({
 const AppSettingsErpAgentRoute = AppSettingsErpAgentRouteImport.update({
   id: '/settings/erp-agent',
   path: '/settings/erp-agent',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsBriefingRoute = AppSettingsBriefingRouteImport.update({
+  id: '/settings/briefing',
+  path: '/settings/briefing',
   getParentRoute: () => AppRoute,
 } as any)
 const AppSettingsAutomationsRoute = AppSettingsAutomationsRouteImport.update({
@@ -846,6 +864,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/activities': typeof AppActivitiesRoute
   '/alerts': typeof AppAlertsRoute
+  '/automacoes': typeof AppAutomacoesRoute
   '/benchmark': typeof AppBenchmarkRoute
   '/calendar': typeof AppCalendarRoute
   '/campaigns': typeof AppCampaignsRoute
@@ -867,6 +886,7 @@ export interface FileRoutesByFullPath {
   '/geo-cobertura': typeof AppGeoCoberturaRoute
   '/geo-prospeccao': typeof AppGeoProspeccaoRoute
   '/geo-rota': typeof AppGeoRotaRoute
+  '/gestao-visao-global': typeof AppGestaoVisaoGlobalRoute
   '/goals': typeof AppGoalsRoute
   '/ia-comercial': typeof AppIaComercialRoute
   '/influencers': typeof AppInfluencersRoute
@@ -941,6 +961,7 @@ export interface FileRoutesByFullPath {
   '/reports/weekly': typeof AppReportsWeeklyRoute
   '/sequences/$id': typeof AppSequencesIdRoute
   '/settings/automations': typeof AppSettingsAutomationsRouteWithChildren
+  '/settings/briefing': typeof AppSettingsBriefingRoute
   '/settings/erp-agent': typeof AppSettingsErpAgentRoute
   '/settings/fields': typeof AppSettingsFieldsRoute
   '/settings/import': typeof AppSettingsImportRoute
@@ -981,6 +1002,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/activities': typeof AppActivitiesRoute
   '/alerts': typeof AppAlertsRoute
+  '/automacoes': typeof AppAutomacoesRoute
   '/benchmark': typeof AppBenchmarkRoute
   '/calendar': typeof AppCalendarRoute
   '/campaigns': typeof AppCampaignsRoute
@@ -1002,6 +1024,7 @@ export interface FileRoutesByTo {
   '/geo-cobertura': typeof AppGeoCoberturaRoute
   '/geo-prospeccao': typeof AppGeoProspeccaoRoute
   '/geo-rota': typeof AppGeoRotaRoute
+  '/gestao-visao-global': typeof AppGestaoVisaoGlobalRoute
   '/goals': typeof AppGoalsRoute
   '/ia-comercial': typeof AppIaComercialRoute
   '/influencers': typeof AppInfluencersRoute
@@ -1076,6 +1099,7 @@ export interface FileRoutesByTo {
   '/reports/weekly': typeof AppReportsWeeklyRoute
   '/sequences/$id': typeof AppSequencesIdRoute
   '/settings/automations': typeof AppSettingsAutomationsRouteWithChildren
+  '/settings/briefing': typeof AppSettingsBriefingRoute
   '/settings/erp-agent': typeof AppSettingsErpAgentRoute
   '/settings/fields': typeof AppSettingsFieldsRoute
   '/settings/import': typeof AppSettingsImportRoute
@@ -1118,6 +1142,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/_app/activities': typeof AppActivitiesRoute
   '/_app/alerts': typeof AppAlertsRoute
+  '/_app/automacoes': typeof AppAutomacoesRoute
   '/_app/benchmark': typeof AppBenchmarkRoute
   '/_app/calendar': typeof AppCalendarRoute
   '/_app/campaigns': typeof AppCampaignsRoute
@@ -1139,6 +1164,7 @@ export interface FileRoutesById {
   '/_app/geo-cobertura': typeof AppGeoCoberturaRoute
   '/_app/geo-prospeccao': typeof AppGeoProspeccaoRoute
   '/_app/geo-rota': typeof AppGeoRotaRoute
+  '/_app/gestao-visao-global': typeof AppGestaoVisaoGlobalRoute
   '/_app/goals': typeof AppGoalsRoute
   '/_app/ia-comercial': typeof AppIaComercialRoute
   '/_app/influencers': typeof AppInfluencersRoute
@@ -1213,6 +1239,7 @@ export interface FileRoutesById {
   '/_app/reports/weekly': typeof AppReportsWeeklyRoute
   '/_app/sequences/$id': typeof AppSequencesIdRoute
   '/_app/settings/automations': typeof AppSettingsAutomationsRouteWithChildren
+  '/_app/settings/briefing': typeof AppSettingsBriefingRoute
   '/_app/settings/erp-agent': typeof AppSettingsErpAgentRoute
   '/_app/settings/fields': typeof AppSettingsFieldsRoute
   '/_app/settings/import': typeof AppSettingsImportRoute
@@ -1255,6 +1282,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/activities'
     | '/alerts'
+    | '/automacoes'
     | '/benchmark'
     | '/calendar'
     | '/campaigns'
@@ -1276,6 +1304,7 @@ export interface FileRouteTypes {
     | '/geo-cobertura'
     | '/geo-prospeccao'
     | '/geo-rota'
+    | '/gestao-visao-global'
     | '/goals'
     | '/ia-comercial'
     | '/influencers'
@@ -1350,6 +1379,7 @@ export interface FileRouteTypes {
     | '/reports/weekly'
     | '/sequences/$id'
     | '/settings/automations'
+    | '/settings/briefing'
     | '/settings/erp-agent'
     | '/settings/fields'
     | '/settings/import'
@@ -1390,6 +1420,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/activities'
     | '/alerts'
+    | '/automacoes'
     | '/benchmark'
     | '/calendar'
     | '/campaigns'
@@ -1411,6 +1442,7 @@ export interface FileRouteTypes {
     | '/geo-cobertura'
     | '/geo-prospeccao'
     | '/geo-rota'
+    | '/gestao-visao-global'
     | '/goals'
     | '/ia-comercial'
     | '/influencers'
@@ -1485,6 +1517,7 @@ export interface FileRouteTypes {
     | '/reports/weekly'
     | '/sequences/$id'
     | '/settings/automations'
+    | '/settings/briefing'
     | '/settings/erp-agent'
     | '/settings/fields'
     | '/settings/import'
@@ -1526,6 +1559,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/_app/activities'
     | '/_app/alerts'
+    | '/_app/automacoes'
     | '/_app/benchmark'
     | '/_app/calendar'
     | '/_app/campaigns'
@@ -1547,6 +1581,7 @@ export interface FileRouteTypes {
     | '/_app/geo-cobertura'
     | '/_app/geo-prospeccao'
     | '/_app/geo-rota'
+    | '/_app/gestao-visao-global'
     | '/_app/goals'
     | '/_app/ia-comercial'
     | '/_app/influencers'
@@ -1621,6 +1656,7 @@ export interface FileRouteTypes {
     | '/_app/reports/weekly'
     | '/_app/sequences/$id'
     | '/_app/settings/automations'
+    | '/_app/settings/briefing'
     | '/_app/settings/erp-agent'
     | '/_app/settings/fields'
     | '/_app/settings/import'
@@ -2060,6 +2096,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppGoalsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/gestao-visao-global': {
+      id: '/_app/gestao-visao-global'
+      path: '/gestao-visao-global'
+      fullPath: '/gestao-visao-global'
+      preLoaderRoute: typeof AppGestaoVisaoGlobalRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/geo-rota': {
       id: '/_app/geo-rota'
       path: '/geo-rota'
@@ -2207,6 +2250,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppBenchmarkRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/automacoes': {
+      id: '/_app/automacoes'
+      path: '/automacoes'
+      fullPath: '/automacoes'
+      preLoaderRoute: typeof AppAutomacoesRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/alerts': {
       id: '/_app/alerts'
       path: '/alerts'
@@ -2303,6 +2353,13 @@ declare module '@tanstack/react-router' {
       path: '/settings/erp-agent'
       fullPath: '/settings/erp-agent'
       preLoaderRoute: typeof AppSettingsErpAgentRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings/briefing': {
+      id: '/_app/settings/briefing'
+      path: '/settings/briefing'
+      fullPath: '/settings/briefing'
+      preLoaderRoute: typeof AppSettingsBriefingRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/settings/automations': {
@@ -2819,6 +2876,7 @@ const AppSettingsAutomationsRouteWithChildren =
 interface AppRouteChildren {
   AppActivitiesRoute: typeof AppActivitiesRoute
   AppAlertsRoute: typeof AppAlertsRoute
+  AppAutomacoesRoute: typeof AppAutomacoesRoute
   AppBenchmarkRoute: typeof AppBenchmarkRoute
   AppCalendarRoute: typeof AppCalendarRoute
   AppCampaignsRoute: typeof AppCampaignsRoute
@@ -2840,6 +2898,7 @@ interface AppRouteChildren {
   AppGeoCoberturaRoute: typeof AppGeoCoberturaRoute
   AppGeoProspeccaoRoute: typeof AppGeoProspeccaoRoute
   AppGeoRotaRoute: typeof AppGeoRotaRoute
+  AppGestaoVisaoGlobalRoute: typeof AppGestaoVisaoGlobalRoute
   AppGoalsRoute: typeof AppGoalsRoute
   AppIaComercialRoute: typeof AppIaComercialRoute
   AppInfluencersRoute: typeof AppInfluencersRoute
@@ -2891,6 +2950,7 @@ interface AppRouteChildren {
   AppWinLossRoute: typeof AppWinLossRoute
   AppInviteTokenRoute: typeof AppInviteTokenRoute
   AppSettingsAutomationsRoute: typeof AppSettingsAutomationsRouteWithChildren
+  AppSettingsBriefingRoute: typeof AppSettingsBriefingRoute
   AppSettingsErpAgentRoute: typeof AppSettingsErpAgentRoute
   AppSettingsFieldsRoute: typeof AppSettingsFieldsRoute
   AppSettingsImportRoute: typeof AppSettingsImportRoute
@@ -2903,6 +2963,7 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppActivitiesRoute: AppActivitiesRoute,
   AppAlertsRoute: AppAlertsRoute,
+  AppAutomacoesRoute: AppAutomacoesRoute,
   AppBenchmarkRoute: AppBenchmarkRoute,
   AppCalendarRoute: AppCalendarRoute,
   AppCampaignsRoute: AppCampaignsRoute,
@@ -2924,6 +2985,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppGeoCoberturaRoute: AppGeoCoberturaRoute,
   AppGeoProspeccaoRoute: AppGeoProspeccaoRoute,
   AppGeoRotaRoute: AppGeoRotaRoute,
+  AppGestaoVisaoGlobalRoute: AppGestaoVisaoGlobalRoute,
   AppGoalsRoute: AppGoalsRoute,
   AppIaComercialRoute: AppIaComercialRoute,
   AppInfluencersRoute: AppInfluencersRoute,
@@ -2975,6 +3037,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppWinLossRoute: AppWinLossRoute,
   AppInviteTokenRoute: AppInviteTokenRoute,
   AppSettingsAutomationsRoute: AppSettingsAutomationsRouteWithChildren,
+  AppSettingsBriefingRoute: AppSettingsBriefingRoute,
   AppSettingsErpAgentRoute: AppSettingsErpAgentRoute,
   AppSettingsFieldsRoute: AppSettingsFieldsRoute,
   AppSettingsImportRoute: AppSettingsImportRoute,
