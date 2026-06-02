@@ -55,6 +55,7 @@ const primaryNav: NavEntry[] = [
   { to: "/leads",                    label: "Leads",              icon: Flame,           tone: "accent" },
   { to: "/leads-pipeline",           label: "Pipeline de Leads",  icon: GitBranch,       tone: "accent" },
   { to: "/contacts",                 label: "Clientes",           icon: Users,           tone: "info" },
+  { to: "/customer-360",             label: "Customer 360",       icon: Sparkles,        tone: "violet" },
   { to: "/oportunidades",            label: "Oportunidades",      icon: Target,          tone: "accent" },
   { to: "/representantes",           label: "Representantes",     icon: Award,           tone: "success", managerOnly: true },
   { to: "/calendar",                 label: "Agenda",             icon: CalendarIcon,    tone: "primary" },
