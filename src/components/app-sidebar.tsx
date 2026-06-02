@@ -3,7 +3,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import {
   LayoutDashboard, Users, Briefcase, Check, ChevronsUpDown,
   LogOut, Settings, Upload, BarChart3, Sliders, Webhook, Zap, Sparkles,
-  Target, Map, Megaphone, MessageSquare, ShieldCheck,
+  Target, Map, Megaphone, MessageSquare, ShieldCheck, Route as RouteIcon, GitBranch,
   Flame, Calendar as CalendarIcon, Award, Plug, Building, Rocket, type LucideIcon,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
