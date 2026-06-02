@@ -347,3 +347,35 @@ function Footer({
     </div>
   );
 }
+
+function GoLiveItem({
+  icon: Icon,
+  title,
+  desc,
+  to,
+  cta,
+}: {
+  icon: typeof Plug;
+  title: string;
+  desc: string;
+  to: string;
+  cta: string;
+}) {
+  return (
+    <div className="flex items-start gap-3 rounded-md border p-3">
+      <div className="h-9 w-9 rounded-md bg-primary/10 text-primary flex items-center justify-center shrink-0">
+        <Icon className="h-4 w-4" />
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="text-sm font-medium">{title}</div>
+        <p className="text-xs text-muted-foreground mt-0.5">{desc}</p>
+      </div>
+      <Link to={to as any}>
+        <Button size="sm" variant="outline" className="gap-1 shrink-0">
+          {cta} <ArrowRight className="h-3 w-3" />
+        </Button>
+      </Link>
+    </div>
+  );
+}
+
