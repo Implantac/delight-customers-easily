@@ -1,13 +1,15 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useCurrentOrg } from "@/lib/org";
 import { getTerritorialCoverage, getProspectingInsights } from "@/lib/geo-prospect.functions";
+import { listSilentCities } from "@/lib/geo-silent-cities.functions";
 import { PageHeader } from "@/components/page-header";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Map, Sparkles, TrendingUp, Target, AlertTriangle } from "lucide-react";
+import { Map, Sparkles, TrendingUp, Target, AlertTriangle, Clock, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/_app/geo-cobertura")({ component: CoberturaPage });
 
@@ -18,6 +20,7 @@ function CoberturaPage() {
   const { orgId } = useCurrentOrg();
   const fetchCov = useServerFn(getTerritorialCoverage);
   const fetchAI = useServerFn(getProspectingInsights);
+  const fetchSilent = useServerFn(listSilentCities);
 
   const covQ = useQuery({
     queryKey: ["geo-coverage", orgId],
@@ -30,6 +33,13 @@ function CoberturaPage() {
     enabled: !!orgId,
     queryFn: () => fetchAI({ data: { organization_id: orgId! } }),
     staleTime: 1000 * 60 * 30,
+  });
+
+  const silentQ = useQuery({
+    queryKey: ["geo-silent-cities", orgId],
+    enabled: !!orgId,
+    queryFn: () => fetchSilent({ data: { organization_id: orgId!, limit: 20 } }),
+    staleTime: 1000 * 60 * 10,
   });
 
   return (
@@ -46,6 +56,71 @@ function CoberturaPage() {
         <KPI label="Clientes ativos" value={covQ.data?.summary.customers ?? 0} icon={Target} loading={covQ.isLoading} tone="ok" />
         <KPI label="Prospects" value={covQ.data?.summary.prospects ?? 0} icon={TrendingUp} loading={covQ.isLoading} />
       </div>
+
+      {/* Cidades silenciosas */}
+      <Card>
+        <CardHeader className="pb-3 flex flex-row items-start justify-between space-y-0">
+          <div>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Clock className="h-4 w-4 text-amber-600" /> Cidades silenciosas
+            </CardTitle>
+            <CardDescription>
+              Clientes sem atividade comercial recente — priorize reativação.
+            </CardDescription>
+          </div>
+          <Button asChild size="sm" variant="ghost">
+            <Link to="/geo-rota">
+              Montar rota <ArrowRight className="ml-1 h-3 w-3" />
+            </Link>
+          </Button>
+        </CardHeader>
+        <CardContent className="p-0">
+          {silentQ.isLoading ? (
+            <div className="p-6"><Skeleton className="h-32 w-full" /></div>
+          ) : !silentQ.data?.rows.length ? (
+            <div className="p-6 text-center text-sm text-muted-foreground">
+              Nenhuma cidade silenciosa — todas tiveram atividade nos últimos 60 dias 🎉
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="bg-muted/30 text-xs uppercase text-muted-foreground">
+                  <tr>
+                    <th className="text-left px-3 py-2">Cidade</th>
+                    <th className="text-left px-3 py-2">UF</th>
+                    <th className="text-right px-3 py-2">Clientes</th>
+                    <th className="text-right px-3 py-2">Sem visita 30d</th>
+                    <th className="text-right px-3 py-2">60d</th>
+                    <th className="text-right px-3 py-2">90d</th>
+                    <th className="text-right px-3 py-2">Potencial perdido</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {silentQ.data.rows.map((r) => (
+                    <tr key={`${r.city}-${r.state}`} className="border-t">
+                      <td className="px-3 py-2 font-medium">{r.city}</td>
+                      <td className="px-3 py-2 text-muted-foreground">{r.state ?? "—"}</td>
+                      <td className="px-3 py-2 text-right">{r.total}</td>
+                      <td className="px-3 py-2 text-right">
+                        <Badge variant="outline" className="bg-amber-500/10 text-amber-700 border-amber-500/30">{r.silent_30}</Badge>
+                      </td>
+                      <td className="px-3 py-2 text-right">
+                        <Badge variant="outline" className="bg-orange-500/10 text-orange-700 border-orange-500/30">{r.silent_60}</Badge>
+                      </td>
+                      <td className="px-3 py-2 text-right">
+                        <Badge variant="outline" className="bg-red-500/10 text-red-700 border-red-500/30">{r.silent_90}</Badge>
+                      </td>
+                      <td className="px-3 py-2 text-right font-mono text-xs">{fmt(r.potential)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+
 
       {/* IA Insights */}
       <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-transparent">

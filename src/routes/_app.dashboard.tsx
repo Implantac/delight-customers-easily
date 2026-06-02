@@ -15,6 +15,7 @@ import { NextActionBlock } from "@/components/next-action-block";
 import { BusinessHealthCard } from "@/components/business-health-card";
 import { OnboardingChecklist } from "@/components/onboarding-checklist";
 import { Customer360Mini } from "@/components/customer-360-mini";
+import { ChurnRiskCard } from "@/components/churn-risk-card";
 import { useCurrentOrg } from "@/lib/org";
 import { getForecast } from "@/lib/forecast.functions";
 import { getRetentionInsights } from "@/lib/churn.functions";
@@ -297,10 +298,12 @@ function DashboardPage() {
         </Card>
       </div>
 
-      {/* Customer 360 — top campeões + em risco */}
-      <div className="mt-6">
+      {/* Customer 360 + Churn — IA comercial em destaque */}
+      <div className="mt-6 grid gap-6 lg:grid-cols-2">
         <Customer360Mini />
+        <ChurnRiskCard />
       </div>
+
 
       {/* Clientes em risco — call-to-action de retenção */}
       <Card className="mt-6 p-6">

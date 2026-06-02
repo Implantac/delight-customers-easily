@@ -1,13 +1,12 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Briefcase, Users, Target, MessageSquare } from "lucide-react";
+import { LayoutDashboard, Sun, Users, Target, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // Bottom nav alinhado à arquitetura comercial (Onda 1/2).
-// Foco: ir direto ao que gera receita — Dashboard, Carteira, Clientes,
-// Oportunidades, WhatsApp.
+// "Meu Dia" é o hub do representante em campo: agenda, rota, check-in.
 const items = [
   { to: "/dashboard", label: "Início", icon: LayoutDashboard },
-  { to: "/carteira", label: "Carteira", icon: Briefcase },
+  { to: "/meu-dia", label: "Meu Dia", icon: Sun },
   { to: "/contacts", label: "Clientes", icon: Users },
   { to: "/oportunidades", label: "Oportun.", icon: Target },
   { to: "/whatsapp", label: "WhatsApp", icon: MessageSquare },

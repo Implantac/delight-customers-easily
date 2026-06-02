@@ -2,9 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Sparkles, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { Sparkles, TrendingUp, TrendingDown, Minus, Lightbulb, MessageSquare } from "lucide-react";
 import { getCustomer360 } from "@/lib/customer360.functions";
+import { whatsappLink } from "@/lib/wa";
 
 const SEGMENT_LABEL: Record<string, string> = {
   campeoes: "Campeão",
@@ -108,6 +110,8 @@ export function Company360Panel({
         <Metric label="Atividades 30d" value={`${snap.activities_30d ?? 0}`} sub={snap.last_activity_at ? `últ. ${fmtDate(snap.last_activity_at)}` : "sem atividade"} />
       </div>
 
+      <NextActionBlock snap={snap} />
+
       {snap.updated_at && (
         <p className="mt-3 text-[10px] text-muted-foreground">
           Snapshot atualizado em {new Date(snap.updated_at).toLocaleString("pt-BR")}
@@ -116,6 +120,63 @@ export function Company360Panel({
     </Card>
   );
 }
+
+/** Heurística de próxima ação baseada no segmento RFM + trend. */
+function NextActionBlock({ snap }: { snap: any }) {
+  const seg: string = snap.rfm_segment ?? "";
+  const trend: string = snap.trend ?? "stable";
+
+  let action = "Agende um follow-up comercial para fortalecer o relacionamento.";
+  let why = "Sem segmento definido — comece registrando uma atividade.";
+  let cta = "WhatsApp";
+
+  if (seg === "campeoes") {
+    action = "Proponha upsell ou cross-sell — este cliente está engajado.";
+    why = `Segmento Campeão${trend === "up" ? " e em alta" : ""} — alta receptividade a novas ofertas.`;
+  } else if (seg === "fieis") {
+    action = "Apresente novidades de catálogo ou contrato anual com benefício.";
+    why = "Fidelidade alta — bom momento para aumentar ticket médio.";
+  } else if (seg === "potencial") {
+    action = "Faça uma visita comercial focada em ampliar mix de produtos.";
+    why = "Cliente potencial — pequenas ações podem virar Campeão.";
+  } else if (seg === "novos") {
+    action = "Onboarding: ligue para entender necessidades e apresente o portfólio.";
+    why = "Novo cliente — primeiras semanas definem a relação.";
+  } else if (seg === "em_risco") {
+    action = "Reativação urgente: ligue, ofereça condição especial ou agende visita.";
+    why = "Cliente em risco — atividade caindo e recência ruim.";
+    cta = "Ligar pelo WhatsApp";
+  } else if (seg === "hibernando") {
+    action = "Campanha de winback: cupom, condição diferenciada ou novo produto.";
+    why = "Hibernando há tempo — precisa de um gatilho forte.";
+  } else if (seg === "perdidos") {
+    action = "Pesquisa de churn: descubra o motivo da perda e ofereça reentrada.";
+    why = "Cliente perdido — ainda dá para entender e recuperar a relação.";
+  }
+
+  const wa = snap.primary_phone ? whatsappLink(snap.primary_phone) : null;
+
+  return (
+    <div className="mt-4 rounded-md border border-primary/30 bg-primary/5 p-3">
+      <div className="flex items-start gap-2">
+        <Lightbulb className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+        <div className="flex-1 min-w-0">
+          <div className="text-xs font-semibold">Próxima ação recomendada</div>
+          <p className="mt-1 text-sm leading-snug">{action}</p>
+          <p className="mt-1 text-[11px] text-muted-foreground italic">Por quê: {why}</p>
+          {wa && (
+            <Button asChild size="sm" variant="outline" className="mt-2 h-7 gap-1.5 text-xs">
+              <a href={wa} target="_blank" rel="noopener noreferrer">
+                <MessageSquare className="h-3 w-3" /> {cta}
+              </a>
+            </Button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 
 function Metric({ label, value, sub }: { label: string; value: string; sub?: string }) {
   return (

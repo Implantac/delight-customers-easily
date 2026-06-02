@@ -27,6 +27,10 @@ import {
   Sparkles,
   Loader2,
   CheckCircle2,
+  Database,
+  GitMerge,
+  Stethoscope,
+  Rocket,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/integrations/connect/wizard")({
@@ -262,40 +266,61 @@ function ConnectWizard() {
         </Card>
       )}
 
-      {/* Step 4: Mapeamento + ativar */}
+      {/* Step 4: Checklist Go-Live */}
       {step === 4 && (
         <Card>
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-emerald-600" /> Passo 4 —
-              Pronto para conectar
+              <Rocket className="h-4 w-4 text-emerald-600" /> Passo 4 — Go-Live
             </CardTitle>
             <CardDescription>
-              Confirme e vá para a tela de credenciais. Depois você pode
-              configurar mapeamento de campos e agendamento.
+              Sua conexão com <strong>{selectedProvider ?? "ERP"}</strong> está pronta
+              para começar a sincronizar. Confirme em 3 verificações rápidas.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            <div className="grid gap-2">
-              <Link to="/integrations/connect">
-                <Button className="w-full gap-2">
-                  <Plug className="h-4 w-4" /> Abrir tela de credenciais
-                </Button>
-              </Link>
-              <Link to="/integrations/mapping">
-                <Button variant="outline" className="w-full gap-2">
-                  Configurar mapeamento de campos
-                </Button>
-              </Link>
+            <GoLiveItem
+              icon={Database}
+              title="Detectar tabelas e campos"
+              desc="Verifica quais tabelas o conector enxerga (clientes, vendas, representantes)."
+              to="/integrations/diagnostic"
+              cta="Rodar diagnóstico"
+            />
+            <GoLiveItem
+              icon={GitMerge}
+              title="Mapear campos do ERP para o CRM"
+              desc="Auto-sugestão por nome (cliente_id → external_id, razao_social → name, etc.)."
+              to="/integrations/mapping"
+              cta="Abrir mapeamento"
+            />
+            <GoLiveItem
+              icon={Stethoscope}
+              title="Smoke test (validação final)"
+              desc="Importa uma amostra de 10 registros e verifica integridade antes do go-live."
+              to="/integrations/smoke-test"
+              cta="Rodar smoke test"
+            />
+
+            <div className="rounded-md border border-emerald-500/30 bg-emerald-500/5 p-3 flex items-start gap-2">
+              <CheckCircle2 className="h-4 w-4 text-emerald-600 mt-0.5 shrink-0" />
+              <div className="text-xs">
+                Quando o smoke test passar, ative a conexão em{" "}
+                <Link to="/integrations/dashboard" className="underline font-medium">
+                  Connect Hub → Dashboard
+                </Link>
+                . A primeira sincronização roda automaticamente e você acompanha pelo painel.
+              </div>
             </div>
+
             <Footer
               onBack={() => setStep(3)}
-              onNext={() => navigate({ to: "/integrations" })}
-              nextLabel="Concluir"
+              onNext={() => navigate({ to: "/integrations/dashboard" })}
+              nextLabel="Ir para o Connect Hub"
             />
           </CardContent>
         </Card>
       )}
+
     </div>
   );
 }
@@ -322,3 +347,35 @@ function Footer({
     </div>
   );
 }
+
+function GoLiveItem({
+  icon: Icon,
+  title,
+  desc,
+  to,
+  cta,
+}: {
+  icon: typeof Plug;
+  title: string;
+  desc: string;
+  to: string;
+  cta: string;
+}) {
+  return (
+    <div className="flex items-start gap-3 rounded-md border p-3">
+      <div className="h-9 w-9 rounded-md bg-primary/10 text-primary flex items-center justify-center shrink-0">
+        <Icon className="h-4 w-4" />
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="text-sm font-medium">{title}</div>
+        <p className="text-xs text-muted-foreground mt-0.5">{desc}</p>
+      </div>
+      <Link to={to as any}>
+        <Button size="sm" variant="outline" className="gap-1 shrink-0">
+          {cta} <ArrowRight className="h-3 w-3" />
+        </Button>
+      </Link>
+    </div>
+  );
+}
+
