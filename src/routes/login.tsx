@@ -63,7 +63,7 @@ function LoginPage() {
           <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--gradient-primary)] text-primary-foreground shadow-[var(--shadow-glow)]">
             <Briefcase className="h-7 w-7" />
           </div>
-          <h1 className="bg-[var(--gradient-primary)] bg-clip-text text-3xl font-bold tracking-tight text-transparent">Lovable CRM</h1>
+          <h1 className="bg-[var(--gradient-primary)] bg-clip-text text-3xl font-bold tracking-tight text-transparent">USE CRM</h1>
           <p className="text-sm text-muted-foreground">Gerencie seu pipeline com simplicidade</p>
         </div>
         <Card className="border-border/60 p-6 shadow-[var(--shadow-md)] backdrop-blur">
