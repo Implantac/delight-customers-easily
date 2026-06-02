@@ -339,3 +339,118 @@ function ConvertDialog({
     </Dialog>
   );
 }
+
+function statusLabel(s: Status) {
+  return s === "new" ? "Novo" : s === "contacted" ? "Contatado" : s === "converted" ? "Convertido" : "Descartado";
+}
+
+function LeadDetailsDrawer({
+  item, onClose, onConvert, onContact, onDiscard,
+}: {
+  item: LeadInboxItem | null;
+  onClose: () => void;
+  onConvert: (it: LeadInboxItem) => void;
+  onContact: (it: LeadInboxItem) => void;
+  onDiscard: (it: LeadInboxItem) => void;
+}) {
+  return (
+    <Sheet open={!!item} onOpenChange={(o) => !o && onClose()}>
+      <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto">
+        {item && (
+          <>
+            <SheetHeader>
+              <SheetTitle className="flex items-center gap-2">
+                <Flame className="h-4 w-4 text-primary" />
+                {item.name}
+              </SheetTitle>
+              <SheetDescription className="flex flex-wrap items-center gap-2">
+                <Badge variant="secondary">{statusLabel(item.status)}</Badge>
+                {item.source && <Badge variant="outline">{item.source}</Badge>}
+                {item.form_name && (
+                  <span className="text-xs text-muted-foreground inline-flex items-center gap-1">
+                    <FileText className="h-3 w-3" /> {item.form_name}
+                  </span>
+                )}
+              </SheetDescription>
+            </SheetHeader>
+
+            <div className="mt-4 space-y-4">
+              <section className="space-y-2 text-sm">
+                {item.email && (
+                  <div className="flex items-center gap-2">
+                    <Mail className="h-4 w-4 text-muted-foreground" />
+                    <a href={`mailto:${item.email}`} className="hover:underline truncate">{item.email}</a>
+                  </div>
+                )}
+                {item.phone && (
+                  <div className="flex items-center gap-2">
+                    <Phone className="h-4 w-4 text-muted-foreground" />
+                    <a href={`tel:${item.phone}`} className="hover:underline">{item.phone}</a>
+                  </div>
+                )}
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Calendar className="h-4 w-4" />
+                  <span>Criado em {new Date(item.created_at).toLocaleString("pt-BR")}</span>
+                </div>
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Tag className="h-4 w-4" />
+                  <span className="text-xs">
+                    Tipo: {item.kind === "form_submission" ? "Submissão de formulário" : "Contato"}
+                  </span>
+                </div>
+              </section>
+
+              {item.payload && Object.keys(item.payload).length > 0 && (
+                <>
+                  <Separator />
+                  <section>
+                    <p className="text-xs font-semibold uppercase text-muted-foreground mb-2">
+                      Dados do formulário
+                    </p>
+                    <dl className="space-y-1.5 text-sm">
+                      {Object.entries(item.payload).map(([k, v]) => (
+                        <div key={k} className="grid grid-cols-3 gap-2">
+                          <dt className="text-muted-foreground truncate">{k}</dt>
+                          <dd className="col-span-2 break-words">{String(v ?? "—")}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </section>
+                </>
+              )}
+
+              {item.contact_id && (
+                <>
+                  <Separator />
+                  <Button asChild variant="outline" size="sm" className="w-full">
+                    <Link to="/contacts/$id" params={{ id: item.contact_id }}>
+                      <ExternalLink className="h-4 w-4 mr-2" /> Abrir contato completo
+                    </Link>
+                  </Button>
+                </>
+              )}
+            </div>
+
+            <SheetFooter className="mt-6 flex flex-col gap-2 sm:flex-col sm:space-x-0">
+              {item.status !== "contacted" && item.status !== "converted" && (
+                <Button variant="outline" onClick={() => onContact(item)}>
+                  <Mail className="h-4 w-4 mr-2" /> Marcar como contatado
+                </Button>
+              )}
+              {item.status !== "converted" && !item.deal_id && (
+                <Button onClick={() => onConvert(item)}>
+                  <Sparkles className="h-4 w-4 mr-2" /> Converter em oportunidade
+                </Button>
+              )}
+              {item.kind === "form_submission" && item.status !== "discarded" && (
+                <Button variant="destructive" onClick={() => onDiscard(item)}>
+                  <Trash2 className="h-4 w-4 mr-2" /> Descartar
+                </Button>
+              )}
+            </SheetFooter>
+          </>
+        )}
+      </SheetContent>
+    </Sheet>
+  );
+}
