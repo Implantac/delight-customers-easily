@@ -333,15 +333,43 @@ function PayoutsTab({ orgId, period, canManage }: { orgId: string; period: strin
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-2 flex-wrap">
         <div className="text-sm text-muted-foreground">
           Snapshots do mês — trave para congelar o cálculo e marque como pago após o pagamento.
         </div>
-        {canManage && (
-          <Button onClick={() => gen.mutate()} disabled={gen.isPending}>
-            {gen.isPending ? "Gerando…" : "Gerar / recalcular payouts"}
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              const rows = q.data?.payouts ?? [];
+              if (!rows.length) return;
+              const csv = toCSV(
+                rows.map((r: any) => ({
+                  vendedor: r.name,
+                  vendido: Number(r.sold_value),
+                  meta: Number(r.goal_value),
+                  base: Number(r.base_commission),
+                  acelerador: Number(r.accelerator),
+                  bonus: Number(r.bonus),
+                  total: Number(r.total),
+                  status: r.status,
+                })),
+                ["vendedor", "vendido", "meta", "base", "acelerador", "bonus", "total", "status"],
+              );
+              downloadCSV(`payouts-${period}.csv`, csv);
+            }}
+            disabled={!q.data?.payouts?.length}
+          >
+            <Download className="h-4 w-4 mr-1.5" />
+            Exportar CSV
           </Button>
-        )}
+          {canManage && (
+            <Button onClick={() => gen.mutate()} disabled={gen.isPending}>
+              {gen.isPending ? "Gerando…" : "Gerar / recalcular payouts"}
+            </Button>
+          )}
+        </div>
       </div>
 
       {q.isLoading || !q.data ? (
