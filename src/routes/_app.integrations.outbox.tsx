@@ -283,6 +283,53 @@ function OutboxPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
+                {/* Barra de ação em massa */}
+                {selected.size > 0 && (
+                  <div className="mb-3 flex flex-wrap items-center justify-between gap-2 rounded-md border border-primary/40 bg-primary/5 px-3 py-2">
+                    <div className="text-sm font-medium">
+                      {selected.size} selecionado{selected.size > 1 ? "s" : ""}
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        disabled={bulkBusy}
+                        onClick={() => bulk("retry")}
+                        className="gap-1.5"
+                      >
+                        <Zap className="h-3.5 w-3.5" /> Retentar em massa
+                      </Button>
+                      {(tab === "needs_manual" || tab === "failed") && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          disabled={bulkBusy}
+                          onClick={() => bulk("mark_succeeded")}
+                          className="gap-1.5"
+                        >
+                          <CheckCircle2 className="h-3.5 w-3.5" /> Marcar concluído
+                        </Button>
+                      )}
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        disabled={bulkBusy}
+                        onClick={() => bulk("cancel")}
+                        className="gap-1.5"
+                      >
+                        <X className="h-3.5 w-3.5" /> Cancelar
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        disabled={bulkBusy}
+                        onClick={() => setSelected(new Set())}
+                      >
+                        Limpar
+                      </Button>
+                    </div>
+                  </div>
+                )}
                 {isLoading ? (
                   <p className="text-muted-foreground">Carregando…</p>
                 ) : !filtered.length ? (
@@ -293,6 +340,13 @@ function OutboxPage() {
                   <Table>
                     <TableHeader>
                       <TableRow>
+                        <TableHead className="w-8">
+                          <Checkbox
+                            checked={allSelected ? true : someSelected ? "indeterminate" : false}
+                            onCheckedChange={toggleAll}
+                            aria-label="Selecionar todos"
+                          />
+                        </TableHead>
                         <TableHead>Entidade</TableHead>
                         <TableHead>Ação</TableHead>
                         <TableHead>External ID</TableHead>
@@ -304,7 +358,14 @@ function OutboxPage() {
                     </TableHeader>
                     <TableBody>
                       {filtered.map((it) => (
-                        <TableRow key={it.id}>
+                        <TableRow key={it.id} data-state={selected.has(it.id) ? "selected" : undefined}>
+                          <TableCell>
+                            <Checkbox
+                              checked={selected.has(it.id)}
+                              onCheckedChange={() => toggleOne(it.id)}
+                              aria-label="Selecionar"
+                            />
+                          </TableCell>
                           <TableCell>
                             <Badge variant="outline">{it.entity}</Badge>
                           </TableCell>
