@@ -57,14 +57,15 @@ export function parseCSV(text: string): string[][] {
   return rows.filter((r) => !(r.length === 1 && r[0] === ""));
 }
 
-/** Parses CSV text into an array of objects keyed by the header row. */
-export function csvToObjects(text: string): Record<string, string>[] {
-  const rows = parseCSV(text);
-  if (rows.length === 0) return [];
-  const headers = rows[0].map((h) => h.trim());
-  return rows.slice(1).map((r) => {
+/** Parses CSV text into { headers, rows } where rows are objects keyed by the header row. */
+export function csvToObjects(text: string): { headers: string[]; rows: Record<string, string>[] } {
+  const raw = parseCSV(text);
+  if (raw.length === 0) return { headers: [], rows: [] };
+  const headers = raw[0].map((h) => h.trim());
+  const rows = raw.slice(1).map((r) => {
     const o: Record<string, string> = {};
     headers.forEach((h, idx) => { o[h] = (r[idx] ?? "").trim(); });
     return o;
   });
+  return { headers, rows };
 }
