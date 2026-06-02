@@ -20,6 +20,7 @@ import { TagPicker } from "@/components/tag-picker";
 import { AuditHistory } from "@/components/audit-history";
 import { AIInsights } from "@/components/ai-insights";
 import { PropensityPanel } from "@/components/propensity-panel";
+import { Company360Panel } from "@/components/company-360-panel";
 import { whatsappLink } from "@/lib/wa";
 import { toast } from "sonner";
 
@@ -581,6 +582,13 @@ function CompanyDetail() {
         {/* ====== Coluna direita: painel de inteligência sticky ====== */}
         <aside className="space-y-4 lg:sticky lg:top-20 lg:self-start">
           <HealthScore companyId={company.id} />
+
+          {erpLink && (
+            <Company360Panel
+              organizationId={erpLink.organization_id}
+              companyId={company.id}
+            />
+          )}
 
           <Card className="p-4">
             <div className="flex items-center justify-between">

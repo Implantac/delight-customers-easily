@@ -14,6 +14,7 @@ import { PageHeader } from "@/components/page-header";
 import { NextActionBlock } from "@/components/next-action-block";
 import { BusinessHealthCard } from "@/components/business-health-card";
 import { OnboardingChecklist } from "@/components/onboarding-checklist";
+import { Customer360Mini } from "@/components/customer-360-mini";
 import { useCurrentOrg } from "@/lib/org";
 import { getForecast } from "@/lib/forecast.functions";
 import { getRetentionInsights } from "@/lib/churn.functions";
@@ -294,6 +295,11 @@ function DashboardPage() {
             })}
           </div>
         </Card>
+      </div>
+
+      {/* Customer 360 — top campeões + em risco */}
+      <div className="mt-6">
+        <Customer360Mini />
       </div>
 
       {/* Clientes em risco — call-to-action de retenção */}
