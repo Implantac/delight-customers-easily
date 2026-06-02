@@ -1,37 +1,28 @@
-// Lightweight RFC4180-ish CSV parser. Handles quoted fields, commas, newlines, escaped quotes.
-export function parseCSV(text: string): string[][] {
-  const rows: string[][] = [];
-  let row: string[] = [];
-  let field = "";
-  let inQuotes = false;
-  let i = 0;
-  const src = text.replace(/\r\n?/g, "\n");
-  while (i < src.length) {
-    const c = src[i];
-    if (inQuotes) {
-      if (c === '"') {
-        if (src[i + 1] === '"') { field += '"'; i += 2; continue; }
-        inQuotes = false; i++; continue;
-      }
-      field += c; i++; continue;
-    }
-    if (c === '"') { inQuotes = true; i++; continue; }
-    if (c === ",") { row.push(field); field = ""; i++; continue; }
-    if (c === "\n") { row.push(field); rows.push(row); row = []; field = ""; i++; continue; }
-    field += c; i++;
-  }
-  if (field.length > 0 || row.length > 0) { row.push(field); rows.push(row); }
-  return rows.filter((r) => r.some((v) => v.trim().length > 0));
+// Tiny CSV builder + browser downloader (no deps).
+// Escapes fields per RFC 4180: wraps in quotes if it contains , " \n \r, doubles internal quotes.
+function esc(v: unknown): string {
+  if (v == null) return "";
+  const s = String(v);
+  return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
 
-export function csvToObjects(text: string): { headers: string[]; rows: Record<string, string>[] } {
-  const parsed = parseCSV(text);
-  if (parsed.length === 0) return { headers: [], rows: [] };
-  const headers = parsed[0].map((h) => h.trim());
-  const rows = parsed.slice(1).map((r) => {
-    const obj: Record<string, string> = {};
-    headers.forEach((h, idx) => { obj[h] = (r[idx] ?? "").trim(); });
-    return obj;
-  });
-  return { headers, rows };
+export function toCSV(rows: Record<string, unknown>[], headers?: string[]): string {
+  if (!rows.length) return (headers ?? []).join(",");
+  const cols = headers ?? Object.keys(rows[0]);
+  const head = cols.join(",");
+  const body = rows.map((r) => cols.map((c) => esc((r as any)[c])).join(",")).join("\n");
+  return `${head}\n${body}`;
+}
+
+export function downloadCSV(filename: string, csv: string) {
+  // BOM for Excel pt-BR friendliness
+  const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
 }
