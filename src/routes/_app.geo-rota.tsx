@@ -129,7 +129,7 @@ function RotaPage() {
   const optimized = !!aiM.data?.stops?.length || !!vrpM.data;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-4 md:p-6">
       <PageHeader
         title="Rota Inteligente do Dia"
         subtitle="A IA monta a melhor sequência de visitas — você só sai para vender."

@@ -221,12 +221,12 @@ function WhatsAppPage() {
         }
       />
 
-      <div className="px-6 mb-4">
+      <div className="px-3 md:px-6 mb-4">
         <WhatsAppSlaPanel onPick={(id) => setSelectedId(id)} />
       </div>
 
       {/* SLA strip */}
-      <div className="px-6 grid grid-cols-2 md:grid-cols-6 gap-3 mb-4">
+      <div className="px-3 md:px-6 grid grid-cols-2 md:grid-cols-6 gap-3 mb-4">
         <SlaCard label="Abertas" value={slaQ.data?.open ?? 0} />
         <SlaCard label="Pendentes" value={slaQ.data?.pending ?? 0} />
         <SlaCard label="Resolvidas" value={slaQ.data?.resolved ?? 0} />
@@ -239,9 +239,9 @@ function WhatsAppPage() {
         />
       </div>
 
-      <div className="flex-1 grid grid-cols-12 gap-4 px-6 pb-6 min-h-0">
+      <div className="flex-1 grid grid-cols-12 gap-4 px-3 md:px-6 pb-20 md:pb-6 min-h-0">
         {/* List */}
-        <Card className="col-span-12 md:col-span-4 xl:col-span-3 flex flex-col min-h-0">
+        <Card className={`${selectedId ? "hidden md:flex" : "flex"} col-span-12 md:col-span-4 xl:col-span-3 flex-col min-h-0`}>
           <div className="p-3 border-b">
             <Tabs value={filter} onValueChange={(v) => setFilter(v as typeof filter)}>
               <TabsList className="grid grid-cols-3 w-full">
@@ -318,10 +318,19 @@ function WhatsAppPage() {
         </Card>
 
         {/* Thread */}
-        <Card className="col-span-12 md:col-span-8 xl:col-span-6 flex flex-col min-h-0">
+        <Card className={`${selectedId ? "flex" : "hidden md:flex"} col-span-12 md:col-span-8 xl:col-span-6 flex-col min-h-0`}>
           {selected ? (
             <>
               <div className="p-3 border-b flex items-center gap-3">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="md:hidden h-8 px-2"
+                  onClick={() => setSelectedId(null)}
+                  aria-label="Voltar"
+                >
+                  ←
+                </Button>
                 <Avatar className="h-9 w-9">
                   <AvatarFallback className="bg-primary/10 text-primary text-xs">{initials(selected.contact_name)}</AvatarFallback>
                 </Avatar>
