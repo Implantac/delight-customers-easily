@@ -11,6 +11,7 @@ import {
   bulkCreateActivityForCompanies,
   bulkAssignCompaniesOwner,
   bulkAddCompaniesToCampaign,
+  bulkSendWhatsAppToCompanies,
 } from "@/lib/customer360-bulk.functions";
 import { listCampaigns } from "@/lib/campaigns.functions";
 import { getRepsOverview } from "@/lib/reps.functions";
@@ -74,6 +75,16 @@ function fmtDate(d?: string | null) {
   return new Date(d).toLocaleDateString("pt-BR");
 }
 
+const NBA_BY_SEGMENT: Record<string, { label: string; cls: string }> = {
+  campeoes: { label: "Oferecer upsell", cls: "bg-emerald-500/10 text-emerald-700 border-emerald-500/30" },
+  fieis: { label: "Cross-sell", cls: "bg-blue-500/10 text-blue-700 border-blue-500/30" },
+  potencial: { label: "Agendar visita", cls: "bg-violet-500/10 text-violet-700 border-violet-500/30" },
+  novos: { label: "Follow-up", cls: "bg-cyan-500/10 text-cyan-700 border-cyan-500/30" },
+  em_risco: { label: "Ligar hoje", cls: "bg-amber-500/15 text-amber-700 border-amber-500/40" },
+  hibernando: { label: "Reativar c/ cupom", cls: "bg-orange-500/15 text-orange-700 border-orange-500/40" },
+  perdidos: { label: "Win-back", cls: "bg-red-500/15 text-red-700 border-red-500/40" },
+};
+
 function Customer360Page() {
   const { orgId } = useCurrentOrg();
   const canManage = useCanManage();
@@ -88,7 +99,7 @@ function Customer360Page() {
 
   // Selection state — keyed by company_id (only companies can be acted upon)
   const [selected, setSelected] = useState<Set<string>>(new Set());
-  const [dialog, setDialog] = useState<"activity" | "campaign" | "rep" | null>(null);
+  const [dialog, setDialog] = useState<"activity" | "campaign" | "rep" | "whatsapp" | null>(null);
 
   const q = useQuery({
     queryKey: ["customer-360", orgId, search, segment, sort],
@@ -239,6 +250,9 @@ function Customer360Page() {
             <Button size="sm" variant="outline" onClick={() => setDialog("activity")} className="gap-1.5">
               <CalendarPlus className="h-3.5 w-3.5" /> Criar atividade
             </Button>
+            <Button size="sm" variant="outline" onClick={() => setDialog("whatsapp")} className="gap-1.5">
+              <MessageSquare className="h-3.5 w-3.5" /> Disparo WhatsApp
+            </Button>
             <Button size="sm" variant="outline" onClick={() => setDialog("campaign")} className="gap-1.5">
               <Megaphone className="h-3.5 w-3.5" /> Adicionar à campanha
             </Button>
@@ -308,6 +322,11 @@ function Customer360Page() {
                           <span className="font-medium truncate">{c.display_name ?? "Sem nome"}</span>
                           {c.rfm_segment && (
                             <Badge variant="outline" className={segCls}>{segLbl}</Badge>
+                          )}
+                          {NBA_BY_SEGMENT[c.rfm_segment] && (
+                            <Badge variant="outline" className={NBA_BY_SEGMENT[c.rfm_segment].cls} title="Próxima melhor ação sugerida">
+                              ⚡ {NBA_BY_SEGMENT[c.rfm_segment].label}
+                            </Badge>
                           )}
                           <span className={`inline-flex items-center gap-0.5 text-xs ${trendCls}`}>
                             <TrendIcon className="h-3 w-3" />
@@ -380,7 +399,75 @@ function Customer360Page() {
           onDone={onBulkDone}
         />
       )}
+      {dialog === "whatsapp" && orgId && (
+        <BulkWhatsAppDialog
+          orgId={orgId}
+          companyIds={selectedCompanyIds}
+          onClose={() => setDialog(null)}
+          onDone={onBulkDone}
+        />
+      )}
     </div>
+  );
+}
+
+function BulkWhatsAppDialog({
+  orgId, companyIds, onClose, onDone,
+}: { orgId: string; companyIds: string[]; onClose: () => void; onDone: () => void }) {
+  const fn = useServerFn(bulkSendWhatsAppToCompanies);
+  const [body, setBody] = useState("Olá {name}, tudo bem? Posso te ajudar com algo hoje?");
+
+  const mut = useMutation({
+    mutationFn: () =>
+      fn({
+        data: {
+          organizationId: orgId,
+          companyIds,
+          body: body.trim(),
+        },
+      }),
+    onSuccess: (r: any) => {
+      if (r.queued === 0) {
+        toast.warning(r.reason ?? "Nenhuma mensagem enfileirada");
+      } else {
+        toast.success(`${r.queued} mensagem(ns) enfileirada(s)${r.skipped ? ` · ${r.skipped} sem telefone` : ""}`);
+        onDone();
+      }
+    },
+    onError: (e: any) => toast.error("Falha", { description: e?.message }),
+  });
+
+  return (
+    <Dialog open onOpenChange={(o) => !o && onClose()}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Disparo WhatsApp em massa</DialogTitle>
+          <DialogDescription>
+            Uma mensagem será enfileirada para cada empresa selecionada que tiver telefone.
+            Use <code>{"{name}"}</code> para inserir o nome da empresa. Lembre-se da janela de 24h do WhatsApp.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-2">
+          <Label htmlFor="wa-body">Mensagem</Label>
+          <Textarea
+            id="wa-body"
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
+            rows={5}
+            maxLength={1500}
+          />
+          <div className="text-[11px] text-muted-foreground">
+            {body.length}/1500 · {companyIds.length} destinatário(s) selecionado(s)
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>Cancelar</Button>
+          <Button onClick={() => mut.mutate()} disabled={!body.trim() || mut.isPending}>
+            {mut.isPending ? "Enfileirando…" : `Enfileirar ${companyIds.length} envio(s)`}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 

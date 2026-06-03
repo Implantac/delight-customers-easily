@@ -12,13 +12,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Zap, Plus, Trash2, Edit3 } from "lucide-react";
+import { Zap, Plus, Trash2, Edit3, PlayCircle } from "lucide-react";
 import { toast } from "sonner";
 import { useCurrentOrg } from "@/lib/org";
 import {
   listCommercialAutomations as listAutomations,
   upsertCommercialAutomation as upsertAutomation,
   deleteCommercialAutomation as deleteAutomation,
+  runCommercialAutomationsNow,
 } from "@/lib/commercial-automations.functions";
 
 export const Route = createFileRoute("/_app/automacoes")({ component: AutomationsPage });
@@ -44,6 +45,7 @@ function AutomationsPage() {
   const callList = useServerFn(listAutomations);
   const callUpsert = useServerFn(upsertAutomation);
   const callDelete = useServerFn(deleteAutomation);
+  const callRunNow = useServerFn(runCommercialAutomationsNow);
 
   const q = useQuery({
     queryKey: ["automations", orgId],
@@ -62,6 +64,15 @@ function AutomationsPage() {
     },
   });
 
+  const runNow = useMutation({
+    mutationFn: () => callRunNow({ data: { organization_id: orgId! } }),
+    onSuccess: (r: any) => {
+      toast.success(`Executou ${r.rules ?? 0} regra(s) · ${r.matched ?? 0} ação(ões) disparada(s)`);
+      qc.invalidateQueries({ queryKey: ["automations"] });
+    },
+    onError: (e: any) => toast.error(e?.message ?? "Erro ao executar"),
+  });
+
   return (
     <div className="p-4 md:p-8 space-y-6">
       <PageHeader
@@ -69,9 +80,19 @@ function AutomationsPage() {
         title="Automações comerciais"
         subtitle="Regras simples que criam tarefas, notificações ou mensagens automaticamente"
         action={
-          <Button onClick={() => { setEditing(null); setOpen(true); }}>
-            <Plus className="h-4 w-4 mr-1" /> Nova regra
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              onClick={() => runNow.mutate()}
+              disabled={!orgId || runNow.isPending}
+            >
+              <PlayCircle className="h-4 w-4 mr-1" />
+              {runNow.isPending ? "Executando…" : "Executar agora"}
+            </Button>
+            <Button onClick={() => { setEditing(null); setOpen(true); }}>
+              <Plus className="h-4 w-4 mr-1" /> Nova regra
+            </Button>
+          </div>
         }
       />
 

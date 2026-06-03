@@ -84,3 +84,19 @@ export const deleteCommercialAutomation = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+import { runAutomationsForOrg } from "@/lib/automations-runner.server";
+
+/**
+ * Executa todas as automações comerciais da organização agora (manual).
+ * Útil para testar regras sem esperar o cron diário.
+ */
+export const runCommercialAutomationsNow = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: { organization_id: string }) =>
+    z.object({ organization_id: z.string().uuid() }).parse(i),
+  )
+  .handler(async ({ data, context }) => {
+    const result = await runAutomationsForOrg(context.supabase as any, data.organization_id);
+    return result;
+  });
