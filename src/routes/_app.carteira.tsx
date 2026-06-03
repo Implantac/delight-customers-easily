@@ -90,7 +90,7 @@ function CarteiraPage() {
   }, [data, bucket, q, industry]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-4 md:p-6">
       <PageHeader
         title="Carteira comercial"
         subtitle="Quem comprou, quem está sumindo, quem está pronto pra recomprar — em uma visão só."
