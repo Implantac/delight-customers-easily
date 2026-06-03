@@ -117,6 +117,27 @@ function Customer360Page() {
 
   const items = q.data?.items ?? [];
 
+  // Per-company ERP sync status (last sync, conflicts) — shown as a chip in each row
+  const visibleCompanyIds = useMemo(
+    () => items.filter((c: any) => c.company_id).map((c: any) => c.company_id as string),
+    [items],
+  );
+  const erpStatusFn = useServerFn(getCompanyErpStatus);
+  const erpStatusQ = useQuery({
+    queryKey: ["customer-360-erp-status", orgId, visibleCompanyIds.join(",")],
+    queryFn: () =>
+      erpStatusFn({
+        data: { organization_id: orgId!, company_ids: visibleCompanyIds.slice(0, 200) },
+      }),
+    enabled: !!orgId && visibleCompanyIds.length > 0,
+    staleTime: 30_000,
+  });
+  const erpStatusMap = useMemo(() => {
+    const m = new Map<string, CompanyErpStatus>();
+    for (const it of erpStatusQ.data?.items ?? []) m.set(it.company_id, it);
+    return m;
+  }, [erpStatusQ.data]);
+
   // company_ids selecionados (filtra apenas linhas que de fato têm company_id)
   const selectedCompanyIds = useMemo(
     () => items.filter((c: any) => c.company_id && selected.has(c.company_id)).map((c: any) => c.company_id as string),
