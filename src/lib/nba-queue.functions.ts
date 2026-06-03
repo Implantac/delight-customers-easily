@@ -152,7 +152,6 @@ export const createNbaTask = createServerFn({ method: "POST" })
       .object({
         organization_id: z.string().uuid(),
         title: z.string().min(1).max(200),
-        company_id: z.string().uuid().nullable().optional(),
         type: z.enum(["task", "meeting", "call"]).default("task"),
       })
       .parse(i),
@@ -165,7 +164,6 @@ export const createNbaTask = createServerFn({ method: "POST" })
       type: data.type,
       title: data.title,
       due_date: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-      company_id: data.company_id ?? null,
     });
     if (error) throw new Error(error.message);
     return { ok: true };
