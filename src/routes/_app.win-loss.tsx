@@ -204,3 +204,65 @@ function WinLossPage() {
     </div>
   );
 }
+
+function AiPlanCard({ plan }: { plan: { resumo: string; maior_alavanca: string; insights: WinLossInsight[]; proximas_acoes: string[]; generated_at: string } }) {
+  const sevColor = (s: string) =>
+    s === "alta" ? "destructive" : s === "media" ? "default" : "secondary";
+  return (
+    <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-transparent p-5">
+      <div className="flex items-start gap-3">
+        <div className="rounded-lg bg-primary/10 p-2"><Sparkles className="h-5 w-5 text-primary" /></div>
+        <div className="flex-1 space-y-4">
+          <div>
+            <p className="text-sm font-semibold">Análise estratégica com IA</p>
+            <p className="mt-1 text-sm text-muted-foreground">{plan.resumo}</p>
+          </div>
+
+          {plan.maior_alavanca && (
+            <div className="rounded-md border border-amber-500/30 bg-amber-500/5 p-3">
+              <div className="flex items-start gap-2">
+                <Lightbulb className="mt-0.5 h-4 w-4 text-amber-500" />
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wide text-amber-600">Maior alavanca</p>
+                  <p className="mt-0.5 text-sm">{plan.maior_alavanca}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {plan.insights.length > 0 && (
+            <div className="grid gap-3 md:grid-cols-2">
+              {plan.insights.map((i, idx) => (
+                <div key={idx} className="rounded-md border bg-card/50 p-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <p className="text-sm font-medium">{i.titulo}</p>
+                    <Badge variant={sevColor(i.severidade) as any} className="shrink-0 text-[10px] uppercase">{i.severidade}</Badge>
+                  </div>
+                  <p className="mt-1 text-xs text-muted-foreground"><span className="font-medium text-foreground">Evidência:</span> {i.evidencia}</p>
+                  <p className="mt-1 text-xs text-muted-foreground"><span className="font-medium text-foreground">Ação:</span> {i.recomendacao}</p>
+                  <div className="mt-2 flex items-center justify-between text-xs">
+                    <Badge variant="outline" className="text-[10px] capitalize">{i.categoria}</Badge>
+                    <span className="text-muted-foreground">Impacto: {i.impacto_estimado}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {plan.proximas_acoes.length > 0 && (
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Próximas ações</p>
+              <ul className="mt-1 space-y-1 text-sm">
+                {plan.proximas_acoes.map((a, idx) => (
+                  <li key={idx} className="flex gap-2"><span className="text-primary">•</span>{a}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          <p className="text-[10px] text-muted-foreground">Gerado {new Date(plan.generated_at).toLocaleString("pt-BR")}</p>
+        </div>
+      </div>
+    </Card>
+  );
+}
