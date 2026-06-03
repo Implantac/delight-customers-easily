@@ -170,7 +170,7 @@ function DashboardPage() {
             placement: "bottom",
           },
           {
-            selector: 'a[href="/leads-pipeline"]',
+            selector: 'a[href="/pipeline"]',
             title: "Pipeline de vendas",
             body: "Arraste oportunidades entre os estágios para acompanhar o funil.",
             placement: "right",
