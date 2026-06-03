@@ -16,6 +16,7 @@ import { BusinessHealthCard } from "@/components/business-health-card";
 import { OnboardingChecklist } from "@/components/onboarding-checklist";
 import { Customer360Mini } from "@/components/customer-360-mini";
 import { ChurnRiskCard } from "@/components/churn-risk-card";
+import { ProductTour } from "@/components/product-tour";
 import { useCurrentOrg } from "@/lib/org";
 import { getForecast } from "@/lib/forecast.functions";
 import { getRetentionInsights } from "@/lib/churn.functions";
@@ -155,9 +156,45 @@ function DashboardPage() {
       />
 
 
-      <div className="mt-6">
+      <div className="mt-6" data-tour="dashboard-checklist">
         <OnboardingChecklist />
       </div>
+
+      <ProductTour
+        tourId="dashboard-v1"
+        steps={[
+          {
+            selector: '[data-tour="dashboard-checklist"]',
+            title: "Bem-vindo ao seu CRM",
+            body: "Esta é a sua trilha de primeiros passos. Conclua os itens para ativar o copiloto comercial.",
+            placement: "bottom",
+          },
+          {
+            selector: 'a[href="/leads-pipeline"]',
+            title: "Pipeline de vendas",
+            body: "Arraste oportunidades entre os estágios para acompanhar o funil.",
+            placement: "right",
+          },
+          {
+            selector: 'a[href="/whatsapp"]',
+            title: "WhatsApp integrado",
+            body: "Centralize as conversas comerciais aqui. Cada mensagem vira contexto para a IA.",
+            placement: "right",
+          },
+          {
+            selector: 'a[href="/integrations"]',
+            title: "Conectar seu ERP",
+            body: "No Connect Hub você liga Bling, Omie, SAP, banco direto ou agente local — sem precisar de TI.",
+            placement: "right",
+          },
+          {
+            selector: 'a[href="/inteligencia-comercial"]',
+            title: "Inteligência Comercial",
+            body: "Lead scoring, churn, recompra e próxima melhor ação — tudo pronto, alimentado pelos seus dados.",
+            placement: "right",
+          },
+        ]}
+      />
 
       {/* Saúde geral + plano do dia lado a lado em telas largas */}
       <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
