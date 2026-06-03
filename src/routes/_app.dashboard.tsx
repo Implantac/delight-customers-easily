@@ -256,7 +256,7 @@ function DashboardPage() {
             {!dashQuery.isLoading && (dashQuery.data?.topOpen ?? []).length === 0 && (
               <p className="text-sm text-muted-foreground">
                 Sem oportunidades abertas. Bora prospectar — comece em{" "}
-                <Link to="/marketing" className="underline">Leads</Link>.
+                <Link to="/campaigns" className="underline">Leads</Link>.
               </p>
             )}
             {(dashQuery.data?.topOpen ?? []).map((d) => {

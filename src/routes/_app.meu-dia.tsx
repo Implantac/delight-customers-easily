@@ -314,7 +314,7 @@ function MyDayPage() {
             ) : (myDeals.data ?? []).length === 0 ? (
               <p className="text-sm text-muted-foreground">
                 Sem oportunidades abertas. Comece em{" "}
-                <Link to="/marketing" className="underline">Leads</Link>.
+                <Link to="/campaigns" className="underline">Leads</Link>.
               </p>
             ) : (
               (myDeals.data ?? []).map((d) => (

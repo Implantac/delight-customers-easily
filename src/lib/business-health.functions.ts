@@ -176,13 +176,13 @@ export const computeBusinessHealth = createServerFn({ method: "POST" })
           title: `Aumentar pipeline em ${fmtBRL(Math.max(0, target - openValue))}`,
           impact_brl: Math.max(0, target - openValue),
           reason: `Cobertura está em ${(coverage * 100).toFixed(0)}% do alvo. Acione marketing e prospecção.`,
-          href: "/marketing",
+          href: "/campaigns",
         });
       } else if (p.key === "conversao" && winRate < 0.3) {
         levers.push({
           title: "Revisar qualificação e proposta",
           reason: `Win-rate de ${(winRate * 100).toFixed(0)}% está abaixo do saudável (30%+).`,
-          href: "/ia-comercial",
+          href: "/inteligencia-comercial",
         });
       } else if (p.key === "velocidade" && (actsPerDeal < 3 || avgAgeDays > 45)) {
         levers.push({

@@ -541,7 +541,7 @@ function SetupWizardPage() {
           <div className="grid md:grid-cols-2 gap-3">
             <ShortcutCard to="/dashboard" title="Dashboard" desc="KPIs comerciais consolidados." />
             <ShortcutCard to="/pipeline" title="Pipeline" desc="Crie sua primeira oportunidade." />
-            <ShortcutCard to="/ia-comercial" title="IA Comercial" desc="Lead scoring, churn e recompra." />
+            <ShortcutCard to="/inteligencia-comercial" title="IA Comercial" desc="Lead scoring, churn e recompra." />
             <ShortcutCard to="/integrations/health" title="Saúde das Integrações" desc="Acompanhe o sync." />
           </div>
 

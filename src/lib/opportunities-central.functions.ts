@@ -249,7 +249,7 @@ export const getOpportunitiesCentral = createServerFn({ method: "POST" })
         score: Math.max(40, 80 - days * 2),
         reason: "Lead recente ainda não virou negócio.",
         action_label: "Trabalhar lead",
-        action_href: "/marketing",
+        action_href: "/campaigns",
       });
     }
 
