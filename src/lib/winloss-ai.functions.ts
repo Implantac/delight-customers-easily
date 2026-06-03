@@ -35,18 +35,19 @@ export const getWinLossPlan = createServerFn({ method: "POST" })
     const org = data.organization_id;
     const since = new Date(Date.now() - data.days * DAY).toISOString();
 
-    const [dealsRes, profilesRes] = await Promise.all([
-      supabase
-        .from("deals")
-        .select("id, title, stage, value, owner_id, outcome_reason, closed_at, created_at")
-        .eq("organization_id", org)
-        .in("stage", ["won", "lost"])
-        .gte("closed_at", since),
-      supabase.from("profiles").select("id, full_name").eq("organization_id", org),
-    ]);
+    const dealsRes = await supabase
+      .from("deals")
+      .select("id, title, stage, value, owner_id, outcome_reason, closed_at, created_at")
+      .eq("organization_id", org)
+      .in("stage", ["won", "lost"])
+      .gte("closed_at", since);
     const deals = dealsRes.data ?? [];
-    const profiles = profilesRes.data ?? [];
-    const nameById = new Map(profiles.map((p: any) => [p.id, p.full_name]));
+
+    const ownerIds = Array.from(new Set((deals as any[]).map((d) => d.owner_id).filter(Boolean)));
+    const profilesRes = ownerIds.length
+      ? await supabase.from("profiles").select("id, full_name").in("id", ownerIds)
+      : { data: [] as any[] };
+    const nameById = new Map((profilesRes.data ?? []).map((p: any) => [p.id, p.full_name]));
 
     const won = deals.filter((d: any) => d.stage === "won");
     const lost = deals.filter((d: any) => d.stage === "lost");
