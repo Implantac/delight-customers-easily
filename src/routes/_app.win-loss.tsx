@@ -1,15 +1,18 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { useCurrentOrg } from "@/lib/org";
 import { PageHeader } from "@/components/page-header";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
-import { Trophy, TrendingDown, Clock, Target, AlertTriangle } from "lucide-react";
+import { Trophy, TrendingDown, Clock, Target, AlertTriangle, Sparkles, Loader2, Lightbulb } from "lucide-react";
 import { getWinLossIntel } from "@/lib/winloss.functions";
+import { getWinLossPlan, type WinLossInsight } from "@/lib/winloss-ai.functions";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/win-loss")({ component: WinLossPage });
 
@@ -27,13 +30,27 @@ function WinLossPage() {
     refetchOnWindowFocus: false,
   });
 
+  const planFn = useServerFn(getWinLossPlan);
+  const planMut = useMutation({
+    mutationFn: () => planFn({ data: { organization_id: orgId!, days: 180 } }),
+    onError: (e: any) => toast.error(e?.message ?? "Erro ao gerar plano com IA"),
+  });
+
   return (
     <div className="space-y-6 p-6">
       <PageHeader
         icon={Trophy}
         title="Win/Loss Analysis"
         subtitle="Entenda por que você vende — e por que perde. Últimos 180 dias."
+        action={
+          <Button onClick={() => planMut.mutate()} disabled={planMut.isPending || !orgId} className="gap-2">
+            {planMut.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+            {planMut.isPending ? "Analisando..." : "Análise com IA"}
+          </Button>
+        }
       />
+
+      {planMut.data && <AiPlanCard plan={planMut.data} />}
 
       {isLoading || !data ? (
         <div className="grid gap-4 md:grid-cols-4">
@@ -185,5 +202,67 @@ function WinLossPage() {
         </>
       )}
     </div>
+  );
+}
+
+function AiPlanCard({ plan }: { plan: { resumo: string; maior_alavanca: string; insights: WinLossInsight[]; proximas_acoes: string[]; generated_at: string } }) {
+  const sevColor = (s: string) =>
+    s === "alta" ? "destructive" : s === "media" ? "default" : "secondary";
+  return (
+    <Card className="border-primary/30 bg-gradient-to-br from-primary/5 to-transparent p-5">
+      <div className="flex items-start gap-3">
+        <div className="rounded-lg bg-primary/10 p-2"><Sparkles className="h-5 w-5 text-primary" /></div>
+        <div className="flex-1 space-y-4">
+          <div>
+            <p className="text-sm font-semibold">Análise estratégica com IA</p>
+            <p className="mt-1 text-sm text-muted-foreground">{plan.resumo}</p>
+          </div>
+
+          {plan.maior_alavanca && (
+            <div className="rounded-md border border-amber-500/30 bg-amber-500/5 p-3">
+              <div className="flex items-start gap-2">
+                <Lightbulb className="mt-0.5 h-4 w-4 text-amber-500" />
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wide text-amber-600">Maior alavanca</p>
+                  <p className="mt-0.5 text-sm">{plan.maior_alavanca}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {plan.insights.length > 0 && (
+            <div className="grid gap-3 md:grid-cols-2">
+              {plan.insights.map((i, idx) => (
+                <div key={idx} className="rounded-md border bg-card/50 p-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <p className="text-sm font-medium">{i.titulo}</p>
+                    <Badge variant={sevColor(i.severidade) as any} className="shrink-0 text-[10px] uppercase">{i.severidade}</Badge>
+                  </div>
+                  <p className="mt-1 text-xs text-muted-foreground"><span className="font-medium text-foreground">Evidência:</span> {i.evidencia}</p>
+                  <p className="mt-1 text-xs text-muted-foreground"><span className="font-medium text-foreground">Ação:</span> {i.recomendacao}</p>
+                  <div className="mt-2 flex items-center justify-between text-xs">
+                    <Badge variant="outline" className="text-[10px] capitalize">{i.categoria}</Badge>
+                    <span className="text-muted-foreground">Impacto: {i.impacto_estimado}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {plan.proximas_acoes.length > 0 && (
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Próximas ações</p>
+              <ul className="mt-1 space-y-1 text-sm">
+                {plan.proximas_acoes.map((a, idx) => (
+                  <li key={idx} className="flex gap-2"><span className="text-primary">•</span>{a}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          <p className="text-[10px] text-muted-foreground">Gerado {new Date(plan.generated_at).toLocaleString("pt-BR")}</p>
+        </div>
+      </div>
+    </Card>
   );
 }
