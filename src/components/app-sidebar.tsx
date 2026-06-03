@@ -64,6 +64,7 @@ const primaryNav: NavEntry[] = [
   { to: "/whatsapp",                 label: "WhatsApp",           icon: MessageSquare,   tone: "success" },
   { to: "/site-chat",                label: "Chat do Site",       icon: MessageSquare,   tone: "success" },
   { to: "/campaigns",                label: "Marketing",          icon: Megaphone,       tone: "rose" },
+  { to: "/campaigns/whatsapp",       label: "Campanhas WhatsApp", icon: MessageSquare,   tone: "success" },
   { to: "/influencers",              label: "Influencers",        icon: Sparkles,        tone: "violet" },
   { to: "/geo",                      label: "Geointeligência",    icon: Map,             tone: "info" },
   { to: "/inteligencia-comercial",   label: "IA Comercial",       icon: Sparkles,        tone: "violet" },
