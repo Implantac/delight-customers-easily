@@ -99,7 +99,7 @@ function Customer360Page() {
 
   // Selection state — keyed by company_id (only companies can be acted upon)
   const [selected, setSelected] = useState<Set<string>>(new Set());
-  const [dialog, setDialog] = useState<"activity" | "campaign" | "rep" | null>(null);
+  const [dialog, setDialog] = useState<"activity" | "campaign" | "rep" | "whatsapp" | null>(null);
 
   const q = useQuery({
     queryKey: ["customer-360", orgId, search, segment, sort],
@@ -249,6 +249,9 @@ function Customer360Page() {
             <div className="flex-1" />
             <Button size="sm" variant="outline" onClick={() => setDialog("activity")} className="gap-1.5">
               <CalendarPlus className="h-3.5 w-3.5" /> Criar atividade
+            </Button>
+            <Button size="sm" variant="outline" onClick={() => setDialog("whatsapp")} className="gap-1.5">
+              <MessageSquare className="h-3.5 w-3.5" /> Disparo WhatsApp
             </Button>
             <Button size="sm" variant="outline" onClick={() => setDialog("campaign")} className="gap-1.5">
               <Megaphone className="h-3.5 w-3.5" /> Adicionar à campanha
