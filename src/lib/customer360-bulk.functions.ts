@@ -153,3 +153,69 @@ export const bulkAddCompaniesToCampaign = createServerFn({ method: "POST" })
 
     return { added: fresh.length, skipped: contacts.length - fresh.length };
   });
+
+/**
+ * Cria mensagens em massa na whatsapp_outbox para as empresas selecionadas
+ * (uma mensagem por empresa, usando o phone primário). Respeita janela 24h
+ * apenas como aviso — o envio real é feito pelo worker do canal.
+ * Substitui {name} pelo nome da empresa no template.
+ */
+export const bulkSendWhatsAppToCompanies = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i) =>
+    z
+      .object({
+        organizationId: z.string().uuid(),
+        companyIds: z.array(z.string().uuid()).min(1).max(500),
+        body: z.string().min(1).max(1500),
+        channelId: z.string().uuid().optional(),
+      })
+      .parse(i),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+
+    // Canal: usa o passado ou pega o default ativo da org
+    let channelId = data.channelId;
+    if (!channelId) {
+      const { data: ch } = await supabase
+        .from("whatsapp_channels")
+        .select("id")
+        .eq("organization_id", data.organizationId)
+        .eq("status", "active")
+        .order("is_default", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      channelId = ch?.id;
+    }
+    if (!channelId) {
+      throw new Error("Nenhum canal WhatsApp ativo. Configure em Configurações → WhatsApp.");
+    }
+
+    const { data: companies, error: cErr } = await supabase
+      .from("companies")
+      .select("id, name, phone")
+      .eq("organization_id", data.organizationId)
+      .in("id", data.companyIds);
+    if (cErr) throw new Error(cErr.message);
+
+    const valid = (companies ?? []).filter((c: any) => c.phone && String(c.phone).trim().length >= 8);
+    if (valid.length === 0) {
+      return { queued: 0, skipped: companies?.length ?? 0, reason: "Nenhuma empresa selecionada tem telefone." };
+    }
+
+    const rows = valid.map((c: any) => ({
+      organization_id: data.organizationId,
+      channel_id: channelId,
+      to_phone: String(c.phone).replace(/\D/g, ""),
+      body: data.body.replace(/\{name\}/g, c.name ?? "cliente"),
+    }));
+
+    const { error } = await supabase.from("whatsapp_outbox").insert(rows);
+    if (error) throw new Error(error.message);
+
+    return {
+      queued: rows.length,
+      skipped: (companies?.length ?? 0) - rows.length,
+    };
+  });
