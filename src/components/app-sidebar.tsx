@@ -54,7 +54,7 @@ const primaryNav: NavEntry[] = [
   { to: "/gestao-visao-global",      label: "Visão Global",       icon: Map,             tone: "violet", managerOnly: true },
   { to: "/carteira",                 label: "Carteira Comercial", icon: Briefcase,       tone: "info" },
   { to: "/leads",                    label: "Leads",              icon: Flame,           tone: "accent" },
-  { to: "/leads-pipeline",           label: "Pipeline de Leads",  icon: GitBranch,       tone: "accent" },
+  { to: "/pipeline",           label: "Pipeline de Leads",  icon: GitBranch,       tone: "accent" },
   { to: "/contacts",                 label: "Clientes",           icon: Users,           tone: "info" },
   { to: "/customer-360",             label: "Customer 360",       icon: Sparkles,        tone: "violet" },
   { to: "/oportunidades",            label: "Oportunidades",      icon: Target,          tone: "accent" },
@@ -78,9 +78,8 @@ const adminNav: NavEntry[] = [
   { to: "/automacoes",               label: "Automações",         icon: Zap,             tone: "accent", managerOnly: true },
   { to: "/integrations",             label: "Integrações ERP",    icon: Plug,            tone: "primary", managerOnly: true },
   { to: "/companies",                label: "Empresas",           icon: Building,        tone: "primary" },
-  { to: "/settings/organization",    label: "Usuários",           icon: Users,           tone: "primary", managerOnly: true },
   { to: "/settings/briefing",        label: "Briefing diário",    icon: Sun,             tone: "primary" },
-  { to: "/settings/organization",    label: "Configurações",      icon: Settings,        tone: "primary" },
+  { to: "/settings/organization",    label: "Configurações",      icon: Settings,        tone: "primary", managerOnly: true },
 ];
 
 export function AppSidebar() {

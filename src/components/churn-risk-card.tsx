@@ -44,7 +44,7 @@ export function ChurnRiskCard() {
           <h3 className="font-semibold">Risco de churn</h3>
         </div>
         <Button asChild size="sm" variant="ghost">
-          <Link to="/ia-comercial">
+          <Link to="/inteligencia-comercial">
             Ver tudo <ArrowRight className="ml-1 h-3 w-3" />
           </Link>
         </Button>
