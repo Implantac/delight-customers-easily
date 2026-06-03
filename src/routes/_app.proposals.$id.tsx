@@ -137,7 +137,27 @@ function ProposalDetail() {
               navigator.clipboard.writeText(url).then(() => toast.success("Link público copiado"));
             }}><Link2 className="mr-1 h-4 w-4" />Copiar link público</Button>
           )}
-          <Button variant="outline" onClick={() => window.print()}><Printer className="mr-1 h-4 w-4" />Imprimir / PDF</Button>
+          <Button variant="outline" onClick={() => window.print()}><Printer className="mr-1 h-4 w-4" />Imprimir</Button>
+          <Button variant="outline" onClick={() => {
+            downloadProposalPdf({
+              orgName: p.companies?.name ? undefined : undefined,
+              proposalTitle: draft.title || "Proposta",
+              proposalNumber: p.number ?? null,
+              status: draft.status,
+              validUntil: draft.valid_until,
+              customerName: p.companies?.name ?? p.contacts?.name ?? null,
+              notes: draft.notes,
+              items: (data.items ?? []).map((it: any) => ({
+                description: it.description,
+                quantity: Number(it.quantity),
+                unit_price: Number(it.unit_price),
+                discount_percent: Number(it.discount_percent ?? 0),
+              })),
+              subtotal: Number(p.subtotal ?? 0),
+              discountPercent: Number(draft.discount_percent ?? 0),
+              total: Number(p.total ?? 0),
+            });
+          }}><FileDown className="mr-1 h-4 w-4" />Baixar PDF</Button>
           <Button variant="outline" onClick={removeProposal}><Trash2 className="mr-1 h-4 w-4" />Excluir</Button>
           <Button onClick={save}><Save className="mr-1 h-4 w-4" />Salvar</Button>
         </div>
