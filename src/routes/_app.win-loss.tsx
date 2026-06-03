@@ -42,7 +42,7 @@ function WinLossPage() {
         icon={Trophy}
         title="Win/Loss Analysis"
         subtitle="Entenda por que você vende — e por que perde. Últimos 180 dias."
-        actions={
+        action={
           <Button onClick={() => planMut.mutate()} disabled={planMut.isPending || !orgId} className="gap-2">
             {planMut.isPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
             {planMut.isPending ? "Analisando..." : "Análise com IA"}
