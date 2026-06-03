@@ -39,6 +39,64 @@ const ACTION_LABELS: Record<string, string> = {
   suggest_visit: "Sugerir visita",
 };
 
+type Recipe = {
+  id: string;
+  name: string;
+  description: string;
+  trigger_type: string;
+  threshold: number | null;
+  actions: { type: string; template?: string }[];
+};
+
+const RECIPES: Recipe[] = [
+  {
+    id: "reativar-60d",
+    name: "Reativar cliente parado (60 dias)",
+    description: "Cria tarefa para o representante e sugere mensagem no WhatsApp.",
+    trigger_type: "no_purchase_days",
+    threshold: 60,
+    actions: [
+      { type: "create_task", template: "Reativar {name} — sem compra há 60 dias" },
+      { type: "send_whatsapp", template: "Olá {name}, faz um tempo! Posso te mostrar o que chegou de novo?" },
+    ],
+  },
+  {
+    id: "churn-alto",
+    name: "Risco de churn alto",
+    description: "Notifica o app e cria tarefa quando o score de churn passa de 70.",
+    trigger_type: "churn_risk_high",
+    threshold: 70,
+    actions: [
+      { type: "create_notification", template: "{name} está com alto risco de churn" },
+      { type: "create_task", template: "Ligar para {name} — risco de churn" },
+    ],
+  },
+  {
+    id: "potencial-sem-visita",
+    name: "Alto potencial sem visita (30 dias)",
+    description: "Sugere visita ao representante responsável.",
+    trigger_type: "high_potential_no_visit",
+    threshold: 30,
+    actions: [{ type: "suggest_visit", template: "Visitar {name} — alto potencial" }],
+  },
+  {
+    id: "aniversario",
+    name: "Aniversário do contato",
+    description: "Mensagem automática de aniversário no WhatsApp.",
+    trigger_type: "birthday",
+    threshold: null,
+    actions: [{ type: "send_whatsapp", template: "Feliz aniversário, {name}! 🎉" }],
+  },
+  {
+    id: "lead-novo",
+    name: "Lead novo sem contato em 1 dia",
+    description: "Cria tarefa urgente para o vendedor responder rápido.",
+    trigger_type: "new_lead_no_contact",
+    threshold: 1,
+    actions: [{ type: "create_task", template: "Responder lead {name} (SLA 24h)" }],
+  },
+];
+
 function AutomationsPage() {
   const { orgId } = useCurrentOrg();
   const qc = useQueryClient();
