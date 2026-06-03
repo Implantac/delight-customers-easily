@@ -130,6 +130,7 @@ import { Route as AppIntegrationsAgentRouteImport } from './routes/_app.integrat
 import { Route as AppIntegrationsAdvancedRouteImport } from './routes/_app.integrations.advanced'
 import { Route as AppContactsIdRouteImport } from './routes/_app.contacts.$id'
 import { Route as AppCompaniesIdRouteImport } from './routes/_app.companies.$id'
+import { Route as AppCampaignsWhatsappRouteImport } from './routes/_app.campaigns.whatsapp'
 import { Route as ApiPublicHooksWhatsappOutboxTickRouteImport } from './routes/api/public/hooks/whatsapp-outbox-tick'
 import { Route as ApiPublicHooksSequenceTickRouteImport } from './routes/api/public/hooks/sequence-tick'
 import { Route as ApiPublicHooksRefreshRecommendationsRouteImport } from './routes/api/public/hooks/refresh-recommendations'
@@ -767,6 +768,11 @@ const AppCompaniesIdRoute = AppCompaniesIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AppCompaniesRoute,
 } as any)
+const AppCampaignsWhatsappRoute = AppCampaignsWhatsappRouteImport.update({
+  id: '/whatsapp',
+  path: '/whatsapp',
+  getParentRoute: () => AppCampaignsRoute,
+} as any)
 const ApiPublicHooksWhatsappOutboxTickRoute =
   ApiPublicHooksWhatsappOutboxTickRouteImport.update({
     id: '/api/public/hooks/whatsapp-outbox-tick',
@@ -905,7 +911,7 @@ export interface FileRoutesByFullPath {
   '/automacoes': typeof AppAutomacoesRoute
   '/benchmark': typeof AppBenchmarkRoute
   '/calendar': typeof AppCalendarRoute
-  '/campaigns': typeof AppCampaignsRoute
+  '/campaigns': typeof AppCampaignsRouteWithChildren
   '/carteira': typeof AppCarteiraRoute
   '/chat': typeof AppChatRoute
   '/coaching': typeof AppCoachingRoute
@@ -977,6 +983,7 @@ export interface FileRoutesByFullPath {
   '/whatsapp': typeof AppWhatsappRoute
   '/win-loss': typeof AppWinLossRoute
   '/p/$token': typeof PTokenRoute
+  '/campaigns/whatsapp': typeof AppCampaignsWhatsappRoute
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
   '/integrations/advanced': typeof AppIntegrationsAdvancedRoute
@@ -1049,7 +1056,7 @@ export interface FileRoutesByTo {
   '/automacoes': typeof AppAutomacoesRoute
   '/benchmark': typeof AppBenchmarkRoute
   '/calendar': typeof AppCalendarRoute
-  '/campaigns': typeof AppCampaignsRoute
+  '/campaigns': typeof AppCampaignsRouteWithChildren
   '/carteira': typeof AppCarteiraRoute
   '/chat': typeof AppChatRoute
   '/coaching': typeof AppCoachingRoute
@@ -1121,6 +1128,7 @@ export interface FileRoutesByTo {
   '/whatsapp': typeof AppWhatsappRoute
   '/win-loss': typeof AppWinLossRoute
   '/p/$token': typeof PTokenRoute
+  '/campaigns/whatsapp': typeof AppCampaignsWhatsappRoute
   '/companies/$id': typeof AppCompaniesIdRoute
   '/contacts/$id': typeof AppContactsIdRoute
   '/integrations/advanced': typeof AppIntegrationsAdvancedRoute
@@ -1195,7 +1203,7 @@ export interface FileRoutesById {
   '/_app/automacoes': typeof AppAutomacoesRoute
   '/_app/benchmark': typeof AppBenchmarkRoute
   '/_app/calendar': typeof AppCalendarRoute
-  '/_app/campaigns': typeof AppCampaignsRoute
+  '/_app/campaigns': typeof AppCampaignsRouteWithChildren
   '/_app/carteira': typeof AppCarteiraRoute
   '/_app/chat': typeof AppChatRoute
   '/_app/coaching': typeof AppCoachingRoute
@@ -1267,6 +1275,7 @@ export interface FileRoutesById {
   '/_app/whatsapp': typeof AppWhatsappRoute
   '/_app/win-loss': typeof AppWinLossRoute
   '/p/$token': typeof PTokenRoute
+  '/_app/campaigns/whatsapp': typeof AppCampaignsWhatsappRoute
   '/_app/companies/$id': typeof AppCompaniesIdRoute
   '/_app/contacts/$id': typeof AppContactsIdRoute
   '/_app/integrations/advanced': typeof AppIntegrationsAdvancedRoute
@@ -1413,6 +1422,7 @@ export interface FileRouteTypes {
     | '/whatsapp'
     | '/win-loss'
     | '/p/$token'
+    | '/campaigns/whatsapp'
     | '/companies/$id'
     | '/contacts/$id'
     | '/integrations/advanced'
@@ -1557,6 +1567,7 @@ export interface FileRouteTypes {
     | '/whatsapp'
     | '/win-loss'
     | '/p/$token'
+    | '/campaigns/whatsapp'
     | '/companies/$id'
     | '/contacts/$id'
     | '/integrations/advanced'
@@ -1702,6 +1713,7 @@ export interface FileRouteTypes {
     | '/_app/whatsapp'
     | '/_app/win-loss'
     | '/p/$token'
+    | '/_app/campaigns/whatsapp'
     | '/_app/companies/$id'
     | '/_app/contacts/$id'
     | '/_app/integrations/advanced'
@@ -2648,6 +2660,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCompaniesIdRouteImport
       parentRoute: typeof AppCompaniesRoute
     }
+    '/_app/campaigns/whatsapp': {
+      id: '/_app/campaigns/whatsapp'
+      path: '/whatsapp'
+      fullPath: '/campaigns/whatsapp'
+      preLoaderRoute: typeof AppCampaignsWhatsappRouteImport
+      parentRoute: typeof AppCampaignsRoute
+    }
     '/api/public/hooks/whatsapp-outbox-tick': {
       id: '/api/public/hooks/whatsapp-outbox-tick'
       path: '/api/public/hooks/whatsapp-outbox-tick'
@@ -2804,6 +2823,18 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AppCampaignsRouteChildren {
+  AppCampaignsWhatsappRoute: typeof AppCampaignsWhatsappRoute
+}
+
+const AppCampaignsRouteChildren: AppCampaignsRouteChildren = {
+  AppCampaignsWhatsappRoute: AppCampaignsWhatsappRoute,
+}
+
+const AppCampaignsRouteWithChildren = AppCampaignsRoute._addFileChildren(
+  AppCampaignsRouteChildren,
+)
 
 interface AppCompaniesRouteChildren {
   AppCompaniesIdRoute: typeof AppCompaniesIdRoute
@@ -2997,7 +3028,7 @@ interface AppRouteChildren {
   AppAutomacoesRoute: typeof AppAutomacoesRoute
   AppBenchmarkRoute: typeof AppBenchmarkRoute
   AppCalendarRoute: typeof AppCalendarRoute
-  AppCampaignsRoute: typeof AppCampaignsRoute
+  AppCampaignsRoute: typeof AppCampaignsRouteWithChildren
   AppCarteiraRoute: typeof AppCarteiraRoute
   AppChatRoute: typeof AppChatRoute
   AppCoachingRoute: typeof AppCoachingRoute
@@ -3088,7 +3119,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppAutomacoesRoute: AppAutomacoesRoute,
   AppBenchmarkRoute: AppBenchmarkRoute,
   AppCalendarRoute: AppCalendarRoute,
-  AppCampaignsRoute: AppCampaignsRoute,
+  AppCampaignsRoute: AppCampaignsRouteWithChildren,
   AppCarteiraRoute: AppCarteiraRoute,
   AppChatRoute: AppChatRoute,
   AppCoachingRoute: AppCoachingRoute,
