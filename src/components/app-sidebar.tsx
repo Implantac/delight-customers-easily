@@ -78,9 +78,8 @@ const adminNav: NavEntry[] = [
   { to: "/automacoes",               label: "Automações",         icon: Zap,             tone: "accent", managerOnly: true },
   { to: "/integrations",             label: "Integrações ERP",    icon: Plug,            tone: "primary", managerOnly: true },
   { to: "/companies",                label: "Empresas",           icon: Building,        tone: "primary" },
-  { to: "/settings/organization",    label: "Usuários",           icon: Users,           tone: "primary", managerOnly: true },
   { to: "/settings/briefing",        label: "Briefing diário",    icon: Sun,             tone: "primary" },
-  { to: "/settings/organization",    label: "Configurações",      icon: Settings,        tone: "primary" },
+  { to: "/settings/organization",    label: "Configurações",      icon: Settings,        tone: "primary", managerOnly: true },
 ];
 
 export function AppSidebar() {
