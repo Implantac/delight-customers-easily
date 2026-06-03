@@ -4,7 +4,10 @@ import {
   LayoutDashboard, Users, Briefcase, Check, ChevronsUpDown,
   LogOut, Settings, Upload, BarChart3, Sliders, Webhook, Zap, Sparkles,
   Target, Map, Megaphone, MessageSquare, ShieldCheck, Route as RouteIcon, GitBranch,
-  Flame, Calendar as CalendarIcon, Award, Plug, Building, Rocket, Sun, type LucideIcon,
+  Flame, Calendar as CalendarIcon, Award, Plug, Building, Rocket, Sun,
+  Sun as SunIcon, ListChecks, CheckSquare, TrendingUp, Trophy, Repeat, DollarSign,
+  Goal, GraduationCap, Workflow, FileInput, LineChart, Compass, MessagesSquare,
+  Network, type LucideIcon,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import { useCurrentOrg, switchOrganization } from "@/lib/org";
