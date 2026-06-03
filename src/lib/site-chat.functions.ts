@@ -151,20 +151,23 @@ export const convertSiteChatToLead = createServerFn({ method: "POST" })
     if (s.lead_id) return { ok: true, lead_id: s.lead_id, already: true };
 
     const { data: lead, error: e2 } = await context.supabase
-      .from("leads")
+      .from("marketing_leads")
       .insert({
         organization_id: s.organization_id,
+        channel: "site_chat",
+        source: "widget",
         name: s.visitor_name || s.visitor_email || "Visitante do site",
         email: s.visitor_email,
         phone: s.visitor_phone,
-        source: "site_chat",
-        notes: s.page_url ? `Origem: ${s.page_url}` : null,
-        user_id: context.userId,
+        message: s.page_url ? `Origem: ${s.page_url}` : null,
+        payload: { session_id: s.id, page_url: s.page_url },
+        status: "new",
       })
       .select("id")
       .single();
     if (e2) throw new Error(e2.message);
 
-    await context.supabase.from("site_chat_sessions").update({ lead_id: lead.id }).eq("id", s.id);
-    return { ok: true, lead_id: lead.id };
+    const leadId = (lead as { id: string }).id;
+    await context.supabase.from("site_chat_sessions").update({ lead_id: leadId }).eq("id", s.id);
+    return { ok: true, lead_id: leadId };
   });
