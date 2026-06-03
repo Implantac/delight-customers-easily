@@ -47,6 +47,7 @@ import { Route as AppOpportunityMapRouteImport } from './routes/_app.opportunity
 import { Route as AppOportunidadesRouteImport } from './routes/_app.oportunidades'
 import { Route as AppOnboardingRouteImport } from './routes/_app.onboarding'
 import { Route as AppNotificationsRouteImport } from './routes/_app.notifications'
+import { Route as AppNbaRouteImport } from './routes/_app.nba'
 import { Route as AppMytasksRouteImport } from './routes/_app.mytasks'
 import { Route as AppMultiEmpresaRouteImport } from './routes/_app.multi-empresa'
 import { Route as AppMeuDiaRouteImport } from './routes/_app.meu-dia'
@@ -339,6 +340,11 @@ const AppOnboardingRoute = AppOnboardingRouteImport.update({
 const AppNotificationsRoute = AppNotificationsRouteImport.update({
   id: '/notifications',
   path: '/notifications',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppNbaRoute = AppNbaRouteImport.update({
+  id: '/nba',
+  path: '/nba',
   getParentRoute: () => AppRoute,
 } as any)
 const AppMytasksRoute = AppMytasksRouteImport.update({
@@ -935,6 +941,7 @@ export interface FileRoutesByFullPath {
   '/meu-dia': typeof AppMeuDiaRoute
   '/multi-empresa': typeof AppMultiEmpresaRouteWithChildren
   '/mytasks': typeof AppMytasksRoute
+  '/nba': typeof AppNbaRoute
   '/notifications': typeof AppNotificationsRoute
   '/onboarding': typeof AppOnboardingRoute
   '/oportunidades': typeof AppOportunidadesRoute
@@ -1078,6 +1085,7 @@ export interface FileRoutesByTo {
   '/meu-dia': typeof AppMeuDiaRoute
   '/multi-empresa': typeof AppMultiEmpresaRouteWithChildren
   '/mytasks': typeof AppMytasksRoute
+  '/nba': typeof AppNbaRoute
   '/notifications': typeof AppNotificationsRoute
   '/onboarding': typeof AppOnboardingRoute
   '/oportunidades': typeof AppOportunidadesRoute
@@ -1223,6 +1231,7 @@ export interface FileRoutesById {
   '/_app/meu-dia': typeof AppMeuDiaRoute
   '/_app/multi-empresa': typeof AppMultiEmpresaRouteWithChildren
   '/_app/mytasks': typeof AppMytasksRoute
+  '/_app/nba': typeof AppNbaRoute
   '/_app/notifications': typeof AppNotificationsRoute
   '/_app/onboarding': typeof AppOnboardingRoute
   '/_app/oportunidades': typeof AppOportunidadesRoute
@@ -1368,6 +1377,7 @@ export interface FileRouteTypes {
     | '/meu-dia'
     | '/multi-empresa'
     | '/mytasks'
+    | '/nba'
     | '/notifications'
     | '/onboarding'
     | '/oportunidades'
@@ -1511,6 +1521,7 @@ export interface FileRouteTypes {
     | '/meu-dia'
     | '/multi-empresa'
     | '/mytasks'
+    | '/nba'
     | '/notifications'
     | '/onboarding'
     | '/oportunidades'
@@ -1655,6 +1666,7 @@ export interface FileRouteTypes {
     | '/_app/meu-dia'
     | '/_app/multi-empresa'
     | '/_app/mytasks'
+    | '/_app/nba'
     | '/_app/notifications'
     | '/_app/onboarding'
     | '/_app/oportunidades'
@@ -2053,6 +2065,13 @@ declare module '@tanstack/react-router' {
       path: '/notifications'
       fullPath: '/notifications'
       preLoaderRoute: typeof AppNotificationsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/nba': {
+      id: '/_app/nba'
+      path: '/nba'
+      fullPath: '/nba'
+      preLoaderRoute: typeof AppNbaRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/mytasks': {
@@ -3014,6 +3033,7 @@ interface AppRouteChildren {
   AppMeuDiaRoute: typeof AppMeuDiaRoute
   AppMultiEmpresaRoute: typeof AppMultiEmpresaRouteWithChildren
   AppMytasksRoute: typeof AppMytasksRoute
+  AppNbaRoute: typeof AppNbaRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppOnboardingRoute: typeof AppOnboardingRoute
   AppOportunidadesRoute: typeof AppOportunidadesRoute
@@ -3104,6 +3124,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppMeuDiaRoute: AppMeuDiaRoute,
   AppMultiEmpresaRoute: AppMultiEmpresaRouteWithChildren,
   AppMytasksRoute: AppMytasksRoute,
+  AppNbaRoute: AppNbaRoute,
   AppNotificationsRoute: AppNotificationsRoute,
   AppOnboardingRoute: AppOnboardingRoute,
   AppOportunidadesRoute: AppOportunidadesRoute,
