@@ -1,15 +1,18 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { useCurrentOrg } from "@/lib/org";
 import { PageHeader } from "@/components/page-header";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
-import { Trophy, TrendingDown, Clock, Target, AlertTriangle } from "lucide-react";
+import { Trophy, TrendingDown, Clock, Target, AlertTriangle, Sparkles, Loader2, Lightbulb } from "lucide-react";
 import { getWinLossIntel } from "@/lib/winloss.functions";
+import { getWinLossPlan, type WinLossInsight } from "@/lib/winloss-ai.functions";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/win-loss")({ component: WinLossPage });
 
@@ -25,6 +28,12 @@ function WinLossPage() {
     enabled: !!orgId,
     queryFn: () => call({ data: { organization_id: orgId!, days: 180 } }),
     refetchOnWindowFocus: false,
+  });
+
+  const planFn = useServerFn(getWinLossPlan);
+  const planMut = useMutation({
+    mutationFn: () => planFn({ data: { organization_id: orgId!, days: 180 } }),
+    onError: (e: any) => toast.error(e?.message ?? "Erro ao gerar plano com IA"),
   });
 
   return (
