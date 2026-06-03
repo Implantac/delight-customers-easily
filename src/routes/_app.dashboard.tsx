@@ -16,6 +16,7 @@ import { BusinessHealthCard } from "@/components/business-health-card";
 import { OnboardingChecklist } from "@/components/onboarding-checklist";
 import { Customer360Mini } from "@/components/customer-360-mini";
 import { ChurnRiskCard } from "@/components/churn-risk-card";
+import { ProductTour } from "@/components/product-tour";
 import { useCurrentOrg } from "@/lib/org";
 import { getForecast } from "@/lib/forecast.functions";
 import { getRetentionInsights } from "@/lib/churn.functions";
