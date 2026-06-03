@@ -149,5 +149,12 @@ export const getWhatsAppCampaignMetrics = createServerFn({ method: "POST" })
     const successRate = buckets.sent + buckets.failed > 0
       ? buckets.sent / (buckets.sent + buckets.failed)
       : null;
-    return { total, ...buckets, successRate };
+    return {
+      total,
+      pending: buckets.pending,
+      sent: buckets.sent,
+      failed: buckets.failed,
+      scheduled: buckets.scheduled,
+      successRate,
+    };
   });
