@@ -74,6 +74,16 @@ function fmtDate(d?: string | null) {
   return new Date(d).toLocaleDateString("pt-BR");
 }
 
+const NBA_BY_SEGMENT: Record<string, { label: string; cls: string }> = {
+  campeoes: { label: "Oferecer upsell", cls: "bg-emerald-500/10 text-emerald-700 border-emerald-500/30" },
+  fieis: { label: "Cross-sell", cls: "bg-blue-500/10 text-blue-700 border-blue-500/30" },
+  potencial: { label: "Agendar visita", cls: "bg-violet-500/10 text-violet-700 border-violet-500/30" },
+  novos: { label: "Follow-up", cls: "bg-cyan-500/10 text-cyan-700 border-cyan-500/30" },
+  em_risco: { label: "Ligar hoje", cls: "bg-amber-500/15 text-amber-700 border-amber-500/40" },
+  hibernando: { label: "Reativar c/ cupom", cls: "bg-orange-500/15 text-orange-700 border-orange-500/40" },
+  perdidos: { label: "Win-back", cls: "bg-red-500/15 text-red-700 border-red-500/40" },
+};
+
 function Customer360Page() {
   const { orgId } = useCurrentOrg();
   const canManage = useCanManage();
@@ -308,6 +318,11 @@ function Customer360Page() {
                           <span className="font-medium truncate">{c.display_name ?? "Sem nome"}</span>
                           {c.rfm_segment && (
                             <Badge variant="outline" className={segCls}>{segLbl}</Badge>
+                          )}
+                          {NBA_BY_SEGMENT[c.rfm_segment] && (
+                            <Badge variant="outline" className={NBA_BY_SEGMENT[c.rfm_segment].cls} title="Próxima melhor ação sugerida">
+                              ⚡ {NBA_BY_SEGMENT[c.rfm_segment].label}
+                            </Badge>
                           )}
                           <span className={`inline-flex items-center gap-0.5 text-xs ${trendCls}`}>
                             <TrendIcon className="h-3 w-3" />

@@ -130,7 +130,11 @@ function HealthCenterPage() {
       down = 0,
       pending = 0,
       failed = 0,
-      conflictsOpen = 0;
+      conflictsOpen = 0,
+      stale = 0;
+    const STALE_MS = 24 * 60 * 60 * 1000;
+    const now = Date.now();
+    const staleList: typeof items = [];
     for (const i of items) {
       if (i.health_status === "healthy") healthy++;
       else if (i.health_status === "degraded") degraded++;
@@ -138,8 +142,15 @@ function HealthCenterPage() {
       pending += i.pending_jobs ?? 0;
       failed += i.failed_jobs ?? 0;
       conflictsOpen += i.open_conflicts ?? 0;
+      if (i.is_active) {
+        const last = i.last_sync_at ? new Date(i.last_sync_at).getTime() : 0;
+        if (!last || now - last > STALE_MS) {
+          stale++;
+          staleList.push(i);
+        }
+      }
     }
-    return { healthy, degraded, down, pending, failed, conflictsOpen };
+    return { healthy, degraded, down, pending, failed, conflictsOpen, stale, staleList };
   }, [items]);
 
   return (
@@ -161,6 +172,33 @@ function HealthCenterPage() {
           </Button>
         }
       />
+
+      {summary.stale > 0 && (
+        <Card className="border-amber-500/40 bg-amber-500/5">
+          <CardContent className="p-4 flex items-start gap-3">
+            <AlertTriangle className="h-5 w-5 text-amber-600 mt-0.5 shrink-0" />
+            <div className="flex-1 min-w-0">
+              <div className="text-sm font-medium text-amber-700">
+                {summary.stale} integração(ões) sem sincronizar há mais de 24h
+              </div>
+              <div className="text-xs text-muted-foreground mt-0.5 truncate">
+                {summary.staleList.map((i) => i.provider).join(", ")}
+              </div>
+            </div>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => {
+                summary.staleList.forEach((i) => retryMut.mutate(i.integration_id));
+              }}
+              disabled={retryMut.isPending}
+            >
+              <RefreshCw className={`h-3.5 w-3.5 mr-1 ${retryMut.isPending ? "animate-spin" : ""}`} />
+              Re-sincronizar todas
+            </Button>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Resumo */}
       <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
