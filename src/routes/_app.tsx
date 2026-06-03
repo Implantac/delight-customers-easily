@@ -10,6 +10,7 @@ import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 import { ShortcutsHelp } from "@/components/shortcuts-help";
 import { PwaInstallBanner } from "@/components/pwa-install-banner";
 import { useGoToShortcuts } from "@/hooks/use-shortcuts";
+import { useNotificationsRealtime } from "@/lib/use-notifications-realtime";
 
 export const Route = createFileRoute("/_app")({ component: AppLayout });
 
@@ -17,6 +18,7 @@ function AppLayout() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
   useGoToShortcuts();
+  useNotificationsRealtime();
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login", replace: true });

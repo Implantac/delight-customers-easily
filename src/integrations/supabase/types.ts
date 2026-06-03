@@ -6340,6 +6340,88 @@ export type Database = {
           },
         ]
       }
+      notification_preferences: {
+        Row: {
+          browser_enabled: boolean
+          created_at: string
+          dnd_end: string | null
+          dnd_start: string | null
+          id: string
+          mute_types: string[]
+          organization_id: string
+          sound_enabled: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          browser_enabled?: boolean
+          created_at?: string
+          dnd_end?: string | null
+          dnd_start?: string | null
+          id?: string
+          mute_types?: string[]
+          organization_id: string
+          sound_enabled?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          browser_enabled?: boolean
+          created_at?: string
+          dnd_end?: string | null
+          dnd_start?: string | null
+          id?: string
+          mute_types?: string[]
+          organization_id?: string
+          sound_enabled?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_preferences_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["branch_org_id"]
+          },
+          {
+            foreignKeyName: "notification_preferences_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "notification_preferences_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "notification_preferences_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "notification_preferences_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "notification_preferences_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notifications: {
         Row: {
           body: string | null

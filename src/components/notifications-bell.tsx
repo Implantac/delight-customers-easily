@@ -1,11 +1,11 @@
-import { Bell, Check } from "lucide-react";
+import { Bell, Check, Settings as SettingsIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useNotifications, markAllRead, markRead } from "@/lib/notifications";
 import { useAuth } from "@/lib/auth";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, Link } from "@tanstack/react-router";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -30,11 +30,16 @@ export function NotificationsBell() {
       <PopoverContent align="end" className="w-80 p-0">
         <div className="flex items-center justify-between p-3 border-b">
           <p className="text-sm font-medium">Notificações</p>
-          {unread > 0 && user && (
-            <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={async () => { await markAllRead(user.id); }}>
-              <Check className="h-3 w-3 mr-1" />Marcar todas
+          <div className="flex items-center gap-1">
+            {unread > 0 && user && (
+              <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={async () => { await markAllRead(user.id); }}>
+                <Check className="h-3 w-3 mr-1" />Marcar todas
+              </Button>
+            )}
+            <Button variant="ghost" size="icon" className="h-7 w-7" asChild title="Preferências">
+              <Link to="/settings/notifications"><SettingsIcon className="h-3.5 w-3.5" /></Link>
             </Button>
-          )}
+          </div>
         </div>
         <ScrollArea className="max-h-96">
           {items.length === 0 ? (
