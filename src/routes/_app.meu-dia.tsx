@@ -146,6 +146,42 @@ function MyDayPage() {
             <Button
               variant="outline"
               size="default"
+              onClick={async () => {
+                if (!orgId || !user?.id) return;
+                const { data: visits } = await supabase
+                  .from("activities")
+                  .select("title, due_date, notes, latitude, longitude, contacts(name), companies(name)")
+                  .eq("organization_id", orgId)
+                  .eq("user_id", user.id)
+                  .eq("type", "visit")
+                  .gte("due_date", startOfDay().toISOString())
+                  .lte("due_date", endOfDay().toISOString())
+                  .order("due_date");
+                const list = (visits ?? []) as any[];
+                if (list.length === 0) {
+                  toast.info("Sem visitas registradas hoje");
+                  return;
+                }
+                downloadVisitReportPdf({
+                  repName: (user.user_metadata as any)?.full_name ?? user.email ?? null,
+                  periodLabel: new Date().toLocaleDateString("pt-BR"),
+                  visits: list.map((v) => ({
+                    title: v.title,
+                    when: v.due_date,
+                    contactName: v.contacts?.name ?? null,
+                    companyName: v.companies?.name ?? null,
+                    latitude: v.latitude,
+                    longitude: v.longitude,
+                    notes: v.notes,
+                  })),
+                });
+              }}
+            >
+              <FileDown className="h-4 w-4 mr-1" /> Relatório de visitas
+            </Button>
+            <Button
+              variant="outline"
+              size="default"
               onClick={() => genAgenda.mutate()}
               disabled={genAgenda.isPending || !orgId}
             >
