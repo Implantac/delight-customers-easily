@@ -24,6 +24,7 @@ import { Route as AppTemplatesRouteImport } from './routes/_app.templates'
 import { Route as AppTagsRouteImport } from './routes/_app.tags'
 import { Route as AppSurveysRouteImport } from './routes/_app.surveys'
 import { Route as AppSubscriptionsRouteImport } from './routes/_app.subscriptions'
+import { Route as AppSiteChatRouteImport } from './routes/_app.site-chat'
 import { Route as AppSignaturesRouteImport } from './routes/_app.signatures'
 import { Route as AppSetupWizardRouteImport } from './routes/_app.setup-wizard'
 import { Route as AppSequencesRouteImport } from './routes/_app.sequences'
@@ -88,12 +89,15 @@ import { Route as AppAutomacoesRouteImport } from './routes/_app.automacoes'
 import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
 import { Route as AppActivitiesRouteImport } from './routes/_app.activities'
 import { Route as IOrgSlugRouteImport } from './routes/i.$org.$slug'
+import { Route as ApiPublicSiteChatWidgetDotjsRouteImport } from './routes/api/public/site-chat-widget[.]js'
+import { Route as ApiPublicSiteChatRouteImport } from './routes/api/public/site-chat'
 import { Route as ApiPublicLeadFormRouteImport } from './routes/api/public/lead-form'
 import { Route as ApiPublicInfluencerVisitRouteImport } from './routes/api/public/influencer-visit'
 import { Route as ApiPublicInboundEmailRouteImport } from './routes/api/public/inbound-email'
 import { Route as AppTicketsIdRouteImport } from './routes/_app.tickets.$id'
 import { Route as AppSettingsWhatsappRouteImport } from './routes/_app.settings.whatsapp'
 import { Route as AppSettingsWebhooksRouteImport } from './routes/_app.settings.webhooks'
+import { Route as AppSettingsSiteChatRouteImport } from './routes/_app.settings.site-chat'
 import { Route as AppSettingsSecurityRouteImport } from './routes/_app.settings.security'
 import { Route as AppSettingsOrganizationRouteImport } from './routes/_app.settings.organization'
 import { Route as AppSettingsImportRouteImport } from './routes/_app.settings.import'
@@ -219,6 +223,11 @@ const AppSurveysRoute = AppSurveysRouteImport.update({
 const AppSubscriptionsRoute = AppSubscriptionsRouteImport.update({
   id: '/subscriptions',
   path: '/subscriptions',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSiteChatRoute = AppSiteChatRouteImport.update({
+  id: '/site-chat',
+  path: '/site-chat',
   getParentRoute: () => AppRoute,
 } as any)
 const AppSignaturesRoute = AppSignaturesRouteImport.update({
@@ -542,6 +551,17 @@ const IOrgSlugRoute = IOrgSlugRouteImport.update({
   path: '/i/$org/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicSiteChatWidgetDotjsRoute =
+  ApiPublicSiteChatWidgetDotjsRouteImport.update({
+    id: '/api/public/site-chat-widget.js',
+    path: '/api/public/site-chat-widget.js',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicSiteChatRoute = ApiPublicSiteChatRouteImport.update({
+  id: '/api/public/site-chat',
+  path: '/api/public/site-chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicLeadFormRoute = ApiPublicLeadFormRouteImport.update({
   id: '/api/public/lead-form',
   path: '/api/public/lead-form',
@@ -571,6 +591,11 @@ const AppSettingsWhatsappRoute = AppSettingsWhatsappRouteImport.update({
 const AppSettingsWebhooksRoute = AppSettingsWebhooksRouteImport.update({
   id: '/settings/webhooks',
   path: '/settings/webhooks',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsSiteChatRoute = AppSettingsSiteChatRouteImport.update({
+  id: '/settings/site-chat',
+  path: '/settings/site-chat',
   getParentRoute: () => AppRoute,
 } as any)
 const AppSettingsSecurityRoute = AppSettingsSecurityRouteImport.update({
@@ -925,6 +950,7 @@ export interface FileRoutesByFullPath {
   '/sequences': typeof AppSequencesRouteWithChildren
   '/setup-wizard': typeof AppSetupWizardRoute
   '/signatures': typeof AppSignaturesRoute
+  '/site-chat': typeof AppSiteChatRoute
   '/subscriptions': typeof AppSubscriptionsRoute
   '/surveys': typeof AppSurveysRoute
   '/tags': typeof AppTagsRoute
@@ -967,12 +993,15 @@ export interface FileRoutesByFullPath {
   '/settings/import': typeof AppSettingsImportRoute
   '/settings/organization': typeof AppSettingsOrganizationRoute
   '/settings/security': typeof AppSettingsSecurityRoute
+  '/settings/site-chat': typeof AppSettingsSiteChatRoute
   '/settings/webhooks': typeof AppSettingsWebhooksRoute
   '/settings/whatsapp': typeof AppSettingsWhatsappRoute
   '/tickets/$id': typeof AppTicketsIdRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/api/public/influencer-visit': typeof ApiPublicInfluencerVisitRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
+  '/api/public/site-chat': typeof ApiPublicSiteChatRoute
+  '/api/public/site-chat-widget.js': typeof ApiPublicSiteChatWidgetDotjsRoute
   '/i/$org/$slug': typeof IOrgSlugRoute
   '/integrations/connect/wizard': typeof AppIntegrationsConnectWizardRoute
   '/reports/dashboards/$id': typeof AppReportsDashboardsIdRoute
@@ -1063,6 +1092,7 @@ export interface FileRoutesByTo {
   '/sequences': typeof AppSequencesRouteWithChildren
   '/setup-wizard': typeof AppSetupWizardRoute
   '/signatures': typeof AppSignaturesRoute
+  '/site-chat': typeof AppSiteChatRoute
   '/subscriptions': typeof AppSubscriptionsRoute
   '/surveys': typeof AppSurveysRoute
   '/tags': typeof AppTagsRoute
@@ -1105,12 +1135,15 @@ export interface FileRoutesByTo {
   '/settings/import': typeof AppSettingsImportRoute
   '/settings/organization': typeof AppSettingsOrganizationRoute
   '/settings/security': typeof AppSettingsSecurityRoute
+  '/settings/site-chat': typeof AppSettingsSiteChatRoute
   '/settings/webhooks': typeof AppSettingsWebhooksRoute
   '/settings/whatsapp': typeof AppSettingsWhatsappRoute
   '/tickets/$id': typeof AppTicketsIdRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/api/public/influencer-visit': typeof ApiPublicInfluencerVisitRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
+  '/api/public/site-chat': typeof ApiPublicSiteChatRoute
+  '/api/public/site-chat-widget.js': typeof ApiPublicSiteChatWidgetDotjsRoute
   '/i/$org/$slug': typeof IOrgSlugRoute
   '/integrations/connect/wizard': typeof AppIntegrationsConnectWizardRoute
   '/reports/dashboards/$id': typeof AppReportsDashboardsIdRoute
@@ -1203,6 +1236,7 @@ export interface FileRoutesById {
   '/_app/sequences': typeof AppSequencesRouteWithChildren
   '/_app/setup-wizard': typeof AppSetupWizardRoute
   '/_app/signatures': typeof AppSignaturesRoute
+  '/_app/site-chat': typeof AppSiteChatRoute
   '/_app/subscriptions': typeof AppSubscriptionsRoute
   '/_app/surveys': typeof AppSurveysRoute
   '/_app/tags': typeof AppTagsRoute
@@ -1245,12 +1279,15 @@ export interface FileRoutesById {
   '/_app/settings/import': typeof AppSettingsImportRoute
   '/_app/settings/organization': typeof AppSettingsOrganizationRoute
   '/_app/settings/security': typeof AppSettingsSecurityRoute
+  '/_app/settings/site-chat': typeof AppSettingsSiteChatRoute
   '/_app/settings/webhooks': typeof AppSettingsWebhooksRoute
   '/_app/settings/whatsapp': typeof AppSettingsWhatsappRoute
   '/_app/tickets/$id': typeof AppTicketsIdRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/api/public/influencer-visit': typeof ApiPublicInfluencerVisitRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
+  '/api/public/site-chat': typeof ApiPublicSiteChatRoute
+  '/api/public/site-chat-widget.js': typeof ApiPublicSiteChatWidgetDotjsRoute
   '/i/$org/$slug': typeof IOrgSlugRoute
   '/_app/integrations/connect/wizard': typeof AppIntegrationsConnectWizardRoute
   '/_app/reports/dashboards/$id': typeof AppReportsDashboardsIdRoute
@@ -1343,6 +1380,7 @@ export interface FileRouteTypes {
     | '/sequences'
     | '/setup-wizard'
     | '/signatures'
+    | '/site-chat'
     | '/subscriptions'
     | '/surveys'
     | '/tags'
@@ -1385,12 +1423,15 @@ export interface FileRouteTypes {
     | '/settings/import'
     | '/settings/organization'
     | '/settings/security'
+    | '/settings/site-chat'
     | '/settings/webhooks'
     | '/settings/whatsapp'
     | '/tickets/$id'
     | '/api/public/inbound-email'
     | '/api/public/influencer-visit'
     | '/api/public/lead-form'
+    | '/api/public/site-chat'
+    | '/api/public/site-chat-widget.js'
     | '/i/$org/$slug'
     | '/integrations/connect/wizard'
     | '/reports/dashboards/$id'
@@ -1481,6 +1522,7 @@ export interface FileRouteTypes {
     | '/sequences'
     | '/setup-wizard'
     | '/signatures'
+    | '/site-chat'
     | '/subscriptions'
     | '/surveys'
     | '/tags'
@@ -1523,12 +1565,15 @@ export interface FileRouteTypes {
     | '/settings/import'
     | '/settings/organization'
     | '/settings/security'
+    | '/settings/site-chat'
     | '/settings/webhooks'
     | '/settings/whatsapp'
     | '/tickets/$id'
     | '/api/public/inbound-email'
     | '/api/public/influencer-visit'
     | '/api/public/lead-form'
+    | '/api/public/site-chat'
+    | '/api/public/site-chat-widget.js'
     | '/i/$org/$slug'
     | '/integrations/connect/wizard'
     | '/reports/dashboards/$id'
@@ -1620,6 +1665,7 @@ export interface FileRouteTypes {
     | '/_app/sequences'
     | '/_app/setup-wizard'
     | '/_app/signatures'
+    | '/_app/site-chat'
     | '/_app/subscriptions'
     | '/_app/surveys'
     | '/_app/tags'
@@ -1662,12 +1708,15 @@ export interface FileRouteTypes {
     | '/_app/settings/import'
     | '/_app/settings/organization'
     | '/_app/settings/security'
+    | '/_app/settings/site-chat'
     | '/_app/settings/webhooks'
     | '/_app/settings/whatsapp'
     | '/_app/tickets/$id'
     | '/api/public/inbound-email'
     | '/api/public/influencer-visit'
     | '/api/public/lead-form'
+    | '/api/public/site-chat'
+    | '/api/public/site-chat-widget.js'
     | '/i/$org/$slug'
     | '/_app/integrations/connect/wizard'
     | '/_app/reports/dashboards/$id'
@@ -1701,6 +1750,8 @@ export interface RootRouteChildren {
   ApiPublicInboundEmailRoute: typeof ApiPublicInboundEmailRoute
   ApiPublicInfluencerVisitRoute: typeof ApiPublicInfluencerVisitRoute
   ApiPublicLeadFormRoute: typeof ApiPublicLeadFormRoute
+  ApiPublicSiteChatRoute: typeof ApiPublicSiteChatRoute
+  ApiPublicSiteChatWidgetDotjsRoute: typeof ApiPublicSiteChatWidgetDotjsRoute
   IOrgSlugRoute: typeof IOrgSlugRoute
   ApiOauthGoogleCallbackRoute: typeof ApiOauthGoogleCallbackRoute
   ApiOauthGoogleInitiateRoute: typeof ApiOauthGoogleInitiateRoute
@@ -1828,6 +1879,13 @@ declare module '@tanstack/react-router' {
       path: '/subscriptions'
       fullPath: '/subscriptions'
       preLoaderRoute: typeof AppSubscriptionsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/site-chat': {
+      id: '/_app/site-chat'
+      path: '/site-chat'
+      fullPath: '/site-chat'
+      preLoaderRoute: typeof AppSiteChatRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/signatures': {
@@ -2278,6 +2336,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IOrgSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/site-chat-widget.js': {
+      id: '/api/public/site-chat-widget.js'
+      path: '/api/public/site-chat-widget.js'
+      fullPath: '/api/public/site-chat-widget.js'
+      preLoaderRoute: typeof ApiPublicSiteChatWidgetDotjsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/site-chat': {
+      id: '/api/public/site-chat'
+      path: '/api/public/site-chat'
+      fullPath: '/api/public/site-chat'
+      preLoaderRoute: typeof ApiPublicSiteChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/lead-form': {
       id: '/api/public/lead-form'
       path: '/api/public/lead-form'
@@ -2318,6 +2390,13 @@ declare module '@tanstack/react-router' {
       path: '/settings/webhooks'
       fullPath: '/settings/webhooks'
       preLoaderRoute: typeof AppSettingsWebhooksRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings/site-chat': {
+      id: '/_app/settings/site-chat'
+      path: '/settings/site-chat'
+      fullPath: '/settings/site-chat'
+      preLoaderRoute: typeof AppSettingsSiteChatRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/settings/security': {
@@ -2937,6 +3016,7 @@ interface AppRouteChildren {
   AppSequencesRoute: typeof AppSequencesRouteWithChildren
   AppSetupWizardRoute: typeof AppSetupWizardRoute
   AppSignaturesRoute: typeof AppSignaturesRoute
+  AppSiteChatRoute: typeof AppSiteChatRoute
   AppSubscriptionsRoute: typeof AppSubscriptionsRoute
   AppSurveysRoute: typeof AppSurveysRoute
   AppTagsRoute: typeof AppTagsRoute
@@ -2956,6 +3036,7 @@ interface AppRouteChildren {
   AppSettingsImportRoute: typeof AppSettingsImportRoute
   AppSettingsOrganizationRoute: typeof AppSettingsOrganizationRoute
   AppSettingsSecurityRoute: typeof AppSettingsSecurityRoute
+  AppSettingsSiteChatRoute: typeof AppSettingsSiteChatRoute
   AppSettingsWebhooksRoute: typeof AppSettingsWebhooksRoute
   AppSettingsWhatsappRoute: typeof AppSettingsWhatsappRoute
 }
@@ -3024,6 +3105,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSequencesRoute: AppSequencesRouteWithChildren,
   AppSetupWizardRoute: AppSetupWizardRoute,
   AppSignaturesRoute: AppSignaturesRoute,
+  AppSiteChatRoute: AppSiteChatRoute,
   AppSubscriptionsRoute: AppSubscriptionsRoute,
   AppSurveysRoute: AppSurveysRoute,
   AppTagsRoute: AppTagsRoute,
@@ -3043,6 +3125,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSettingsImportRoute: AppSettingsImportRoute,
   AppSettingsOrganizationRoute: AppSettingsOrganizationRoute,
   AppSettingsSecurityRoute: AppSettingsSecurityRoute,
+  AppSettingsSiteChatRoute: AppSettingsSiteChatRoute,
   AppSettingsWebhooksRoute: AppSettingsWebhooksRoute,
   AppSettingsWhatsappRoute: AppSettingsWhatsappRoute,
 }
@@ -3057,6 +3140,8 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicInboundEmailRoute: ApiPublicInboundEmailRoute,
   ApiPublicInfluencerVisitRoute: ApiPublicInfluencerVisitRoute,
   ApiPublicLeadFormRoute: ApiPublicLeadFormRoute,
+  ApiPublicSiteChatRoute: ApiPublicSiteChatRoute,
+  ApiPublicSiteChatWidgetDotjsRoute: ApiPublicSiteChatWidgetDotjsRoute,
   IOrgSlugRoute: IOrgSlugRoute,
   ApiOauthGoogleCallbackRoute: ApiOauthGoogleCallbackRoute,
   ApiOauthGoogleInitiateRoute: ApiOauthGoogleInitiateRoute,
@@ -3085,13 +3170,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

@@ -62,6 +62,7 @@ const primaryNav: NavEntry[] = [
   { to: "/calendar",                 label: "Agenda",             icon: CalendarIcon,    tone: "primary" },
   { to: "/geo-rota",                 label: "Visitas e Rotas",    icon: RouteIcon,       tone: "info" },
   { to: "/whatsapp",                 label: "WhatsApp",           icon: MessageSquare,   tone: "success" },
+  { to: "/site-chat",                label: "Chat do Site",       icon: MessageSquare,   tone: "success" },
   { to: "/campaigns",                label: "Marketing",          icon: Megaphone,       tone: "rose" },
   { to: "/influencers",              label: "Influencers",        icon: Sparkles,        tone: "violet" },
   { to: "/geo",                      label: "Geointeligência",    icon: Map,             tone: "info" },
