@@ -63,6 +63,33 @@ function RetentionPage() {
 
       <NextActionBlock surface="retention" title="Reter e expandir agora" showRegenerate />
 
+      <Card className="p-5 border-primary/30 bg-gradient-to-br from-primary/5 to-transparent">
+        <div className="flex items-start justify-between gap-3 flex-wrap">
+          <div>
+            <h3 className="text-sm font-semibold flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-primary" /> Plano de retenção com IA
+            </h3>
+            <p className="text-xs text-muted-foreground mt-1">
+              A IA analisa os clientes em risco e gera diagnóstico + ação imediata por canal e prazo.
+            </p>
+          </div>
+          <Button onClick={() => planMut.mutate()} disabled={planMut.isPending || atRisk.length === 0} size="sm">
+            {planMut.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Sparkles className="h-4 w-4 mr-2" />}
+            {planMut.data ? "Regenerar plano" : "Gerar plano"}
+          </Button>
+        </div>
+        {planMut.data && (
+          <div className="mt-4 space-y-3">
+            <p className="text-sm rounded-md border bg-background p-3">{planMut.data.resumo}</p>
+            <div className="space-y-2">
+              {planMut.data.acoes.map((a) => <AiActionRow key={a.company_id} a={a} />)}
+            </div>
+          </div>
+        )}
+      </Card>
+
+
+
 
       <div className="grid gap-3 md:grid-cols-4">
         <Kpi icon={Heart} label="Saudáveis" value={summary.saudaveis} tone="emerald" />
