@@ -62,7 +62,7 @@ export function useNotificationsRealtime() {
   }, [prefs?.browser_enabled]);
 
   useEffect(() => {
-    if (!user || !orgId) return;
+    if (!user || !orgId || !prefs) return;
     const ch = supabase
       .channel(`notif-realtime:${user.id}:${orgId}`)
       .on(
@@ -127,5 +127,5 @@ export function useNotificationsRealtime() {
     return () => {
       supabase.removeChannel(ch);
     };
-  }, [user, orgId, navigate, prefs]);
+  }, [user, orgId, navigate, prefs, getPrefsFn]);
 }

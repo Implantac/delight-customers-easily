@@ -61,11 +61,13 @@ function PipelinePage() {
 
 
   const { data: deals, isLoading } = useQuery({
-    queryKey: ["deals"],
+    queryKey: ["deals", orgId],
+    enabled: !!orgId,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("deals")
-        .select("*, contacts(name), companies(name)")
+        .select("id, title, stage, value, user_id, updated_at, created_at, contacts(name), companies(name)")
+        .eq("organization_id", orgId!)
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data;
@@ -73,13 +75,17 @@ function PipelinePage() {
   });
 
   const { data: contacts } = useQuery({
-    queryKey: ["contacts-list"],
-    queryFn: async () => (await supabase.from("contacts").select("id, name, company_id").order("name")).data ?? [],
+    queryKey: ["contacts-list-min", orgId],
+    enabled: !!orgId,
+    queryFn: async () => (await supabase.from("contacts").select("id, name, company_id").eq("organization_id", orgId!).order("name")).data ?? [],
+    staleTime: 5 * 60_000,
   });
 
   const { data: companies } = useQuery({
-    queryKey: ["companies-list-p"],
-    queryFn: async () => (await supabase.from("companies").select("id, name").order("name")).data ?? [],
+    queryKey: ["companies-list-min", orgId],
+    enabled: !!orgId,
+    queryFn: async () => (await supabase.from("companies").select("id, name").eq("organization_id", orgId!).order("name")).data ?? [],
+    staleTime: 5 * 60_000,
   });
 
   const create = useMutation({

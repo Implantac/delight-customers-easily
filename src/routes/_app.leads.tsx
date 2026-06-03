@@ -48,6 +48,7 @@ function LeadsInboxPage() {
     queryKey: ["leads-inbox", orgId, status],
     enabled: !!orgId,
     queryFn: () => call({ data: { organization_id: orgId!, status } }),
+    staleTime: 10_000,
   });
 
   const callDiscard = useServerFn(discardLead);
