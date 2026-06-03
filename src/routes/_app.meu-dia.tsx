@@ -153,7 +153,8 @@ function MyDayPage() {
                   .select("title, due_date, notes, latitude, longitude, contacts(name), companies(name)")
                   .eq("organization_id", orgId)
                   .eq("user_id", user.id)
-                  .eq("type", "visit")
+                  .eq("type", "meeting")
+                  .not("latitude", "is", null)
                   .gte("due_date", startOfDay().toISOString())
                   .lte("due_date", endOfDay().toISOString())
                   .order("due_date");
