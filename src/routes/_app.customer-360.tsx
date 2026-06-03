@@ -399,7 +399,75 @@ function Customer360Page() {
           onDone={onBulkDone}
         />
       )}
+      {dialog === "whatsapp" && orgId && (
+        <BulkWhatsAppDialog
+          orgId={orgId}
+          companyIds={selectedCompanyIds}
+          onClose={() => setDialog(null)}
+          onDone={onBulkDone}
+        />
+      )}
     </div>
+  );
+}
+
+function BulkWhatsAppDialog({
+  orgId, companyIds, onClose, onDone,
+}: { orgId: string; companyIds: string[]; onClose: () => void; onDone: () => void }) {
+  const fn = useServerFn(bulkSendWhatsAppToCompanies);
+  const [body, setBody] = useState("Olá {name}, tudo bem? Posso te ajudar com algo hoje?");
+
+  const mut = useMutation({
+    mutationFn: () =>
+      fn({
+        data: {
+          organizationId: orgId,
+          companyIds,
+          body: body.trim(),
+        },
+      }),
+    onSuccess: (r: any) => {
+      if (r.queued === 0) {
+        toast.warning(r.reason ?? "Nenhuma mensagem enfileirada");
+      } else {
+        toast.success(`${r.queued} mensagem(ns) enfileirada(s)${r.skipped ? ` · ${r.skipped} sem telefone` : ""}`);
+        onDone();
+      }
+    },
+    onError: (e: any) => toast.error("Falha", { description: e?.message }),
+  });
+
+  return (
+    <Dialog open onOpenChange={(o) => !o && onClose()}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Disparo WhatsApp em massa</DialogTitle>
+          <DialogDescription>
+            Uma mensagem será enfileirada para cada empresa selecionada que tiver telefone.
+            Use <code>{"{name}"}</code> para inserir o nome da empresa. Lembre-se da janela de 24h do WhatsApp.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-2">
+          <Label htmlFor="wa-body">Mensagem</Label>
+          <Textarea
+            id="wa-body"
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
+            rows={5}
+            maxLength={1500}
+          />
+          <div className="text-[11px] text-muted-foreground">
+            {body.length}/1500 · {companyIds.length} destinatário(s) selecionado(s)
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>Cancelar</Button>
+          <Button onClick={() => mut.mutate()} disabled={!body.trim() || mut.isPending}>
+            {mut.isPending ? "Enfileirando…" : `Enfileirar ${companyIds.length} envio(s)`}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 
