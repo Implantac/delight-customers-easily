@@ -318,10 +318,19 @@ function WhatsAppPage() {
         </Card>
 
         {/* Thread */}
-        <Card className="col-span-12 md:col-span-8 xl:col-span-6 flex flex-col min-h-0">
+        <Card className={`${selectedId ? "flex" : "hidden md:flex"} col-span-12 md:col-span-8 xl:col-span-6 flex-col min-h-0`}>
           {selected ? (
             <>
               <div className="p-3 border-b flex items-center gap-3">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="md:hidden h-8 px-2"
+                  onClick={() => setSelectedId(null)}
+                  aria-label="Voltar"
+                >
+                  ←
+                </Button>
                 <Avatar className="h-9 w-9">
                   <AvatarFallback className="bg-primary/10 text-primary text-xs">{initials(selected.contact_name)}</AvatarFallback>
                 </Avatar>
