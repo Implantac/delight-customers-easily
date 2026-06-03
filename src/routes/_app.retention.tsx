@@ -29,10 +29,15 @@ const fmt = (n: number) =>
 function RetentionPage() {
   const { orgId } = useCurrentOrg();
   const fn = useServerFn(getRetentionInsights);
+  const planFn = useServerFn(getRetentionPlan);
   const { data, isLoading } = useQuery({
     queryKey: ["retention", orgId],
     enabled: !!orgId,
     queryFn: () => fn({ data: { organization_id: orgId! } }),
+  });
+  const planMut = useMutation({
+    mutationFn: () => planFn({ data: { organization_id: orgId!, max_companies: 8 } }),
+    onError: (e: any) => toast.error(e?.message ?? "Falha ao gerar plano"),
   });
 
   if (isLoading || !data) {
