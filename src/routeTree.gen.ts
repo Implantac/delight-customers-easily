@@ -16,53 +16,25 @@ import { Route as PTokenRouteImport } from './routes/p.$token'
 import { Route as AppWinLossRouteImport } from './routes/_app.win-loss'
 import { Route as AppWhatsappRouteImport } from './routes/_app.whatsapp'
 import { Route as AppWelcomeRouteImport } from './routes/_app.welcome'
-import { Route as AppViewsRouteImport } from './routes/_app.views'
-import { Route as AppTimeRouteImport } from './routes/_app.time'
-import { Route as AppTicketsRouteImport } from './routes/_app.tickets'
-import { Route as AppTerritoriesRouteImport } from './routes/_app.territories'
-import { Route as AppTemplatesRouteImport } from './routes/_app.templates'
-import { Route as AppTagsRouteImport } from './routes/_app.tags'
-import { Route as AppSurveysRouteImport } from './routes/_app.surveys'
-import { Route as AppSubscriptionsRouteImport } from './routes/_app.subscriptions'
 import { Route as AppSiteChatRouteImport } from './routes/_app.site-chat'
-import { Route as AppSignaturesRouteImport } from './routes/_app.signatures'
 import { Route as AppSetupWizardRouteImport } from './routes/_app.setup-wizard'
 import { Route as AppSequencesRouteImport } from './routes/_app.sequences'
-import { Route as AppSegmentsRouteImport } from './routes/_app.segments'
-import { Route as AppSalesOrdersRouteImport } from './routes/_app.sales-orders'
-import { Route as AppRoutingRouteImport } from './routes/_app.routing'
-import { Route as AppRotaOtimizadaRouteImport } from './routes/_app.rota-otimizada'
 import { Route as AppRetentionRouteImport } from './routes/_app.retention'
 import { Route as AppRepresentantesRouteImport } from './routes/_app.representantes'
 import { Route as AppReportsRouteImport } from './routes/_app.reports'
-import { Route as AppReferralsRouteImport } from './routes/_app.referrals'
-import { Route as AppQuotesRouteImport } from './routes/_app.quotes'
-import { Route as AppProposalsRouteImport } from './routes/_app.proposals'
-import { Route as AppPropensaoRouteImport } from './routes/_app.propensao'
-import { Route as AppProductsRouteImport } from './routes/_app.products'
-import { Route as AppProductivityRouteImport } from './routes/_app.productivity'
-import { Route as AppPlaybooksRouteImport } from './routes/_app.playbooks'
 import { Route as AppPipelineRouteImport } from './routes/_app.pipeline'
-import { Route as AppOpportunityMapRouteImport } from './routes/_app.opportunity-map'
 import { Route as AppOportunidadesRouteImport } from './routes/_app.oportunidades'
 import { Route as AppOnboardingRouteImport } from './routes/_app.onboarding'
-import { Route as AppNotificationsRouteImport } from './routes/_app.notifications'
 import { Route as AppNbaRouteImport } from './routes/_app.nba'
 import { Route as AppMytasksRouteImport } from './routes/_app.mytasks'
 import { Route as AppMultiEmpresaRouteImport } from './routes/_app.multi-empresa'
 import { Route as AppMeuDiaRouteImport } from './routes/_app.meu-dia'
 import { Route as AppMarketingIntelRouteImport } from './routes/_app.marketing-intel'
-import { Route as AppMarketingRouteImport } from './routes/_app.marketing'
-import { Route as AppLoyaltyRouteImport } from './routes/_app.loyalty'
-import { Route as AppLeadsPipelineRouteImport } from './routes/_app.leads-pipeline'
 import { Route as AppLeadsRouteImport } from './routes/_app.leads'
-import { Route as AppLeadScoringRouteImport } from './routes/_app.lead-scoring'
 import { Route as AppLeadFormsRouteImport } from './routes/_app.lead-forms'
-import { Route as AppKbRouteImport } from './routes/_app.kb'
 import { Route as AppInteligenciaComercialRouteImport } from './routes/_app.inteligencia-comercial'
 import { Route as AppIntegrationsRouteImport } from './routes/_app.integrations'
 import { Route as AppInfluencersRouteImport } from './routes/_app.influencers'
-import { Route as AppIaComercialRouteImport } from './routes/_app.ia-comercial'
 import { Route as AppGoalsRouteImport } from './routes/_app.goals'
 import { Route as AppGestaoVisaoGlobalRouteImport } from './routes/_app.gestao-visao-global'
 import { Route as AppGeoRotaRouteImport } from './routes/_app.geo-rota'
@@ -70,24 +42,19 @@ import { Route as AppGeoProspeccaoRouteImport } from './routes/_app.geo-prospecc
 import { Route as AppGeoCoberturaRouteImport } from './routes/_app.geo-cobertura'
 import { Route as AppGeoRouteImport } from './routes/_app.geo'
 import { Route as AppForecastRouteImport } from './routes/_app.forecast'
-import { Route as AppDataQualityRouteImport } from './routes/_app.data-quality'
 import { Route as AppDashboardExecutivoRouteImport } from './routes/_app.dashboard-executivo'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppCustomer360RouteImport } from './routes/_app.customer-360'
-import { Route as AppContractsRouteImport } from './routes/_app.contracts'
 import { Route as AppContactsRouteImport } from './routes/_app.contacts'
 import { Route as AppCompaniesRouteImport } from './routes/_app.companies'
 import { Route as AppCommissionsRouteImport } from './routes/_app.commissions'
 import { Route as AppCommandRouteImport } from './routes/_app.command'
-import { Route as AppCohortsRouteImport } from './routes/_app.cohorts'
 import { Route as AppCoachingRouteImport } from './routes/_app.coaching'
 import { Route as AppChatRouteImport } from './routes/_app.chat'
 import { Route as AppCarteiraRouteImport } from './routes/_app.carteira'
 import { Route as AppCampaignsRouteImport } from './routes/_app.campaigns'
 import { Route as AppCalendarRouteImport } from './routes/_app.calendar'
-import { Route as AppBenchmarkRouteImport } from './routes/_app.benchmark'
 import { Route as AppAutomacoesRouteImport } from './routes/_app.automacoes'
-import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
 import { Route as AppActivitiesRouteImport } from './routes/_app.activities'
 import { Route as IOrgSlugRouteImport } from './routes/i.$org.$slug'
 import { Route as ApiPublicSiteChatWidgetDotjsRouteImport } from './routes/api/public/site-chat-widget[.]js'
@@ -95,7 +62,6 @@ import { Route as ApiPublicSiteChatRouteImport } from './routes/api/public/site-
 import { Route as ApiPublicLeadFormRouteImport } from './routes/api/public/lead-form'
 import { Route as ApiPublicInfluencerVisitRouteImport } from './routes/api/public/influencer-visit'
 import { Route as ApiPublicInboundEmailRouteImport } from './routes/api/public/inbound-email'
-import { Route as AppTicketsIdRouteImport } from './routes/_app.tickets.$id'
 import { Route as AppSettingsWhatsappRouteImport } from './routes/_app.settings.whatsapp'
 import { Route as AppSettingsWebhooksRouteImport } from './routes/_app.settings.webhooks'
 import { Route as AppSettingsSiteChatRouteImport } from './routes/_app.settings.site-chat'
@@ -110,9 +76,7 @@ import { Route as AppSettingsAutomationsRouteImport } from './routes/_app.settin
 import { Route as AppSequencesIdRouteImport } from './routes/_app.sequences.$id'
 import { Route as AppReportsWeeklyRouteImport } from './routes/_app.reports.weekly'
 import { Route as AppReportsDashboardsRouteImport } from './routes/_app.reports.dashboards'
-import { Route as AppProposalsIdRouteImport } from './routes/_app.proposals.$id'
 import { Route as AppMultiEmpresaOrgIdRouteImport } from './routes/_app.multi-empresa.$orgId'
-import { Route as AppKbIdRouteImport } from './routes/_app.kb.$id'
 import { Route as AppInviteTokenRouteImport } from './routes/_app.invite.$token'
 import { Route as AppInteligenciaComercialQualidadeIaRouteImport } from './routes/_app.inteligencia-comercial.qualidade-ia'
 import { Route as AppIntegrationsTemplatesRouteImport } from './routes/_app.integrations.templates'
@@ -188,54 +152,9 @@ const AppWelcomeRoute = AppWelcomeRouteImport.update({
   path: '/welcome',
   getParentRoute: () => AppRoute,
 } as any)
-const AppViewsRoute = AppViewsRouteImport.update({
-  id: '/views',
-  path: '/views',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppTimeRoute = AppTimeRouteImport.update({
-  id: '/time',
-  path: '/time',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppTicketsRoute = AppTicketsRouteImport.update({
-  id: '/tickets',
-  path: '/tickets',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppTerritoriesRoute = AppTerritoriesRouteImport.update({
-  id: '/territories',
-  path: '/territories',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppTemplatesRoute = AppTemplatesRouteImport.update({
-  id: '/templates',
-  path: '/templates',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppTagsRoute = AppTagsRouteImport.update({
-  id: '/tags',
-  path: '/tags',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppSurveysRoute = AppSurveysRouteImport.update({
-  id: '/surveys',
-  path: '/surveys',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppSubscriptionsRoute = AppSubscriptionsRouteImport.update({
-  id: '/subscriptions',
-  path: '/subscriptions',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppSiteChatRoute = AppSiteChatRouteImport.update({
   id: '/site-chat',
   path: '/site-chat',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppSignaturesRoute = AppSignaturesRouteImport.update({
-  id: '/signatures',
-  path: '/signatures',
   getParentRoute: () => AppRoute,
 } as any)
 const AppSetupWizardRoute = AppSetupWizardRouteImport.update({
@@ -246,26 +165,6 @@ const AppSetupWizardRoute = AppSetupWizardRouteImport.update({
 const AppSequencesRoute = AppSequencesRouteImport.update({
   id: '/sequences',
   path: '/sequences',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppSegmentsRoute = AppSegmentsRouteImport.update({
-  id: '/segments',
-  path: '/segments',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppSalesOrdersRoute = AppSalesOrdersRouteImport.update({
-  id: '/sales-orders',
-  path: '/sales-orders',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppRoutingRoute = AppRoutingRouteImport.update({
-  id: '/routing',
-  path: '/routing',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppRotaOtimizadaRoute = AppRotaOtimizadaRouteImport.update({
-  id: '/rota-otimizada',
-  path: '/rota-otimizada',
   getParentRoute: () => AppRoute,
 } as any)
 const AppRetentionRoute = AppRetentionRouteImport.update({
@@ -283,49 +182,9 @@ const AppReportsRoute = AppReportsRouteImport.update({
   path: '/reports',
   getParentRoute: () => AppRoute,
 } as any)
-const AppReferralsRoute = AppReferralsRouteImport.update({
-  id: '/referrals',
-  path: '/referrals',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppQuotesRoute = AppQuotesRouteImport.update({
-  id: '/quotes',
-  path: '/quotes',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppProposalsRoute = AppProposalsRouteImport.update({
-  id: '/proposals',
-  path: '/proposals',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppPropensaoRoute = AppPropensaoRouteImport.update({
-  id: '/propensao',
-  path: '/propensao',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppProductsRoute = AppProductsRouteImport.update({
-  id: '/products',
-  path: '/products',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppProductivityRoute = AppProductivityRouteImport.update({
-  id: '/productivity',
-  path: '/productivity',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppPlaybooksRoute = AppPlaybooksRouteImport.update({
-  id: '/playbooks',
-  path: '/playbooks',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppPipelineRoute = AppPipelineRouteImport.update({
   id: '/pipeline',
   path: '/pipeline',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppOpportunityMapRoute = AppOpportunityMapRouteImport.update({
-  id: '/opportunity-map',
-  path: '/opportunity-map',
   getParentRoute: () => AppRoute,
 } as any)
 const AppOportunidadesRoute = AppOportunidadesRouteImport.update({
@@ -336,11 +195,6 @@ const AppOportunidadesRoute = AppOportunidadesRouteImport.update({
 const AppOnboardingRoute = AppOnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppNotificationsRoute = AppNotificationsRouteImport.update({
-  id: '/notifications',
-  path: '/notifications',
   getParentRoute: () => AppRoute,
 } as any)
 const AppNbaRoute = AppNbaRouteImport.update({
@@ -368,39 +222,14 @@ const AppMarketingIntelRoute = AppMarketingIntelRouteImport.update({
   path: '/marketing-intel',
   getParentRoute: () => AppRoute,
 } as any)
-const AppMarketingRoute = AppMarketingRouteImport.update({
-  id: '/marketing',
-  path: '/marketing',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppLoyaltyRoute = AppLoyaltyRouteImport.update({
-  id: '/loyalty',
-  path: '/loyalty',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppLeadsPipelineRoute = AppLeadsPipelineRouteImport.update({
-  id: '/leads-pipeline',
-  path: '/leads-pipeline',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppLeadsRoute = AppLeadsRouteImport.update({
   id: '/leads',
   path: '/leads',
   getParentRoute: () => AppRoute,
 } as any)
-const AppLeadScoringRoute = AppLeadScoringRouteImport.update({
-  id: '/lead-scoring',
-  path: '/lead-scoring',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppLeadFormsRoute = AppLeadFormsRouteImport.update({
   id: '/lead-forms',
   path: '/lead-forms',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppKbRoute = AppKbRouteImport.update({
-  id: '/kb',
-  path: '/kb',
   getParentRoute: () => AppRoute,
 } as any)
 const AppInteligenciaComercialRoute =
@@ -417,11 +246,6 @@ const AppIntegrationsRoute = AppIntegrationsRouteImport.update({
 const AppInfluencersRoute = AppInfluencersRouteImport.update({
   id: '/influencers',
   path: '/influencers',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppIaComercialRoute = AppIaComercialRouteImport.update({
-  id: '/ia-comercial',
-  path: '/ia-comercial',
   getParentRoute: () => AppRoute,
 } as any)
 const AppGoalsRoute = AppGoalsRouteImport.update({
@@ -459,11 +283,6 @@ const AppForecastRoute = AppForecastRouteImport.update({
   path: '/forecast',
   getParentRoute: () => AppRoute,
 } as any)
-const AppDataQualityRoute = AppDataQualityRouteImport.update({
-  id: '/data-quality',
-  path: '/data-quality',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppDashboardExecutivoRoute = AppDashboardExecutivoRouteImport.update({
   id: '/dashboard-executivo',
   path: '/dashboard-executivo',
@@ -477,11 +296,6 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
 const AppCustomer360Route = AppCustomer360RouteImport.update({
   id: '/customer-360',
   path: '/customer-360',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppContractsRoute = AppContractsRouteImport.update({
-  id: '/contracts',
-  path: '/contracts',
   getParentRoute: () => AppRoute,
 } as any)
 const AppContactsRoute = AppContactsRouteImport.update({
@@ -502,11 +316,6 @@ const AppCommissionsRoute = AppCommissionsRouteImport.update({
 const AppCommandRoute = AppCommandRouteImport.update({
   id: '/command',
   path: '/command',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppCohortsRoute = AppCohortsRouteImport.update({
-  id: '/cohorts',
-  path: '/cohorts',
   getParentRoute: () => AppRoute,
 } as any)
 const AppCoachingRoute = AppCoachingRouteImport.update({
@@ -534,19 +343,9 @@ const AppCalendarRoute = AppCalendarRouteImport.update({
   path: '/calendar',
   getParentRoute: () => AppRoute,
 } as any)
-const AppBenchmarkRoute = AppBenchmarkRouteImport.update({
-  id: '/benchmark',
-  path: '/benchmark',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppAutomacoesRoute = AppAutomacoesRouteImport.update({
   id: '/automacoes',
   path: '/automacoes',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppAlertsRoute = AppAlertsRouteImport.update({
-  id: '/alerts',
-  path: '/alerts',
   getParentRoute: () => AppRoute,
 } as any)
 const AppActivitiesRoute = AppActivitiesRouteImport.update({
@@ -585,11 +384,6 @@ const ApiPublicInboundEmailRoute = ApiPublicInboundEmailRouteImport.update({
   id: '/api/public/inbound-email',
   path: '/api/public/inbound-email',
   getParentRoute: () => rootRouteImport,
-} as any)
-const AppTicketsIdRoute = AppTicketsIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => AppTicketsRoute,
 } as any)
 const AppSettingsWhatsappRoute = AppSettingsWhatsappRouteImport.update({
   id: '/settings/whatsapp',
@@ -662,20 +456,10 @@ const AppReportsDashboardsRoute = AppReportsDashboardsRouteImport.update({
   path: '/dashboards',
   getParentRoute: () => AppReportsRoute,
 } as any)
-const AppProposalsIdRoute = AppProposalsIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => AppProposalsRoute,
-} as any)
 const AppMultiEmpresaOrgIdRoute = AppMultiEmpresaOrgIdRouteImport.update({
   id: '/$orgId',
   path: '/$orgId',
   getParentRoute: () => AppMultiEmpresaRoute,
-} as any)
-const AppKbIdRoute = AppKbIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => AppKbRoute,
 } as any)
 const AppInviteTokenRoute = AppInviteTokenRouteImport.update({
   id: '/invite/$token',
@@ -907,24 +691,19 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/activities': typeof AppActivitiesRoute
-  '/alerts': typeof AppAlertsRoute
   '/automacoes': typeof AppAutomacoesRoute
-  '/benchmark': typeof AppBenchmarkRoute
   '/calendar': typeof AppCalendarRoute
   '/campaigns': typeof AppCampaignsRouteWithChildren
   '/carteira': typeof AppCarteiraRoute
   '/chat': typeof AppChatRoute
   '/coaching': typeof AppCoachingRoute
-  '/cohorts': typeof AppCohortsRoute
   '/command': typeof AppCommandRoute
   '/commissions': typeof AppCommissionsRoute
   '/companies': typeof AppCompaniesRouteWithChildren
   '/contacts': typeof AppContactsRouteWithChildren
-  '/contracts': typeof AppContractsRoute
   '/customer-360': typeof AppCustomer360Route
   '/dashboard': typeof AppDashboardRoute
   '/dashboard-executivo': typeof AppDashboardExecutivoRoute
-  '/data-quality': typeof AppDataQualityRoute
   '/forecast': typeof AppForecastRoute
   '/geo': typeof AppGeoRoute
   '/geo-cobertura': typeof AppGeoCoberturaRoute
@@ -932,53 +711,25 @@ export interface FileRoutesByFullPath {
   '/geo-rota': typeof AppGeoRotaRoute
   '/gestao-visao-global': typeof AppGestaoVisaoGlobalRoute
   '/goals': typeof AppGoalsRoute
-  '/ia-comercial': typeof AppIaComercialRoute
   '/influencers': typeof AppInfluencersRoute
   '/integrations': typeof AppIntegrationsRouteWithChildren
   '/inteligencia-comercial': typeof AppInteligenciaComercialRouteWithChildren
-  '/kb': typeof AppKbRouteWithChildren
   '/lead-forms': typeof AppLeadFormsRoute
-  '/lead-scoring': typeof AppLeadScoringRoute
   '/leads': typeof AppLeadsRoute
-  '/leads-pipeline': typeof AppLeadsPipelineRoute
-  '/loyalty': typeof AppLoyaltyRoute
-  '/marketing': typeof AppMarketingRoute
   '/marketing-intel': typeof AppMarketingIntelRoute
   '/meu-dia': typeof AppMeuDiaRoute
   '/multi-empresa': typeof AppMultiEmpresaRouteWithChildren
   '/mytasks': typeof AppMytasksRoute
   '/nba': typeof AppNbaRoute
-  '/notifications': typeof AppNotificationsRoute
   '/onboarding': typeof AppOnboardingRoute
   '/oportunidades': typeof AppOportunidadesRoute
-  '/opportunity-map': typeof AppOpportunityMapRoute
   '/pipeline': typeof AppPipelineRoute
-  '/playbooks': typeof AppPlaybooksRoute
-  '/productivity': typeof AppProductivityRoute
-  '/products': typeof AppProductsRoute
-  '/propensao': typeof AppPropensaoRoute
-  '/proposals': typeof AppProposalsRouteWithChildren
-  '/quotes': typeof AppQuotesRoute
-  '/referrals': typeof AppReferralsRoute
   '/reports': typeof AppReportsRouteWithChildren
   '/representantes': typeof AppRepresentantesRoute
   '/retention': typeof AppRetentionRoute
-  '/rota-otimizada': typeof AppRotaOtimizadaRoute
-  '/routing': typeof AppRoutingRoute
-  '/sales-orders': typeof AppSalesOrdersRoute
-  '/segments': typeof AppSegmentsRoute
   '/sequences': typeof AppSequencesRouteWithChildren
   '/setup-wizard': typeof AppSetupWizardRoute
-  '/signatures': typeof AppSignaturesRoute
   '/site-chat': typeof AppSiteChatRoute
-  '/subscriptions': typeof AppSubscriptionsRoute
-  '/surveys': typeof AppSurveysRoute
-  '/tags': typeof AppTagsRoute
-  '/templates': typeof AppTemplatesRoute
-  '/territories': typeof AppTerritoriesRoute
-  '/tickets': typeof AppTicketsRouteWithChildren
-  '/time': typeof AppTimeRoute
-  '/views': typeof AppViewsRoute
   '/welcome': typeof AppWelcomeRoute
   '/whatsapp': typeof AppWhatsappRoute
   '/win-loss': typeof AppWinLossRoute
@@ -1001,9 +752,7 @@ export interface FileRoutesByFullPath {
   '/integrations/templates': typeof AppIntegrationsTemplatesRoute
   '/inteligencia-comercial/qualidade-ia': typeof AppInteligenciaComercialQualidadeIaRoute
   '/invite/$token': typeof AppInviteTokenRoute
-  '/kb/$id': typeof AppKbIdRoute
   '/multi-empresa/$orgId': typeof AppMultiEmpresaOrgIdRoute
-  '/proposals/$id': typeof AppProposalsIdRoute
   '/reports/dashboards': typeof AppReportsDashboardsRouteWithChildren
   '/reports/weekly': typeof AppReportsWeeklyRoute
   '/sequences/$id': typeof AppSequencesIdRoute
@@ -1018,7 +767,6 @@ export interface FileRoutesByFullPath {
   '/settings/site-chat': typeof AppSettingsSiteChatRoute
   '/settings/webhooks': typeof AppSettingsWebhooksRoute
   '/settings/whatsapp': typeof AppSettingsWhatsappRoute
-  '/tickets/$id': typeof AppTicketsIdRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/api/public/influencer-visit': typeof ApiPublicInfluencerVisitRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
@@ -1052,24 +800,19 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/activities': typeof AppActivitiesRoute
-  '/alerts': typeof AppAlertsRoute
   '/automacoes': typeof AppAutomacoesRoute
-  '/benchmark': typeof AppBenchmarkRoute
   '/calendar': typeof AppCalendarRoute
   '/campaigns': typeof AppCampaignsRouteWithChildren
   '/carteira': typeof AppCarteiraRoute
   '/chat': typeof AppChatRoute
   '/coaching': typeof AppCoachingRoute
-  '/cohorts': typeof AppCohortsRoute
   '/command': typeof AppCommandRoute
   '/commissions': typeof AppCommissionsRoute
   '/companies': typeof AppCompaniesRouteWithChildren
   '/contacts': typeof AppContactsRouteWithChildren
-  '/contracts': typeof AppContractsRoute
   '/customer-360': typeof AppCustomer360Route
   '/dashboard': typeof AppDashboardRoute
   '/dashboard-executivo': typeof AppDashboardExecutivoRoute
-  '/data-quality': typeof AppDataQualityRoute
   '/forecast': typeof AppForecastRoute
   '/geo': typeof AppGeoRoute
   '/geo-cobertura': typeof AppGeoCoberturaRoute
@@ -1077,53 +820,25 @@ export interface FileRoutesByTo {
   '/geo-rota': typeof AppGeoRotaRoute
   '/gestao-visao-global': typeof AppGestaoVisaoGlobalRoute
   '/goals': typeof AppGoalsRoute
-  '/ia-comercial': typeof AppIaComercialRoute
   '/influencers': typeof AppInfluencersRoute
   '/integrations': typeof AppIntegrationsRouteWithChildren
   '/inteligencia-comercial': typeof AppInteligenciaComercialRouteWithChildren
-  '/kb': typeof AppKbRouteWithChildren
   '/lead-forms': typeof AppLeadFormsRoute
-  '/lead-scoring': typeof AppLeadScoringRoute
   '/leads': typeof AppLeadsRoute
-  '/leads-pipeline': typeof AppLeadsPipelineRoute
-  '/loyalty': typeof AppLoyaltyRoute
-  '/marketing': typeof AppMarketingRoute
   '/marketing-intel': typeof AppMarketingIntelRoute
   '/meu-dia': typeof AppMeuDiaRoute
   '/multi-empresa': typeof AppMultiEmpresaRouteWithChildren
   '/mytasks': typeof AppMytasksRoute
   '/nba': typeof AppNbaRoute
-  '/notifications': typeof AppNotificationsRoute
   '/onboarding': typeof AppOnboardingRoute
   '/oportunidades': typeof AppOportunidadesRoute
-  '/opportunity-map': typeof AppOpportunityMapRoute
   '/pipeline': typeof AppPipelineRoute
-  '/playbooks': typeof AppPlaybooksRoute
-  '/productivity': typeof AppProductivityRoute
-  '/products': typeof AppProductsRoute
-  '/propensao': typeof AppPropensaoRoute
-  '/proposals': typeof AppProposalsRouteWithChildren
-  '/quotes': typeof AppQuotesRoute
-  '/referrals': typeof AppReferralsRoute
   '/reports': typeof AppReportsRouteWithChildren
   '/representantes': typeof AppRepresentantesRoute
   '/retention': typeof AppRetentionRoute
-  '/rota-otimizada': typeof AppRotaOtimizadaRoute
-  '/routing': typeof AppRoutingRoute
-  '/sales-orders': typeof AppSalesOrdersRoute
-  '/segments': typeof AppSegmentsRoute
   '/sequences': typeof AppSequencesRouteWithChildren
   '/setup-wizard': typeof AppSetupWizardRoute
-  '/signatures': typeof AppSignaturesRoute
   '/site-chat': typeof AppSiteChatRoute
-  '/subscriptions': typeof AppSubscriptionsRoute
-  '/surveys': typeof AppSurveysRoute
-  '/tags': typeof AppTagsRoute
-  '/templates': typeof AppTemplatesRoute
-  '/territories': typeof AppTerritoriesRoute
-  '/tickets': typeof AppTicketsRouteWithChildren
-  '/time': typeof AppTimeRoute
-  '/views': typeof AppViewsRoute
   '/welcome': typeof AppWelcomeRoute
   '/whatsapp': typeof AppWhatsappRoute
   '/win-loss': typeof AppWinLossRoute
@@ -1146,9 +861,7 @@ export interface FileRoutesByTo {
   '/integrations/templates': typeof AppIntegrationsTemplatesRoute
   '/inteligencia-comercial/qualidade-ia': typeof AppInteligenciaComercialQualidadeIaRoute
   '/invite/$token': typeof AppInviteTokenRoute
-  '/kb/$id': typeof AppKbIdRoute
   '/multi-empresa/$orgId': typeof AppMultiEmpresaOrgIdRoute
-  '/proposals/$id': typeof AppProposalsIdRoute
   '/reports/dashboards': typeof AppReportsDashboardsRouteWithChildren
   '/reports/weekly': typeof AppReportsWeeklyRoute
   '/sequences/$id': typeof AppSequencesIdRoute
@@ -1163,7 +876,6 @@ export interface FileRoutesByTo {
   '/settings/site-chat': typeof AppSettingsSiteChatRoute
   '/settings/webhooks': typeof AppSettingsWebhooksRoute
   '/settings/whatsapp': typeof AppSettingsWhatsappRoute
-  '/tickets/$id': typeof AppTicketsIdRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/api/public/influencer-visit': typeof ApiPublicInfluencerVisitRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
@@ -1199,24 +911,19 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/_app/activities': typeof AppActivitiesRoute
-  '/_app/alerts': typeof AppAlertsRoute
   '/_app/automacoes': typeof AppAutomacoesRoute
-  '/_app/benchmark': typeof AppBenchmarkRoute
   '/_app/calendar': typeof AppCalendarRoute
   '/_app/campaigns': typeof AppCampaignsRouteWithChildren
   '/_app/carteira': typeof AppCarteiraRoute
   '/_app/chat': typeof AppChatRoute
   '/_app/coaching': typeof AppCoachingRoute
-  '/_app/cohorts': typeof AppCohortsRoute
   '/_app/command': typeof AppCommandRoute
   '/_app/commissions': typeof AppCommissionsRoute
   '/_app/companies': typeof AppCompaniesRouteWithChildren
   '/_app/contacts': typeof AppContactsRouteWithChildren
-  '/_app/contracts': typeof AppContractsRoute
   '/_app/customer-360': typeof AppCustomer360Route
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/dashboard-executivo': typeof AppDashboardExecutivoRoute
-  '/_app/data-quality': typeof AppDataQualityRoute
   '/_app/forecast': typeof AppForecastRoute
   '/_app/geo': typeof AppGeoRoute
   '/_app/geo-cobertura': typeof AppGeoCoberturaRoute
@@ -1224,53 +931,25 @@ export interface FileRoutesById {
   '/_app/geo-rota': typeof AppGeoRotaRoute
   '/_app/gestao-visao-global': typeof AppGestaoVisaoGlobalRoute
   '/_app/goals': typeof AppGoalsRoute
-  '/_app/ia-comercial': typeof AppIaComercialRoute
   '/_app/influencers': typeof AppInfluencersRoute
   '/_app/integrations': typeof AppIntegrationsRouteWithChildren
   '/_app/inteligencia-comercial': typeof AppInteligenciaComercialRouteWithChildren
-  '/_app/kb': typeof AppKbRouteWithChildren
   '/_app/lead-forms': typeof AppLeadFormsRoute
-  '/_app/lead-scoring': typeof AppLeadScoringRoute
   '/_app/leads': typeof AppLeadsRoute
-  '/_app/leads-pipeline': typeof AppLeadsPipelineRoute
-  '/_app/loyalty': typeof AppLoyaltyRoute
-  '/_app/marketing': typeof AppMarketingRoute
   '/_app/marketing-intel': typeof AppMarketingIntelRoute
   '/_app/meu-dia': typeof AppMeuDiaRoute
   '/_app/multi-empresa': typeof AppMultiEmpresaRouteWithChildren
   '/_app/mytasks': typeof AppMytasksRoute
   '/_app/nba': typeof AppNbaRoute
-  '/_app/notifications': typeof AppNotificationsRoute
   '/_app/onboarding': typeof AppOnboardingRoute
   '/_app/oportunidades': typeof AppOportunidadesRoute
-  '/_app/opportunity-map': typeof AppOpportunityMapRoute
   '/_app/pipeline': typeof AppPipelineRoute
-  '/_app/playbooks': typeof AppPlaybooksRoute
-  '/_app/productivity': typeof AppProductivityRoute
-  '/_app/products': typeof AppProductsRoute
-  '/_app/propensao': typeof AppPropensaoRoute
-  '/_app/proposals': typeof AppProposalsRouteWithChildren
-  '/_app/quotes': typeof AppQuotesRoute
-  '/_app/referrals': typeof AppReferralsRoute
   '/_app/reports': typeof AppReportsRouteWithChildren
   '/_app/representantes': typeof AppRepresentantesRoute
   '/_app/retention': typeof AppRetentionRoute
-  '/_app/rota-otimizada': typeof AppRotaOtimizadaRoute
-  '/_app/routing': typeof AppRoutingRoute
-  '/_app/sales-orders': typeof AppSalesOrdersRoute
-  '/_app/segments': typeof AppSegmentsRoute
   '/_app/sequences': typeof AppSequencesRouteWithChildren
   '/_app/setup-wizard': typeof AppSetupWizardRoute
-  '/_app/signatures': typeof AppSignaturesRoute
   '/_app/site-chat': typeof AppSiteChatRoute
-  '/_app/subscriptions': typeof AppSubscriptionsRoute
-  '/_app/surveys': typeof AppSurveysRoute
-  '/_app/tags': typeof AppTagsRoute
-  '/_app/templates': typeof AppTemplatesRoute
-  '/_app/territories': typeof AppTerritoriesRoute
-  '/_app/tickets': typeof AppTicketsRouteWithChildren
-  '/_app/time': typeof AppTimeRoute
-  '/_app/views': typeof AppViewsRoute
   '/_app/welcome': typeof AppWelcomeRoute
   '/_app/whatsapp': typeof AppWhatsappRoute
   '/_app/win-loss': typeof AppWinLossRoute
@@ -1293,9 +972,7 @@ export interface FileRoutesById {
   '/_app/integrations/templates': typeof AppIntegrationsTemplatesRoute
   '/_app/inteligencia-comercial/qualidade-ia': typeof AppInteligenciaComercialQualidadeIaRoute
   '/_app/invite/$token': typeof AppInviteTokenRoute
-  '/_app/kb/$id': typeof AppKbIdRoute
   '/_app/multi-empresa/$orgId': typeof AppMultiEmpresaOrgIdRoute
-  '/_app/proposals/$id': typeof AppProposalsIdRoute
   '/_app/reports/dashboards': typeof AppReportsDashboardsRouteWithChildren
   '/_app/reports/weekly': typeof AppReportsWeeklyRoute
   '/_app/sequences/$id': typeof AppSequencesIdRoute
@@ -1310,7 +987,6 @@ export interface FileRoutesById {
   '/_app/settings/site-chat': typeof AppSettingsSiteChatRoute
   '/_app/settings/webhooks': typeof AppSettingsWebhooksRoute
   '/_app/settings/whatsapp': typeof AppSettingsWhatsappRoute
-  '/_app/tickets/$id': typeof AppTicketsIdRoute
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/api/public/influencer-visit': typeof ApiPublicInfluencerVisitRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
@@ -1346,24 +1022,19 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/activities'
-    | '/alerts'
     | '/automacoes'
-    | '/benchmark'
     | '/calendar'
     | '/campaigns'
     | '/carteira'
     | '/chat'
     | '/coaching'
-    | '/cohorts'
     | '/command'
     | '/commissions'
     | '/companies'
     | '/contacts'
-    | '/contracts'
     | '/customer-360'
     | '/dashboard'
     | '/dashboard-executivo'
-    | '/data-quality'
     | '/forecast'
     | '/geo'
     | '/geo-cobertura'
@@ -1371,53 +1042,25 @@ export interface FileRouteTypes {
     | '/geo-rota'
     | '/gestao-visao-global'
     | '/goals'
-    | '/ia-comercial'
     | '/influencers'
     | '/integrations'
     | '/inteligencia-comercial'
-    | '/kb'
     | '/lead-forms'
-    | '/lead-scoring'
     | '/leads'
-    | '/leads-pipeline'
-    | '/loyalty'
-    | '/marketing'
     | '/marketing-intel'
     | '/meu-dia'
     | '/multi-empresa'
     | '/mytasks'
     | '/nba'
-    | '/notifications'
     | '/onboarding'
     | '/oportunidades'
-    | '/opportunity-map'
     | '/pipeline'
-    | '/playbooks'
-    | '/productivity'
-    | '/products'
-    | '/propensao'
-    | '/proposals'
-    | '/quotes'
-    | '/referrals'
     | '/reports'
     | '/representantes'
     | '/retention'
-    | '/rota-otimizada'
-    | '/routing'
-    | '/sales-orders'
-    | '/segments'
     | '/sequences'
     | '/setup-wizard'
-    | '/signatures'
     | '/site-chat'
-    | '/subscriptions'
-    | '/surveys'
-    | '/tags'
-    | '/templates'
-    | '/territories'
-    | '/tickets'
-    | '/time'
-    | '/views'
     | '/welcome'
     | '/whatsapp'
     | '/win-loss'
@@ -1440,9 +1083,7 @@ export interface FileRouteTypes {
     | '/integrations/templates'
     | '/inteligencia-comercial/qualidade-ia'
     | '/invite/$token'
-    | '/kb/$id'
     | '/multi-empresa/$orgId'
-    | '/proposals/$id'
     | '/reports/dashboards'
     | '/reports/weekly'
     | '/sequences/$id'
@@ -1457,7 +1098,6 @@ export interface FileRouteTypes {
     | '/settings/site-chat'
     | '/settings/webhooks'
     | '/settings/whatsapp'
-    | '/tickets/$id'
     | '/api/public/inbound-email'
     | '/api/public/influencer-visit'
     | '/api/public/lead-form'
@@ -1491,24 +1131,19 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/activities'
-    | '/alerts'
     | '/automacoes'
-    | '/benchmark'
     | '/calendar'
     | '/campaigns'
     | '/carteira'
     | '/chat'
     | '/coaching'
-    | '/cohorts'
     | '/command'
     | '/commissions'
     | '/companies'
     | '/contacts'
-    | '/contracts'
     | '/customer-360'
     | '/dashboard'
     | '/dashboard-executivo'
-    | '/data-quality'
     | '/forecast'
     | '/geo'
     | '/geo-cobertura'
@@ -1516,53 +1151,25 @@ export interface FileRouteTypes {
     | '/geo-rota'
     | '/gestao-visao-global'
     | '/goals'
-    | '/ia-comercial'
     | '/influencers'
     | '/integrations'
     | '/inteligencia-comercial'
-    | '/kb'
     | '/lead-forms'
-    | '/lead-scoring'
     | '/leads'
-    | '/leads-pipeline'
-    | '/loyalty'
-    | '/marketing'
     | '/marketing-intel'
     | '/meu-dia'
     | '/multi-empresa'
     | '/mytasks'
     | '/nba'
-    | '/notifications'
     | '/onboarding'
     | '/oportunidades'
-    | '/opportunity-map'
     | '/pipeline'
-    | '/playbooks'
-    | '/productivity'
-    | '/products'
-    | '/propensao'
-    | '/proposals'
-    | '/quotes'
-    | '/referrals'
     | '/reports'
     | '/representantes'
     | '/retention'
-    | '/rota-otimizada'
-    | '/routing'
-    | '/sales-orders'
-    | '/segments'
     | '/sequences'
     | '/setup-wizard'
-    | '/signatures'
     | '/site-chat'
-    | '/subscriptions'
-    | '/surveys'
-    | '/tags'
-    | '/templates'
-    | '/territories'
-    | '/tickets'
-    | '/time'
-    | '/views'
     | '/welcome'
     | '/whatsapp'
     | '/win-loss'
@@ -1585,9 +1192,7 @@ export interface FileRouteTypes {
     | '/integrations/templates'
     | '/inteligencia-comercial/qualidade-ia'
     | '/invite/$token'
-    | '/kb/$id'
     | '/multi-empresa/$orgId'
-    | '/proposals/$id'
     | '/reports/dashboards'
     | '/reports/weekly'
     | '/sequences/$id'
@@ -1602,7 +1207,6 @@ export interface FileRouteTypes {
     | '/settings/site-chat'
     | '/settings/webhooks'
     | '/settings/whatsapp'
-    | '/tickets/$id'
     | '/api/public/inbound-email'
     | '/api/public/influencer-visit'
     | '/api/public/lead-form'
@@ -1637,24 +1241,19 @@ export interface FileRouteTypes {
     | '/_app'
     | '/login'
     | '/_app/activities'
-    | '/_app/alerts'
     | '/_app/automacoes'
-    | '/_app/benchmark'
     | '/_app/calendar'
     | '/_app/campaigns'
     | '/_app/carteira'
     | '/_app/chat'
     | '/_app/coaching'
-    | '/_app/cohorts'
     | '/_app/command'
     | '/_app/commissions'
     | '/_app/companies'
     | '/_app/contacts'
-    | '/_app/contracts'
     | '/_app/customer-360'
     | '/_app/dashboard'
     | '/_app/dashboard-executivo'
-    | '/_app/data-quality'
     | '/_app/forecast'
     | '/_app/geo'
     | '/_app/geo-cobertura'
@@ -1662,53 +1261,25 @@ export interface FileRouteTypes {
     | '/_app/geo-rota'
     | '/_app/gestao-visao-global'
     | '/_app/goals'
-    | '/_app/ia-comercial'
     | '/_app/influencers'
     | '/_app/integrations'
     | '/_app/inteligencia-comercial'
-    | '/_app/kb'
     | '/_app/lead-forms'
-    | '/_app/lead-scoring'
     | '/_app/leads'
-    | '/_app/leads-pipeline'
-    | '/_app/loyalty'
-    | '/_app/marketing'
     | '/_app/marketing-intel'
     | '/_app/meu-dia'
     | '/_app/multi-empresa'
     | '/_app/mytasks'
     | '/_app/nba'
-    | '/_app/notifications'
     | '/_app/onboarding'
     | '/_app/oportunidades'
-    | '/_app/opportunity-map'
     | '/_app/pipeline'
-    | '/_app/playbooks'
-    | '/_app/productivity'
-    | '/_app/products'
-    | '/_app/propensao'
-    | '/_app/proposals'
-    | '/_app/quotes'
-    | '/_app/referrals'
     | '/_app/reports'
     | '/_app/representantes'
     | '/_app/retention'
-    | '/_app/rota-otimizada'
-    | '/_app/routing'
-    | '/_app/sales-orders'
-    | '/_app/segments'
     | '/_app/sequences'
     | '/_app/setup-wizard'
-    | '/_app/signatures'
     | '/_app/site-chat'
-    | '/_app/subscriptions'
-    | '/_app/surveys'
-    | '/_app/tags'
-    | '/_app/templates'
-    | '/_app/territories'
-    | '/_app/tickets'
-    | '/_app/time'
-    | '/_app/views'
     | '/_app/welcome'
     | '/_app/whatsapp'
     | '/_app/win-loss'
@@ -1731,9 +1302,7 @@ export interface FileRouteTypes {
     | '/_app/integrations/templates'
     | '/_app/inteligencia-comercial/qualidade-ia'
     | '/_app/invite/$token'
-    | '/_app/kb/$id'
     | '/_app/multi-empresa/$orgId'
-    | '/_app/proposals/$id'
     | '/_app/reports/dashboards'
     | '/_app/reports/weekly'
     | '/_app/sequences/$id'
@@ -1748,7 +1317,6 @@ export interface FileRouteTypes {
     | '/_app/settings/site-chat'
     | '/_app/settings/webhooks'
     | '/_app/settings/whatsapp'
-    | '/_app/tickets/$id'
     | '/api/public/inbound-email'
     | '/api/public/influencer-visit'
     | '/api/public/lead-form'
@@ -1862,74 +1430,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppWelcomeRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/views': {
-      id: '/_app/views'
-      path: '/views'
-      fullPath: '/views'
-      preLoaderRoute: typeof AppViewsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/time': {
-      id: '/_app/time'
-      path: '/time'
-      fullPath: '/time'
-      preLoaderRoute: typeof AppTimeRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/tickets': {
-      id: '/_app/tickets'
-      path: '/tickets'
-      fullPath: '/tickets'
-      preLoaderRoute: typeof AppTicketsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/territories': {
-      id: '/_app/territories'
-      path: '/territories'
-      fullPath: '/territories'
-      preLoaderRoute: typeof AppTerritoriesRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/templates': {
-      id: '/_app/templates'
-      path: '/templates'
-      fullPath: '/templates'
-      preLoaderRoute: typeof AppTemplatesRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/tags': {
-      id: '/_app/tags'
-      path: '/tags'
-      fullPath: '/tags'
-      preLoaderRoute: typeof AppTagsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/surveys': {
-      id: '/_app/surveys'
-      path: '/surveys'
-      fullPath: '/surveys'
-      preLoaderRoute: typeof AppSurveysRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/subscriptions': {
-      id: '/_app/subscriptions'
-      path: '/subscriptions'
-      fullPath: '/subscriptions'
-      preLoaderRoute: typeof AppSubscriptionsRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/_app/site-chat': {
       id: '/_app/site-chat'
       path: '/site-chat'
       fullPath: '/site-chat'
       preLoaderRoute: typeof AppSiteChatRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/signatures': {
-      id: '/_app/signatures'
-      path: '/signatures'
-      fullPath: '/signatures'
-      preLoaderRoute: typeof AppSignaturesRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/setup-wizard': {
@@ -1944,34 +1449,6 @@ declare module '@tanstack/react-router' {
       path: '/sequences'
       fullPath: '/sequences'
       preLoaderRoute: typeof AppSequencesRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/segments': {
-      id: '/_app/segments'
-      path: '/segments'
-      fullPath: '/segments'
-      preLoaderRoute: typeof AppSegmentsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/sales-orders': {
-      id: '/_app/sales-orders'
-      path: '/sales-orders'
-      fullPath: '/sales-orders'
-      preLoaderRoute: typeof AppSalesOrdersRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/routing': {
-      id: '/_app/routing'
-      path: '/routing'
-      fullPath: '/routing'
-      preLoaderRoute: typeof AppRoutingRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/rota-otimizada': {
-      id: '/_app/rota-otimizada'
-      path: '/rota-otimizada'
-      fullPath: '/rota-otimizada'
-      preLoaderRoute: typeof AppRotaOtimizadaRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/retention': {
@@ -1995,67 +1472,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppReportsRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/referrals': {
-      id: '/_app/referrals'
-      path: '/referrals'
-      fullPath: '/referrals'
-      preLoaderRoute: typeof AppReferralsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/quotes': {
-      id: '/_app/quotes'
-      path: '/quotes'
-      fullPath: '/quotes'
-      preLoaderRoute: typeof AppQuotesRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/proposals': {
-      id: '/_app/proposals'
-      path: '/proposals'
-      fullPath: '/proposals'
-      preLoaderRoute: typeof AppProposalsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/propensao': {
-      id: '/_app/propensao'
-      path: '/propensao'
-      fullPath: '/propensao'
-      preLoaderRoute: typeof AppPropensaoRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/products': {
-      id: '/_app/products'
-      path: '/products'
-      fullPath: '/products'
-      preLoaderRoute: typeof AppProductsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/productivity': {
-      id: '/_app/productivity'
-      path: '/productivity'
-      fullPath: '/productivity'
-      preLoaderRoute: typeof AppProductivityRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/playbooks': {
-      id: '/_app/playbooks'
-      path: '/playbooks'
-      fullPath: '/playbooks'
-      preLoaderRoute: typeof AppPlaybooksRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/_app/pipeline': {
       id: '/_app/pipeline'
       path: '/pipeline'
       fullPath: '/pipeline'
       preLoaderRoute: typeof AppPipelineRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/opportunity-map': {
-      id: '/_app/opportunity-map'
-      path: '/opportunity-map'
-      fullPath: '/opportunity-map'
-      preLoaderRoute: typeof AppOpportunityMapRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/oportunidades': {
@@ -2070,13 +1491,6 @@ declare module '@tanstack/react-router' {
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof AppOnboardingRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/notifications': {
-      id: '/_app/notifications'
-      path: '/notifications'
-      fullPath: '/notifications'
-      preLoaderRoute: typeof AppNotificationsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/nba': {
@@ -2114,27 +1528,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppMarketingIntelRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/marketing': {
-      id: '/_app/marketing'
-      path: '/marketing'
-      fullPath: '/marketing'
-      preLoaderRoute: typeof AppMarketingRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/loyalty': {
-      id: '/_app/loyalty'
-      path: '/loyalty'
-      fullPath: '/loyalty'
-      preLoaderRoute: typeof AppLoyaltyRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/leads-pipeline': {
-      id: '/_app/leads-pipeline'
-      path: '/leads-pipeline'
-      fullPath: '/leads-pipeline'
-      preLoaderRoute: typeof AppLeadsPipelineRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/_app/leads': {
       id: '/_app/leads'
       path: '/leads'
@@ -2142,25 +1535,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppLeadsRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/lead-scoring': {
-      id: '/_app/lead-scoring'
-      path: '/lead-scoring'
-      fullPath: '/lead-scoring'
-      preLoaderRoute: typeof AppLeadScoringRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/_app/lead-forms': {
       id: '/_app/lead-forms'
       path: '/lead-forms'
       fullPath: '/lead-forms'
       preLoaderRoute: typeof AppLeadFormsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/kb': {
-      id: '/_app/kb'
-      path: '/kb'
-      fullPath: '/kb'
-      preLoaderRoute: typeof AppKbRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/inteligencia-comercial': {
@@ -2182,13 +1561,6 @@ declare module '@tanstack/react-router' {
       path: '/influencers'
       fullPath: '/influencers'
       preLoaderRoute: typeof AppInfluencersRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/ia-comercial': {
-      id: '/_app/ia-comercial'
-      path: '/ia-comercial'
-      fullPath: '/ia-comercial'
-      preLoaderRoute: typeof AppIaComercialRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/goals': {
@@ -2240,13 +1612,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppForecastRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/data-quality': {
-      id: '/_app/data-quality'
-      path: '/data-quality'
-      fullPath: '/data-quality'
-      preLoaderRoute: typeof AppDataQualityRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/_app/dashboard-executivo': {
       id: '/_app/dashboard-executivo'
       path: '/dashboard-executivo'
@@ -2266,13 +1631,6 @@ declare module '@tanstack/react-router' {
       path: '/customer-360'
       fullPath: '/customer-360'
       preLoaderRoute: typeof AppCustomer360RouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/contracts': {
-      id: '/_app/contracts'
-      path: '/contracts'
-      fullPath: '/contracts'
-      preLoaderRoute: typeof AppContractsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/contacts': {
@@ -2301,13 +1659,6 @@ declare module '@tanstack/react-router' {
       path: '/command'
       fullPath: '/command'
       preLoaderRoute: typeof AppCommandRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/cohorts': {
-      id: '/_app/cohorts'
-      path: '/cohorts'
-      fullPath: '/cohorts'
-      preLoaderRoute: typeof AppCohortsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/coaching': {
@@ -2345,25 +1696,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCalendarRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/benchmark': {
-      id: '/_app/benchmark'
-      path: '/benchmark'
-      fullPath: '/benchmark'
-      preLoaderRoute: typeof AppBenchmarkRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/_app/automacoes': {
       id: '/_app/automacoes'
       path: '/automacoes'
       fullPath: '/automacoes'
       preLoaderRoute: typeof AppAutomacoesRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/alerts': {
-      id: '/_app/alerts'
-      path: '/alerts'
-      fullPath: '/alerts'
-      preLoaderRoute: typeof AppAlertsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/activities': {
@@ -2414,13 +1751,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/public/inbound-email'
       preLoaderRoute: typeof ApiPublicInboundEmailRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/_app/tickets/$id': {
-      id: '/_app/tickets/$id'
-      path: '/$id'
-      fullPath: '/tickets/$id'
-      preLoaderRoute: typeof AppTicketsIdRouteImport
-      parentRoute: typeof AppTicketsRoute
     }
     '/_app/settings/whatsapp': {
       id: '/_app/settings/whatsapp'
@@ -2520,26 +1850,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppReportsDashboardsRouteImport
       parentRoute: typeof AppReportsRoute
     }
-    '/_app/proposals/$id': {
-      id: '/_app/proposals/$id'
-      path: '/$id'
-      fullPath: '/proposals/$id'
-      preLoaderRoute: typeof AppProposalsIdRouteImport
-      parentRoute: typeof AppProposalsRoute
-    }
     '/_app/multi-empresa/$orgId': {
       id: '/_app/multi-empresa/$orgId'
       path: '/$orgId'
       fullPath: '/multi-empresa/$orgId'
       preLoaderRoute: typeof AppMultiEmpresaOrgIdRouteImport
       parentRoute: typeof AppMultiEmpresaRoute
-    }
-    '/_app/kb/$id': {
-      id: '/_app/kb/$id'
-      path: '/$id'
-      fullPath: '/kb/$id'
-      preLoaderRoute: typeof AppKbIdRouteImport
-      parentRoute: typeof AppKbRoute
     }
     '/_app/invite/$token': {
       id: '/_app/invite/$token'
@@ -2925,16 +2241,6 @@ const AppInteligenciaComercialRouteWithChildren =
     AppInteligenciaComercialRouteChildren,
   )
 
-interface AppKbRouteChildren {
-  AppKbIdRoute: typeof AppKbIdRoute
-}
-
-const AppKbRouteChildren: AppKbRouteChildren = {
-  AppKbIdRoute: AppKbIdRoute,
-}
-
-const AppKbRouteWithChildren = AppKbRoute._addFileChildren(AppKbRouteChildren)
-
 interface AppMultiEmpresaRouteChildren {
   AppMultiEmpresaOrgIdRoute: typeof AppMultiEmpresaOrgIdRoute
 }
@@ -2945,18 +2251,6 @@ const AppMultiEmpresaRouteChildren: AppMultiEmpresaRouteChildren = {
 
 const AppMultiEmpresaRouteWithChildren = AppMultiEmpresaRoute._addFileChildren(
   AppMultiEmpresaRouteChildren,
-)
-
-interface AppProposalsRouteChildren {
-  AppProposalsIdRoute: typeof AppProposalsIdRoute
-}
-
-const AppProposalsRouteChildren: AppProposalsRouteChildren = {
-  AppProposalsIdRoute: AppProposalsIdRoute,
-}
-
-const AppProposalsRouteWithChildren = AppProposalsRoute._addFileChildren(
-  AppProposalsRouteChildren,
 )
 
 interface AppReportsDashboardsRouteChildren {
@@ -2996,18 +2290,6 @@ const AppSequencesRouteWithChildren = AppSequencesRoute._addFileChildren(
   AppSequencesRouteChildren,
 )
 
-interface AppTicketsRouteChildren {
-  AppTicketsIdRoute: typeof AppTicketsIdRoute
-}
-
-const AppTicketsRouteChildren: AppTicketsRouteChildren = {
-  AppTicketsIdRoute: AppTicketsIdRoute,
-}
-
-const AppTicketsRouteWithChildren = AppTicketsRoute._addFileChildren(
-  AppTicketsRouteChildren,
-)
-
 interface AppSettingsAutomationsRouteChildren {
   AppSettingsAutomationsRunsRoute: typeof AppSettingsAutomationsRunsRoute
 }
@@ -3024,24 +2306,19 @@ const AppSettingsAutomationsRouteWithChildren =
 
 interface AppRouteChildren {
   AppActivitiesRoute: typeof AppActivitiesRoute
-  AppAlertsRoute: typeof AppAlertsRoute
   AppAutomacoesRoute: typeof AppAutomacoesRoute
-  AppBenchmarkRoute: typeof AppBenchmarkRoute
   AppCalendarRoute: typeof AppCalendarRoute
   AppCampaignsRoute: typeof AppCampaignsRouteWithChildren
   AppCarteiraRoute: typeof AppCarteiraRoute
   AppChatRoute: typeof AppChatRoute
   AppCoachingRoute: typeof AppCoachingRoute
-  AppCohortsRoute: typeof AppCohortsRoute
   AppCommandRoute: typeof AppCommandRoute
   AppCommissionsRoute: typeof AppCommissionsRoute
   AppCompaniesRoute: typeof AppCompaniesRouteWithChildren
   AppContactsRoute: typeof AppContactsRouteWithChildren
-  AppContractsRoute: typeof AppContractsRoute
   AppCustomer360Route: typeof AppCustomer360Route
   AppDashboardRoute: typeof AppDashboardRoute
   AppDashboardExecutivoRoute: typeof AppDashboardExecutivoRoute
-  AppDataQualityRoute: typeof AppDataQualityRoute
   AppForecastRoute: typeof AppForecastRoute
   AppGeoRoute: typeof AppGeoRoute
   AppGeoCoberturaRoute: typeof AppGeoCoberturaRoute
@@ -3049,53 +2326,25 @@ interface AppRouteChildren {
   AppGeoRotaRoute: typeof AppGeoRotaRoute
   AppGestaoVisaoGlobalRoute: typeof AppGestaoVisaoGlobalRoute
   AppGoalsRoute: typeof AppGoalsRoute
-  AppIaComercialRoute: typeof AppIaComercialRoute
   AppInfluencersRoute: typeof AppInfluencersRoute
   AppIntegrationsRoute: typeof AppIntegrationsRouteWithChildren
   AppInteligenciaComercialRoute: typeof AppInteligenciaComercialRouteWithChildren
-  AppKbRoute: typeof AppKbRouteWithChildren
   AppLeadFormsRoute: typeof AppLeadFormsRoute
-  AppLeadScoringRoute: typeof AppLeadScoringRoute
   AppLeadsRoute: typeof AppLeadsRoute
-  AppLeadsPipelineRoute: typeof AppLeadsPipelineRoute
-  AppLoyaltyRoute: typeof AppLoyaltyRoute
-  AppMarketingRoute: typeof AppMarketingRoute
   AppMarketingIntelRoute: typeof AppMarketingIntelRoute
   AppMeuDiaRoute: typeof AppMeuDiaRoute
   AppMultiEmpresaRoute: typeof AppMultiEmpresaRouteWithChildren
   AppMytasksRoute: typeof AppMytasksRoute
   AppNbaRoute: typeof AppNbaRoute
-  AppNotificationsRoute: typeof AppNotificationsRoute
   AppOnboardingRoute: typeof AppOnboardingRoute
   AppOportunidadesRoute: typeof AppOportunidadesRoute
-  AppOpportunityMapRoute: typeof AppOpportunityMapRoute
   AppPipelineRoute: typeof AppPipelineRoute
-  AppPlaybooksRoute: typeof AppPlaybooksRoute
-  AppProductivityRoute: typeof AppProductivityRoute
-  AppProductsRoute: typeof AppProductsRoute
-  AppPropensaoRoute: typeof AppPropensaoRoute
-  AppProposalsRoute: typeof AppProposalsRouteWithChildren
-  AppQuotesRoute: typeof AppQuotesRoute
-  AppReferralsRoute: typeof AppReferralsRoute
   AppReportsRoute: typeof AppReportsRouteWithChildren
   AppRepresentantesRoute: typeof AppRepresentantesRoute
   AppRetentionRoute: typeof AppRetentionRoute
-  AppRotaOtimizadaRoute: typeof AppRotaOtimizadaRoute
-  AppRoutingRoute: typeof AppRoutingRoute
-  AppSalesOrdersRoute: typeof AppSalesOrdersRoute
-  AppSegmentsRoute: typeof AppSegmentsRoute
   AppSequencesRoute: typeof AppSequencesRouteWithChildren
   AppSetupWizardRoute: typeof AppSetupWizardRoute
-  AppSignaturesRoute: typeof AppSignaturesRoute
   AppSiteChatRoute: typeof AppSiteChatRoute
-  AppSubscriptionsRoute: typeof AppSubscriptionsRoute
-  AppSurveysRoute: typeof AppSurveysRoute
-  AppTagsRoute: typeof AppTagsRoute
-  AppTemplatesRoute: typeof AppTemplatesRoute
-  AppTerritoriesRoute: typeof AppTerritoriesRoute
-  AppTicketsRoute: typeof AppTicketsRouteWithChildren
-  AppTimeRoute: typeof AppTimeRoute
-  AppViewsRoute: typeof AppViewsRoute
   AppWelcomeRoute: typeof AppWelcomeRoute
   AppWhatsappRoute: typeof AppWhatsappRoute
   AppWinLossRoute: typeof AppWinLossRoute
@@ -3115,24 +2364,19 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppActivitiesRoute: AppActivitiesRoute,
-  AppAlertsRoute: AppAlertsRoute,
   AppAutomacoesRoute: AppAutomacoesRoute,
-  AppBenchmarkRoute: AppBenchmarkRoute,
   AppCalendarRoute: AppCalendarRoute,
   AppCampaignsRoute: AppCampaignsRouteWithChildren,
   AppCarteiraRoute: AppCarteiraRoute,
   AppChatRoute: AppChatRoute,
   AppCoachingRoute: AppCoachingRoute,
-  AppCohortsRoute: AppCohortsRoute,
   AppCommandRoute: AppCommandRoute,
   AppCommissionsRoute: AppCommissionsRoute,
   AppCompaniesRoute: AppCompaniesRouteWithChildren,
   AppContactsRoute: AppContactsRouteWithChildren,
-  AppContractsRoute: AppContractsRoute,
   AppCustomer360Route: AppCustomer360Route,
   AppDashboardRoute: AppDashboardRoute,
   AppDashboardExecutivoRoute: AppDashboardExecutivoRoute,
-  AppDataQualityRoute: AppDataQualityRoute,
   AppForecastRoute: AppForecastRoute,
   AppGeoRoute: AppGeoRoute,
   AppGeoCoberturaRoute: AppGeoCoberturaRoute,
@@ -3140,53 +2384,25 @@ const AppRouteChildren: AppRouteChildren = {
   AppGeoRotaRoute: AppGeoRotaRoute,
   AppGestaoVisaoGlobalRoute: AppGestaoVisaoGlobalRoute,
   AppGoalsRoute: AppGoalsRoute,
-  AppIaComercialRoute: AppIaComercialRoute,
   AppInfluencersRoute: AppInfluencersRoute,
   AppIntegrationsRoute: AppIntegrationsRouteWithChildren,
   AppInteligenciaComercialRoute: AppInteligenciaComercialRouteWithChildren,
-  AppKbRoute: AppKbRouteWithChildren,
   AppLeadFormsRoute: AppLeadFormsRoute,
-  AppLeadScoringRoute: AppLeadScoringRoute,
   AppLeadsRoute: AppLeadsRoute,
-  AppLeadsPipelineRoute: AppLeadsPipelineRoute,
-  AppLoyaltyRoute: AppLoyaltyRoute,
-  AppMarketingRoute: AppMarketingRoute,
   AppMarketingIntelRoute: AppMarketingIntelRoute,
   AppMeuDiaRoute: AppMeuDiaRoute,
   AppMultiEmpresaRoute: AppMultiEmpresaRouteWithChildren,
   AppMytasksRoute: AppMytasksRoute,
   AppNbaRoute: AppNbaRoute,
-  AppNotificationsRoute: AppNotificationsRoute,
   AppOnboardingRoute: AppOnboardingRoute,
   AppOportunidadesRoute: AppOportunidadesRoute,
-  AppOpportunityMapRoute: AppOpportunityMapRoute,
   AppPipelineRoute: AppPipelineRoute,
-  AppPlaybooksRoute: AppPlaybooksRoute,
-  AppProductivityRoute: AppProductivityRoute,
-  AppProductsRoute: AppProductsRoute,
-  AppPropensaoRoute: AppPropensaoRoute,
-  AppProposalsRoute: AppProposalsRouteWithChildren,
-  AppQuotesRoute: AppQuotesRoute,
-  AppReferralsRoute: AppReferralsRoute,
   AppReportsRoute: AppReportsRouteWithChildren,
   AppRepresentantesRoute: AppRepresentantesRoute,
   AppRetentionRoute: AppRetentionRoute,
-  AppRotaOtimizadaRoute: AppRotaOtimizadaRoute,
-  AppRoutingRoute: AppRoutingRoute,
-  AppSalesOrdersRoute: AppSalesOrdersRoute,
-  AppSegmentsRoute: AppSegmentsRoute,
   AppSequencesRoute: AppSequencesRouteWithChildren,
   AppSetupWizardRoute: AppSetupWizardRoute,
-  AppSignaturesRoute: AppSignaturesRoute,
   AppSiteChatRoute: AppSiteChatRoute,
-  AppSubscriptionsRoute: AppSubscriptionsRoute,
-  AppSurveysRoute: AppSurveysRoute,
-  AppTagsRoute: AppTagsRoute,
-  AppTemplatesRoute: AppTemplatesRoute,
-  AppTerritoriesRoute: AppTerritoriesRoute,
-  AppTicketsRoute: AppTicketsRouteWithChildren,
-  AppTimeRoute: AppTimeRoute,
-  AppViewsRoute: AppViewsRoute,
   AppWelcomeRoute: AppWelcomeRoute,
   AppWhatsappRoute: AppWhatsappRoute,
   AppWinLossRoute: AppWinLossRoute,
