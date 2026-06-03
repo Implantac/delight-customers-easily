@@ -113,6 +113,8 @@ function AutomationsPage() {
 
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<any | null>(null);
+  const [prefill, setPrefill] = useState<Recipe | null>(null);
+  const [recipesOpen, setRecipesOpen] = useState(false);
 
   const del = useMutation({
     mutationFn: (id: string) => callDelete({ data: { id } }),
@@ -131,6 +133,13 @@ function AutomationsPage() {
     onError: (e: any) => toast.error(e?.message ?? "Erro ao executar"),
   });
 
+  const useRecipe = (r: Recipe) => {
+    setEditing(null);
+    setPrefill(r);
+    setRecipesOpen(false);
+    setOpen(true);
+  };
+
   return (
     <div className="p-4 md:p-8 space-y-6">
       <PageHeader
@@ -138,7 +147,10 @@ function AutomationsPage() {
         title="Automações comerciais"
         subtitle="Regras simples que criam tarefas, notificações ou mensagens automaticamente"
         action={
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" onClick={() => setRecipesOpen(true)}>
+              <Sparkles className="h-4 w-4 mr-1" /> Receitas prontas
+            </Button>
             <Button
               variant="outline"
               onClick={() => runNow.mutate()}
@@ -147,7 +159,7 @@ function AutomationsPage() {
               <PlayCircle className="h-4 w-4 mr-1" />
               {runNow.isPending ? "Executando…" : "Executar agora"}
             </Button>
-            <Button onClick={() => { setEditing(null); setOpen(true); }}>
+            <Button onClick={() => { setEditing(null); setPrefill(null); setOpen(true); }}>
               <Plus className="h-4 w-4 mr-1" /> Nova regra
             </Button>
           </div>
@@ -157,12 +169,15 @@ function AutomationsPage() {
       {q.isLoading ? (
         <p className="text-sm text-muted-foreground">Carregando…</p>
       ) : (q.data?.automations ?? []).length === 0 ? (
-        <Card className="p-12 text-center">
-          <Zap className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
+        <Card className="p-12 text-center space-y-3">
+          <Zap className="h-10 w-10 mx-auto text-muted-foreground" />
           <p className="font-medium">Nenhuma automação ainda</p>
-          <p className="text-sm text-muted-foreground mt-1">
-            Crie regras como "se cliente ficar 90 dias sem comprar, criar tarefa".
+          <p className="text-sm text-muted-foreground">
+            Comece com uma receita pronta ou crie sua própria regra.
           </p>
+          <Button variant="outline" onClick={() => setRecipesOpen(true)}>
+            <Sparkles className="h-4 w-4 mr-1" /> Ver receitas
+          </Button>
         </Card>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -180,7 +195,7 @@ function AutomationsPage() {
                   </p>
                 </div>
                 <div className="flex gap-1">
-                  <Button size="icon" variant="ghost" onClick={() => { setEditing(a); setOpen(true); }}>
+                  <Button size="icon" variant="ghost" onClick={() => { setEditing(a); setPrefill(null); setOpen(true); }}>
                     <Edit3 className="h-4 w-4" />
                   </Button>
                   <Button size="icon" variant="ghost" onClick={() => del.mutate(a.id)}>
@@ -204,10 +219,40 @@ function AutomationsPage() {
         </div>
       )}
 
+      <Dialog open={recipesOpen} onOpenChange={setRecipesOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-primary" /> Receitas prontas
+            </DialogTitle>
+          </DialogHeader>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[60vh] overflow-y-auto pr-1">
+            {RECIPES.map((r) => (
+              <Card key={r.id} className="p-3 space-y-2 hover:border-primary/50 transition-colors">
+                <h4 className="font-medium text-sm">{r.name}</h4>
+                <p className="text-xs text-muted-foreground">{r.description}</p>
+                <div className="flex flex-wrap gap-1">
+                  {r.actions.map((a, i) => (
+                    <Badge key={i} variant="outline" className="text-[10px]">
+                      {ACTION_LABELS[a.type] ?? a.type}
+                    </Badge>
+                  ))}
+                </div>
+                <Button size="sm" className="w-full" onClick={() => useRecipe(r)}>
+                  Usar esta receita
+                </Button>
+              </Card>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <AutomationDialog
+        key={editing?.id ?? prefill?.id ?? "new"}
         open={open}
         onOpenChange={setOpen}
         editing={editing}
+        prefill={prefill}
         orgId={orgId}
         onSaved={() => {
           qc.invalidateQueries({ queryKey: ["automations"] });
@@ -220,17 +265,18 @@ function AutomationsPage() {
 }
 
 function AutomationDialog({
-  open, onOpenChange, editing, orgId, onSaved, callUpsert,
+  open, onOpenChange, editing, prefill, orgId, onSaved, callUpsert,
 }: any) {
-  const [name, setName] = useState(editing?.name ?? "");
-  const [description, setDescription] = useState(editing?.description ?? "");
-  const [trigger, setTrigger] = useState(editing?.trigger_type ?? "no_purchase_days");
-  const [threshold, setThreshold] = useState<number>(editing?.threshold ?? 90);
+  const seed = editing ?? prefill ?? null;
+  const [name, setName] = useState(seed?.name ?? "");
+  const [description, setDescription] = useState(seed?.description ?? "");
+  const [trigger, setTrigger] = useState(seed?.trigger_type ?? "no_purchase_days");
+  const [threshold, setThreshold] = useState<number>(seed?.threshold ?? 90);
   const [actions, setActions] = useState<string[]>(
-    (editing?.actions ?? [{ type: "create_task" }]).map((a: any) => a.type),
+    (seed?.actions ?? [{ type: "create_task" }]).map((a: any) => a.type),
   );
-  const [template, setTemplate] = useState<string>(editing?.actions?.[0]?.template ?? "");
-  const [enabled, setEnabled] = useState(editing?.enabled ?? true);
+  const [template, setTemplate] = useState<string>(seed?.actions?.[0]?.template ?? "");
+  const [enabled, setEnabled] = useState(seed?.enabled ?? true);
 
   // Reset on open with new editing
   // Note: simple approach — re-render on key change in parent if needed.
