@@ -6804,7 +6804,7 @@ export type Database = {
         Insert: {
           cnpj?: string | null
           created_at?: string
-          created_by: string
+          created_by?: string
           external_branch_code?: string | null
           external_company_code?: string | null
           id?: string
