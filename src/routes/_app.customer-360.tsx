@@ -286,6 +286,7 @@ function Customer360Page() {
             const TrendIcon = c.trend === "up" ? TrendingUp : c.trend === "down" ? TrendingDown : Minus;
             const trendCls = c.trend === "up" ? "text-emerald-600" : c.trend === "down" ? "text-red-600" : "text-muted-foreground";
             const checked = c.company_id ? selected.has(c.company_id) : false;
+            const erp = c.company_id ? erpStatusMap.get(c.company_id) : undefined;
             return (
               <Card key={c.id} className={checked ? "border-primary/40 bg-primary/5" : undefined}>
                 <CardContent className="p-4">
@@ -312,6 +313,7 @@ function Customer360Page() {
                             <TrendIcon className="h-3 w-3" />
                             {c.trend === "up" ? "subindo" : c.trend === "down" ? "caindo" : "estável"}
                           </span>
+                          <ErpSyncBadge erp={erp} />
                         </div>
                         <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
                           {c.cnpj && <span>CNPJ {c.cnpj}</span>}
