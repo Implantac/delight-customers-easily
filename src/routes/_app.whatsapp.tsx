@@ -239,9 +239,9 @@ function WhatsAppPage() {
         />
       </div>
 
-      <div className="flex-1 grid grid-cols-12 gap-4 px-6 pb-6 min-h-0">
+      <div className="flex-1 grid grid-cols-12 gap-4 px-3 md:px-6 pb-20 md:pb-6 min-h-0">
         {/* List */}
-        <Card className="col-span-12 md:col-span-4 xl:col-span-3 flex flex-col min-h-0">
+        <Card className={`${selectedId ? "hidden md:flex" : "flex"} col-span-12 md:col-span-4 xl:col-span-3 flex-col min-h-0`}>
           <div className="p-3 border-b">
             <Tabs value={filter} onValueChange={(v) => setFilter(v as typeof filter)}>
               <TabsList className="grid grid-cols-3 w-full">
