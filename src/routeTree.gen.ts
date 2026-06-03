@@ -24,6 +24,7 @@ import { Route as AppTemplatesRouteImport } from './routes/_app.templates'
 import { Route as AppTagsRouteImport } from './routes/_app.tags'
 import { Route as AppSurveysRouteImport } from './routes/_app.surveys'
 import { Route as AppSubscriptionsRouteImport } from './routes/_app.subscriptions'
+import { Route as AppSiteChatRouteImport } from './routes/_app.site-chat'
 import { Route as AppSignaturesRouteImport } from './routes/_app.signatures'
 import { Route as AppSetupWizardRouteImport } from './routes/_app.setup-wizard'
 import { Route as AppSequencesRouteImport } from './routes/_app.sequences'
@@ -96,6 +97,7 @@ import { Route as ApiPublicInboundEmailRouteImport } from './routes/api/public/i
 import { Route as AppTicketsIdRouteImport } from './routes/_app.tickets.$id'
 import { Route as AppSettingsWhatsappRouteImport } from './routes/_app.settings.whatsapp'
 import { Route as AppSettingsWebhooksRouteImport } from './routes/_app.settings.webhooks'
+import { Route as AppSettingsSiteChatRouteImport } from './routes/_app.settings.site-chat'
 import { Route as AppSettingsSecurityRouteImport } from './routes/_app.settings.security'
 import { Route as AppSettingsOrganizationRouteImport } from './routes/_app.settings.organization'
 import { Route as AppSettingsImportRouteImport } from './routes/_app.settings.import'
@@ -221,6 +223,11 @@ const AppSurveysRoute = AppSurveysRouteImport.update({
 const AppSubscriptionsRoute = AppSubscriptionsRouteImport.update({
   id: '/subscriptions',
   path: '/subscriptions',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSiteChatRoute = AppSiteChatRouteImport.update({
+  id: '/site-chat',
+  path: '/site-chat',
   getParentRoute: () => AppRoute,
 } as any)
 const AppSignaturesRoute = AppSignaturesRouteImport.update({
@@ -586,6 +593,11 @@ const AppSettingsWebhooksRoute = AppSettingsWebhooksRouteImport.update({
   path: '/settings/webhooks',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSettingsSiteChatRoute = AppSettingsSiteChatRouteImport.update({
+  id: '/settings/site-chat',
+  path: '/settings/site-chat',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppSettingsSecurityRoute = AppSettingsSecurityRouteImport.update({
   id: '/settings/security',
   path: '/settings/security',
@@ -938,6 +950,7 @@ export interface FileRoutesByFullPath {
   '/sequences': typeof AppSequencesRouteWithChildren
   '/setup-wizard': typeof AppSetupWizardRoute
   '/signatures': typeof AppSignaturesRoute
+  '/site-chat': typeof AppSiteChatRoute
   '/subscriptions': typeof AppSubscriptionsRoute
   '/surveys': typeof AppSurveysRoute
   '/tags': typeof AppTagsRoute
@@ -980,6 +993,7 @@ export interface FileRoutesByFullPath {
   '/settings/import': typeof AppSettingsImportRoute
   '/settings/organization': typeof AppSettingsOrganizationRoute
   '/settings/security': typeof AppSettingsSecurityRoute
+  '/settings/site-chat': typeof AppSettingsSiteChatRoute
   '/settings/webhooks': typeof AppSettingsWebhooksRoute
   '/settings/whatsapp': typeof AppSettingsWhatsappRoute
   '/tickets/$id': typeof AppTicketsIdRoute
@@ -1078,6 +1092,7 @@ export interface FileRoutesByTo {
   '/sequences': typeof AppSequencesRouteWithChildren
   '/setup-wizard': typeof AppSetupWizardRoute
   '/signatures': typeof AppSignaturesRoute
+  '/site-chat': typeof AppSiteChatRoute
   '/subscriptions': typeof AppSubscriptionsRoute
   '/surveys': typeof AppSurveysRoute
   '/tags': typeof AppTagsRoute
@@ -1120,6 +1135,7 @@ export interface FileRoutesByTo {
   '/settings/import': typeof AppSettingsImportRoute
   '/settings/organization': typeof AppSettingsOrganizationRoute
   '/settings/security': typeof AppSettingsSecurityRoute
+  '/settings/site-chat': typeof AppSettingsSiteChatRoute
   '/settings/webhooks': typeof AppSettingsWebhooksRoute
   '/settings/whatsapp': typeof AppSettingsWhatsappRoute
   '/tickets/$id': typeof AppTicketsIdRoute
@@ -1220,6 +1236,7 @@ export interface FileRoutesById {
   '/_app/sequences': typeof AppSequencesRouteWithChildren
   '/_app/setup-wizard': typeof AppSetupWizardRoute
   '/_app/signatures': typeof AppSignaturesRoute
+  '/_app/site-chat': typeof AppSiteChatRoute
   '/_app/subscriptions': typeof AppSubscriptionsRoute
   '/_app/surveys': typeof AppSurveysRoute
   '/_app/tags': typeof AppTagsRoute
@@ -1262,6 +1279,7 @@ export interface FileRoutesById {
   '/_app/settings/import': typeof AppSettingsImportRoute
   '/_app/settings/organization': typeof AppSettingsOrganizationRoute
   '/_app/settings/security': typeof AppSettingsSecurityRoute
+  '/_app/settings/site-chat': typeof AppSettingsSiteChatRoute
   '/_app/settings/webhooks': typeof AppSettingsWebhooksRoute
   '/_app/settings/whatsapp': typeof AppSettingsWhatsappRoute
   '/_app/tickets/$id': typeof AppTicketsIdRoute
@@ -1362,6 +1380,7 @@ export interface FileRouteTypes {
     | '/sequences'
     | '/setup-wizard'
     | '/signatures'
+    | '/site-chat'
     | '/subscriptions'
     | '/surveys'
     | '/tags'
@@ -1404,6 +1423,7 @@ export interface FileRouteTypes {
     | '/settings/import'
     | '/settings/organization'
     | '/settings/security'
+    | '/settings/site-chat'
     | '/settings/webhooks'
     | '/settings/whatsapp'
     | '/tickets/$id'
@@ -1502,6 +1522,7 @@ export interface FileRouteTypes {
     | '/sequences'
     | '/setup-wizard'
     | '/signatures'
+    | '/site-chat'
     | '/subscriptions'
     | '/surveys'
     | '/tags'
@@ -1544,6 +1565,7 @@ export interface FileRouteTypes {
     | '/settings/import'
     | '/settings/organization'
     | '/settings/security'
+    | '/settings/site-chat'
     | '/settings/webhooks'
     | '/settings/whatsapp'
     | '/tickets/$id'
@@ -1643,6 +1665,7 @@ export interface FileRouteTypes {
     | '/_app/sequences'
     | '/_app/setup-wizard'
     | '/_app/signatures'
+    | '/_app/site-chat'
     | '/_app/subscriptions'
     | '/_app/surveys'
     | '/_app/tags'
@@ -1685,6 +1708,7 @@ export interface FileRouteTypes {
     | '/_app/settings/import'
     | '/_app/settings/organization'
     | '/_app/settings/security'
+    | '/_app/settings/site-chat'
     | '/_app/settings/webhooks'
     | '/_app/settings/whatsapp'
     | '/_app/tickets/$id'
@@ -1855,6 +1879,13 @@ declare module '@tanstack/react-router' {
       path: '/subscriptions'
       fullPath: '/subscriptions'
       preLoaderRoute: typeof AppSubscriptionsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/site-chat': {
+      id: '/_app/site-chat'
+      path: '/site-chat'
+      fullPath: '/site-chat'
+      preLoaderRoute: typeof AppSiteChatRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/signatures': {
@@ -2359,6 +2390,13 @@ declare module '@tanstack/react-router' {
       path: '/settings/webhooks'
       fullPath: '/settings/webhooks'
       preLoaderRoute: typeof AppSettingsWebhooksRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings/site-chat': {
+      id: '/_app/settings/site-chat'
+      path: '/settings/site-chat'
+      fullPath: '/settings/site-chat'
+      preLoaderRoute: typeof AppSettingsSiteChatRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/settings/security': {
@@ -2978,6 +3016,7 @@ interface AppRouteChildren {
   AppSequencesRoute: typeof AppSequencesRouteWithChildren
   AppSetupWizardRoute: typeof AppSetupWizardRoute
   AppSignaturesRoute: typeof AppSignaturesRoute
+  AppSiteChatRoute: typeof AppSiteChatRoute
   AppSubscriptionsRoute: typeof AppSubscriptionsRoute
   AppSurveysRoute: typeof AppSurveysRoute
   AppTagsRoute: typeof AppTagsRoute
@@ -2997,6 +3036,7 @@ interface AppRouteChildren {
   AppSettingsImportRoute: typeof AppSettingsImportRoute
   AppSettingsOrganizationRoute: typeof AppSettingsOrganizationRoute
   AppSettingsSecurityRoute: typeof AppSettingsSecurityRoute
+  AppSettingsSiteChatRoute: typeof AppSettingsSiteChatRoute
   AppSettingsWebhooksRoute: typeof AppSettingsWebhooksRoute
   AppSettingsWhatsappRoute: typeof AppSettingsWhatsappRoute
 }
@@ -3065,6 +3105,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSequencesRoute: AppSequencesRouteWithChildren,
   AppSetupWizardRoute: AppSetupWizardRoute,
   AppSignaturesRoute: AppSignaturesRoute,
+  AppSiteChatRoute: AppSiteChatRoute,
   AppSubscriptionsRoute: AppSubscriptionsRoute,
   AppSurveysRoute: AppSurveysRoute,
   AppTagsRoute: AppTagsRoute,
@@ -3084,6 +3125,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSettingsImportRoute: AppSettingsImportRoute,
   AppSettingsOrganizationRoute: AppSettingsOrganizationRoute,
   AppSettingsSecurityRoute: AppSettingsSecurityRoute,
+  AppSettingsSiteChatRoute: AppSettingsSiteChatRoute,
   AppSettingsWebhooksRoute: AppSettingsWebhooksRoute,
   AppSettingsWhatsappRoute: AppSettingsWhatsappRoute,
 }
