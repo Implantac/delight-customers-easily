@@ -1,16 +1,27 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useCurrentOrg } from "@/lib/org";
 import { getRetentionInsights } from "@/lib/churn.functions";
+import { getRetentionPlan, type RetentionAction } from "@/lib/retention-ai.functions";
 import { PageHeader } from "@/components/page-header";
 import { NextActionBlock } from "@/components/next-action-block";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Heart, AlertTriangle, AlertCircle, TrendingUp, Building2 } from "lucide-react";
+import { Heart, AlertTriangle, AlertCircle, TrendingUp, Building2, Sparkles, Loader2, MessageCircle, Phone, Mail, MapPin } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/retention")({ component: RetentionPage });
+
+const CHANNEL_ICON = { whatsapp: MessageCircle, ligacao: Phone, email: Mail, visita: MapPin } as const;
+const CHANNEL_LABEL = { whatsapp: "WhatsApp", ligacao: "Ligação", email: "E-mail", visita: "Visita" } as const;
+const PRIORITY_TONE: Record<string, string> = {
+  alta: "bg-rose-500/15 text-rose-600 border-rose-500/30",
+  media: "bg-amber-500/15 text-amber-600 border-amber-500/30",
+  baixa: "bg-muted text-muted-foreground",
+};
 
 const fmt = (n: number) =>
   n.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
@@ -18,10 +29,15 @@ const fmt = (n: number) =>
 function RetentionPage() {
   const { orgId } = useCurrentOrg();
   const fn = useServerFn(getRetentionInsights);
+  const planFn = useServerFn(getRetentionPlan);
   const { data, isLoading } = useQuery({
     queryKey: ["retention", orgId],
     enabled: !!orgId,
     queryFn: () => fn({ data: { organization_id: orgId! } }),
+  });
+  const planMut = useMutation({
+    mutationFn: () => planFn({ data: { organization_id: orgId!, max_companies: 8 } }),
+    onError: (e: any) => toast.error(e?.message ?? "Falha ao gerar plano"),
   });
 
   if (isLoading || !data) {
@@ -46,6 +62,33 @@ function RetentionPage() {
       />
 
       <NextActionBlock surface="retention" title="Reter e expandir agora" showRegenerate />
+
+      <Card className="p-5 border-primary/30 bg-gradient-to-br from-primary/5 to-transparent">
+        <div className="flex items-start justify-between gap-3 flex-wrap">
+          <div>
+            <h3 className="text-sm font-semibold flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-primary" /> Plano de retenção com IA
+            </h3>
+            <p className="text-xs text-muted-foreground mt-1">
+              A IA analisa os clientes em risco e gera diagnóstico + ação imediata por canal e prazo.
+            </p>
+          </div>
+          <Button onClick={() => planMut.mutate()} disabled={planMut.isPending || atRisk.length === 0} size="sm">
+            {planMut.isPending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Sparkles className="h-4 w-4 mr-2" />}
+            {planMut.data ? "Regenerar plano" : "Gerar plano"}
+          </Button>
+        </div>
+        {planMut.data && (
+          <div className="mt-4 space-y-3">
+            <p className="text-sm rounded-md border bg-background p-3">{planMut.data.resumo}</p>
+            <div className="space-y-2">
+              {planMut.data.acoes.map((a) => <AiActionRow key={a.company_id} a={a} />)}
+            </div>
+          </div>
+        )}
+      </Card>
+
+
 
 
       <div className="grid gap-3 md:grid-cols-4">
@@ -168,6 +211,30 @@ function RiskRow({ row }: { row: any }) {
       <div className="text-right">
         <Badge variant="destructive">{row.risk}</Badge>
       </div>
+    </div>
+  );
+}
+
+function AiActionRow({ a }: { a: RetentionAction }) {
+  const Icon = CHANNEL_ICON[a.canal];
+  return (
+    <div className="flex items-start gap-3 p-3 rounded-md border bg-background">
+      <div className="flex flex-col items-center gap-1 pt-0.5">
+        <Icon className="h-4 w-4 text-primary" />
+        <span className="text-[10px] text-muted-foreground">{CHANNEL_LABEL[a.canal]}</span>
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 flex-wrap">
+          <Link to="/companies/$id" params={{ id: a.company_id }} className="font-medium text-sm hover:underline truncate">
+            {a.company_name}
+          </Link>
+          <Badge variant="outline" className={PRIORITY_TONE[a.priority]}>{a.priority}</Badge>
+          <span className="text-xs text-muted-foreground">em {a.prazo_dias}d</span>
+        </div>
+        <p className="text-xs text-muted-foreground mt-1">{a.diagnostico}</p>
+        <p className="text-sm mt-1.5">→ {a.acao_imediata}</p>
+      </div>
+      <Badge variant="destructive">{a.risk}</Badge>
     </div>
   );
 }
