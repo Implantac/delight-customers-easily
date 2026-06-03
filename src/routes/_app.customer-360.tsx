@@ -609,3 +609,40 @@ function BulkRepDialog({
     </Dialog>
   );
 }
+
+function ErpSyncBadge({ erp }: { erp?: CompanyErpStatus }) {
+  if (!erp || !erp.synced_at) {
+    return (
+      <Badge variant="outline" className="gap-1 bg-muted text-muted-foreground border-muted">
+        <Database className="h-3 w-3" /> sem ERP
+      </Badge>
+    );
+  }
+  const ageMs = Date.now() - new Date(erp.synced_at).getTime();
+  const ageH = ageMs / 3_600_000;
+  const stale = ageH > 24;
+  const hasConflict = erp.open_conflicts > 0;
+  const tone = hasConflict
+    ? "bg-amber-500/15 text-amber-700 border-amber-500/30"
+    : stale
+    ? "bg-orange-500/15 text-orange-700 border-orange-500/30"
+    : "bg-emerald-500/15 text-emerald-700 border-emerald-500/30";
+  const Icon = hasConflict ? AlertTriangle : stale ? Database : CheckCircle2;
+  const label = hasConflict
+    ? `${erp.open_conflicts} conflito${erp.open_conflicts > 1 ? "s" : ""}`
+    : stale
+    ? `ERP ${Math.round(ageH)}h`
+    : `ERP ok`;
+  const title = [
+    erp.provider ? `Provider: ${erp.provider}` : null,
+    erp.external_id ? `ext_id: ${erp.external_id}` : null,
+    erp.synced_at ? `Última sync: ${new Date(erp.synced_at).toLocaleString("pt-BR")}` : null,
+    erp.last_error ? `Último erro: ${erp.last_error}` : null,
+  ].filter(Boolean).join(" • ");
+  return (
+    <Badge variant="outline" className={`gap-1 ${tone}`} title={title}>
+      <Icon className="h-3 w-3" /> {label}
+    </Badge>
+  );
+}
+
