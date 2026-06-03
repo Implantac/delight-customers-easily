@@ -88,6 +88,8 @@ import { Route as AppAutomacoesRouteImport } from './routes/_app.automacoes'
 import { Route as AppAlertsRouteImport } from './routes/_app.alerts'
 import { Route as AppActivitiesRouteImport } from './routes/_app.activities'
 import { Route as IOrgSlugRouteImport } from './routes/i.$org.$slug'
+import { Route as ApiPublicSiteChatWidgetDotjsRouteImport } from './routes/api/public/site-chat-widget[.]js'
+import { Route as ApiPublicSiteChatRouteImport } from './routes/api/public/site-chat'
 import { Route as ApiPublicLeadFormRouteImport } from './routes/api/public/lead-form'
 import { Route as ApiPublicInfluencerVisitRouteImport } from './routes/api/public/influencer-visit'
 import { Route as ApiPublicInboundEmailRouteImport } from './routes/api/public/inbound-email'
@@ -542,6 +544,17 @@ const IOrgSlugRoute = IOrgSlugRouteImport.update({
   path: '/i/$org/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicSiteChatWidgetDotjsRoute =
+  ApiPublicSiteChatWidgetDotjsRouteImport.update({
+    id: '/api/public/site-chat-widget.js',
+    path: '/api/public/site-chat-widget.js',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicSiteChatRoute = ApiPublicSiteChatRouteImport.update({
+  id: '/api/public/site-chat',
+  path: '/api/public/site-chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicLeadFormRoute = ApiPublicLeadFormRouteImport.update({
   id: '/api/public/lead-form',
   path: '/api/public/lead-form',
@@ -973,6 +986,8 @@ export interface FileRoutesByFullPath {
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/api/public/influencer-visit': typeof ApiPublicInfluencerVisitRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
+  '/api/public/site-chat': typeof ApiPublicSiteChatRoute
+  '/api/public/site-chat-widget.js': typeof ApiPublicSiteChatWidgetDotjsRoute
   '/i/$org/$slug': typeof IOrgSlugRoute
   '/integrations/connect/wizard': typeof AppIntegrationsConnectWizardRoute
   '/reports/dashboards/$id': typeof AppReportsDashboardsIdRoute
@@ -1111,6 +1126,8 @@ export interface FileRoutesByTo {
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/api/public/influencer-visit': typeof ApiPublicInfluencerVisitRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
+  '/api/public/site-chat': typeof ApiPublicSiteChatRoute
+  '/api/public/site-chat-widget.js': typeof ApiPublicSiteChatWidgetDotjsRoute
   '/i/$org/$slug': typeof IOrgSlugRoute
   '/integrations/connect/wizard': typeof AppIntegrationsConnectWizardRoute
   '/reports/dashboards/$id': typeof AppReportsDashboardsIdRoute
@@ -1251,6 +1268,8 @@ export interface FileRoutesById {
   '/api/public/inbound-email': typeof ApiPublicInboundEmailRoute
   '/api/public/influencer-visit': typeof ApiPublicInfluencerVisitRoute
   '/api/public/lead-form': typeof ApiPublicLeadFormRoute
+  '/api/public/site-chat': typeof ApiPublicSiteChatRoute
+  '/api/public/site-chat-widget.js': typeof ApiPublicSiteChatWidgetDotjsRoute
   '/i/$org/$slug': typeof IOrgSlugRoute
   '/_app/integrations/connect/wizard': typeof AppIntegrationsConnectWizardRoute
   '/_app/reports/dashboards/$id': typeof AppReportsDashboardsIdRoute
@@ -1391,6 +1410,8 @@ export interface FileRouteTypes {
     | '/api/public/inbound-email'
     | '/api/public/influencer-visit'
     | '/api/public/lead-form'
+    | '/api/public/site-chat'
+    | '/api/public/site-chat-widget.js'
     | '/i/$org/$slug'
     | '/integrations/connect/wizard'
     | '/reports/dashboards/$id'
@@ -1529,6 +1550,8 @@ export interface FileRouteTypes {
     | '/api/public/inbound-email'
     | '/api/public/influencer-visit'
     | '/api/public/lead-form'
+    | '/api/public/site-chat'
+    | '/api/public/site-chat-widget.js'
     | '/i/$org/$slug'
     | '/integrations/connect/wizard'
     | '/reports/dashboards/$id'
@@ -1668,6 +1691,8 @@ export interface FileRouteTypes {
     | '/api/public/inbound-email'
     | '/api/public/influencer-visit'
     | '/api/public/lead-form'
+    | '/api/public/site-chat'
+    | '/api/public/site-chat-widget.js'
     | '/i/$org/$slug'
     | '/_app/integrations/connect/wizard'
     | '/_app/reports/dashboards/$id'
@@ -1701,6 +1726,8 @@ export interface RootRouteChildren {
   ApiPublicInboundEmailRoute: typeof ApiPublicInboundEmailRoute
   ApiPublicInfluencerVisitRoute: typeof ApiPublicInfluencerVisitRoute
   ApiPublicLeadFormRoute: typeof ApiPublicLeadFormRoute
+  ApiPublicSiteChatRoute: typeof ApiPublicSiteChatRoute
+  ApiPublicSiteChatWidgetDotjsRoute: typeof ApiPublicSiteChatWidgetDotjsRoute
   IOrgSlugRoute: typeof IOrgSlugRoute
   ApiOauthGoogleCallbackRoute: typeof ApiOauthGoogleCallbackRoute
   ApiOauthGoogleInitiateRoute: typeof ApiOauthGoogleInitiateRoute
@@ -2276,6 +2303,20 @@ declare module '@tanstack/react-router' {
       path: '/i/$org/$slug'
       fullPath: '/i/$org/$slug'
       preLoaderRoute: typeof IOrgSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/site-chat-widget.js': {
+      id: '/api/public/site-chat-widget.js'
+      path: '/api/public/site-chat-widget.js'
+      fullPath: '/api/public/site-chat-widget.js'
+      preLoaderRoute: typeof ApiPublicSiteChatWidgetDotjsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/site-chat': {
+      id: '/api/public/site-chat'
+      path: '/api/public/site-chat'
+      fullPath: '/api/public/site-chat'
+      preLoaderRoute: typeof ApiPublicSiteChatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/public/lead-form': {
@@ -3057,6 +3098,8 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicInboundEmailRoute: ApiPublicInboundEmailRoute,
   ApiPublicInfluencerVisitRoute: ApiPublicInfluencerVisitRoute,
   ApiPublicLeadFormRoute: ApiPublicLeadFormRoute,
+  ApiPublicSiteChatRoute: ApiPublicSiteChatRoute,
+  ApiPublicSiteChatWidgetDotjsRoute: ApiPublicSiteChatWidgetDotjsRoute,
   IOrgSlugRoute: IOrgSlugRoute,
   ApiOauthGoogleCallbackRoute: ApiOauthGoogleCallbackRoute,
   ApiOauthGoogleInitiateRoute: ApiOauthGoogleInitiateRoute,
