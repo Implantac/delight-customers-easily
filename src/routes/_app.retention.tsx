@@ -1,16 +1,27 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useCurrentOrg } from "@/lib/org";
 import { getRetentionInsights } from "@/lib/churn.functions";
+import { getRetentionPlan, type RetentionAction } from "@/lib/retention-ai.functions";
 import { PageHeader } from "@/components/page-header";
 import { NextActionBlock } from "@/components/next-action-block";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Heart, AlertTriangle, AlertCircle, TrendingUp, Building2 } from "lucide-react";
+import { Heart, AlertTriangle, AlertCircle, TrendingUp, Building2, Sparkles, Loader2, MessageCircle, Phone, Mail, MapPin } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/retention")({ component: RetentionPage });
+
+const CHANNEL_ICON = { whatsapp: MessageCircle, ligacao: Phone, email: Mail, visita: MapPin } as const;
+const CHANNEL_LABEL = { whatsapp: "WhatsApp", ligacao: "Ligação", email: "E-mail", visita: "Visita" } as const;
+const PRIORITY_TONE: Record<string, string> = {
+  alta: "bg-rose-500/15 text-rose-600 border-rose-500/30",
+  media: "bg-amber-500/15 text-amber-600 border-amber-500/30",
+  baixa: "bg-muted text-muted-foreground",
+};
 
 const fmt = (n: number) =>
   n.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
