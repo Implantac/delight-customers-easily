@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { useCurrentOrg } from "@/lib/org";
 import { useCanManage, useIsManager } from "@/lib/permissions";
 import { listCustomer360, refreshCustomer360 } from "@/lib/customer360.functions";
+import { getCompanyErpStatus, type CompanyErpStatus } from "@/lib/erp-customer-status.functions";
 import {
   bulkCreateActivityForCompanies,
   bulkAssignCompaniesOwner,
@@ -31,7 +32,7 @@ import {
 import {
   Users, Search, RefreshCw, MessageSquare, Mail, Phone,
   TrendingUp, TrendingDown, Minus, Building, ExternalLink,
-  CalendarPlus, UserCog, Megaphone, X,
+  CalendarPlus, UserCog, Megaphone, X, Database, AlertTriangle, CheckCircle2,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/customer-360")({
@@ -115,6 +116,27 @@ function Customer360Page() {
   });
 
   const items = q.data?.items ?? [];
+
+  // Per-company ERP sync status (last sync, conflicts) — shown as a chip in each row
+  const visibleCompanyIds = useMemo(
+    () => items.filter((c: any) => c.company_id).map((c: any) => c.company_id as string),
+    [items],
+  );
+  const erpStatusFn = useServerFn(getCompanyErpStatus);
+  const erpStatusQ = useQuery({
+    queryKey: ["customer-360-erp-status", orgId, visibleCompanyIds.join(",")],
+    queryFn: () =>
+      erpStatusFn({
+        data: { organization_id: orgId!, company_ids: visibleCompanyIds.slice(0, 200) },
+      }),
+    enabled: !!orgId && visibleCompanyIds.length > 0,
+    staleTime: 30_000,
+  });
+  const erpStatusMap = useMemo(() => {
+    const m = new Map<string, CompanyErpStatus>();
+    for (const it of erpStatusQ.data?.items ?? []) m.set(it.company_id, it);
+    return m;
+  }, [erpStatusQ.data]);
 
   // company_ids selecionados (filtra apenas linhas que de fato têm company_id)
   const selectedCompanyIds = useMemo(
@@ -264,6 +286,7 @@ function Customer360Page() {
             const TrendIcon = c.trend === "up" ? TrendingUp : c.trend === "down" ? TrendingDown : Minus;
             const trendCls = c.trend === "up" ? "text-emerald-600" : c.trend === "down" ? "text-red-600" : "text-muted-foreground";
             const checked = c.company_id ? selected.has(c.company_id) : false;
+            const erp = c.company_id ? erpStatusMap.get(c.company_id) : undefined;
             return (
               <Card key={c.id} className={checked ? "border-primary/40 bg-primary/5" : undefined}>
                 <CardContent className="p-4">
@@ -290,6 +313,7 @@ function Customer360Page() {
                             <TrendIcon className="h-3 w-3" />
                             {c.trend === "up" ? "subindo" : c.trend === "down" ? "caindo" : "estável"}
                           </span>
+                          <ErpSyncBadge erp={erp} />
                         </div>
                         <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
                           {c.cnpj && <span>CNPJ {c.cnpj}</span>}
@@ -585,3 +609,40 @@ function BulkRepDialog({
     </Dialog>
   );
 }
+
+function ErpSyncBadge({ erp }: { erp?: CompanyErpStatus }) {
+  if (!erp || !erp.synced_at) {
+    return (
+      <Badge variant="outline" className="gap-1 bg-muted text-muted-foreground border-muted">
+        <Database className="h-3 w-3" /> sem ERP
+      </Badge>
+    );
+  }
+  const ageMs = Date.now() - new Date(erp.synced_at).getTime();
+  const ageH = ageMs / 3_600_000;
+  const stale = ageH > 24;
+  const hasConflict = erp.open_conflicts > 0;
+  const tone = hasConflict
+    ? "bg-amber-500/15 text-amber-700 border-amber-500/30"
+    : stale
+    ? "bg-orange-500/15 text-orange-700 border-orange-500/30"
+    : "bg-emerald-500/15 text-emerald-700 border-emerald-500/30";
+  const Icon = hasConflict ? AlertTriangle : stale ? Database : CheckCircle2;
+  const label = hasConflict
+    ? `${erp.open_conflicts} conflito${erp.open_conflicts > 1 ? "s" : ""}`
+    : stale
+    ? `ERP ${Math.round(ageH)}h`
+    : `ERP ok`;
+  const title = [
+    erp.provider ? `Provider: ${erp.provider}` : null,
+    erp.external_id ? `ext_id: ${erp.external_id}` : null,
+    erp.synced_at ? `Última sync: ${new Date(erp.synced_at).toLocaleString("pt-BR")}` : null,
+    erp.last_error ? `Último erro: ${erp.last_error}` : null,
+  ].filter(Boolean).join(" • ");
+  return (
+    <Badge variant="outline" className={`gap-1 ${tone}`} title={title}>
+      <Icon className="h-3 w-3" /> {label}
+    </Badge>
+  );
+}
+
