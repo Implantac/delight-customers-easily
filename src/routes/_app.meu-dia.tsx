@@ -13,13 +13,14 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Sun, CheckSquare, Target, MessageSquare, Calendar as CalIcon,
-  ArrowRight, Trophy, Flame, Sparkles,
+  ArrowRight, Trophy, Flame, Sparkles, FileDown,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { listMyTasks } from "@/lib/mytasks.functions";
 import { getForecast } from "@/lib/forecast.functions";
 import { generateSmartAgenda } from "@/lib/smart-agenda.functions";
+import { downloadVisitReportPdf } from "@/lib/pdf-export";
 
 export const Route = createFileRoute("/_app/meu-dia")({ component: MyDayPage });
 
