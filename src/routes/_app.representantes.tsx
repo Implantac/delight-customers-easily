@@ -9,9 +9,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
+import { toCSV, downloadCSV } from "@/lib/csv-export";
 import {
   Award, Target, TrendingUp, TrendingDown, AlertTriangle, Activity,
-  Flame, ArrowRight, MapPin, Compass,
+  Flame, ArrowRight, MapPin, Compass, Download,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/representantes")({
@@ -37,12 +38,38 @@ function RepsPage() {
     queryFn: () => run({ data: { organization_id: orgId! } }),
   });
 
+  const exportCsv = () => {
+    const rows = data?.rows ?? [];
+    if (rows.length === 0) return;
+    const csv = toCSV(rows as any, [
+      { key: "user_name", label: "Representante" },
+      { key: "status", label: "Status" },
+      { key: "target", label: "Meta" },
+      { key: "achieved", label: "Realizado" },
+      { key: "attainment", label: "% Meta" },
+      { key: "open_value", label: "Pipeline aberto" },
+      { key: "weighted_pipeline", label: "Pipeline ponderado" },
+      { key: "coverage", label: "Cobertura" },
+      { key: "deals_open", label: "Deals abertos" },
+      { key: "deals_won_month", label: "Ganhos no mês" },
+      { key: "stalled_count", label: "Deals parados" },
+      { key: "activities_7d", label: "Atividades 7d" },
+      { key: "last_activity_at", label: "Última atividade" },
+    ]);
+    downloadCSV(`representantes-${new Date().toISOString().slice(0, 10)}.csv`, csv);
+  };
+
   return (
     <div className="space-y-6">
       <PageHeader
         title="Representantes"
         subtitle="Quem está acima, quem está atrás e quem precisa de ajuda hoje."
         icon={Award}
+        action={
+          <Button variant="outline" size="sm" onClick={exportCsv} disabled={!data || data.rows.length === 0}>
+            <Download className="h-4 w-4 mr-1" /> Exportar CSV
+          </Button>
+        }
       />
 
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
