@@ -13,13 +13,14 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Sun, CheckSquare, Target, MessageSquare, Calendar as CalIcon,
-  ArrowRight, Trophy, Flame, Sparkles,
+  ArrowRight, Trophy, Flame, Sparkles, FileDown,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { listMyTasks } from "@/lib/mytasks.functions";
 import { getForecast } from "@/lib/forecast.functions";
 import { generateSmartAgenda } from "@/lib/smart-agenda.functions";
+import { downloadVisitReportPdf } from "@/lib/pdf-export";
 
 export const Route = createFileRoute("/_app/meu-dia")({ component: MyDayPage });
 
@@ -142,6 +143,43 @@ function MyDayPage() {
         subtitle={new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long" })}
         action={
           <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="default"
+              onClick={async () => {
+                if (!orgId || !user?.id) return;
+                const { data: visits } = await supabase
+                  .from("activities")
+                  .select("title, due_date, notes, latitude, longitude, contacts(name), companies(name)")
+                  .eq("organization_id", orgId)
+                  .eq("user_id", user.id)
+                  .eq("type", "meeting")
+                  .not("latitude", "is", null)
+                  .gte("due_date", startOfDay().toISOString())
+                  .lte("due_date", endOfDay().toISOString())
+                  .order("due_date");
+                const list = (visits ?? []) as any[];
+                if (list.length === 0) {
+                  toast.info("Sem visitas registradas hoje");
+                  return;
+                }
+                downloadVisitReportPdf({
+                  repName: (user.user_metadata as any)?.full_name ?? user.email ?? null,
+                  periodLabel: new Date().toLocaleDateString("pt-BR"),
+                  visits: list.map((v) => ({
+                    title: v.title,
+                    when: v.due_date,
+                    contactName: v.contacts?.name ?? null,
+                    companyName: v.companies?.name ?? null,
+                    latitude: v.latitude,
+                    longitude: v.longitude,
+                    notes: v.notes,
+                  })),
+                });
+              }}
+            >
+              <FileDown className="h-4 w-4 mr-1" /> Relatório de visitas
+            </Button>
             <Button
               variant="outline"
               size="default"
