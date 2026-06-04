@@ -42,14 +42,16 @@ function AppLayout() {
       <div className="flex min-h-screen w-full bg-background">
         <AppSidebar />
         <div className="flex flex-1 flex-col min-w-0">
-          <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-b border-border/60 bg-background/75 px-3 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 md:gap-3 md:px-4 shadow-[0_1px_0_0_color-mix(in_oklab,var(--accent)_18%,transparent)]">
+          <header className="sticky top-0 z-30 flex h-16 items-center gap-2 border-b border-border/40 bg-background/60 px-4 backdrop-blur-xl md:gap-4 md:px-6">
             <SidebarTrigger className="shrink-0 text-muted-foreground hover:text-foreground transition-colors" />
-            <div className="h-5 w-px bg-border/80 hidden md:block" />
+            <div className="h-4 w-px bg-border/60 hidden md:block" />
             <div className="flex-1 min-w-0">
               <CommandPaletteTrigger />
             </div>
-            <NotificationsBell />
-            <ThemeToggle />
+            <div className="flex items-center gap-1 md:gap-2">
+              <NotificationsBell />
+              <ThemeToggle />
+            </div>
           </header>
           <main className="flex-1 overflow-auto pb-20 md:pb-0">
             <AnimatePresence mode="wait">
