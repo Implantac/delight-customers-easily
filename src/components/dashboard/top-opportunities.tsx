@@ -9,6 +9,7 @@ import { Link } from "@tanstack/react-router";
 import { Database } from "@/integrations/supabase/types";
 import { useState, useMemo, useEffect } from "react";
 import { Input } from "@/components/ui/input";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Select,
   SelectContent,
