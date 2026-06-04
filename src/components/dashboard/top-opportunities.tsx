@@ -30,8 +30,8 @@ export function TopOpportunities() {
       if (error) throw error;
 
       return (data as unknown as Deal[] || []).map((d) => {
-        const insights = d.ai_deal_insights || {};
-        const winProb = Number(insights.win_probability || 0.5);
+        const insights = d.ai_deal_insights;
+        const winProb = insights ? Number(insights.win_probability || 0.5) : 0.5;
         
         const daysToClose = d.expected_close 
           ? Math.max(0, (new Date(d.expected_close).getTime() - Date.now()) / (1000 * 3600 * 24))
