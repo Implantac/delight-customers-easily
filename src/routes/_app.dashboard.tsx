@@ -19,6 +19,7 @@ import { Customer360Mini } from "@/components/customer-360-mini";
 import { ChurnRiskCard } from "@/components/churn-risk-card";
 import { TopOpportunities } from "@/components/dashboard/top-opportunities";
 import { ProductTour } from "@/components/product-tour";
+import { MuralComercial } from "@/components/dashboard/mural-comercial";
 import { useCurrentOrg } from "@/lib/org";
 import { getForecast } from "@/lib/forecast.functions";
 import { getRetentionInsights } from "@/lib/churn.functions";
@@ -143,28 +144,8 @@ function DashboardPage() {
 
   return (
     <div className="page-container max-w-[1400px]">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <div className="bg-primary/5 p-1.5 rounded-lg">
-              <Sparkles className="h-5 w-5 text-primary" />
-            </div>
-            <h1 className="text-3xl font-bold tracking-tight">Crescimento</h1>
-          </div>
-          <p className="text-muted-foreground text-sm max-w-md">
-            Seu copiloto de inteligência comercial. O que precisamos fazer hoje para vender mais?
-          </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button asChild variant="outline" size="sm" className="h-9 px-4 font-medium">
-            <Link to="/meu-dia">
-              <Flame className="mr-2 h-4 w-4 text-orange-500" /> Meu dia
-            </Link>
-          </Button>
-          <Button variant="premium" size="sm" className="h-9 px-4 font-medium">
-            <TrendingUp className="mr-2 h-4 w-4" /> Nova meta
-          </Button>
-        </div>
+      <div className="mb-10">
+        <MuralComercial />
       </div>
 
 
