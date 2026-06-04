@@ -19,6 +19,7 @@ export const Route = createFileRoute("/_app")({ component: AppLayout });
 function AppLayout() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const location = useRouterState({ select: (s) => s.location.pathname });
   useGoToShortcuts();
   useNotificationsRealtime();
 
