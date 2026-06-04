@@ -35,12 +35,12 @@ type NavEntry = {
 };
 
 const TONE_CLASS: Record<NavTone, string> = {
-  primary: "text-sidebar-foreground/70 group-data-[active=true]/menu-item:text-[color:var(--accent-glow)]",
-  info:    "text-[#7aa9d9] group-data-[active=true]/menu-item:text-[color:var(--accent-glow)]",
-  success: "text-[#7cc095] group-data-[active=true]/menu-item:text-[color:var(--accent-glow)]",
-  violet:  "text-[#a89bd6] group-data-[active=true]/menu-item:text-[color:var(--accent-glow)]",
-  accent:  "text-[color:var(--accent-glow)]",
-  rose:    "text-[#d49aae] group-data-[active=true]/menu-item:text-[color:var(--accent-glow)]",
+  primary: "text-muted-foreground group-data-[active=true]/menu-item:text-primary",
+  info:    "text-muted-foreground group-data-[active=true]/menu-item:text-primary",
+  success: "text-muted-foreground group-data-[active=true]/menu-item:text-primary",
+  violet:  "text-muted-foreground group-data-[active=true]/menu-item:text-primary",
+  accent:  "text-amber-500",
+  rose:    "text-muted-foreground group-data-[active=true]/menu-item:text-primary",
 };
 
 /**
@@ -143,8 +143,8 @@ export function AppSidebar() {
       <SidebarHeader className="border-b border-sidebar-border/60">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <SidebarMenuButton size="lg" className="data-[state=open]:bg-sidebar-accent">
-              <div className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-[var(--gradient-accent)] text-[#1f2740] shadow-[var(--shadow-glow)] ring-1 ring-white/15">
+            <SidebarMenuButton size="lg" className="data-[state=open]:bg-sidebar-accent transition-all duration-200">
+              <div className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm ring-1 ring-white/15">
                 <Sparkles className="h-4 w-4" />
               </div>
               {!collapsed && (

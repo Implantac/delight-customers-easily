@@ -10,10 +10,10 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  /* === Tipografia: Geometric Tech (Linear / Attio) === */
-  --font-sans: "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-display: "Space Grotesk", "DM Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
+  /* === Tipografia: Geist (Linear / Attio) === */
+  --font-sans: "Geist", "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Geist", "Space Grotesk", "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -61,72 +61,85 @@
 :root {
   --radius: 0.625rem;
 
-  --background: #fbfaf7;
-  --foreground: #1f2740;
+  --background: #ffffff;
+  --foreground: #09090b;
   --card: #ffffff;
-  --card-foreground: #1f2740;
+  --card-foreground: #09090b;
   --popover: #ffffff;
-  --popover-foreground: #1f2740;
+  --popover-foreground: #09090b;
 
-  /* Navy suavizado — menos pesado, com leve nuance fria */
-  --primary: #2a3556;
-  --primary-foreground: #fbfaf7;
+  --primary: #09090b;
+  --primary-foreground: #ffffff;
 
-  --secondary: #eef0f5;
-  --secondary-foreground: #2a3556;
-  --muted: #f3f2ee;
-  --muted-foreground: #6b7589;
-  /* Âmbar refinado — substitui o laranja "neon" por um tom mais executivo */
-  --accent: #d98a3d;
-  --accent-foreground: #ffffff;
+  --secondary: #f4f4f5;
+  --secondary-foreground: #09090b;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  --accent: #f4f4f5;
+  --accent-foreground: #09090b;
 
-  --destructive: #d94d4d;
-  --destructive-foreground: #ffffff;
-  --success: #4a9d6a;
+  --destructive: #ef4444;
+  --destructive-foreground: #fafafa;
+  --success: #10b981;
   --success-foreground: #ffffff;
-  --warning: #e0a93a;
-  --warning-foreground: #1f2740;
-  --info: #4a7ec0;
-  --info-foreground: #ffffff;
+  --warning: #f59e0b;
+  --warning-foreground: #ffffff;
 
-  --border: #e5e3dd;
-  --input: #e5e3dd;
-  --ring: #d98a3d;
+  --border: #e4e4e7;
+  --input: #e4e4e7;
+  --ring: #09090b;
 
-  /* Sidebar — navy suave com warm tint, menos contraste agressivo */
-  --sidebar: #232c47;
-  --sidebar-foreground: #c8ccd8;
-  --sidebar-primary: #e8a05a;
-  --sidebar-primary-foreground: #232c47;
-  --sidebar-accent: #2f3a58;
-  --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: #2f3a58;
-  --sidebar-ring: #e8a05a;
+  --sidebar: #fafafa;
+  --sidebar-foreground: #3f3f46;
+  --sidebar-primary: #09090b;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f4f4f5;
+  --sidebar-accent-foreground: #09090b;
+  --sidebar-border: #e4e4e7;
+  --sidebar-ring: #09090b;
 
-  --chart-1: #d98a3d;
-  --chart-2: #4a7ec0;
-  --chart-3: #4a9d6a;
-  --chart-4: #8a7cc0;
-  --chart-5: #c46a8a;
+  --chart-1: #09090b;
+  --chart-2: #27272a;
+  --chart-3: #52525b;
+  --chart-4: #a1a1aa;
+  --chart-5: #e4e4e7;
 
-  --primary-glow: #3a4670;
-  --accent-glow: #e8a05a;
-  --gradient-primary: linear-gradient(135deg, #2a3556, #3a4670);
-  --gradient-accent: linear-gradient(135deg, #d98a3d, #e8a05a);
-  --gradient-subtle: linear-gradient(180deg, color-mix(in oklab, #2a3556 3%, transparent), transparent);
-  --gradient-mesh:
-    radial-gradient(ellipse 90% 60% at 50% -10%, color-mix(in oklab, #2a3556 5%, transparent), transparent 60%),
-    radial-gradient(ellipse 70% 50% at 100% 0%, color-mix(in oklab, #d98a3d 4%, transparent), transparent 55%);
+  --primary-glow: #09090b;
+  --accent-glow: #09090b;
+  --gradient-primary: linear-gradient(135deg, #09090b, #27272a);
+  --gradient-accent: linear-gradient(135deg, #09090b, #52525b);
+  --gradient-subtle: linear-gradient(180deg, rgba(9, 9, 11, 0.03), transparent);
+  --gradient-mesh: 
+    radial-gradient(at 0% 0%, rgba(9, 9, 11, 0.03) 0, transparent 50%), 
+    radial-gradient(at 100% 0%, rgba(9, 9, 11, 0.02) 0, transparent 50%);
 
-  --shadow-xs: 0 1px 1px 0 color-mix(in oklab, #2a3556 4%, transparent);
-  --shadow-sm: 0 1px 2px 0 color-mix(in oklab, #2a3556 6%, transparent), 0 1px 1px -0.5px color-mix(in oklab, #2a3556 4%, transparent);
-  --shadow-md: 0 4px 12px -3px color-mix(in oklab, #2a3556 10%, transparent), 0 2px 4px -2px color-mix(in oklab, #2a3556 5%, transparent);
-  --shadow-lg: 0 16px 32px -8px color-mix(in oklab, #2a3556 14%, transparent), 0 4px 10px -4px color-mix(in oklab, #2a3556 8%, transparent);
-  --shadow-glow: 0 8px 24px -8px color-mix(in oklab, #d98a3d 28%, transparent);
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-glow: 0 0 20px -5px rgba(9, 9, 11, 0.1);
 
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
-  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --radius: 0.5rem;
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* =========================================================
+   USE SISTEMAS THEME
+   Azul Profundo + Ouro Metálico (Refinado)
+   ========================================================= */
+[data-theme='use-sistemas'] {
+  --background: #0f172a;
+  --foreground: #f8fafc;
+  --card: #1e293b;
+  --card-foreground: #f8fafc;
+  --primary: #fbbf24;
+  --primary-foreground: #0f172a;
+  --border: #334155;
+  --ring: #fbbf24;
+  --sidebar: #020617;
+}
 }
 
 /* =========================================================
@@ -483,25 +496,31 @@
   /* Sidebar minimal — Linear/Attio style */
   [data-sidebar="menu-button"] {
     border-radius: var(--radius-md);
-    transition: background-color 140ms var(--ease-out), color 140ms var(--ease-out);
+    transition: all 140ms var(--ease-out);
+    margin: 0 4px;
+    height: 34px;
+  }
+  [data-sidebar="menu-button"]:hover {
+    background: var(--sidebar-accent);
+    color: var(--foreground);
   }
   [data-sidebar="menu-button"][data-active="true"] {
-    background: color-mix(in oklab, var(--primary) 14%, transparent);
-    color: color-mix(in oklab, var(--primary) 75%, var(--sidebar-foreground));
+    background: var(--sidebar-accent);
+    color: var(--foreground);
     font-weight: 500;
-    position: relative;
   }
-  [data-sidebar="menu-button"][data-active="true"]::before {
-    content: "";
-    position: absolute;
-    left: -8px;
-    top: 50%;
-    transform: translateY(-50%);
-    height: 60%;
-    width: 2px;
-    border-radius: 2px;
-    background: var(--primary);
-    box-shadow: 0 0 8px color-mix(in oklab, var(--primary) 60%, transparent);
+  
+  /* Badge refinements */
+  .badge-premium {
+    @apply border-primary/20 bg-primary/5 text-primary font-medium;
+  }
+
+  /* Micro-interactions */
+  .hover-lift {
+    transition: transform 200ms var(--ease-out);
+  }
+  .hover-lift:hover {
+    transform: translateY(-1px);
   }
 }
 

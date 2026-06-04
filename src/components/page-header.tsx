@@ -4,21 +4,21 @@ import { cn } from "@/lib/utils";
 type Tone = "primary" | "info" | "success" | "violet" | "accent" | "rose";
 
 const TONE_BAR: Record<Tone, string> = {
-  primary: "bg-[var(--gradient-primary)]",
-  info:    "bg-gradient-to-b from-[#4a7ec0] to-[#7aa9d9]",
-  success: "bg-gradient-to-b from-[#4a9d6a] to-[#7cc095]",
-  violet:  "bg-gradient-to-b from-[#8a7cc0] to-[#a89bd6]",
-  accent:  "bg-[var(--gradient-accent)]",
-  rose:    "bg-gradient-to-b from-[#c46a8a] to-[#d49aae]",
+  primary: "bg-primary",
+  info:    "bg-blue-500",
+  success: "bg-emerald-500",
+  violet:  "bg-violet-500",
+  accent:  "bg-amber-500",
+  rose:    "bg-rose-500",
 };
 
 const TONE_ICON: Record<Tone, string> = {
-  primary: "text-[color:var(--primary-glow)]",
-  info:    "text-[#4a7ec0]",
-  success: "text-[#4a9d6a]",
-  violet:  "text-[#8a7cc0]",
-  accent:  "text-[color:var(--accent)]",
-  rose:    "text-[#c46a8a]",
+  primary: "text-primary",
+  info:    "text-blue-500",
+  success: "text-emerald-500",
+  violet:  "text-violet-500",
+  accent:  "text-amber-500",
+  rose:    "text-rose-500",
 };
 
 export function PageHeader({
@@ -39,14 +39,14 @@ export function PageHeader({
   return (
     <div
       className={cn(
-        "relative flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4 border-b border-border/60 pb-4 sm:pb-5 mb-5 sm:mb-6 pl-3 sm:pl-4",
+        "relative flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4 border-b border-border/40 pb-6 mb-8 pl-4",
         className,
       )}
     >
       <span
         aria-hidden
         className={cn(
-          "absolute left-0 top-1 bottom-4 sm:bottom-5 w-[3px] rounded-full",
+          "absolute left-0 top-1 bottom-6 w-[4px] rounded-full",
           TONE_BAR[tone],
         )}
       />

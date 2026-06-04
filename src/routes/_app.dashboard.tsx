@@ -141,20 +141,30 @@ function DashboardPage() {
   const riskRows = (ret?.rows ?? []).filter((r) => r.level === "risco").slice(0, 5);
 
   return (
-    <div className="p-4 md:p-8">
-      <PageHeader
-        tone="primary"
-        icon={Sparkles}
-        title="Central de Crescimento"
-        subtitle="Como aumentar as vendas este mês — inteligência e ações prioritárias"
-        action={
-          <Button asChild size="sm" variant="outline">
+    <div className="page-container max-w-[1400px]">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <div className="bg-primary/5 p-1.5 rounded-lg">
+              <Sparkles className="h-5 w-5 text-primary" />
+            </div>
+            <h1 className="text-3xl font-bold tracking-tight">Crescimento</h1>
+          </div>
+          <p className="text-muted-foreground text-sm max-w-md">
+            Seu copiloto de inteligência comercial. O que precisamos fazer hoje para vender mais?
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button asChild variant="outline" size="sm" className="h-9 px-4 font-medium">
             <Link to="/meu-dia">
-              <Flame className="mr-1 h-4 w-4" /> Meu dia
+              <Flame className="mr-2 h-4 w-4 text-orange-500" /> Meu dia
             </Link>
           </Button>
-        }
-      />
+          <Button variant="premium" size="sm" className="h-9 px-4 font-medium">
+            <TrendingUp className="mr-2 h-4 w-4" /> Nova meta
+          </Button>
+        </div>
+      </div>
 
 
       <div className="mt-6" data-tour="dashboard-checklist">
@@ -205,29 +215,33 @@ function DashboardPage() {
       </div>
 
       {/* KPI strip — sempre acionável (cada um leva para o módulo correto) */}
-      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {kpis.map((k, i) => (
           <Link key={k.label} to={k.href as any} className="group block">
             <Card
-              className="kpi-card relative h-full overflow-hidden p-5 animate-in fade-in slide-in-from-bottom-2"
+              className="kpi-card relative h-full overflow-hidden p-5 border-border/40 hover:border-primary/20 bg-card shadow-sm hover:shadow-md animate-in fade-in slide-in-from-bottom-2"
               style={{ animationDelay: `${i * 60}ms`, animationFillMode: "backwards" }}
             >
-              <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-              <div className="relative flex items-center justify-between">
-                <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+              <div className="relative flex items-center justify-between mb-4">
+                <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground/80">
                   {k.label}
                 </span>
-                <span className={`flex h-7 w-7 items-center justify-center rounded-md border border-border/60 bg-card ${k.tone}`}>
-                  <k.icon className="h-3.5 w-3.5" />
-                </span>
+                <div className={`p-2 rounded-lg bg-secondary/50 ${k.tone}`}>
+                  <k.icon className="h-4 w-4" />
+                </div>
               </div>
-              <p
-                data-slot="kpi-value"
-                className="relative mt-3 font-display text-[1.75rem] font-semibold leading-none tracking-[-0.03em]"
-              >
-                {k.value}
-              </p>
-              <p className="relative mt-2 text-xs text-muted-foreground">{k.sub}</p>
+              <div className="space-y-1">
+                <p
+                  data-slot="kpi-value"
+                  className="font-display text-2xl font-bold tracking-tight"
+                >
+                  {k.value}
+                </p>
+                <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                  <span className="truncate">{k.sub}</span>
+                </div>
+              </div>
+              <div className="absolute bottom-0 left-0 h-1 w-0 bg-primary/10 transition-all duration-500 group-hover:w-full" />
             </Card>
           </Link>
         ))}
