@@ -13,6 +13,7 @@ import { useGoToShortcuts } from "@/hooks/use-shortcuts";
 import { useNotificationsRealtime } from "@/lib/use-notifications-realtime";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouterState } from "@tanstack/react-router";
+import { PAGE_TRANSITION } from "@/lib/animations";
 
 export const Route = createFileRoute("/_app")({ component: AppLayout });
 
@@ -54,10 +55,7 @@ function AppLayout() {
             <AnimatePresence mode="wait">
               <motion.div
                 key={location}
-                initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
-                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                {...PAGE_TRANSITION}
                 className="w-full"
               >
                 <Outlet />
