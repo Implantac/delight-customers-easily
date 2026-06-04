@@ -1,4 +1,5 @@
 import { memo, useMemo } from "react";
+import { motion } from "framer-motion";
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
   LayoutDashboard, Users, Briefcase, Check, ChevronsUpDown,
