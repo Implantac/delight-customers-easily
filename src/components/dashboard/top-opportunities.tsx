@@ -7,7 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Flame, Clock, ArrowUpRight, Search, Users, Tag, Activity } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Database } from "@/integrations/supabase/types";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -24,10 +24,17 @@ type Deal = Database["public"]["Tables"]["deals"]["Row"] & {
 };
 
 export function TopOpportunities() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedSegment, setSelectedSegment] = useState("all");
-  const [selectedOwner, setSelectedOwner] = useState("all");
-  const [selectedStatus, setSelectedStatus] = useState("all");
+  const [searchTerm, setSearchTerm] = useState(() => localStorage.getItem("top-opps-search") || "");
+  const [selectedSegment, setSelectedSegment] = useState(() => localStorage.getItem("top-opps-segment") || "all");
+  const [selectedOwner, setSelectedOwner] = useState(() => localStorage.getItem("top-opps-owner") || "all");
+  const [selectedStatus, setSelectedStatus] = useState(() => localStorage.getItem("top-opps-status") || "all");
+
+  useEffect(() => {
+    localStorage.setItem("top-opps-search", searchTerm);
+    localStorage.setItem("top-opps-segment", selectedSegment);
+    localStorage.setItem("top-opps-owner", selectedOwner);
+    localStorage.setItem("top-opps-status", selectedStatus);
+  }, [searchTerm, selectedSegment, selectedOwner, selectedStatus]);
 
   const { data: rawOpportunities, isLoading } = useQuery({
     queryKey: ["top-opportunities-day"],
