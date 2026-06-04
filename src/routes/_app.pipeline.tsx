@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -141,16 +141,23 @@ function PipelinePage() {
   const selected = (deals ?? []).find((d) => d.id === selectedId) ?? null;
 
   return (
-    <div className="p-4 md:p-8">
+    <div className="page-container max-w-[1600px]">
       <PageHeader
-        title="Pipeline"
-        subtitle="Arraste para mover de estágio. Negócios quentes no topo de cada coluna."
+        title="Pipeline de Leads"
+        subtitle="Onde os negócios acontecem. Arraste para mover, foque no que está quente."
         icon={Target}
         action={
           <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild><Button><Plus className="mr-2 h-4 w-4" />Novo negócio</Button></DialogTrigger>
-            <DialogContent>
-              <DialogHeader><DialogTitle>Novo negócio</DialogTitle></DialogHeader>
+            <DialogTrigger asChild>
+              <Button className="h-9 px-4 font-medium transition-all hover:shadow-glow">
+                <Plus className="mr-2 h-4 w-4" /> Novo negócio
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[500px]">
+              <DialogHeader>
+                <DialogTitle className="text-xl font-bold">Novo negócio</DialogTitle>
+                <DialogDescription>Preencha os dados básicos para iniciar o acompanhamento.</DialogDescription>
+              </DialogHeader>
               <form onSubmit={(e) => { e.preventDefault(); create.mutate(new FormData(e.currentTarget)); }} className="space-y-3">
                 <div className="space-y-1.5"><Label>Título *</Label><Input name="title" required maxLength={150} /></div>
                 <div className="grid grid-cols-2 gap-3">
@@ -235,7 +242,7 @@ function PipelinePage() {
           <EmptyState icon={Target} title="Sem negócios" description="Crie seu primeiro negócio para começar a acompanhar o funil." />
         </div>
       ) : (
-        <div className="mt-6 flex gap-3 overflow-x-auto pb-2 md:grid md:grid-cols-3 md:overflow-visible lg:grid-cols-6">
+        <div className="mt-8 flex gap-4 overflow-x-auto pb-6 scrollbar-hide md:grid md:grid-cols-3 md:overflow-visible lg:grid-cols-6 min-h-[600px]">
           {STAGES.map((stage) => {
             const minV = Number(minValue) || 0;
             const ql = q.trim().toLowerCase();
@@ -273,13 +280,13 @@ function PipelinePage() {
                   if (d && d.stage !== stage.id) move.mutate({ id: dragId, stage: stage.id, prevStage: d.stage as Stage, deal: { title: d.title, value: d.value } });
                   setDragId(null);
                 }}
-                className={`flex w-[80vw] shrink-0 flex-col rounded-xl border bg-muted/30 p-2 transition-all md:w-auto md:shrink ${
+                className={`flex w-[80vw] shrink-0 flex-col rounded-2xl border bg-secondary/20 p-2.5 transition-all md:w-auto md:shrink ${
                   dragOverStage === stage.id && dragId
-                    ? "border-primary/60 bg-primary/5 ring-2 ring-primary/30 scale-[1.01]"
-                    : "border-border/50"
+                    ? "border-primary/40 bg-primary/5 ring-4 ring-primary/5 scale-[1.02]"
+                    : "border-border/30"
                 }`}
               >
-                <div className="sticky top-0 z-10 -mx-2 -mt-2 mb-1 rounded-t-xl bg-muted/60 px-4 py-2 backdrop-blur supports-[backdrop-filter]:bg-muted/40">
+                <div className="sticky top-0 z-10 -mx-2.5 -mt-2.5 mb-3 rounded-t-2xl bg-background/60 px-4 py-3 backdrop-blur-xl border-b border-border/10">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-semibold tracking-tight">{stage.label}</span>
                     <span className="rounded-full bg-background px-2 py-0.5 text-xs text-muted-foreground">{items.length}</span>
@@ -307,8 +314,8 @@ function PipelinePage() {
                         onDragStart={() => setDragId(d.id)}
                         onDragEnd={() => { setDragId(null); setDragOverStage(null); }}
                         onClick={() => setSelectedId(d.id)}
-                        className={`group cursor-grab border-l-4 p-3 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[var(--shadow-md)] active:cursor-grabbing ${stage.color} ${
-                          isDragging ? "opacity-40 rotate-1 scale-95" : ""
+                        className={`group cursor-grab border-l-[3px] p-4 transition-all duration-200 hover:-translate-y-1 hover:shadow-md active:cursor-grabbing bg-card border-border/50 ${stage.color} ${
+                          isDragging ? "opacity-30 rotate-2 scale-90" : ""
                         }`}
                         title={d._score.reasons.join(" · ")}
                       >

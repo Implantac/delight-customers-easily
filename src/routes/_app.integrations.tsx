@@ -2,6 +2,7 @@ import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-rout
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
+import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useCurrentOrg } from "@/lib/org";
 import { useCanManage } from "@/lib/permissions";
@@ -316,17 +317,17 @@ function ConnectHubDashboard() {
   );
 
   return (
-    <div className="p-6 space-y-6 max-w-6xl mx-auto">
+    <div className="page-container max-w-[1200px]">
       <PageHeader
         icon={Plug}
-        title="Integração com ERP"
-        subtitle="Conecte seu ERP ao CRM em poucos minutos."
+        title="ConnectHub"
+        subtitle="Integração inteligente com seu ERP sem necessidade de código."
         action={
           <div className="flex items-center gap-2">
             <Button
               variant="outline"
               size="sm"
-              className="gap-2"
+              className="gap-2 h-9 px-4"
               onClick={() => {
                 health.refetch();
                 jobs.refetch();
@@ -336,11 +337,11 @@ function ConnectHubDashboard() {
               <RefreshCw
                 className={`h-4 w-4 ${health.isFetching ? "animate-spin" : ""}`}
               />
-              Atualizar
+              Sincronizar
             </Button>
             <Link to="/integrations/connect/wizard">
-              <Button size="sm" className="gap-2">
-                <Plus className="h-4 w-4" /> Conectar novo ERP
+              <Button size="sm" className="gap-2 h-9 px-4 bg-primary text-primary-foreground hover:shadow-glow transition-all">
+                <Plus className="h-4 w-4" /> Novo Conector
               </Button>
             </Link>
           </div>
@@ -348,7 +349,7 @@ function ConnectHubDashboard() {
       />
 
       {/* Resumo de status */}
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="ERPs conectados" value={rows.length} tone="primary" icon={Plug} />
         <StatCard label="Funcionando bem" value={online} tone="green" icon={CheckCircle2} />
         <StatCard
@@ -812,28 +813,24 @@ function StatCard({
   hint?: string;
   spinning?: boolean;
 }) {
-  const color =
-    tone === "primary"
-      ? "text-primary bg-primary/10"
-      : tone === "green"
-      ? "text-emerald-600 bg-emerald-500/10"
-      : tone === "amber"
-      ? "text-amber-600 bg-amber-500/10"
-      : "text-muted-foreground bg-muted";
+  const tones = {
+    primary: "bg-primary/5 text-primary border-primary/20",
+    green: "bg-emerald-500/5 text-emerald-600 border-emerald-500/20",
+    amber: "bg-amber-500/5 text-amber-600 border-amber-500/20",
+    muted: "bg-muted/5 text-muted-foreground border-border/40",
+  };
+
   return (
-    <Card>
-      <CardContent className="p-4 flex items-center gap-3">
-        <div
-          className={`h-10 w-10 rounded-md flex items-center justify-center ${color}`}
-        >
-          <Icon className={`h-5 w-5 ${spinning ? "animate-spin" : ""}`} />
-        </div>
-        <div className="min-w-0">
-          <div className="text-2xl font-semibold leading-none">{value}</div>
-          <div className="text-xs text-muted-foreground mt-1 truncate">
-            {hint ?? label}
+    <Card className={cn("hover-lift border-border/40 bg-card shadow-xs transition-all duration-300")}>
+      <CardContent className="p-5">
+        <div className="flex items-center justify-between mb-4">
+          <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground/80">{label}</span>
+          <div className={cn("p-2 rounded-lg", tones[tone])}>
+            <Icon className={cn("h-4 w-4", spinning && "animate-spin")} />
           </div>
         </div>
+        <p className="font-display text-2xl font-bold tracking-tight">{value}</p>
+        {hint && <p className="text-[10px] text-muted-foreground mt-1">{hint}</p>}
       </CardContent>
     </Card>
   );
