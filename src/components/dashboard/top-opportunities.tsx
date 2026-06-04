@@ -4,45 +4,40 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Flame, TrendingUp, Clock, Target, ArrowUpRight } from "lucide-react";
+import { Flame, Clock, ArrowUpRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { Database } from "@/integrations/supabase/types";
+
+type Deal = Database["public"]["Tables"]["deals"]["Row"] & {
+  companies: { name: string } | null;
+  ai_deal_insights: Database["public"]["Tables"]["ai_deal_insights"]["Row"] | null;
+};
 
 export function TopOpportunities() {
   const { data: opportunities, isLoading } = useQuery({
     queryKey: ["top-opportunities-day"],
     queryFn: async () => {
-      // Buscamos as oportunidades abertas e cruzamos com os insights da IA
       const { data, error } = await supabase
         .from("deals")
         .select(`
-          id, 
-          title, 
-          value, 
-          stage, 
-          expected_close, 
+          *,
           companies(name),
-          ai_deal_insights(win_probability, risk_level)
+          ai_deal_insights(*)
         `)
         .not("stage", "in", "(won,lost)")
         .limit(20);
 
       if (error) throw error;
 
-      // Cálculo de Score customizado:
-      // Potencial: valor (log scale)
-      // Urgência: proximidade do fechamento esperado
-      // Chance: win_probability da IA
-      return (data || []).map((d: any) => {
-        const insights = d.ai_deal_insights?.[0] || {};
+      return (data as unknown as Deal[] || []).map((d) => {
+        const insights = d.ai_deal_insights || {};
         const winProb = Number(insights.win_probability || 0.5);
         
-        // Urgência (dias para fechar)
         const daysToClose = d.expected_close 
           ? Math.max(0, (new Date(d.expected_close).getTime() - Date.now()) / (1000 * 3600 * 24))
           : 30;
-        const urgencyScore = Math.max(0, 1 - (daysToClose / 60)); // 60 dias como horizonte
+        const urgencyScore = Math.max(0, 1 - (daysToClose / 60));
 
-        // Score final (0-100)
         const score = (
           (winProb * 40) + 
           (urgencyScore * 40) + 
@@ -103,7 +98,7 @@ export function TopOpportunities() {
           opportunities?.map((opp, idx) => (
             <Link 
               key={opp.id} 
-              to={`/pipeline` as any} // Em um caso real, levaria para o detalhe
+              to={`/pipeline` as any}
               className="group flex items-center gap-4 p-3 rounded-xl border border-transparent hover:border-orange-100 hover:bg-orange-50/30 transition-all duration-300"
             >
               <div className="flex flex-col items-center justify-center h-12 w-12 rounded-xl bg-orange-100/50 text-orange-700 font-bold border border-orange-200">
@@ -140,3 +135,4 @@ export function TopOpportunities() {
     </Card>
   );
 }
+
