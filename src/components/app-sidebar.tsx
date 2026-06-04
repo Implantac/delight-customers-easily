@@ -52,7 +52,9 @@ const TONE_CLASS: Record<NavTone, string> = {
  * via a entrada "Integrações ERP".
  */
 const primaryNav: NavEntry[] = [
-  { to: "/dashboard",                label: "Dashboard",          icon: LayoutDashboard, tone: "primary" },
+  { to: "/dashboard",                label: "Central de Crescimento", icon: Sparkles,        tone: "accent" },
+  { to: "/oportunidades",            label: "Motor de Oportunidades", icon: Target,          tone: "accent" },
+  { to: "/dashboard-executivo",      label: "Dashboard Executivo", icon: Building,       tone: "primary", managerOnly: true },
   { to: "/dashboard-executivo",      label: "Dashboard Executivo", icon: Building,       tone: "primary", managerOnly: true },
   { to: "/gestao-visao-global",      label: "Visão Global",       icon: Map,             tone: "violet", managerOnly: true },
   { to: "/carteira",                 label: "Carteira Comercial", icon: Briefcase,       tone: "info" },

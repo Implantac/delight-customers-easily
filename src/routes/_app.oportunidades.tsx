@@ -58,8 +58,8 @@ function OportunidadesPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Central de Oportunidades"
-        subtitle="Onde vender hoje. Tudo priorizado por IA: alto valor, recuperação, upsell, cross-sell e leads quentes."
+        title="Motor de Oportunidades"
+        subtitle="Ranking automático de onde existe dinheiro disponível hoje."
         icon={Target}
       />
 

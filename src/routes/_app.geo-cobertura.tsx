@@ -45,8 +45,8 @@ function CoberturaPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Cobertura Territorial"
-        subtitle="Quantos clientes você tem em cada cidade, quantos prospects existem e qual a sua penetração."
+        title="IA de Cobertura Comercial"
+        subtitle="Análise territorial de penetração de mercado e regiões subexploradas."
         icon={Map}
       />
 
