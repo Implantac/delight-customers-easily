@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 type Tone = "primary" | "info" | "success" | "violet" | "accent" | "rose";
@@ -37,7 +38,10 @@ export function PageHeader({
   className?: string;
 }) {
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, x: -10 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.4, ease: "easeOut" }}
       className={cn(
         "relative flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4 border-b border-border/40 pb-6 mb-8 pl-4",
         className,
@@ -72,6 +76,6 @@ export function PageHeader({
           {action}
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }

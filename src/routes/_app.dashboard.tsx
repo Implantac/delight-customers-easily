@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { motion } from "framer-motion";
 import {
   AlertTriangle, TrendingUp, Target, Users, ArrowRight,
   Flame, HeartPulse, Award, Gauge, Sparkles,
@@ -219,33 +220,39 @@ function DashboardPage() {
       {/* KPI strip — sempre acionável (cada um leva para o módulo correto) */}
       <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {kpis.map((k, i) => (
-          <Link key={k.label} to={k.href as any} className="group block">
-            <Card
-              className="kpi-card relative h-full overflow-hidden p-5 border-border/40 hover:border-primary/20 bg-card shadow-sm hover:shadow-md animate-in fade-in slide-in-from-bottom-2"
-              style={{ animationDelay: `${i * 60}ms`, animationFillMode: "backwards" }}
-            >
-              <div className="relative flex items-center justify-between mb-4">
-                <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground/80">
-                  {k.label}
-                </span>
-                <div className={`p-2 rounded-lg bg-secondary/50 ${k.tone}`}>
-                  <k.icon className="h-4 w-4" />
+          <motion.div
+            key={k.label}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.1, duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+          >
+            <Link to={k.href as any} className="group block h-full">
+              <Card
+                className="kpi-card relative h-full overflow-hidden p-5 border-border/40 hover:border-primary/20 bg-card shadow-sm hover:shadow-md transition-all duration-300"
+              >
+                <div className="relative flex items-center justify-between mb-4">
+                  <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground/80">
+                    {k.label}
+                  </span>
+                  <div className={`p-2 rounded-lg bg-secondary/50 ${k.tone} group-hover:scale-110 transition-transform duration-300`}>
+                    <k.icon className="h-4 w-4" />
+                  </div>
                 </div>
-              </div>
-              <div className="space-y-1">
-                <p
-                  data-slot="kpi-value"
-                  className="font-display text-2xl font-bold tracking-tight"
-                >
-                  {k.value}
-                </p>
-                <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
-                  <span className="truncate">{k.sub}</span>
+                <div className="space-y-1">
+                  <p
+                    data-slot="kpi-value"
+                    className="font-display text-2xl font-bold tracking-tight group-hover:text-primary transition-colors"
+                  >
+                    {k.value}
+                  </p>
+                  <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
+                    <span className="truncate">{k.sub}</span>
+                  </div>
                 </div>
-              </div>
-              <div className="absolute bottom-0 left-0 h-1 w-0 bg-primary/10 transition-all duration-500 group-hover:w-full" />
-            </Card>
-          </Link>
+                <div className="absolute bottom-0 left-0 h-1 w-0 bg-primary/10 transition-all duration-500 group-hover:w-full" />
+              </Card>
+            </Link>
+          </motion.div>
         ))}
       </div>
 

@@ -120,9 +120,10 @@
   --shadow-glow: 0 0 20px -5px rgba(9, 9, 11, 0.1);
 
   --radius: 0.5rem;
-  --ease-out: cubic-bezier(0, 0, 0.2, 1);
-  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-out: cubic-bezier(0, 0, 0, 1);
+  --ease-in-out: cubic-bezier(0.45, 0, 0.55, 1);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.2);
+  --ease-smooth: cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 /* =========================================================

@@ -11,12 +11,15 @@ import { ShortcutsHelp } from "@/components/shortcuts-help";
 import { PwaInstallBanner } from "@/components/pwa-install-banner";
 import { useGoToShortcuts } from "@/hooks/use-shortcuts";
 import { useNotificationsRealtime } from "@/lib/use-notifications-realtime";
+import { motion, AnimatePresence } from "framer-motion";
+import { useRouterState } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_app")({ component: AppLayout });
 
 function AppLayout() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const location = useRouterState({ select: (s) => s.location.pathname });
   useGoToShortcuts();
   useNotificationsRealtime();
 
@@ -48,9 +51,18 @@ function AppLayout() {
             <ThemeToggle />
           </header>
           <main className="flex-1 overflow-auto pb-20 md:pb-0">
-            <div className="animate-in-page">
-              <Outlet />
-            </div>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={location}
+                initial={{ opacity: 0, y: 10, filter: "blur(4px)" }}
+                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                exit={{ opacity: 0, y: -10, filter: "blur(4px)" }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                className="w-full"
+              >
+                <Outlet />
+              </motion.div>
+            </AnimatePresence>
           </main>
           <MobileBottomNav />
           <ShortcutsHelp />

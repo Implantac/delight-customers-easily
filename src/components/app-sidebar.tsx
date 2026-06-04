@@ -1,4 +1,5 @@
 import { memo, useMemo } from "react";
+import { motion } from "framer-motion";
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
   LayoutDashboard, Users, Briefcase, Check, ChevronsUpDown,
@@ -271,9 +272,20 @@ const NavItem = memo(function NavItem({ to, label, Icon, active, tone }: NavItem
   return (
     <SidebarMenuItem>
       <SidebarMenuButton asChild isActive={active} tooltip={label}>
-        <Link to={to as any} preload="intent">
-          <Icon className={`h-4 w-4 transition-colors ${TONE_CLASS[tone]}`} />
-          <span>{label}</span>
+        <Link 
+          to={to as any} 
+          preload="intent"
+          className="relative transition-all duration-300 hover:pl-5 group"
+        >
+          <Icon className={`h-4 w-4 transition-all duration-300 group-hover:scale-110 ${TONE_CLASS[tone]}`} />
+          <span className="transition-all duration-300 group-hover:tracking-tight">{label}</span>
+          {active && (
+            <motion.div 
+              layoutId="active-nav"
+              className="absolute left-1 h-1 w-1 rounded-full bg-primary"
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            />
+          )}
         </Link>
       </SidebarMenuButton>
     </SidebarMenuItem>
