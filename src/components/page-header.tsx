@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 type Tone = "primary" | "info" | "success" | "violet" | "accent" | "rose";
