@@ -10,7 +10,7 @@ const prefersReducedMotion = typeof window !== "undefined"
   : false;
 
 export const ENTERPRISE_TRANSITION: Transition = prefersReducedMotion 
-  ? { duration: 0.1 }
+  ? { duration: 0.2, ease: "linear" }
   : {
       type: "spring",
       stiffness: 260,
@@ -23,7 +23,7 @@ export const PAGE_TRANSITION = {
   initial: { opacity: 0, y: prefersReducedMotion ? 0 : 8, filter: prefersReducedMotion ? "none" : "blur(4px)" },
   animate: { opacity: 1, y: 0, filter: "none" },
   exit: { opacity: 0, y: prefersReducedMotion ? 0 : -8, filter: prefersReducedMotion ? "none" : "blur(4px)" },
-  transition: { duration: prefersReducedMotion ? 0.2 : 0.4, ease: ENTERPRISE_EASE } as Transition,
+  transition: { duration: prefersReducedMotion ? 0.3 : 0.4, ease: ENTERPRISE_EASE } as Transition,
 };
 
 export const STAGGER_CHILDREN = {
@@ -37,6 +37,6 @@ export const STAGGER_CHILDREN = {
 export const FADE_IN_UP = {
   initial: { opacity: 0, y: prefersReducedMotion ? 0 : 10 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: prefersReducedMotion ? 0.2 : 0.4, ease: ENTERPRISE_EASE } as Transition,
+  transition: { duration: prefersReducedMotion ? 0.3 : 0.4, ease: ENTERPRISE_EASE } as Transition,
 };
 
