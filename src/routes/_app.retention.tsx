@@ -57,8 +57,8 @@ function RetentionPage() {
   return (
     <div className="p-4 md:p-8 space-y-6">
       <PageHeader
-        title="Retenção & Expansão"
-        subtitle="Quem corre risco de churn e onde estão as oportunidades de crescer dentro da base."
+        title="IA de Churn Comercial"
+        subtitle="Detecção proativa de risco de perda e planos de recuperação sugeridos."
       />
 
       <NextActionBlock surface="retention" title="Reter e expandir agora" showRegenerate />

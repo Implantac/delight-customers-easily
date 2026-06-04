@@ -143,9 +143,9 @@ function DashboardPage() {
     <div className="p-4 md:p-8">
       <PageHeader
         tone="primary"
-        icon={Gauge}
-        title="Revenue Command Center"
-        subtitle="O que precisa acontecer hoje para vender mais"
+        icon={Sparkles}
+        title="Central de Crescimento"
+        subtitle="Como aumentar as vendas este mês — inteligência e ações prioritárias"
         action={
           <Button asChild size="sm" variant="outline">
             <Link to="/meu-dia">
