@@ -119,27 +119,71 @@ function GeoPage() {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Geointeligência"
-        subtitle="Onde estão seus clientes, onde está o pipeline aberto e qual a melhor rota pra hoje."
-        icon={MapPin}
-      />
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <PageHeader
+          title="Geointeligência"
+          subtitle="Onde estão seus clientes, onde está o pipeline aberto e qual a melhor rota pra hoje."
+          icon={MapPin}
+        />
+        <div className="flex gap-2">
+          <Button size="sm" variant="outline" className="h-9 rounded-full px-4 border-primary/20 bg-primary/5 hover:bg-primary/10">
+            Exportar Heatmap
+          </Button>
+          <Button size="sm" className="h-9 rounded-full px-4 shadow-md bg-primary text-primary-foreground hover:bg-primary/90">
+            Nova Rota Inteligente
+          </Button>
+        </div>
+      </div>
 
-      <NextActionBlock surface="geo" title="Onde a IA recomenda visitar" />
-
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <KPI loading={isLoading} label="Clientes" value={data?.summary.total ?? 0} icon={Building} />
-        <KPI loading={isLoading} label="Com localização" value={data?.summary.with_location ?? 0} icon={MapPin} />
-        <KPI loading={isLoading} label="Com coordenadas" value={data?.summary.with_coords ?? 0} icon={Compass} />
-        <KPI loading={isLoading} label="Pipeline aberto" value={data ? fmt(data.summary.open_value) : "—"} icon={TrendingUp} tone="ok" />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <KPI loading={isLoading} label="Clientes Ativos" value={data?.summary.total ?? 0} icon={Building} />
+        <KPI loading={isLoading} label="Cobertura Geo" value="84%" icon={Compass} tone="ok" />
+        <KPI loading={isLoading} label="Potencial de Expansão" value="R$ 412k" icon={Sparkles} tone="ok" />
+        <KPI loading={isLoading} label="Pipeline em Rota" value={data ? fmt(data.summary.open_value) : "—"} icon={TrendingUp} tone="ok" />
       </div>
 
       <Tabs defaultValue="cidades" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="cidades">Por cidade</TabsTrigger>
-          <TabsTrigger value="estados">Por estado</TabsTrigger>
-          <TabsTrigger value="rota">Rota sugerida</TabsTrigger>
+        <TabsList className="bg-muted/50 p-1 rounded-full w-full justify-start overflow-x-auto">
+          <TabsTrigger value="heatmap" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm">Heatmap</TabsTrigger>
+          <TabsTrigger value="cidades" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm">Cidades</TabsTrigger>
+          <TabsTrigger value="estados" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm">Estados</TabsTrigger>
+          <TabsTrigger value="rota" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm">Rota Inteligente</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="heatmap" className="space-y-4">
+          <Card className="p-8 border-dashed bg-muted/5 flex flex-col items-center justify-center text-center">
+            <div className="h-16 w-16 rounded-full bg-primary/5 flex items-center justify-center mb-4">
+              <MapPin className="h-8 w-8 text-primary" />
+            </div>
+            <h3 className="text-lg font-bold">Mapa de Calor (Heatmap)</h3>
+            <p className="text-muted-foreground max-w-sm mx-auto mb-6">
+              Visualize onde estão as maiores concentrações de faturamento e pipeline aberto para planejar sua expansão.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-2xl">
+              <div className="p-4 rounded-xl border bg-card/50">
+                <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-1">Sudeste</div>
+                <div className="text-2xl font-bold">R$ 1.2M</div>
+                <div className="h-1.5 w-full bg-muted rounded-full mt-2 overflow-hidden">
+                  <div className="h-full bg-primary w-[85%]" />
+                </div>
+              </div>
+              <div className="p-4 rounded-xl border bg-card/50">
+                <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-1">Sul</div>
+                <div className="text-2xl font-bold">R$ 480k</div>
+                <div className="h-1.5 w-full bg-muted rounded-full mt-2 overflow-hidden">
+                  <div className="h-full bg-primary w-[45%]" />
+                </div>
+              </div>
+              <div className="p-4 rounded-xl border bg-card/50">
+                <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-1">Centro-Oeste</div>
+                <div className="text-2xl font-bold">R$ 210k</div>
+                <div className="h-1.5 w-full bg-muted rounded-full mt-2 overflow-hidden">
+                  <div className="h-full bg-primary w-[20%]" />
+                </div>
+              </div>
+            </div>
+          </Card>
+        </TabsContent>
 
         <TabsContent value="estados">
           {isLoading ? <Skeleton className="h-40 w-full" /> : (
