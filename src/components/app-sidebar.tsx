@@ -36,6 +36,11 @@ type NavEntry = {
   managerOnly?: boolean;
 };
 
+type NavGroup = {
+  label: string;
+  items: NavEntry[];
+};
+
 const TONE_CLASS: Record<NavTone, string> = {
   primary: "text-muted-foreground group-data-[active=true]/menu-item:text-primary",
   info:    "text-muted-foreground group-data-[active=true]/menu-item:text-primary",
@@ -45,64 +50,60 @@ const TONE_CLASS: Record<NavTone, string> = {
   rose:    "text-muted-foreground group-data-[active=true]/menu-item:text-primary",
 };
 
-/**
- * USE CRM — Plataforma de Inteligência Comercial.
- * Sidebar enxuta, espelhando o briefing 1:1 (17 itens, em duas seções).
- *
- * REGRA ABSOLUTA: nada de ERP aqui. Nenhuma tela operacional/fiscal/financeira
- * aparece na navegação principal. O CRM apenas consome dados comerciais do ERP
- * via a entrada "Integrações ERP".
- */
-const primaryNav: NavEntry[] = [
-  { to: "/dashboard",                label: "Central de Crescimento", icon: Sparkles,        tone: "accent" },
-  { to: "/oportunidades",            label: "Motor de Oportunidades", icon: Target,          tone: "accent" },
-  { to: "/dashboard-executivo",      label: "Dashboard Executivo", icon: Building,       tone: "primary", managerOnly: true },
-  { to: "/dashboard-executivo",      label: "Dashboard Executivo", icon: Building,       tone: "primary", managerOnly: true },
-  { to: "/gestao-visao-global",      label: "Visão Global",       icon: Map,             tone: "violet", managerOnly: true },
-  { to: "/carteira",                 label: "Carteira Comercial", icon: Briefcase,       tone: "info" },
-  { to: "/leads",                    label: "Leads",              icon: Flame,           tone: "accent" },
-  { to: "/lead-forms",               label: "Formulários de Lead", icon: FileInput,      tone: "accent", managerOnly: true },
-  { to: "/pipeline",                 label: "Pipeline de Leads",  icon: GitBranch,       tone: "accent" },
-  { to: "/contacts",                 label: "Clientes",           icon: Users,           tone: "info" },
-  { to: "/customer-360",             label: "Customer 360",       icon: Sparkles,        tone: "violet" },
-  { to: "/oportunidades",            label: "Oportunidades",      icon: Target,          tone: "accent" },
-  { to: "/representantes",           label: "Representantes",     icon: Award,           tone: "success", managerOnly: true },
-  { to: "/commissions",              label: "Comissões",          icon: DollarSign,      tone: "success", managerOnly: true },
-  { to: "/goals",                    label: "Metas",              icon: Goal,            tone: "success", managerOnly: true },
-  { to: "/coaching",                 label: "Coaching",           icon: GraduationCap,   tone: "violet", managerOnly: true },
-  { to: "/meu-dia",                  label: "Meu Dia",            icon: SunIcon,         tone: "primary" },
-  { to: "/calendar",                 label: "Agenda",             icon: CalendarIcon,    tone: "primary" },
-  { to: "/activities",               label: "Atividades",         icon: ListChecks,      tone: "primary" },
-  { to: "/mytasks",                  label: "Minhas Tarefas",     icon: CheckSquare,     tone: "primary" },
-  { to: "/geo",                      label: "Geointeligência",    icon: Map,             tone: "info" },
-  { to: "/geo-rota",                 label: "Visitas e Rotas",    icon: RouteIcon,       tone: "info" },
-  { to: "/geo-cobertura",            label: "Cobertura Geo",      icon: Compass,         tone: "info" },
-  { to: "/geo-prospeccao",           label: "Prospecção Geo",     icon: Compass,         tone: "info" },
-  { to: "/whatsapp",                 label: "WhatsApp",           icon: MessageSquare,   tone: "success" },
-  { to: "/site-chat",                label: "Chat do Site",       icon: MessageSquare,   tone: "success" },
-  { to: "/chat",                     label: "Chat Interno",       icon: MessagesSquare,  tone: "success" },
-  { to: "/campaigns",                label: "Marketing",          icon: Megaphone,       tone: "rose" },
-  { to: "/campaigns/whatsapp",       label: "Campanhas WhatsApp", icon: MessageSquare,   tone: "success" },
-  { to: "/marketing-intel",          label: "Marketing Intel",    icon: LineChart,       tone: "rose" },
-  { to: "/sequences",                label: "Cadências",          icon: Workflow,        tone: "rose" },
-  { to: "/influencers",              label: "Influencers",        icon: Sparkles,        tone: "violet" },
-  { to: "/inteligencia-comercial",   label: "IA Comercial",       icon: Sparkles,        tone: "violet" },
-  { to: "/nba",                      label: "Próximas ações",     icon: Sparkles,        tone: "violet" },
-  { to: "/inteligencia-comercial/qualidade-ia", label: "Qualidade da IA", icon: Sparkles, tone: "violet", managerOnly: true },
-  { to: "/reports",                  label: "Relatórios",         icon: BarChart3,       tone: "info", managerOnly: true },
-  { to: "/forecast",                 label: "Forecast",           icon: TrendingUp,      tone: "info", managerOnly: true },
-  { to: "/win-loss",                 label: "Win / Loss",         icon: Trophy,          tone: "info", managerOnly: true },
-  { to: "/retention",                label: "Retenção",           icon: Repeat,          tone: "info", managerOnly: true },
-];
-
-const adminNav: NavEntry[] = [
-  { to: "/setup-wizard",             label: "Setup guiado",       icon: Rocket,          tone: "accent", managerOnly: true },
-  { to: "/automacoes",               label: "Automações",         icon: Zap,             tone: "accent", managerOnly: true },
-  { to: "/integrations",             label: "Integrações ERP",    icon: Plug,            tone: "primary", managerOnly: true },
-  { to: "/companies",                label: "Empresas",           icon: Building,        tone: "primary" },
-  { to: "/multi-empresa",            label: "Multi-empresa",      icon: Network,         tone: "primary", managerOnly: true },
-  { to: "/settings/briefing",        label: "Briefing diário",    icon: Sun,             tone: "primary" },
-  { to: "/settings/organization",    label: "Configurações",      icon: Settings,        tone: "primary", managerOnly: true },
+const navigationGroups: NavGroup[] = [
+  {
+    label: "Crescimento",
+    items: [
+      { to: "/dashboard", label: "Central de Crescimento", icon: Sparkles, tone: "accent" },
+      { to: "/oportunidades", label: "Oportunidades", icon: Target, tone: "accent" },
+      { to: "/inteligencia-comercial", label: "IA Comercial", icon: Sparkles, tone: "violet" },
+    ],
+  },
+  {
+    label: "Relacionamento",
+    items: [
+      { to: "/carteira", label: "Carteira Comercial", icon: Briefcase, tone: "info" },
+      { to: "/contacts", label: "Clientes", icon: Users, tone: "info" },
+      { to: "/leads", label: "Leads", icon: Flame, tone: "accent" },
+    ],
+  },
+  {
+    label: "Equipe",
+    items: [
+      { to: "/representantes", label: "Representantes", icon: Award, tone: "success", managerOnly: true },
+      { to: "/calendar", label: "Agenda", icon: CalendarIcon, tone: "primary" },
+      { to: "/geo-rota", label: "Visitas e Rotas", icon: RouteIcon, tone: "info" },
+    ],
+  },
+  {
+    label: "Comunicação",
+    items: [
+      { to: "/whatsapp", label: "WhatsApp", icon: MessageSquare, tone: "success" },
+      { to: "/site-chat", label: "Omnichannel", icon: MessagesSquare, tone: "success" },
+      { to: "/chat", label: "Chat Interno", icon: MessagesSquare, tone: "success" },
+    ],
+  },
+  {
+    label: "Inteligência",
+    items: [
+      { to: "/geo", label: "Geointeligência", icon: Map, tone: "info" },
+      { to: "/reports", label: "Relatórios", icon: BarChart3, tone: "info", managerOnly: true },
+      { to: "/forecast", label: "Forecast", icon: TrendingUp, tone: "info", managerOnly: true },
+    ],
+  },
+  {
+    label: "Integrações",
+    items: [
+      { to: "/integrations", label: "ConnectHub", icon: Plug, tone: "primary", managerOnly: true },
+    ],
+  },
+  {
+    label: "Administração",
+    items: [
+      { to: "/companies", label: "Empresas", icon: Building, tone: "primary" },
+      { to: "/settings/organization", label: "Configurações", icon: Settings, tone: "primary", managerOnly: true },
+    ],
+  },
 ];
 
 export function AppSidebar() {
@@ -128,14 +129,12 @@ export function AppSidebar() {
     }
   };
 
-  const primary = useMemo(
-    () => primaryNav.filter((n) => !n.managerOnly || canManage),
-    [canManage],
-  );
-  const admin = useMemo(
-    () => adminNav.filter((n) => !n.managerOnly || canManage),
-    [canManage],
-  );
+  const groups = useMemo(() => {
+    return navigationGroups.map(group => ({
+      ...group,
+      items: group.items.filter(item => !item.managerOnly || canManage)
+    })).filter(group => group.items.length > 0);
+  }, [canManage]);
 
   const isItemActive = (to: string) =>
     path === to || (to !== "/dashboard" && path.startsWith(to + "/"));
@@ -176,54 +175,23 @@ export function AppSidebar() {
             <DropdownMenuItem asChild>
               <Link to="/settings/organization"><Settings className="mr-2 h-4 w-4" />Configurações</Link>
             </DropdownMenuItem>
-            {canManage && (
-              <>
-                <DropdownMenuItem asChild>
-                  <Link to="/settings/fields"><Sliders className="mr-2 h-4 w-4" />Campos personalizados</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/settings/import"><Upload className="mr-2 h-4 w-4" />Importar CSV</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/settings/webhooks"><Webhook className="mr-2 h-4 w-4" />Webhooks</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/settings/automations"><Zap className="mr-2 h-4 w-4" />Automações</Link>
-                </DropdownMenuItem>
-              </>
-            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarHeader>
 
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {primary.map((item) => (
-                <NavItem
-                  key={`primary:${item.to}:${item.label}`}
-                  to={item.to}
-                  label={item.label}
-                  Icon={item.icon}
-                  tone={item.tone ?? "primary"}
-                  active={isItemActive(item.to)}
-                />
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        {admin.length > 0 && (
-          <SidebarGroup>
+        {groups.map((group) => (
+          <SidebarGroup key={group.label}>
             {!collapsed && (
-              <div className="mx-2 mb-1 mt-2 h-px bg-gradient-to-r from-transparent via-sidebar-border to-transparent" />
+              <div className="px-3 mb-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50">
+                {group.label}
+              </div>
             )}
             <SidebarGroupContent>
               <SidebarMenu>
-                {admin.map((item) => (
+                {group.items.map((item) => (
                   <NavItem
-                    key={`admin:${item.to}:${item.label}`}
+                    key={`${group.label}:${item.to}:${item.label}`}
                     to={item.to}
                     label={item.label}
                     Icon={item.icon}
@@ -234,7 +202,7 @@ export function AppSidebar() {
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
-        )}
+        ))}
       </SidebarContent>
 
       <SidebarFooter className="border-t">

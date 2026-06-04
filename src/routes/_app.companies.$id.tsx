@@ -14,6 +14,7 @@ import { Timeline, type TimelineItem } from "@/components/timeline";
 import {
   ArrowLeft, Globe, Trash2, Users, KanbanSquare, Clock, History as HistoryIcon,
   Plug, TrendingUp, Receipt, Package, MessageCircle, Mail, Phone, Sparkles, LayoutGrid,
+  Building, Lightbulb,
 } from "lucide-react";
 import { Attachments } from "@/components/attachments";
 import { TagPicker } from "@/components/tag-picker";
@@ -28,6 +29,33 @@ export const Route = createFileRoute("/_app/companies/$id")({ component: Company
 
 const BRL = (n: number) =>
   Number(n || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
+
+function TimelineEvent({ type, title, desc, time }: { type: string; title: string; desc: string; time: string }) {
+  const icons: Record<string, any> = {
+    whatsapp: <MessageCircle className="h-4 w-4 text-emerald-500" />,
+    visit: <MapPin className="h-4 w-4 text-blue-500" />,
+    proposal: <Receipt className="h-4 w-4 text-amber-500" />,
+    email: <Mail className="h-4 w-4 text-violet-500" />,
+  };
+  return (
+    <div className="flex gap-4 items-start relative pb-4 last:pb-0">
+      <div className="absolute left-[17px] top-8 bottom-0 w-px bg-border/40 last:hidden" />
+      <div className="h-9 w-9 shrink-0 rounded-full border border-border/40 bg-card flex items-center justify-center z-10">
+        {icons[type] || <Clock className="h-4 w-4" />}
+      </div>
+      <div className="flex-1 pt-1">
+        <div className="flex justify-between items-center mb-1">
+          <span className="font-bold text-sm">{title}</span>
+          <span className="text-[10px] text-muted-foreground uppercase">{time}</span>
+        </div>
+        <p className="text-xs text-muted-foreground leading-relaxed">{desc}</p>
+      </div>
+    </div>
+  );
+}
+
+import { MapPin } from "lucide-react";
+
 
 function CompanyDetail() {
   const { id } = Route.useParams();
@@ -202,94 +230,70 @@ function CompanyDetail() {
 
   return (
     <div className="page-container max-w-[1600px]">
-      <Button variant="ghost" size="sm" asChild className="mb-3 -ml-2 h-7 text-muted-foreground">
-        <Link to="/companies"><ArrowLeft className="mr-1 h-3.5 w-3.5" />Carteira</Link>
+      <Button variant="ghost" size="sm" asChild className="mb-4 -ml-2 h-8 text-muted-foreground hover:bg-muted/50">
+        <Link to="/companies"><ArrowLeft className="mr-2 h-4 w-4" />Carteira Comercial</Link>
       </Button>
 
-      {/* ============ HERO — Command bar premium ============ */}
-      <div className="surface-elevated relative overflow-hidden p-5 md:p-6">
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-          <div className="flex min-w-0 items-start gap-4">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-[var(--gradient-primary)] text-primary-foreground shadow-[var(--shadow-glow)] ring-1 ring-white/10">
-              <span className="font-display text-xl font-semibold tracking-tight">
+      {/* ============ HERO — Premium Customer Context ============ */}
+      <div className="relative mb-8 rounded-2xl border border-border/40 bg-card/50 p-6 shadow-sm backdrop-blur-xl md:p-8">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+        
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+          <div className="flex flex-col gap-6 md:flex-row md:items-start">
+            <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg ring-1 ring-white/10">
+              <span className="font-display text-2xl font-bold">
                 {company.name.slice(0, 2).toUpperCase()}
               </span>
             </div>
-            <div className="min-w-0">
-              <div className="flex flex-wrap items-center gap-2">
-                <h1 className="font-display text-[1.625rem] font-semibold leading-tight tracking-[-0.025em] md:text-[2rem]">
-                  {company.name}
-                </h1>
-                {company.omie_id && (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-border/60 bg-muted/50 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
-                    <Plug className="h-2.5 w-2.5" /> ERP
-                  </span>
-                )}
+            
+            <div className="space-y-4">
+              <div>
+                <div className="flex flex-wrap items-center gap-3">
+                  <h1 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
+                    {company.name}
+                  </h1>
+                  <Badge variant="secondary" className="bg-primary/5 text-primary border-primary/10">
+                    Score: 92
+                  </Badge>
+                </div>
+                <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
+                  <span className="flex items-center gap-1.5"><Building className="h-4 w-4" /> {company.industry || "Indústria"}</span>
+                  <span className="flex items-center gap-1.5"><Globe className="h-4 w-4" /> {company.website?.replace(/^https?:\/\//, "") || "website.com"}</span>
+                  {company.omie_id && <Badge variant="outline" className="text-[10px] uppercase">ERP Connected</Badge>}
+                </div>
               </div>
-              <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-muted-foreground">
-                {company.industry && <span>{company.industry}</span>}
-                {company.size && <><span className="opacity-30">·</span><span>{company.size}</span></>}
-                {company.website && (
-                  <>
-                    <span className="opacity-30">·</span>
-                    <a href={company.website} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-primary hover:underline">
-                      <Globe className="h-3 w-3" />
-                      {company.website.replace(/^https?:\/\//, "")}
-                    </a>
-                  </>
-                )}
-              </div>
-              {/* Status pills derivadas da inteligência comercial */}
-              <div className="mt-3 flex flex-wrap items-center gap-1.5">
-                {kpis.lastPurchase && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[11px] font-medium text-emerald-700 dark:text-emerald-300">
-                    <Clock className="h-2.5 w-2.5" />
-                    Última compra {new Date(kpis.lastPurchase).toLocaleDateString("pt-BR", { day: "2-digit", month: "short" })}
-                  </span>
-                )}
-                {kpis.openCount > 0 && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary">
-                    <KanbanSquare className="h-2.5 w-2.5" />
-                    {kpis.openCount} aberta{kpis.openCount === 1 ? "" : "s"}
-                  </span>
-                )}
-                {kpis.overdueCount > 0 && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-rose-500/10 px-2 py-0.5 text-[11px] font-medium text-rose-700 dark:text-rose-300">
-                    <Receipt className="h-2.5 w-2.5" />
-                    {kpis.overdueCount} em atraso
-                  </span>
-                )}
-                {kpis.frequency >= 6 && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/10 px-2 py-0.5 text-[11px] font-medium text-amber-700 dark:text-amber-300">
-                    <Sparkles className="h-2.5 w-2.5" />
-                    Cliente recorrente
-                  </span>
-                )}
+
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+                <div>
+                  <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Potencial</div>
+                  <div className="text-xl font-bold text-emerald-600">{BRL(58000)}</div>
+                </div>
+                <div>
+                  <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Última Compra</div>
+                  <div className="text-xl font-bold">42 dias</div>
+                </div>
+                <div>
+                  <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Ticket Médio</div>
+                  <div className="text-xl font-bold">{BRL(kpis.ticket)}</div>
+                </div>
+                <div>
+                  <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Representante</div>
+                  <div className="text-xl font-bold">João</div>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-2 lg:shrink-0">
+          <div className="flex flex-wrap gap-2 pt-2">
             {waLink && (
-              <Button variant="outline" size="sm" asChild>
-                <a href={waLink} target="_blank" rel="noreferrer"><MessageCircle className="mr-1 h-4 w-4" />WhatsApp</a>
+              <Button variant="outline" className="h-10 gap-2 rounded-full border-primary/20 bg-primary/5 hover:bg-primary/10" asChild>
+                <a href={waLink} target="_blank" rel="noreferrer"><MessageCircle className="h-4 w-4 text-emerald-500" /> WhatsApp</a>
               </Button>
             )}
-            {primaryContact?.email && (
-              <Button variant="outline" size="sm" asChild>
-                <a href={`mailto:${primaryContact.email}`}><Mail className="mr-1 h-4 w-4" />E-mail</a>
-              </Button>
-            )}
-            {primaryContact?.phone && (
-              <Button variant="outline" size="sm" asChild>
-                <a href={`tel:${primaryContact.phone}`}><Phone className="mr-1 h-4 w-4" />Ligar</a>
-              </Button>
-            )}
-            <Button size="sm" asChild>
-              <Link to="/pipeline"><KanbanSquare className="mr-1 h-4 w-4" />Nova oportunidade</Link>
+            <Button className="h-10 gap-2 rounded-full shadow-md" asChild>
+              <Link to="/pipeline"><KanbanSquare className="h-4 w-4" /> Nova Oportunidade</Link>
             </Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive" onClick={() => { if (confirm("Remover empresa?")) del.mutate(); }}>
+            <Button variant="ghost" size="icon" className="h-10 w-10 rounded-full hover:bg-destructive/10 hover:text-destructive" onClick={() => { if (confirm("Remover empresa?")) del.mutate(); }}>
               <Trash2 className="h-4 w-4" />
             </Button>
           </div>
@@ -330,14 +334,37 @@ function CompanyDetail() {
       </div>
 
       {/* ============ Layout invertido: conteúdo principal à esquerda, painel de inteligência sticky à direita ============ */}
-      <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_340px]">
+      <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_360px]">
         {/* ====== Coluna principal: ação comercial ====== */}
-        <div className="min-w-0 space-y-6">
+        <div className="min-w-0 space-y-8">
+          
+          {/* Timeline Unificada (Mock/Preview do briefing) */}
+          <Card className="p-6 border-border/40 bg-card/30">
+            <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+              <Clock className="h-5 w-5 text-primary" /> Linha do Tempo Unificada
+            </h3>
+            <div className="space-y-4">
+              <TimelineEvent 
+                type="whatsapp" 
+                title="Conversa via WhatsApp" 
+                desc="Cliente perguntou sobre prazo de entrega da última proposta." 
+                time="10:30" 
+              />
+              <TimelineEvent 
+                type="visit" 
+                title="Visita Técnica" 
+                desc="Apresentação do novo catálogo de produtos industriais." 
+                time="Ontem" 
+              />
+              <TimelineEvent 
+                type="proposal" 
+                title="Proposta Enviada" 
+                desc="Proposta #4829 no valor de R$ 12.500,00." 
+                time="2 dias atrás" 
+              />
+            </div>
+          </Card>
 
-          {/* IA Comercial — sempre visível (briefing Fase 3) */}
-          {primaryContact && (
-            <NextActionBlock surface="contact" title="Próxima ação sugerida" limit={3} showRegenerate />
-          )}
 
           <Tabs defaultValue="overview" className="w-full">
             <TabsList className="w-full justify-start overflow-x-auto">

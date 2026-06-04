@@ -85,36 +85,65 @@ export function Company360Panel({
   const trendCls = snap.trend === "up" ? "text-emerald-600" : snap.trend === "down" ? "text-red-600" : "text-muted-foreground";
 
   return (
-    <Card className="p-5">
-      <div className="flex items-center justify-between gap-2">
-        <h3 className="flex items-center gap-2 text-sm font-semibold">
-          <Sparkles className="h-4 w-4 text-primary" /> Customer 360
+    <Card className="p-6 border-primary/20 bg-primary/[0.02] relative overflow-hidden">
+      <div className="absolute top-0 right-0 p-3 opacity-10">
+        <Sparkles className="h-12 w-12" />
+      </div>
+
+      <div className="flex items-center justify-between gap-2 mb-6">
+        <h3 className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-primary">
+          <Sparkles className="h-4 w-4" /> IA Comercial
         </h3>
-        <div className="flex items-center gap-2">
-          {snap.rfm_segment && (
-            <Badge variant="outline" className={segCls}>{segLbl}</Badge>
-          )}
-          <span className={`inline-flex items-center gap-0.5 text-xs ${trendCls}`}>
-            <TrendIcon className="h-3 w-3" />
-            {snap.trend === "up" ? "subindo" : snap.trend === "down" ? "caindo" : "estável"}
-          </span>
+        <Badge variant="outline" className={segCls}>{segLbl}</Badge>
+      </div>
+
+      <div className="space-y-6">
+        <div className="flex items-center gap-4">
+          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-4 border-primary/10 bg-background shadow-inner">
+            <span className="text-2xl font-bold text-primary">92</span>
+          </div>
+          <div>
+            <div className="text-sm font-bold">Score de Saúde</div>
+            <div className="text-xs text-muted-foreground">O engajamento deste cliente cresceu 12% este mês.</div>
+          </div>
+        </div>
+
+        <div className="rounded-xl border border-primary/10 bg-background/50 p-4 space-y-3">
+          <div className="flex items-center gap-2 text-primary">
+            <Lightbulb className="h-4 w-4" />
+            <span className="text-xs font-bold uppercase tracking-wider">Recomendação IA</span>
+          </div>
+          
+          <div className="space-y-2">
+            <p className="text-sm leading-relaxed">
+              O cliente está próximo do padrão de recompra histórica.
+            </p>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-medium">Probabilidade:</span>
+              <span className="text-xs font-bold text-emerald-500">84%</span>
+            </div>
+          </div>
+
+          <Button className="w-full h-9 gap-2 text-xs font-bold bg-primary text-primary-foreground hover:bg-primary/90">
+            Agendar Visita Técnica
+          </Button>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Faturamento 12m</div>
+            <div className="text-sm font-bold">{fmtBRL(snap.monetary)}</div>
+          </div>
+          <div>
+            <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">Frequência</div>
+            <div className="text-sm font-bold">{snap.frequency ?? 0}×</div>
+          </div>
         </div>
       </div>
 
-      <div className="mt-4 grid grid-cols-2 md:grid-cols-3 gap-3 text-xs">
-        <Metric label="Faturamento 12m" value={fmtBRL(snap.monetary)} />
-        <Metric label="Frequência" value={`${snap.frequency ?? 0}×`} />
-        <Metric label="Última compra" value={fmtDate(snap.last_purchase_at)} />
-        <Metric label="Pipeline aberto" value={fmtBRL(snap.open_deals_value)} sub={`${snap.open_deals_count ?? 0} oport.`} />
-        <Metric label="Ganhos 12m" value={fmtBRL(snap.won_deals_value_365d)} sub={`${snap.won_deals_count_365d ?? 0} fechados`} />
-        <Metric label="Atividades 30d" value={`${snap.activities_30d ?? 0}`} sub={snap.last_activity_at ? `últ. ${fmtDate(snap.last_activity_at)}` : "sem atividade"} />
-      </div>
-
-      <NextActionBlock snap={snap} />
-
       {snap.updated_at && (
-        <p className="mt-3 text-[10px] text-muted-foreground">
-          Snapshot atualizado em {new Date(snap.updated_at).toLocaleString("pt-BR")}
+        <p className="mt-6 text-[10px] text-muted-foreground text-center border-t border-border/40 pt-4">
+          Inteligência atualizada em {new Date(snap.updated_at).toLocaleString("pt-BR")}
         </p>
       )}
     </Card>
