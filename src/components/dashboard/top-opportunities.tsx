@@ -216,51 +216,69 @@ export function TopOpportunities() {
       </div>
 
       <div className="space-y-4">
-        {filteredOpportunities.length === 0 ? (
-          <p className="text-sm text-center py-8 text-muted-foreground">Nenhuma oportunidade encontrada com esses filtros.</p>
-        ) : (
-          filteredOpportunities.map((opp, idx) => (
-            <Link 
-              key={opp.id} 
-              to={`/pipeline` as any}
-              className="group flex items-center gap-4 p-3 rounded-xl border border-transparent hover:border-orange-100 hover:bg-orange-50/30 transition-all duration-300"
+        <AnimatePresence mode="popLayout">
+          {filteredOpportunities.length === 0 ? (
+            <motion.p 
+              key="empty"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="text-sm text-center py-8 text-muted-foreground"
             >
-              <div className="flex flex-col items-center justify-center h-12 w-12 rounded-xl bg-orange-100/50 text-orange-700 font-bold border border-orange-200 shrink-0">
-                <span className="text-xs opacity-60">#{idx + 1}</span>
-                <span className="text-sm">{opp.score}</span>
-              </div>
-              
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-0.5">
-                  <h4 className="font-medium text-sm truncate group-hover:text-orange-700 transition-colors">{opp.title}</h4>
-                  <Badge variant="outline" className="text-[9px] h-4 px-1 border-orange-200 text-orange-700 bg-orange-50 shrink-0">
-                    {opp.winProb}% Chance
-                  </Badge>
-                </div>
-                <div className="flex items-center gap-2 text-xs text-muted-foreground truncate">
-                  <span>{opp.companies?.name || "Sem Empresa"}</span>
-                  {opp.companies?.industry && (
-                    <>
-                      <span className="text-[10px] opacity-30">•</span>
-                      <span>{opp.companies.industry}</span>
-                    </>
-                  )}
-                </div>
-              </div>
-
-              <div className="text-right shrink-0">
-                <p className="text-sm font-bold text-foreground">{fmtBRL(Number(opp.value || 0))}</p>
-                <div className="flex items-center justify-end gap-1.5 mt-1">
-                  <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
-                    <Clock className="h-3 w-3" />
-                    {opp.daysLeft}d
+              Nenhuma oportunidade encontrada com esses filtros.
+            </motion.p>
+          ) : (
+            filteredOpportunities.map((opp, idx) => (
+              <motion.div
+                key={opp.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ delay: idx * 0.05, ease: [0.23, 1, 0.32, 1] }}
+                layout
+              >
+                <Link 
+                  to={`/pipeline` as any}
+                  className="group flex items-center gap-4 p-3 rounded-xl border border-transparent hover:border-orange-100 hover:bg-orange-50/30 transition-all duration-300"
+                >
+                  <div className="flex flex-col items-center justify-center h-12 w-12 rounded-xl bg-orange-100/50 text-orange-700 font-bold border border-orange-200 shrink-0 group-hover:scale-105 group-hover:bg-orange-200/50 transition-all duration-300">
+                    <span className="text-xs opacity-60">#{idx + 1}</span>
+                    <span className="text-sm">{opp.score}</span>
                   </div>
-                  <div className={`h-1.5 w-1.5 rounded-full ${opp.urgency === "Alta" ? "bg-red-500" : opp.urgency === "Média" ? "bg-orange-500" : "bg-emerald-500"}`} />
-                </div>
-              </div>
-            </Link>
-          ))
-        )}
+                  
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <h4 className="font-medium text-sm truncate group-hover:text-orange-700 transition-colors">{opp.title}</h4>
+                      <Badge variant="outline" className="text-[9px] h-4 px-1 border-orange-200 text-orange-700 bg-orange-50 shrink-0">
+                        {opp.winProb}% Chance
+                      </Badge>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground truncate">
+                      <span>{opp.companies?.name || "Sem Empresa"}</span>
+                      {opp.companies?.industry && (
+                        <>
+                          <span className="text-[10px] opacity-30">•</span>
+                          <span>{opp.companies.industry}</span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="text-right shrink-0">
+                    <p className="text-sm font-bold text-foreground group-hover:text-orange-700 transition-colors">{fmtBRL(Number(opp.value || 0))}</p>
+                    <div className="flex items-center justify-end gap-1.5 mt-1">
+                      <div className="flex items-center gap-1 text-[10px] text-muted-foreground group-hover:text-orange-600 transition-colors">
+                        <Clock className="h-3 w-3" />
+                        {opp.daysLeft}d
+                      </div>
+                      <div className={`h-1.5 w-1.5 rounded-full ${opp.urgency === "Alta" ? "bg-red-500" : opp.urgency === "Média" ? "bg-orange-500" : "bg-emerald-500"}`} />
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
+            ))
+          )}
+        </AnimatePresence>
       </div>
     </Card>
   );
