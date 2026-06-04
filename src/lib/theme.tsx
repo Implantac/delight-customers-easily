@@ -1,8 +1,8 @@
 import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
-type Theme = "light" | "dark" | "system";
-type Ctx = { theme: Theme; resolved: "light" | "dark"; setTheme: (t: Theme) => void };
+type Theme = "light" | "dark" | "system" | "use-sistemas";
+type Ctx = { theme: Theme; resolved: "light" | "dark" | "use-sistemas"; setTheme: (t: Theme) => void };
 
 const ThemeCtx = createContext<Ctx>({ theme: "system", resolved: "light", setTheme: () => {} });
 
@@ -10,10 +10,17 @@ function applyTheme(theme: Theme) {
   if (typeof window === "undefined") return "light" as const;
   const root = document.documentElement;
   const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  
+  // Clean all custom theme classes
+  root.classList.remove("dark", "use-sistemas");
+  
   const resolved = theme === "system" ? (prefersDark ? "dark" : "light") : theme;
-  root.classList.toggle("dark", resolved === "dark");
+  
+  if (resolved === "dark") root.classList.add("dark");
+  if (resolved === "use-sistemas") root.classList.add("use-sistemas");
+
   // Sync mobile/PWA status bar with the active theme
-  const color = resolved === "dark" ? "#181d2e" : "#fbfaf7";
+  const color = resolved === "dark" ? "#181d2e" : resolved === "use-sistemas" ? "#0f172a" : "#ffffff";
   let meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]:not([media])');
   if (!meta) {
     meta = document.createElement("meta");
@@ -29,7 +36,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     if (typeof window === "undefined") return "system";
     return (localStorage.getItem("crm-theme") as Theme) || "system";
   });
-  const [resolved, setResolved] = useState<"light" | "dark">("light");
+  const [resolved, setResolved] = useState<"light" | "dark" | "use-sistemas">("light");
   const loadedFromServer = useRef(false);
 
   // Hydrate from user profile (DB) once, falling back to localStorage
