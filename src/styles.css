@@ -496,21 +496,33 @@
   /* Sidebar minimal — Linear/Attio style */
   [data-sidebar="menu-button"] {
     border-radius: var(--radius-md);
-    transition: background-color 140ms var(--ease-out), color 140ms var(--ease-out);
+    transition: all 140ms var(--ease-out);
+    margin: 0 4px;
+    height: 34px;
+  }
+  [data-sidebar="menu-button"]:hover {
+    background: var(--sidebar-accent);
+    color: var(--foreground);
   }
   [data-sidebar="menu-button"][data-active="true"] {
-    background: color-mix(in oklab, var(--primary) 14%, transparent);
-    color: color-mix(in oklab, var(--primary) 75%, var(--sidebar-foreground));
+    background: var(--sidebar-accent);
+    color: var(--foreground);
     font-weight: 500;
-    position: relative;
   }
-  [data-sidebar="menu-button"][data-active="true"]::before {
-    content: "";
-    position: absolute;
-    left: -8px;
-    top: 50%;
-    transform: translateY(-50%);
-    height: 60%;
+  
+  /* Badge refinements */
+  .badge-premium {
+    @apply border-primary/20 bg-primary/5 text-primary font-medium;
+  }
+
+  /* Micro-interactions */
+  .hover-lift {
+    transition: transform 200ms var(--ease-out);
+  }
+  .hover-lift:hover {
+    transform: translateY(-1px);
+  }
+}
     width: 2px;
     border-radius: 2px;
     background: var(--primary);
