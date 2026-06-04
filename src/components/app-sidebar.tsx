@@ -1,5 +1,6 @@
 import { memo, useMemo } from "react";
 import { motion } from "framer-motion";
+import { ENTERPRISE_TRANSITION } from "@/lib/animations";
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
   LayoutDashboard, Users, Briefcase, Check, ChevronsUpDown,
@@ -283,7 +284,7 @@ const NavItem = memo(function NavItem({ to, label, Icon, active, tone }: NavItem
             <motion.div 
               layoutId="active-nav"
               className="absolute left-1 h-1 w-1 rounded-full bg-primary"
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              transition={ENTERPRISE_TRANSITION}
             />
           )}
         </Link>
