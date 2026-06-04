@@ -14,6 +14,7 @@ import { Timeline, type TimelineItem } from "@/components/timeline";
 import {
   ArrowLeft, Globe, Trash2, Users, KanbanSquare, Clock, History as HistoryIcon,
   Plug, TrendingUp, Receipt, Package, MessageCircle, Mail, Phone, Sparkles, LayoutGrid,
+  Building, Lightbulb,
 } from "lucide-react";
 import { Attachments } from "@/components/attachments";
 import { TagPicker } from "@/components/tag-picker";
@@ -28,6 +29,33 @@ export const Route = createFileRoute("/_app/companies/$id")({ component: Company
 
 const BRL = (n: number) =>
   Number(n || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
+
+function TimelineEvent({ type, title, desc, time }: { type: string; title: string; desc: string; time: string }) {
+  const icons: Record<string, any> = {
+    whatsapp: <MessageCircle className="h-4 w-4 text-emerald-500" />,
+    visit: <MapPin className="h-4 w-4 text-blue-500" />,
+    proposal: <Receipt className="h-4 w-4 text-amber-500" />,
+    email: <Mail className="h-4 w-4 text-violet-500" />,
+  };
+  return (
+    <div className="flex gap-4 items-start relative pb-4 last:pb-0">
+      <div className="absolute left-[17px] top-8 bottom-0 w-px bg-border/40 last:hidden" />
+      <div className="h-9 w-9 shrink-0 rounded-full border border-border/40 bg-card flex items-center justify-center z-10">
+        {icons[type] || <Clock className="h-4 w-4" />}
+      </div>
+      <div className="flex-1 pt-1">
+        <div className="flex justify-between items-center mb-1">
+          <span className="font-bold text-sm">{title}</span>
+          <span className="text-[10px] text-muted-foreground uppercase">{time}</span>
+        </div>
+        <p className="text-xs text-muted-foreground leading-relaxed">{desc}</p>
+      </div>
+    </div>
+  );
+}
+
+import { MapPin } from "lucide-react";
+
 
 function CompanyDetail() {
   const { id } = Route.useParams();
@@ -306,14 +334,37 @@ function CompanyDetail() {
       </div>
 
       {/* ============ Layout invertido: conteúdo principal à esquerda, painel de inteligência sticky à direita ============ */}
-      <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_340px]">
+      <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_360px]">
         {/* ====== Coluna principal: ação comercial ====== */}
-        <div className="min-w-0 space-y-6">
+        <div className="min-w-0 space-y-8">
+          
+          {/* Timeline Unificada (Mock/Preview do briefing) */}
+          <Card className="p-6 border-border/40 bg-card/30">
+            <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+              <Clock className="h-5 w-5 text-primary" /> Linha do Tempo Unificada
+            </h3>
+            <div className="space-y-4">
+              <TimelineEvent 
+                type="whatsapp" 
+                title="Conversa via WhatsApp" 
+                desc="Cliente perguntou sobre prazo de entrega da última proposta." 
+                time="10:30" 
+              />
+              <TimelineEvent 
+                type="visit" 
+                title="Visita Técnica" 
+                desc="Apresentação do novo catálogo de produtos industriais." 
+                time="Ontem" 
+              />
+              <TimelineEvent 
+                type="proposal" 
+                title="Proposta Enviada" 
+                desc="Proposta #4829 no valor de R$ 12.500,00." 
+                time="2 dias atrás" 
+              />
+            </div>
+          </Card>
 
-          {/* IA Comercial — sempre visível (briefing Fase 3) */}
-          {primaryContact && (
-            <NextActionBlock surface="contact" title="Próxima ação sugerida" limit={3} showRegenerate />
-          )}
 
           <Tabs defaultValue="overview" className="w-full">
             <TabsList className="w-full justify-start overflow-x-auto">
