@@ -812,28 +812,24 @@ function StatCard({
   hint?: string;
   spinning?: boolean;
 }) {
-  const color =
-    tone === "primary"
-      ? "text-primary bg-primary/10"
-      : tone === "green"
-      ? "text-emerald-600 bg-emerald-500/10"
-      : tone === "amber"
-      ? "text-amber-600 bg-amber-500/10"
-      : "text-muted-foreground bg-muted";
+  const tones = {
+    primary: "bg-primary/5 text-primary border-primary/20",
+    green: "bg-emerald-500/5 text-emerald-600 border-emerald-500/20",
+    amber: "bg-amber-500/5 text-amber-600 border-amber-500/20",
+    muted: "bg-muted/5 text-muted-foreground border-border/40",
+  };
+
   return (
-    <Card>
-      <CardContent className="p-4 flex items-center gap-3">
-        <div
-          className={`h-10 w-10 rounded-md flex items-center justify-center ${color}`}
-        >
-          <Icon className={`h-5 w-5 ${spinning ? "animate-spin" : ""}`} />
-        </div>
-        <div className="min-w-0">
-          <div className="text-2xl font-semibold leading-none">{value}</div>
-          <div className="text-xs text-muted-foreground mt-1 truncate">
-            {hint ?? label}
+    <Card className={cn("hover-lift border-border/40 bg-card shadow-xs transition-all duration-300")}>
+      <CardContent className="p-5">
+        <div className="flex items-center justify-between mb-4">
+          <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground/80">{label}</span>
+          <div className={cn("p-2 rounded-lg", tones[tone])}>
+            <Icon className={cn("h-4 w-4", spinning && "animate-spin")} />
           </div>
         </div>
+        <p className="font-display text-2xl font-bold tracking-tight">{value}</p>
+        {hint && <p className="text-[10px] text-muted-foreground mt-1">{hint}</p>}
       </CardContent>
     </Card>
   );
