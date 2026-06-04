@@ -74,8 +74,8 @@ export function PageHeader({
       {action && (
         <div className="flex flex-wrap items-center gap-2 sm:shrink-0 sm:justify-end [&>*]:min-w-0">
           {action}
-    </motion.div>
+        </div>
       )}
-    </div>
+    </motion.div>
   );
 }
