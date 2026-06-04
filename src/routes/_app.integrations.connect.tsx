@@ -171,47 +171,47 @@ function ConnectWizard() {
 
 
   return (
-    <div className="p-6 max-w-3xl mx-auto space-y-6">
-      <Link to="/integrations">
-        <Button variant="ghost" size="sm" className="gap-2"><ArrowLeft className="h-4 w-4" /> Voltar</Button>
+    <div className="page-container max-w-4xl mx-auto py-12">
+      <Link to="/integrations" className="absolute top-8 left-8">
+        <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
+          <ArrowLeft className="h-4 w-4" /> Voltar ao ConnectHub
+        </Button>
       </Link>
 
-      <PageHeader
-        icon={Plug}
-        title="Conectar meu ERP"
-        subtitle="Vamos te guiar passo a passo. Você não precisa entender de tecnologia."
-      />
+      <div className="text-center space-y-2 mb-10">
+        <div className="mx-auto w-16 h-16 rounded-2xl bg-primary/5 flex items-center justify-center mb-4">
+          <Plug className="h-8 w-8 text-primary" />
+        </div>
+        <h1 className="text-3xl font-bold tracking-tight">Assistente de Conexão</h1>
+        <p className="text-muted-foreground text-lg max-w-lg mx-auto">
+          Vamos conectar seu ERP ao USE CRM em poucos minutos, sem complicações técnicas.
+        </p>
+      </div>
 
-      <div>
-
-        {/* Stepper nomeado */}
-        <div className="mt-4 flex items-center gap-1 overflow-x-auto pb-1">
-          {STEP_LABELS.map((label, i) => {
-            const n = (i + 1) as Step;
+      <div className="max-w-2xl mx-auto">
+        {/* Stepper Moderno */}
+        <div className="flex items-center justify-between mb-8 px-4">
+          {[1, 2, 3, 4, 5].map((n) => {
             const active = step === n;
             const done = step > n;
+            const labels = ["Escolher", "Método", "Conectar", "Validar", "Sincronizar"];
             return (
-              <div key={label} className="flex items-center gap-1 shrink-0">
-                <div className={`flex items-center gap-2 rounded-full px-3 py-1 text-xs border transition ${
-                  active ? "border-primary bg-primary/10 text-primary font-medium" :
-                  done ? "border-green-500/40 bg-green-500/5 text-green-700 dark:text-green-400" :
-                  "border-muted text-muted-foreground"
+              <div key={n} className="flex flex-col items-center gap-2">
+                <div className={`h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
+                  active ? "bg-primary text-primary-foreground ring-4 ring-primary/10 scale-110" :
+                  done ? "bg-emerald-500 text-white" :
+                  "bg-muted text-muted-foreground"
                 }`}>
-                  <span className={`h-5 w-5 rounded-full flex items-center justify-center text-[10px] ${
-                    active ? "bg-primary text-primary-foreground" :
-                    done ? "bg-green-600 text-white" :
-                    "bg-muted"
-                  }`}>
-                    {done ? "✓" : i + 1}
-                  </span>
-                  <span className="hidden sm:inline">{label}</span>
+                  {done ? <CheckCircle2 className="h-4 w-4" /> : n}
                 </div>
-                {i < STEP_LABELS.length - 1 && <div className="h-px w-3 bg-border" />}
+                <span className={`text-[10px] uppercase tracking-widest font-bold ${active ? "text-primary" : "text-muted-foreground"}`}>
+                  {labels[n-1]}
+                </span>
               </div>
             );
           })}
         </div>
-        <Progress value={(step / 6) * 100} className="mt-3 h-1" />
+        <Progress value={(step / 5) * 100} className="h-1 mb-12 bg-muted/50" />
       </div>
 
       {/* PASSO 1 — Escolher ERP */}
