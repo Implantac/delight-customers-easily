@@ -188,39 +188,45 @@ function Customer360Page() {
   };
 
   return (
-    <div className="p-6 space-y-6 max-w-7xl mx-auto">
-      <div className="flex items-start justify-between gap-3">
-        <PageHeader
-          icon={Users}
-          title="Customer 360"
-          subtitle="Visão consolidada por cliente — ERP, atividade comercial e canais."
-        />
-        {canManage && (
-          <Button
-            variant="outline"
-            onClick={() => refreshMut.mutate()}
-            disabled={refreshMut.isPending}
-            className="gap-2"
-          >
-            <RefreshCw className={`h-4 w-4 ${refreshMut.isPending ? "animate-spin" : ""}`} />
-            Recalcular
-          </Button>
-        )}
-      </div>
+    <div className="page-container max-w-[1400px]">
+      <PageHeader
+        icon={Users}
+        title="Customer 360"
+        subtitle="Visão consolidada de cada cliente — inteligência comercial e canais."
+        action={
+          <div className="flex items-center gap-2">
+            {canManage && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => refreshMut.mutate()}
+                disabled={refreshMut.isPending}
+                className="gap-2 h-9 px-4"
+              >
+                <RefreshCw className={`h-4 w-4 ${refreshMut.isPending ? "animate-spin" : ""}`} />
+                Recalcular
+              </Button>
+            )}
+            <Button variant="premium" size="sm" className="h-9 px-4">
+              <TrendingUp className="mr-2 h-4 w-4" /> Novo insight
+            </Button>
+          </div>
+        }
+      />
 
-      <Card>
-        <CardContent className="p-4 flex flex-wrap gap-3 items-center">
+      <Card className="border-border/40 bg-card/50 shadow-sm mb-6">
+        <CardContent className="p-3 flex flex-wrap gap-3 items-center">
           <div className="relative flex-1 min-w-[240px]">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Buscar por nome ou CNPJ"
+              placeholder="Buscar por nome ou CNPJ..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-9"
+              className="pl-9 h-9 border-border/60 bg-background/50 focus-visible:ring-primary/20"
             />
           </div>
           <Select value={segment || "all"} onValueChange={(v) => setSegment(v === "all" ? "" : v)}>
-            <SelectTrigger className="w-[180px]"><SelectValue placeholder="Segmento" /></SelectTrigger>
+            <SelectTrigger className="w-[180px] h-9 border-border/60 bg-background/50"><SelectValue placeholder="Segmento" /></SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Todos os segmentos</SelectItem>
               {Object.entries(SEGMENT_LABEL).map(([k, label]) => (
@@ -229,7 +235,7 @@ function Customer360Page() {
             </SelectContent>
           </Select>
           <Select value={sort} onValueChange={(v: any) => setSort(v)}>
-            <SelectTrigger className="w-[200px]"><SelectValue /></SelectTrigger>
+            <SelectTrigger className="w-[200px] h-9 border-border/60 bg-background/50"><SelectValue /></SelectTrigger>
             <SelectContent>
               <SelectItem value="monetary">Ordenar por: Faturamento</SelectItem>
               <SelectItem value="recency">Ordenar por: Última compra</SelectItem>

@@ -316,17 +316,17 @@ function ConnectHubDashboard() {
   );
 
   return (
-    <div className="p-6 space-y-6 max-w-6xl mx-auto">
+    <div className="page-container max-w-[1200px]">
       <PageHeader
         icon={Plug}
-        title="Integração com ERP"
-        subtitle="Conecte seu ERP ao CRM em poucos minutos."
+        title="ConnectHub"
+        subtitle="Integração inteligente com seu ERP sem necessidade de código."
         action={
           <div className="flex items-center gap-2">
             <Button
               variant="outline"
               size="sm"
-              className="gap-2"
+              className="gap-2 h-9 px-4"
               onClick={() => {
                 health.refetch();
                 jobs.refetch();
@@ -336,11 +336,11 @@ function ConnectHubDashboard() {
               <RefreshCw
                 className={`h-4 w-4 ${health.isFetching ? "animate-spin" : ""}`}
               />
-              Atualizar
+              Sincronizar
             </Button>
             <Link to="/integrations/connect/wizard">
-              <Button size="sm" className="gap-2">
-                <Plus className="h-4 w-4" /> Conectar novo ERP
+              <Button size="sm" className="gap-2 h-9 px-4 bg-primary text-primary-foreground hover:shadow-glow transition-all">
+                <Plus className="h-4 w-4" /> Novo Conector
               </Button>
             </Link>
           </div>

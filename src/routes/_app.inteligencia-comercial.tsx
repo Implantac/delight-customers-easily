@@ -96,18 +96,19 @@ function IntelComercialPage() {
       />
 
       {/* ============ AI do Dia — hero ============ */}
-      <section className="surface-elevated relative mt-6 overflow-hidden p-5 md:p-6">
-        <div className="pointer-events-none absolute inset-0 bg-[var(--gradient-mesh)] opacity-60" />
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+      <section className="relative mt-8 p-6 md:p-8 rounded-3xl overflow-hidden border border-violet-500/20 bg-gradient-to-br from-violet-500/[0.03] to-indigo-500/[0.03] shadow-sm">
+        <div className="pointer-events-none absolute inset-0 bg-grid-white/[0.02] bg-[size:20px_20px]" />
         <div className="relative">
-          <div className="flex items-center gap-2">
-            <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-[var(--gradient-primary)] text-primary-foreground shadow-[var(--shadow-glow)] ring-1 ring-white/10">
-              <Sparkles className="h-3.5 w-3.5" />
-            </span>
-            <h2 className="font-display text-lg font-semibold tracking-tight">AI do Dia</h2>
-            <span className="ml-auto text-[11px] uppercase tracking-wider text-muted-foreground">
-              3 ações prioritárias para hoje
-            </span>
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-500 text-white shadow-lg shadow-violet-500/20">
+                <Sparkles className="h-5 w-5" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold tracking-tight">IA do Dia</h2>
+                <p className="text-sm text-muted-foreground">3 ações prioritárias geradas por inteligência comercial</p>
+              </div>
+            </div>
           </div>
 
           <div className="mt-4 grid gap-3 md:grid-cols-3">
