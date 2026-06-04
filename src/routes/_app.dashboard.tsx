@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   AlertTriangle, TrendingUp, Target, Users, ArrowRight,
-  Flame, HeartPulse, Award, Gauge,
+  Flame, HeartPulse, Award, Gauge, Sparkles,
 } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { NextActionBlock } from "@/components/next-action-block";
