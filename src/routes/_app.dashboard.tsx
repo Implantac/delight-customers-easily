@@ -167,7 +167,7 @@ function DashboardPage() {
       </div>
 
 
-      <div className="mt-6" data-tour="dashboard-checklist">
+      <div className="mt-8" data-tour="dashboard-checklist">
         <OnboardingChecklist />
       </div>
 
@@ -208,9 +208,11 @@ function DashboardPage() {
       />
 
       {/* Saúde geral + plano do dia lado a lado em telas largas */}
-      <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
+      <div className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-2">
         <BusinessHealthCard />
         <NextActionBlock surface="dashboard" title="Plano do dia" showRegenerate />
+      </div>
+      <div className="mt-8">
         <TopOpportunities />
       </div>
 

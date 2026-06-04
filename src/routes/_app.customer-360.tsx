@@ -275,26 +275,29 @@ function Customer360Page() {
       )}
 
       {q.isLoading ? (
-        <Card><CardContent className="p-8 text-sm text-muted-foreground">Carregando…</CardContent></Card>
+        <Card className="border-border/40 shadow-sm"><CardContent className="p-8 text-sm text-muted-foreground">Carregando…</CardContent></Card>
       ) : items.length === 0 ? (
-        <Card className="border-dashed">
-          <CardContent className="p-10 text-center space-y-2">
-            <Users className="h-8 w-8 mx-auto text-muted-foreground" />
-            <p className="text-sm text-muted-foreground">
-              Nenhum cliente consolidado ainda. Conecte um ERP em{" "}
+        <Card className="border-dashed border-border/60 bg-muted/5">
+          <CardContent className="p-12 text-center space-y-3">
+            <div className="mx-auto h-12 w-12 rounded-full bg-muted flex items-center justify-center">
+              <Users className="h-6 w-6 text-muted-foreground" />
+            </div>
+            <p className="text-sm font-medium text-foreground">Nenhum cliente consolidado</p>
+            <p className="text-sm text-muted-foreground max-w-sm mx-auto">
+              Conecte um ERP em{" "}
               <Link to="/integrations" className="underline">Integrações</Link>{" "}
-              e clique em <strong>Recalcular</strong>.
+              e clique em <strong>Recalcular</strong> para gerar a visão 360.
             </p>
           </CardContent>
         </Card>
       ) : (
-        <div className="space-y-2">
-          <div className="flex items-center justify-between px-1">
-            <div className="text-xs text-muted-foreground">{q.data?.total ?? items.length} clientes</div>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between px-1 mb-2">
+            <div className="text-xs font-medium text-muted-foreground uppercase tracking-wider">{q.data?.total ?? items.length} clientes</div>
             {allCompanyIds.length > 0 && (
-              <label className="flex items-center gap-2 text-xs text-muted-foreground cursor-pointer">
-                <Checkbox checked={allSelected} onCheckedChange={toggleAll} />
-                Selecionar todas as empresas visíveis
+              <label className="flex items-center gap-2 text-xs text-muted-foreground cursor-pointer group">
+                <Checkbox checked={allSelected} onCheckedChange={toggleAll} className="border-border/60 data-[state=checked]:bg-primary data-[state=checked]:border-primary" />
+                <span className="group-hover:text-foreground transition-colors">Selecionar todas as empresas visíveis</span>
               </label>
             )}
           </div>
@@ -308,8 +311,11 @@ function Customer360Page() {
             const checked = c.company_id ? selected.has(c.company_id) : false;
             const erp = c.company_id ? erpStatusMap.get(c.company_id) : undefined;
             return (
-              <Card key={c.id} className={checked ? "border-primary/40 bg-primary/5" : undefined}>
-                <CardContent className="p-4">
+              <Card key={c.id} className={cn(
+                "hover-lift ring-brand-hover border-border/40 transition-all duration-300",
+                checked ? "border-primary/40 bg-primary/[0.02] shadow-sm ring-1 ring-primary/20" : "bg-card shadow-xs"
+              )}>
+                <CardContent className="p-5">
                   <div className="flex items-start justify-between gap-4 flex-wrap">
                     <div className="min-w-0 flex-1 flex items-start gap-3">
                       {c.company_id ? (

@@ -80,7 +80,7 @@ function IntelComercialPage() {
       <PageHeader
         tone="violet"
         title="Inteligência Comercial"
-        subtitle="Respostas diretas às perguntas que movem a receita."
+        subtitle="Predições baseadas em IA para acelerar seu funil de vendas."
         action={
           <Button
             variant="outline"
