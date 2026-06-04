@@ -127,7 +127,7 @@ function RootComponent() {
       <ThemeProvider>
         <AuthProvider>
           <Outlet />
-          <Toaster richColors position="top-right" />
+          <Toaster richColors position="top-right" duration={3000} closeButton />
           <LgpdConsentBanner />
         </AuthProvider>
       </ThemeProvider>
