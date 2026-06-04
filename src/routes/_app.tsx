@@ -11,6 +11,8 @@ import { ShortcutsHelp } from "@/components/shortcuts-help";
 import { PwaInstallBanner } from "@/components/pwa-install-banner";
 import { useGoToShortcuts } from "@/hooks/use-shortcuts";
 import { useNotificationsRealtime } from "@/lib/use-notifications-realtime";
+import { motion, AnimatePresence } from "framer-motion";
+import { useRouterState } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/_app")({ component: AppLayout });
 
