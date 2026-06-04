@@ -16,6 +16,7 @@ import { BusinessHealthCard } from "@/components/business-health-card";
 import { OnboardingChecklist } from "@/components/onboarding-checklist";
 import { Customer360Mini } from "@/components/customer-360-mini";
 import { ChurnRiskCard } from "@/components/churn-risk-card";
+import { TopOpportunities } from "@/components/dashboard/top-opportunities";
 import { ProductTour } from "@/components/product-tour";
 import { useCurrentOrg } from "@/lib/org";
 import { getForecast } from "@/lib/forecast.functions";
@@ -200,6 +201,7 @@ function DashboardPage() {
       <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
         <BusinessHealthCard />
         <NextActionBlock surface="dashboard" title="Plano do dia" showRegenerate />
+        <TopOpportunities />
       </div>
 
       {/* KPI strip — sempre acionável (cada um leva para o módulo correto) */}
