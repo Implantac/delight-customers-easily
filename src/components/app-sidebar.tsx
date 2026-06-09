@@ -71,14 +71,6 @@ const navigationGroups: NavGroup[] = [
     ],
   },
   {
-    label: "Atendimento e Sucesso",
-    items: [
-      { to: "/suporte", label: "Suporte", icon: Headphones, tone: "rose" },
-      { to: "/pos-vendas", label: "Pós-Vendas & CS", icon: Heart, tone: "rose" },
-      { to: "/onboarding", label: "Implantação", icon: Rocket, tone: "violet" },
-    ],
-  },
-  {
     label: "Operação de Campo",
     items: [
       { to: "/representantes", label: "Representantes", icon: Award, tone: "success", managerOnly: true },
