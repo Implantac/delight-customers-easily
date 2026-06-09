@@ -115,9 +115,11 @@ const navigationGroups: NavGroup[] = [
     label: "Configurações",
     items: [
       { to: "/multi-empresa", label: "Empresas", icon: Building, tone: "primary", managerOnly: true },
+      { to: "/settings/alerts", label: "Alertas Inteligentes", icon: Bell, tone: "violet", managerOnly: true },
       { to: "/settings/organization", label: "Configurações", icon: Settings, tone: "primary", managerOnly: true },
     ],
   },
+
 ];
 
 
