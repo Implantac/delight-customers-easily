@@ -366,23 +366,32 @@ function ConnectHubDashboard() {
       </div>
 
 
+      {/* Recursos Avançados - Só aparecem no modo avançado */}
+      {isAdvanced && (
+        <div className="space-y-3 animate-in-page">
+          <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Recursos Técnicos & Logs</h2>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+            {ADVANCED_LINKS.map(link => (
+              <Link key={link.to} to={link.to} className="p-3 rounded-xl border border-border/40 bg-card/50 hover:border-primary/30 transition-all flex flex-col items-center text-center gap-2">
+                <link.icon className="h-4 w-4 text-primary" />
+                <span className="text-[10px] font-bold uppercase">{link.label}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* ERPs conectados */}
-      <div className="space-y-3">
+      <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold">Seus ERPs conectados</h2>
+            <h2 className="text-xl font-display font-bold tracking-tight">Sua Pontes Ativas</h2>
             <p className="text-sm text-muted-foreground">
-              Status, última sincronização e ações rápidas por conector.
+              ERPs que alimentam sua inteligência comercial hoje.
             </p>
           </div>
-          {rows.length > 0 && (
-            <Link to="/integrations/health">
-              <Button variant="ghost" size="sm" className="gap-1">
-                Ver tudo <ChevronRight className="h-4 w-4" />
-              </Button>
-            </Link>
-          )}
         </div>
+
 
         {health.isLoading ? (
           <div className="grid gap-4 md:grid-cols-2">
