@@ -31,7 +31,10 @@ import {
   GitMerge,
   Stethoscope,
   Rocket,
+  Server,
+  BrainCircuit
 } from "lucide-react";
+
 
 export const Route = createFileRoute("/_app/integrations/connect/wizard")({
   component: ConnectWizard,
