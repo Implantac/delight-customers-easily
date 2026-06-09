@@ -44,6 +44,7 @@ import { Route as AppGeoProspeccaoRouteImport } from './routes/_app.geo-prospecc
 import { Route as AppGeoCoberturaRouteImport } from './routes/_app.geo-cobertura'
 import { Route as AppGeoRouteImport } from './routes/_app.geo'
 import { Route as AppForecastRouteImport } from './routes/_app.forecast'
+import { Route as AppDesenvolvimentoRouteImport } from './routes/_app.desenvolvimento'
 import { Route as AppDashboardExecutivoRouteImport } from './routes/_app.dashboard-executivo'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppCustomer360RouteImport } from './routes/_app.customer-360'
@@ -293,6 +294,11 @@ const AppGeoRoute = AppGeoRouteImport.update({
 const AppForecastRoute = AppForecastRouteImport.update({
   id: '/forecast',
   path: '/forecast',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDesenvolvimentoRoute = AppDesenvolvimentoRouteImport.update({
+  id: '/desenvolvimento',
+  path: '/desenvolvimento',
   getParentRoute: () => AppRoute,
 } as any)
 const AppDashboardExecutivoRoute = AppDashboardExecutivoRouteImport.update({
@@ -716,6 +722,7 @@ export interface FileRoutesByFullPath {
   '/customer-360': typeof AppCustomer360Route
   '/dashboard': typeof AppDashboardRoute
   '/dashboard-executivo': typeof AppDashboardExecutivoRoute
+  '/desenvolvimento': typeof AppDesenvolvimentoRoute
   '/forecast': typeof AppForecastRoute
   '/geo': typeof AppGeoRoute
   '/geo-cobertura': typeof AppGeoCoberturaRoute
@@ -827,6 +834,7 @@ export interface FileRoutesByTo {
   '/customer-360': typeof AppCustomer360Route
   '/dashboard': typeof AppDashboardRoute
   '/dashboard-executivo': typeof AppDashboardExecutivoRoute
+  '/desenvolvimento': typeof AppDesenvolvimentoRoute
   '/forecast': typeof AppForecastRoute
   '/geo': typeof AppGeoRoute
   '/geo-cobertura': typeof AppGeoCoberturaRoute
@@ -940,6 +948,7 @@ export interface FileRoutesById {
   '/_app/customer-360': typeof AppCustomer360Route
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/dashboard-executivo': typeof AppDashboardExecutivoRoute
+  '/_app/desenvolvimento': typeof AppDesenvolvimentoRoute
   '/_app/forecast': typeof AppForecastRoute
   '/_app/geo': typeof AppGeoRoute
   '/_app/geo-cobertura': typeof AppGeoCoberturaRoute
@@ -1053,6 +1062,7 @@ export interface FileRouteTypes {
     | '/customer-360'
     | '/dashboard'
     | '/dashboard-executivo'
+    | '/desenvolvimento'
     | '/forecast'
     | '/geo'
     | '/geo-cobertura'
@@ -1164,6 +1174,7 @@ export interface FileRouteTypes {
     | '/customer-360'
     | '/dashboard'
     | '/dashboard-executivo'
+    | '/desenvolvimento'
     | '/forecast'
     | '/geo'
     | '/geo-cobertura'
@@ -1276,6 +1287,7 @@ export interface FileRouteTypes {
     | '/_app/customer-360'
     | '/_app/dashboard'
     | '/_app/dashboard-executivo'
+    | '/_app/desenvolvimento'
     | '/_app/forecast'
     | '/_app/geo'
     | '/_app/geo-cobertura'
@@ -1648,6 +1660,13 @@ declare module '@tanstack/react-router' {
       path: '/forecast'
       fullPath: '/forecast'
       preLoaderRoute: typeof AppForecastRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/desenvolvimento': {
+      id: '/_app/desenvolvimento'
+      path: '/desenvolvimento'
+      fullPath: '/desenvolvimento'
+      preLoaderRoute: typeof AppDesenvolvimentoRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/dashboard-executivo': {
@@ -2357,6 +2376,7 @@ interface AppRouteChildren {
   AppCustomer360Route: typeof AppCustomer360Route
   AppDashboardRoute: typeof AppDashboardRoute
   AppDashboardExecutivoRoute: typeof AppDashboardExecutivoRoute
+  AppDesenvolvimentoRoute: typeof AppDesenvolvimentoRoute
   AppForecastRoute: typeof AppForecastRoute
   AppGeoRoute: typeof AppGeoRoute
   AppGeoCoberturaRoute: typeof AppGeoCoberturaRoute
@@ -2417,6 +2437,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppCustomer360Route: AppCustomer360Route,
   AppDashboardRoute: AppDashboardRoute,
   AppDashboardExecutivoRoute: AppDashboardExecutivoRoute,
+  AppDesenvolvimentoRoute: AppDesenvolvimentoRoute,
   AppForecastRoute: AppForecastRoute,
   AppGeoRoute: AppGeoRoute,
   AppGeoCoberturaRoute: AppGeoCoberturaRoute,
