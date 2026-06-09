@@ -363,11 +363,6 @@ function MappingItem({ erp, crm }: any) {
   );
 }
 
-
-    </div>
-  );
-}
-
 function Footer({
   onBack,
   onNext,
@@ -421,4 +416,5 @@ function GoLiveItem({
     </div>
   );
 }
+
 
