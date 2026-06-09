@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/page-header";
 import { Card } from "@/components/ui/card";
-import { GitBranch, Code2, Bug, Rocket, Terminal, Layers } from "lucide-react";
+import { GitBranch, Code2, Bug, Rocket, Terminal, Layers, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { SectorAssistant } from "@/components/sector-assistant";
 
 export const Route = createFileRoute("/_app/desenvolvimento")({ component: DevPage });
 
@@ -20,7 +21,23 @@ function DevPage() {
         title="Desenvolvimento de Produto"
         subtitle="Acompanhe o roadmap tecnológico e o progresso das novas funcionalidades solicitadas."
         icon={Terminal}
-        action={<Button variant="outline"><Bug className="mr-2 h-4 w-4" />Reportar Bug Técnico</Button>}
+        action={<Button variant="outline" className="font-bold border-primary/20"><Bug className="mr-2 h-4 w-4" />Reportar Bug Técnico</Button>}
+      />
+
+      <SectorAssistant 
+        sector="Desenvolvimento"
+        recommendations={[
+          {
+            title: "Revisão de Código Pendente",
+            description: "Existem 4 Pull Requests aguardando sua revisão para o deploy da v3.2.1. Iniciar agora?",
+            icon: Code2
+          },
+          {
+            title: "Documentação de API",
+            description: "A nova integração Bling v2 precisa de documentação técnica para o time de suporte.",
+            icon: Info
+          }
+        ]}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -29,6 +46,7 @@ function DevPage() {
         <StatCard label="Bugs Críticos" value="2" icon={Bug} color="text-rose-500" />
         <StatCard label="Deploy Velocity" value="8.4/wk" icon={Rocket} color="text-emerald-500" />
       </div>
+
 
       <Card className="p-6 border-border/40">
         <h3 className="font-semibold mb-6 flex items-center gap-2">
