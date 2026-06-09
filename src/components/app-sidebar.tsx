@@ -11,8 +11,6 @@ import {
   Goal, GraduationCap, Workflow, FileInput, LineChart, Compass, MessagesSquare,
   Network, Headphones, Heart, Code2, Microscope, Bell, type LucideIcon,
 } from "lucide-react";
-
-
 import { useAuth } from "@/lib/auth";
 import { useCurrentOrg, switchOrganization } from "@/lib/org";
 import { useCanManage } from "@/lib/permissions";
@@ -54,34 +52,33 @@ const TONE_CLASS: Record<NavTone, string> = {
 
 const navigationGroups: NavGroup[] = [
   {
-    label: "Visão Geral",
+    label: "Comando Central",
     items: [
       { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, tone: "accent" },
       { to: "/meu-dia", label: "Meu Dia", icon: Sun, tone: "accent" },
     ],
   },
   {
-    label: "Comercial",
+    label: "Vendas e Relacionamento",
     items: [
       { to: "/carteira", label: "Carteira Comercial", icon: Briefcase, tone: "info" },
-      { to: "/leads", label: "Leads", icon: Flame, tone: "accent" },
-      { to: "/contacts", label: "Clientes", icon: Users, tone: "info" },
+      { to: "/leads", label: "Leads Comerciais", icon: Flame, tone: "accent" },
+      { to: "/contacts", label: "Contatos e Pessoas", icon: Users, tone: "info" },
+      { to: "/companies", label: "Contas B2B", icon: Building, tone: "info" },
       { to: "/oportunidades", label: "Oportunidades", icon: Target, tone: "accent" },
-      { to: "/pipeline", label: "Pipeline", icon: GitBranch, tone: "accent" },
+      { to: "/pipeline", label: "Pipeline Visual", icon: GitBranch, tone: "accent" },
     ],
   },
   {
-    label: "Operação por Setor",
+    label: "Atendimento e Sucesso",
     items: [
-      { to: "/onboarding", label: "Implantação", icon: Rocket, tone: "violet" },
       { to: "/suporte", label: "Suporte", icon: Headphones, tone: "rose" },
       { to: "/pos-vendas", label: "Pós-Vendas & CS", icon: Heart, tone: "rose" },
-      { to: "/desenvolvimento", label: "Desenvolvimento", icon: Code2, tone: "primary" },
-      { to: "/qa", label: "Q.A & Qualidade", icon: Microscope, tone: "success" },
+      { to: "/onboarding", label: "Implantação", icon: Rocket, tone: "violet" },
     ],
   },
   {
-    label: "Equipe e Campo",
+    label: "Operação de Campo",
     items: [
       { to: "/representantes", label: "Representantes", icon: Award, tone: "success", managerOnly: true },
       { to: "/calendar", label: "Agenda", icon: CalendarIcon, tone: "primary" },
@@ -89,21 +86,20 @@ const navigationGroups: NavGroup[] = [
     ],
   },
   {
-    label: "Comunicação Omnichannel",
+    label: "Comunicação Inteligente",
     items: [
-      { to: "/whatsapp", label: "WhatsApp", icon: MessageSquare, tone: "success" },
+      { to: "/whatsapp", label: "WhatsApp Inbox", icon: MessageCircle, tone: "success" },
       { to: "/site-chat", label: "Omnichannel", icon: MessagesSquare, tone: "success" },
-      { to: "/chat", label: "Chat Interno", icon: MessageSquare, tone: "success" },
     ],
   },
   {
-    label: "Inteligência e Estratégia",
+    label: "Inteligência de Mercado",
     items: [
-      { to: "/marketing-intel", label: "Marketing", icon: Megaphone, tone: "violet" },
-      { to: "/influencers", label: "Influencers", icon: Trophy, tone: "accent" },
+      { to: "/marketing-intel", label: "Marketing Intel", icon: Megaphone, tone: "violet" },
+      { to: "/influencers", label: "Influencer ROI", icon: Trophy, tone: "accent" },
       { to: "/geo", label: "Geointeligência", icon: Map, tone: "info" },
       { to: "/inteligencia-comercial", label: "IA Comercial", icon: Sparkles, tone: "violet" },
-      { to: "/reports", label: "Relatórios Comerciais", icon: BarChart3, tone: "info", managerOnly: true },
+      { to: "/reports", label: "Relatórios de Vendas", icon: BarChart3, tone: "info", managerOnly: true },
     ],
   },
   {
@@ -113,17 +109,14 @@ const navigationGroups: NavGroup[] = [
     ],
   },
   {
-    label: "Configurações",
+    label: "Gestão do Grupo",
     items: [
-      { to: "/multi-empresa", label: "Empresas", icon: Building, tone: "primary", managerOnly: true },
+      { to: "/multi-empresa", label: "Empresas e Filiais", icon: Building, tone: "primary", managerOnly: true },
       { to: "/settings/alerts", label: "Alertas Inteligentes", icon: Bell, tone: "violet", managerOnly: true },
       { to: "/settings/organization", label: "Configurações", icon: Settings, tone: "primary", managerOnly: true },
     ],
   },
-
 ];
-
-
 
 export function AppSidebar() {
   const { user, signOut } = useAuth();
