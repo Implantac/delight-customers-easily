@@ -1,9 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/page-header";
 import { Card } from "@/components/ui/card";
-import { Headphones, MessageSquare, Clock, CheckCircle2, AlertCircle, Plus } from "lucide-react";
+import { Headphones, MessageSquare, Clock, CheckCircle2, AlertCircle, Plus, Mail, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { SectorAssistant } from "@/components/sector-assistant";
 
 export const Route = createFileRoute("/_app/suporte")({ component: SupportPage });
 
@@ -20,7 +21,23 @@ function SupportPage() {
         title="Suporte & Atendimento"
         subtitle="Gerencie tickets, chamados e garanta o sucesso imediato do cliente."
         icon={Headphones}
-        action={<Button><Plus className="mr-2 h-4 w-4" />Novo Ticket</Button>}
+        action={<Button className="font-bold"><Plus className="mr-2 h-4 w-4" />Novo Ticket</Button>}
+      />
+
+      <SectorAssistant 
+        sector="Suporte"
+        recommendations={[
+          {
+            title: "Tickets Críticos em Atraso",
+            description: "3 tickets de clientes Tier 1 estão fora do SLA de 1 hora. Recomendo priorizar atendimento agora.",
+            icon: ShieldAlert
+          },
+          {
+            title: "Resposta Automática de Follow-up",
+            description: "Detectamos que 5 clientes aguardam retorno há mais de 4h. Deseja enviar e-mail de posicionamento?",
+            icon: Mail
+          }
+        ]}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -58,6 +75,7 @@ function SupportPage() {
     </div>
   );
 }
+
 
 function StatCard({ label, value, icon: Icon, color }: any) {
   return (
