@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/page-header";
 import { Card } from "@/components/ui/card";
-import { Heart, Users, TrendingDown, Target, Zap, ArrowUpRight } from "lucide-react";
+import { Heart, Users, TrendingDown, Target, Zap, ArrowUpRight, Smile, Briefcase } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { SectorAssistant } from "@/components/sector-assistant";
 
 export const Route = createFileRoute("/_app/pos-vendas")({ component: PosVendasPage });
 
@@ -21,7 +22,23 @@ function PosVendasPage() {
         title="Pós-Vendas & CS"
         subtitle="Monitore a saúde da base, reduza churn e identifique oportunidades de expansão."
         icon={Heart}
-        action={<Button variant="outline"><Zap className="mr-2 h-4 w-4 text-amber-500" />Ver Insights de Churn</Button>}
+        action={<Button variant="outline" className="font-bold border-primary/20"><Zap className="mr-2 h-4 w-4 text-amber-500" />Ver Insights de Churn</Button>}
+      />
+
+      <SectorAssistant 
+        sector="Pós-Vendas"
+        recommendations={[
+          {
+            title: "Reunião de QBR Pendente",
+            description: "O cliente 'Indústria Alfa' está no 3º mês de uso e ainda não teve sua reunião de resultados. Agendar?",
+            icon: Briefcase
+          },
+          {
+            title: "Potencial de Upsell Detectado",
+            description: "Tech Solutions atingiu 90% do limite de armazenamento. Momento ideal para oferecer o plano Pro.",
+            icon: Smile
+          }
+        ]}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -29,6 +46,7 @@ function PosVendasPage() {
         <StatCard label="Expansão (Upsell) Mês" value="R$ 42.000" icon={ArrowUpRight} color="text-emerald-500" />
         <StatCard label="Net Revenue Retention" value="102%" icon={Target} color="text-blue-500" />
       </div>
+
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="p-6">
