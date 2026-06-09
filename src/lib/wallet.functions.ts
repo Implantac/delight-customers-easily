@@ -10,6 +10,12 @@ export type WalletRow = {
   name: string;
   industry: string | null;
   size: string | null;
+  city: string | null;
+  state: string | null;
+  representative_id: string | null;
+  representative_name: string | null;
+  cnae: string | null;
+  channel: string | null;
   wonRevenue: number;
   openPipeline: number;
   lastPurchaseAt: string | null;
@@ -18,10 +24,13 @@ export type WalletRow = {
   frequency: number; // pedidos nos últimos 12m
   activitiesLast30: number;
   overdueAmount: number;
+  potential: number; // 0-100
   score: number; // 0-100
   status: "ativo" | "atencao" | "risco" | "novo" | "inativo";
   buckets: Array<"visitar" | "reativar" | "risco" | "sem_contato" | "inadimplente">;
+  nextAiAction: string | null;
 };
+
 
 /**
  * Carteira Comercial — visão única e densa do relacionamento por empresa.
