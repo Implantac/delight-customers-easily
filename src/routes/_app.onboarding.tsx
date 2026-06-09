@@ -448,3 +448,60 @@ function OnboardingPage() {
     </div>
   );
 }
+
+function StatsCard({ title, value, icon: Icon, color }: any) {
+  return (
+    <Card className="border-border/40 bg-card/50 backdrop-blur-sm">
+      <CardContent className="p-4">
+        <div className="flex items-center justify-between mb-2">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{title}</p>
+          <Icon className={cn("h-4 w-4", color)} />
+        </div>
+        <p className="text-2xl font-display font-bold">{value}</p>
+      </CardContent>
+    </Card>
+  );
+}
+
+function TrainingItem({ title, date, attendee, status }: any) {
+  const statusConfig: any = {
+    confirmed: { label: "Confirmado", color: "bg-emerald-500/10 text-emerald-500" },
+    pending: { label: "Aguardando", color: "bg-amber-500/10 text-amber-500" },
+    planned: { label: "Planejado", color: "bg-blue-500/10 text-blue-500" },
+  };
+  return (
+    <div className="flex items-center justify-between p-3 rounded-xl border border-border/40 bg-background/50 hover:border-primary/20 transition-all">
+      <div className="flex gap-3 items-center">
+        <div className="p-2 rounded-lg bg-secondary">
+          <CalendarDays className="h-4 w-4 text-primary" />
+        </div>
+        <div>
+          <div className="text-sm font-bold">{title}</div>
+          <div className="text-[10px] text-muted-foreground">{date} • {attendee}</div>
+        </div>
+      </div>
+      <Badge variant="outline" className={cn("text-[10px] uppercase border-none", statusConfig[status].color)}>
+        {statusConfig[status].label}
+      </Badge>
+    </div>
+  );
+}
+
+function DocCard({ title, type, size }: any) {
+  return (
+    <div className="flex items-center justify-between p-4 rounded-xl border border-border/40 bg-background/50 hover:border-primary/20 transition-all group">
+      <div className="flex gap-3 items-center">
+        <div className="p-2 rounded-lg bg-primary/5 group-hover:bg-primary/10 transition-colors">
+          <FileText className="h-5 w-5 text-primary" />
+        </div>
+        <div>
+          <div className="text-sm font-bold">{title}</div>
+          <div className="text-[10px] text-muted-foreground uppercase">{type} • {size}</div>
+        </div>
+      </div>
+      <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
+        <Download className="h-4 w-4" />
+      </Button>
+    </div>
+  );
+}
