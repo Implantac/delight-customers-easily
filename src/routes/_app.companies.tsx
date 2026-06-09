@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
@@ -14,12 +14,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { PageHeader } from "@/components/page-header";
 import { EmptyState } from "@/components/empty-state";
-import { Plus, Globe, Trash2, Building2, Download, X, Search, Layers, FileText, Link2 } from "lucide-react";
+import { Plus, Globe, Trash2, Building2, Download, X, Search, Layers, FileText, Link2, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { companySchema, fromForm } from "@/lib/validation";
 import { CompanyDuplicateWarning } from "@/components/duplicate-warning";
 import { toCSV, downloadCSV } from "@/lib/csv-export";
 import { SavedViews } from "@/components/saved-views";
+import { CnpjSearch } from "@/components/cnpj-search";
 
 export const Route = createFileRoute("/_app/companies")({ component: CompaniesPage });
 
@@ -34,6 +35,8 @@ function CompaniesPage() {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [search, setSearch] = useState("");
   const [industry, setIndustry] = useState("");
+  
+  const formRef = useRef<HTMLFormElement>(null);
 
   const { data: companies, isLoading } = useQuery({
     queryKey: ["companies"],
@@ -64,15 +67,19 @@ function CompaniesPage() {
     onError: (e: any) => toast.error(e.message),
   });
 
-  const bulkDel = useMutation({
-    mutationFn: async (ids: string[]) => {
-      const { error } = await supabase.from("companies").delete().in("id", ids);
-      if (error) throw error;
-      return ids.length;
-    },
-    onSuccess: (n) => { qc.invalidateQueries({ queryKey: ["companies"] }); setSelected(new Set()); toast.success(`${n} empresas removidas`); },
-    onError: (e: any) => toast.error(e.message),
-  });
+  const handleCnpjSuccess = (data: any) => {
+    if (formRef.current) {
+      const nameInput = formRef.current.elements.namedItem("name") as HTMLInputElement;
+      const industryInput = formRef.current.elements.namedItem("industry") as HTMLInputElement;
+      const notesInput = formRef.current.elements.namedItem("notes") as HTMLTextAreaElement;
+
+      if (nameInput) nameInput.value = data.nome_fantasia || data.razao_social;
+      if (industryInput) industryInput.value = data.cnae_fiscal_descricao || "";
+      if (notesInput) notesInput.value = `CNPJ: ${data.cnpj}\nMunicípio: ${data.municipio} - ${data.uf}\nE-mail: ${data.email || "N/A"}`;
+      
+      setDupName(data.nome_fantasia || data.razao_social);
+    }
+  };
 
   const list = companies ?? [];
   const kpi = {
@@ -98,19 +105,33 @@ function CompaniesPage() {
               downloadCSV(`empresas-${new Date().toISOString().slice(0,10)}.csv`, csv);
             }}><Download className="mr-2 h-4 w-4" />Exportar</Button>
           <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild><Button><Plus className="mr-2 h-4 w-4" />Nova empresa</Button></DialogTrigger>
-            <DialogContent>
-              <DialogHeader><DialogTitle>Nova empresa</DialogTitle></DialogHeader>
-              <form onSubmit={(e) => { e.preventDefault(); create.mutate(new FormData(e.currentTarget)); }} className="space-y-3">
-                <div className="space-y-1.5"><Label>Nome *</Label><Input name="name" required maxLength={150} onChange={(e) => setDupName(e.target.value)} /></div>
-                <div className="space-y-1.5"><Label>Website</Label><Input name="website" maxLength={255} placeholder="https://…" onChange={(e) => setDupSite(e.target.value)} /></div>
-                <CompanyDuplicateWarning name={dupName} website={dupSite} />
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1.5"><Label>Indústria</Label><Input name="industry" maxLength={120} /></div>
-                  <div className="space-y-1.5"><Label>Tamanho</Label><Input name="size" maxLength={50} placeholder="1-10, 11-50…" /></div>
+            <DialogTrigger asChild><Button className="bg-primary hover:scale-105 transition-transform"><Plus className="mr-2 h-4 w-4" />Nova empresa</Button></DialogTrigger>
+            <DialogContent className="max-w-2xl">
+              <DialogHeader>
+                <DialogTitle className="text-2xl font-display font-bold">Cadastrar Nova Empresa</DialogTitle>
+              </DialogHeader>
+              
+              <div className="py-4 border-b border-border/50 mb-4">
+                <CnpjSearch onSuccess={handleCnpjSuccess} />
+              </div>
+
+              <form ref={formRef} onSubmit={(e) => { e.preventDefault(); create.mutate(new FormData(e.currentTarget)); }} className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-1.5"><Label>Nome ou Razão Social *</Label><Input name="name" required maxLength={150} onChange={(e) => setDupName(e.target.value)} /></div>
+                  <div className="space-y-1.5"><Label>Website</Label><Input name="website" maxLength={255} placeholder="https://…" onChange={(e) => setDupSite(e.target.value)} /></div>
                 </div>
-                <div className="space-y-1.5"><Label>Notas</Label><Textarea name="notes" maxLength={1000} /></div>
-                <DialogFooter><Button type="submit" disabled={create.isPending}>Criar</Button></DialogFooter>
+                <CompanyDuplicateWarning name={dupName} website={dupSite} />
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1.5"><Label>Indústria / Setor</Label><Input name="industry" maxLength={120} /></div>
+                  <div className="space-y-1.5"><Label>Tamanho (Funcionários)</Label><Input name="size" maxLength={50} placeholder="1-10, 11-50…" /></div>
+                </div>
+                <div className="space-y-1.5"><Label>Notas & Contexto</Label><Textarea name="notes" maxLength={1000} className="min-h-[100px]" /></div>
+                <DialogFooter className="gap-2">
+                  <Button type="button" variant="ghost" onClick={() => setOpen(false)}>Cancelar</Button>
+                  <Button type="submit" disabled={create.isPending} className="px-8 font-bold">
+                    <Sparkles className="mr-2 h-4 w-4" /> Criar Empresa
+                  </Button>
+                </DialogFooter>
               </form>
             </DialogContent>
           </Dialog>
