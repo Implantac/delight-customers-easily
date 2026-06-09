@@ -16,6 +16,7 @@ import { Route as PTokenRouteImport } from './routes/p.$token'
 import { Route as AppWinLossRouteImport } from './routes/_app.win-loss'
 import { Route as AppWhatsappRouteImport } from './routes/_app.whatsapp'
 import { Route as AppWelcomeRouteImport } from './routes/_app.welcome'
+import { Route as AppSuporteRouteImport } from './routes/_app.suporte'
 import { Route as AppSiteChatRouteImport } from './routes/_app.site-chat'
 import { Route as AppSetupWizardRouteImport } from './routes/_app.setup-wizard'
 import { Route as AppSequencesRouteImport } from './routes/_app.sequences'
@@ -150,6 +151,11 @@ const AppWhatsappRoute = AppWhatsappRouteImport.update({
 const AppWelcomeRoute = AppWelcomeRouteImport.update({
   id: '/welcome',
   path: '/welcome',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSuporteRoute = AppSuporteRouteImport.update({
+  id: '/suporte',
+  path: '/suporte',
   getParentRoute: () => AppRoute,
 } as any)
 const AppSiteChatRoute = AppSiteChatRouteImport.update({
@@ -730,6 +736,7 @@ export interface FileRoutesByFullPath {
   '/sequences': typeof AppSequencesRouteWithChildren
   '/setup-wizard': typeof AppSetupWizardRoute
   '/site-chat': typeof AppSiteChatRoute
+  '/suporte': typeof AppSuporteRoute
   '/welcome': typeof AppWelcomeRoute
   '/whatsapp': typeof AppWhatsappRoute
   '/win-loss': typeof AppWinLossRoute
@@ -839,6 +846,7 @@ export interface FileRoutesByTo {
   '/sequences': typeof AppSequencesRouteWithChildren
   '/setup-wizard': typeof AppSetupWizardRoute
   '/site-chat': typeof AppSiteChatRoute
+  '/suporte': typeof AppSuporteRoute
   '/welcome': typeof AppWelcomeRoute
   '/whatsapp': typeof AppWhatsappRoute
   '/win-loss': typeof AppWinLossRoute
@@ -950,6 +958,7 @@ export interface FileRoutesById {
   '/_app/sequences': typeof AppSequencesRouteWithChildren
   '/_app/setup-wizard': typeof AppSetupWizardRoute
   '/_app/site-chat': typeof AppSiteChatRoute
+  '/_app/suporte': typeof AppSuporteRoute
   '/_app/welcome': typeof AppWelcomeRoute
   '/_app/whatsapp': typeof AppWhatsappRoute
   '/_app/win-loss': typeof AppWinLossRoute
@@ -1061,6 +1070,7 @@ export interface FileRouteTypes {
     | '/sequences'
     | '/setup-wizard'
     | '/site-chat'
+    | '/suporte'
     | '/welcome'
     | '/whatsapp'
     | '/win-loss'
@@ -1170,6 +1180,7 @@ export interface FileRouteTypes {
     | '/sequences'
     | '/setup-wizard'
     | '/site-chat'
+    | '/suporte'
     | '/welcome'
     | '/whatsapp'
     | '/win-loss'
@@ -1280,6 +1291,7 @@ export interface FileRouteTypes {
     | '/_app/sequences'
     | '/_app/setup-wizard'
     | '/_app/site-chat'
+    | '/_app/suporte'
     | '/_app/welcome'
     | '/_app/whatsapp'
     | '/_app/win-loss'
@@ -1428,6 +1440,13 @@ declare module '@tanstack/react-router' {
       path: '/welcome'
       fullPath: '/welcome'
       preLoaderRoute: typeof AppWelcomeRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/suporte': {
+      id: '/_app/suporte'
+      path: '/suporte'
+      fullPath: '/suporte'
+      preLoaderRoute: typeof AppSuporteRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/site-chat': {
@@ -2345,6 +2364,7 @@ interface AppRouteChildren {
   AppSequencesRoute: typeof AppSequencesRouteWithChildren
   AppSetupWizardRoute: typeof AppSetupWizardRoute
   AppSiteChatRoute: typeof AppSiteChatRoute
+  AppSuporteRoute: typeof AppSuporteRoute
   AppWelcomeRoute: typeof AppWelcomeRoute
   AppWhatsappRoute: typeof AppWhatsappRoute
   AppWinLossRoute: typeof AppWinLossRoute
@@ -2403,6 +2423,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSequencesRoute: AppSequencesRouteWithChildren,
   AppSetupWizardRoute: AppSetupWizardRoute,
   AppSiteChatRoute: AppSiteChatRoute,
+  AppSuporteRoute: AppSuporteRoute,
   AppWelcomeRoute: AppWelcomeRoute,
   AppWhatsappRoute: AppWhatsappRoute,
   AppWinLossRoute: AppWinLossRoute,
