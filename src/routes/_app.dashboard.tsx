@@ -145,281 +145,141 @@ function DashboardPage() {
   const riskRows = (ret?.rows ?? []).filter((r) => r.level === "risco").slice(0, 5);
 
   return (
-    <div className="page-container max-w-[1400px]">
-      <div className="mb-10">
+    <div className="page-container max-w-[1400px] space-y-10">
+      {/* Mural Comercial / Command Center Header */}
+      <section>
         <MuralComercial />
-      </div>
+      </section>
 
+      {/* O QUE FAZER HOJE - Painel de Ações Imediatas */}
+      <section className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <CheckSquare className="h-5 w-5 text-primary" />
+            <h2 className="text-xl font-display font-bold tracking-tight">O QUE FAZER HOJE</h2>
+          </div>
+          <Badge variant="outline" className="bg-primary/5 text-primary border-primary/10">
+            {new Date().toLocaleDateString("pt-BR", { weekday: 'long', day: '2-digit', month: 'long' })}
+          </Badge>
+        </div>
 
-      <div className="mt-8" data-tour="dashboard-checklist">
-        <OnboardingChecklist />
-      </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Plano do Dia */}
+          <Card className="p-6 border-primary/10 bg-gradient-to-br from-background to-primary/5">
+            <h3 className="font-bold flex items-center gap-2 mb-4">
+              <Calendar className="h-4 w-4 text-primary" /> Seu Plano do Dia
+            </h3>
+            <div className="space-y-4">
+              <ActionItem icon={MapPin} label="12 Visitas na Rota" sub="Região: Campinas / Indaiatuba" />
+              <ActionItem icon={MessageSquare} label="8 Follow-ups Atrasados" sub="Prioridade Alta" />
+              <ActionItem icon={TrendingUp} label="R$ 15k em Reativação" sub="3 clientes sem compra 60d+" />
+            </div>
+            <Button className="w-full mt-6 rounded-full" variant="outline">
+              Ver Agenda Completa
+            </Button>
+          </Card>
 
-      <ProductTour
-        tourId="dashboard-v1"
-        steps={[
-          {
-            selector: '[data-tour="dashboard-checklist"]',
-            title: "Bem-vindo ao seu CRM",
-            body: "Esta é a sua trilha de primeiros passos. Conclua os itens para ativar o copiloto comercial.",
-            placement: "bottom",
-          },
-          {
-            selector: 'a[href="/pipeline"]',
-            title: "Pipeline de vendas",
-            body: "Arraste oportunidades entre os estágios para acompanhar o funil.",
-            placement: "right",
-          },
-          {
-            selector: 'a[href="/whatsapp"]',
-            title: "WhatsApp integrado",
-            body: "Centralize as conversas comerciais aqui. Cada mensagem vira contexto para a IA.",
-            placement: "right",
-          },
-          {
-            selector: 'a[href="/integrations"]',
-            title: "Conectar seu ERP",
-            body: "No Connect Hub você liga Bling, Omie, SAP, banco direto ou agente local — sem precisar de TI.",
-            placement: "right",
-          },
-          {
-            selector: 'a[href="/inteligencia-comercial"]',
-            title: "Inteligência Comercial",
-            body: "Lead scoring, churn, recompra e próxima melhor ação — tudo pronto, alimentado pelos seus dados.",
-            placement: "right",
-          },
-        ]}
-      />
+          {/* Clientes em Risco / Atenção */}
+          <Card className="p-6 border-rose-500/10">
+            <h3 className="font-bold flex items-center gap-2 mb-4 text-rose-600">
+              <AlertTriangle className="h-4 w-4" /> Clientes em Risco
+            </h3>
+            <div className="space-y-4">
+              {!retentionQuery.isLoading && riskRows.map(r => (
+                <div key={r.company_id} className="flex items-center justify-between group cursor-pointer">
+                  <div>
+                    <div className="text-sm font-semibold group-hover:text-primary transition-colors">{r.name}</div>
+                    <div className="text-[10px] text-muted-foreground uppercase">{r.risk} de churn</div>
+                  </div>
+                  <Button size="sm" variant="ghost" className="h-8 w-8 p-0 rounded-full">
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+              {riskRows.length === 0 && <div className="text-sm text-muted-foreground italic">Nenhum risco detectado.</div>}
+            </div>
+            <Button className="w-full mt-6 rounded-full border-rose-500/20 text-rose-600 hover:bg-rose-500/5" variant="outline">
+              Ver Todos em Risco
+            </Button>
+          </Card>
 
-      {/* Saúde geral + plano do dia lado a lado em telas largas */}
-      <div className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-2">
-        <BusinessHealthCard />
-        <NextActionBlock surface="dashboard" title="Plano do dia" showRegenerate />
-      </div>
-      <div className="mt-8">
-        <TopOpportunities />
-      </div>
+          {/* Leads Quentes */}
+          <Card className="p-6 border-amber-500/10">
+            <h3 className="font-bold flex items-center gap-2 mb-4 text-amber-600">
+              <Flame className="h-4 w-4" /> Leads Prioritários
+            </h3>
+            <div className="space-y-4">
+              <ActionItem icon={Zap} label="Tech Solutions" sub="Score 94 · Vindo do WhatsApp" />
+              <ActionItem icon={Zap} label="Indústria Alfa" sub="Score 88 · Campanha Influencer" />
+              <ActionItem icon={Zap} label="Global Logistics" sub="Score 82 · Site Chat" />
+            </div>
+            <Button className="w-full mt-6 rounded-full border-amber-500/20 text-amber-600 hover:bg-amber-500/5" variant="outline">
+              Acompanhar Leads
+            </Button>
+          </Card>
+        </div>
+      </section>
 
-      {/* KPI strip — sempre acionável (cada um leva para o módulo correto) */}
-      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {/* KPI Command Bar */}
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {kpis.map((k, i) => (
           <motion.div
             key={k.label}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.1, duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+            transition={{ delay: i * 0.1 }}
           >
             <Link to={k.href as any} className="group block h-full">
-              <Card
-                className="kpi-card relative h-full overflow-hidden p-5 border-border/40 hover:border-primary/20 bg-card shadow-sm hover:shadow-md transition-all duration-300"
-              >
-                <div className="relative flex items-center justify-between mb-4">
-                  <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground/80">
-                    {k.label}
-                  </span>
-                  <div className={`p-2 rounded-lg bg-secondary/50 ${k.tone} group-hover:scale-110 transition-transform duration-300`}>
+              <Card className="h-full p-5 border-border/40 hover:border-primary/20 transition-all hover:shadow-lg hover:shadow-primary/5">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{k.label}</span>
+                  <div className={`p-2 rounded-lg bg-secondary/50 ${k.tone}`}>
                     <k.icon className="h-4 w-4" />
                   </div>
                 </div>
-                <div className="space-y-1">
-                  <p
-                    data-slot="kpi-value"
-                    className="font-display text-2xl font-bold tracking-tight group-hover:text-primary transition-colors"
-                  >
-                    {k.value}
-                  </p>
-                  <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
-                    <span className="truncate">{k.sub}</span>
-                  </div>
-                </div>
-                <div className="absolute bottom-0 left-0 h-1 w-0 bg-primary/10 transition-all duration-500 group-hover:w-full" />
+                <div className="text-2xl font-display font-bold">{k.value}</div>
+                <div className="text-[11px] text-muted-foreground mt-1 truncate">{k.sub}</div>
               </Card>
             </Link>
           </motion.div>
         ))}
-      </div>
+      </section>
 
-      {/* Oportunidades prioritárias + Representantes */}
-      <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <Card className="p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Target className="h-4 w-4 text-primary" />
-              <h3 className="font-semibold">Oportunidades prioritárias</h3>
-            </div>
-            <Button asChild size="sm" variant="ghost">
-              <Link to="/pipeline">
-                Pipeline <ArrowRight className="ml-1 h-3 w-3" />
-              </Link>
-            </Button>
-          </div>
-          <div className="mt-4 space-y-2">
-            {dashQuery.isLoading && (
-              <>
-                <Skeleton className="h-12 w-full" />
-                <Skeleton className="h-12 w-full" />
-                <Skeleton className="h-12 w-full" />
-              </>
-            )}
-            {!dashQuery.isLoading && (dashQuery.data?.topOpen ?? []).length === 0 && (
-              <p className="text-sm text-muted-foreground">
-                Sem oportunidades abertas. Bora prospectar — comece em{" "}
-                <Link to="/campaigns" className="underline">Leads</Link>.
-              </p>
-            )}
-            {(dashQuery.data?.topOpen ?? []).map((d) => {
-              const company = d.companies?.name ?? "Sem empresa";
-              const close = d.expected_close
-                ? new Date(d.expected_close).toLocaleDateString("pt-BR", { day: "2-digit", month: "short" })
-                : "—";
-              return (
-                <div key={d.id} className="flex items-center justify-between gap-3 rounded-md border p-3">
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium">{d.title}</p>
-                    <p className="truncate text-xs text-muted-foreground">
-                      {company} · fechamento {close}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-sm font-semibold">{fmtBRL(Number(d.value || 0))}</p>
-                    <Badge variant="outline" className="mt-0.5 text-[10px]">
-                      {STAGE_LABEL[d.stage] ?? d.stage}
-                    </Badge>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </Card>
+      {/* Oportunidades & Saúde */}
+      <section className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+        <TopOpportunities />
+        <BusinessHealthCard />
+      </section>
 
-        <Card className="p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Award className="h-4 w-4 text-primary" />
-              <h3 className="font-semibold">Cobertura de representantes</h3>
-            </div>
-            <Button asChild size="sm" variant="ghost">
-              <Link to="/goals">
-                Detalhes <ArrowRight className="ml-1 h-3 w-3" />
-              </Link>
-            </Button>
-          </div>
-          <div className="mt-4 space-y-3">
-            {forecastQuery.isLoading && (
-              <>
-                <Skeleton className="h-12 w-full" />
-                <Skeleton className="h-12 w-full" />
-                <Skeleton className="h-12 w-full" />
-              </>
-            )}
-            {!forecastQuery.isLoading && reps.length === 0 && (
-              <p className="text-sm text-muted-foreground">
-                Nenhuma meta atribuída no mês.{" "}
-                <Link to="/goals" className="underline">Definir metas</Link>.
-              </p>
-            )}
-            {reps.map((r) => {
-              const pct = Math.min(100, r.attainment);
-              const tone =
-                pct >= 90 ? "bg-emerald-500" : pct >= 60 ? "bg-amber-500" : "bg-destructive";
-              return (
-                <div key={r.user_id} className="space-y-1.5">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="truncate font-medium">{r.name}</span>
-                    <span className="text-muted-foreground">
-                      {fmtBRL(r.won)} <span className="text-xs">/ {fmtBRL(r.target)}</span>
-                    </span>
-                  </div>
-                  <div className="h-1.5 overflow-hidden rounded bg-muted">
-                    <div className={`h-full ${tone}`} style={{ width: `${pct}%` }} />
-                  </div>
-                  <p className="text-[11px] text-muted-foreground">
-                    {pct}% projetado · gap {fmtBRL(r.gap)}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </Card>
-      </div>
-
-      {/* Customer 360 + Churn — IA comercial em destaque */}
-      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+      <section className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         <Customer360Mini />
         <ChurnRiskCard />
+      </section>
+
+      {/* Onboarding / Setup */}
+      <section data-tour="dashboard-checklist">
+        <OnboardingChecklist />
+      </section>
+
+      <ProductTour tourId="dashboard-v3" steps={[]} />
+    </div>
+  );
+}
+
+function ActionItem({ icon: Icon, label, sub }: any) {
+  return (
+    <div className="flex items-start gap-3 p-3 rounded-xl border border-border/40 hover:border-primary/30 transition-all cursor-pointer bg-card/50">
+      <div className="p-2 rounded-lg bg-secondary/80">
+        <Icon className="h-3.5 w-3.5 text-primary" />
       </div>
-
-
-      {/* Clientes em risco — call-to-action de retenção */}
-      <Card className="mt-6 p-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <HeartPulse className="h-4 w-4 text-destructive" />
-            <h3 className="font-semibold">Clientes em risco</h3>
-          </div>
-          <Button asChild size="sm" variant="ghost">
-            <Link to="/retention">
-              Retenção & churn <ArrowRight className="ml-1 h-3 w-3" />
-            </Link>
-          </Button>
-        </div>
-        <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
-          {retentionQuery.isLoading && (
-            <>
-              <Skeleton className="h-20 w-full" />
-              <Skeleton className="h-20 w-full" />
-              <Skeleton className="h-20 w-full" />
-            </>
-          )}
-          {!retentionQuery.isLoading && riskRows.length === 0 && (
-            <p className="text-sm text-muted-foreground">
-              Nenhum cliente sinalizado como risco agora. 🎉
-            </p>
-          )}
-          {riskRows.map((r) => (
-            <Link
-              key={r.company_id}
-              to={`/companies/${r.company_id}` as any}
-              className="rounded-md border p-3 transition-colors hover:bg-accent/40"
-            >
-              <div className="flex items-center justify-between gap-2">
-                <p className="truncate text-sm font-medium">{r.name}</p>
-                <Badge variant="destructive" className="text-[10px]">
-                  risco {r.risk}
-                </Badge>
-              </div>
-              <p className="mt-1 text-xs text-muted-foreground">
-                {r.days_silent != null ? `${r.days_silent}d sem contato · ` : ""}
-                {fmtBRL(Number(r.won_value || 0))} histórico
-              </p>
-              {r.reasons[0] && (
-                <p className="mt-1 truncate text-[11px] text-muted-foreground">{r.reasons[0]}</p>
-              )}
-            </Link>
-          ))}
-        </div>
-      </Card>
-
-      {/* Cobertura de base — contadores leves */}
-      <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-        <CountTile label="Contatos" value={dashQuery.data?.contacts ?? 0} icon={Users} href="/contacts" />
-        <CountTile label="Empresas" value={dashQuery.data?.companies ?? 0} icon={Users} href="/companies" />
-        <CountTile
-          label="Clientes ativos"
-          value={(ret?.rows ?? []).filter((r) => r.deals_won > 0).length}
-          icon={HeartPulse}
-          href="/carteira"
-        />
-        <CountTile
-          label="Sem compra 30d+"
-          value={noPurchaseCount}
-          icon={AlertTriangle}
-          href="/carteira"
-        />
+      <div>
+        <div className="text-sm font-bold">{label}</div>
+        <div className="text-[10px] text-muted-foreground uppercase">{sub}</div>
       </div>
     </div>
   );
 }
+
 
 function CountTile({
   label, value, icon: Icon, href,
