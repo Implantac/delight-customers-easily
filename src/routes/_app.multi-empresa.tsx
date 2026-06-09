@@ -199,7 +199,7 @@ function MultiEmpresaPage() {
                                         <div className="absolute -left-3 top-1/2 w-3 h-px bg-primary/20" />
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-3">
-                                                <div className="text-xl">{child.org_type === 'loja' ? '🏪' : '🏭'}</div>
+                                                <div className="text-xl">{child.org_type === 'branch' ? '🏪' : '🏭'}</div>
                                                 <div>
                                                     <div className="text-sm font-bold group-hover:text-primary transition-colors">{child.name}</div>
                                                     <div className="text-[10px] text-muted-foreground uppercase">{child.org_type}</div>
@@ -208,6 +208,7 @@ function MultiEmpresaPage() {
                                             <ChevronRight className="h-3 w-3 text-muted-foreground" />
                                         </div>
                                     </Card>
+
                                 ))}
                              </div>
                         </div>
