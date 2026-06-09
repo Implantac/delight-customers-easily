@@ -64,8 +64,16 @@ function CompaniesPage() {
       if (error) throw error;
     },
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["companies"] }); toast.success("Empresa removida"); },
+  const bulkDel = useMutation({
+    mutationFn: async (ids: string[]) => {
+      const { error } = await supabase.from("companies").delete().in("id", ids);
+      if (error) throw error;
+      return ids.length;
+    },
+    onSuccess: (n) => { qc.invalidateQueries({ queryKey: ["companies"] }); setSelected(new Set()); toast.success(`${n} empresas removidas`); },
     onError: (e: any) => toast.error(e.message),
   });
+
 
   const handleCnpjSuccess = (data: any) => {
     if (formRef.current) {
