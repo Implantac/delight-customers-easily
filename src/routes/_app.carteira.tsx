@@ -147,18 +147,18 @@ function CarteiraPage() {
           </TabsList>
         </Tabs>
 
-        <div className="flex flex-col md:flex-row gap-2">
-          <div className="relative flex-1">
+        <div className="flex flex-wrap gap-2">
+          <div className="relative flex-1 min-w-[200px]">
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              placeholder="Buscar cliente..."
+              placeholder="Buscar por cliente, cidade..."
               className="pl-8"
             />
           </div>
           <Select value={industry} onValueChange={setIndustry}>
-            <SelectTrigger className="w-full md:w-56">
+            <SelectTrigger className="w-full md:w-44">
               <SelectValue placeholder="Segmento" />
             </SelectTrigger>
             <SelectContent>
@@ -168,6 +168,29 @@ function CarteiraPage() {
               ))}
             </SelectContent>
           </Select>
+          <Select value={repFilter} onValueChange={setRepFilter}>
+            <SelectTrigger className="w-full md:w-44">
+              <SelectValue placeholder="Representante" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos Representantes</SelectItem>
+              {uniqueReps.map((r) => (
+                <SelectItem key={r.id} value={r.id}>{r.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select value={stateFilter} onValueChange={setStateFilter}>
+            <SelectTrigger className="w-full md:w-32">
+              <SelectValue placeholder="Estado" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos Estados</SelectItem>
+              {uniqueStates.map((s) => (
+                <SelectItem key={s} value={s}>{s}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
           <Button
             variant="outline"
             className="gap-2 shrink-0"
