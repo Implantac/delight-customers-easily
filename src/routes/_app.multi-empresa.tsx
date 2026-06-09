@@ -218,9 +218,6 @@ function MultiEmpresaPage() {
   );
 }
 
-    </div>
-  );
-}
 
 function KPI({ icon: Icon, label, value }: { icon: typeof Building2; label: string; value: string }) {
   return (
