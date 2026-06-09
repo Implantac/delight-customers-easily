@@ -9,8 +9,9 @@ import {
   Flame, Calendar as CalendarIcon, Award, Plug, Building, Rocket, Sun,
   Sun as SunIcon, ListChecks, CheckSquare, TrendingUp, Trophy, Repeat, DollarSign,
   Goal, GraduationCap, Workflow, FileInput, LineChart, Compass, MessagesSquare,
-  Network, type LucideIcon,
+  Network, Headphones, Heart, Code2, Microscope, type LucideIcon,
 } from "lucide-react";
+
 import { useAuth } from "@/lib/auth";
 import { useCurrentOrg, switchOrganization } from "@/lib/org";
 import { useCanManage } from "@/lib/permissions";
@@ -68,6 +69,16 @@ const navigationGroups: NavGroup[] = [
     ],
   },
   {
+    label: "Operação por Setor",
+    items: [
+      { to: "/onboarding", label: "Implantação", icon: Rocket, tone: "violet" },
+      { to: "/suporte", label: "Suporte", icon: Headphones, tone: "rose" },
+      { to: "/pos-vendas", label: "Pós-Vendas & CS", icon: Heart, tone: "rose" },
+      { to: "/desenvolvimento", label: "Desenvolvimento", icon: Code2, tone: "primary" },
+      { to: "/qa", label: "Q.A & Qualidade", icon: Microscope, tone: "success" },
+    ],
+  },
+  {
     label: "Equipe",
     items: [
       { to: "/representantes", label: "Representantes", icon: Award, tone: "success", managerOnly: true },
@@ -105,6 +116,7 @@ const navigationGroups: NavGroup[] = [
     ],
   },
 ];
+
 
 export function AppSidebar() {
   const { user, signOut } = useAuth();

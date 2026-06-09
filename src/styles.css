@@ -142,7 +142,7 @@
   --ring: #fbbf24;
   --sidebar: #020617;
 }
-}
+
 
 /* =========================================================
    EXECUTIVE NAVY — Dark mode
@@ -298,6 +298,7 @@
   .font-sans    { font-family: var(--font-sans); }
 
   .page-container {
+
     width: 100%;
     margin-inline: auto;
     padding: 1rem 0.875rem;
