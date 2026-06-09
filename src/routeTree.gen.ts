@@ -77,6 +77,7 @@ import { Route as AppSettingsFieldsRouteImport } from './routes/_app.settings.fi
 import { Route as AppSettingsErpAgentRouteImport } from './routes/_app.settings.erp-agent'
 import { Route as AppSettingsBriefingRouteImport } from './routes/_app.settings.briefing'
 import { Route as AppSettingsAutomationsRouteImport } from './routes/_app.settings.automations'
+import { Route as AppSettingsAlertsRouteImport } from './routes/_app.settings.alerts'
 import { Route as AppSequencesIdRouteImport } from './routes/_app.sequences.$id'
 import { Route as AppReportsWeeklyRouteImport } from './routes/_app.reports.weekly'
 import { Route as AppReportsDashboardsRouteImport } from './routes/_app.reports.dashboards'
@@ -465,6 +466,11 @@ const AppSettingsAutomationsRoute = AppSettingsAutomationsRouteImport.update({
   path: '/settings/automations',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSettingsAlertsRoute = AppSettingsAlertsRouteImport.update({
+  id: '/settings/alerts',
+  path: '/settings/alerts',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppSequencesIdRoute = AppSequencesIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -784,6 +790,7 @@ export interface FileRoutesByFullPath {
   '/reports/dashboards': typeof AppReportsDashboardsRouteWithChildren
   '/reports/weekly': typeof AppReportsWeeklyRoute
   '/sequences/$id': typeof AppSequencesIdRoute
+  '/settings/alerts': typeof AppSettingsAlertsRoute
   '/settings/automations': typeof AppSettingsAutomationsRouteWithChildren
   '/settings/briefing': typeof AppSettingsBriefingRoute
   '/settings/erp-agent': typeof AppSettingsErpAgentRoute
@@ -897,6 +904,7 @@ export interface FileRoutesByTo {
   '/reports/dashboards': typeof AppReportsDashboardsRouteWithChildren
   '/reports/weekly': typeof AppReportsWeeklyRoute
   '/sequences/$id': typeof AppSequencesIdRoute
+  '/settings/alerts': typeof AppSettingsAlertsRoute
   '/settings/automations': typeof AppSettingsAutomationsRouteWithChildren
   '/settings/briefing': typeof AppSettingsBriefingRoute
   '/settings/erp-agent': typeof AppSettingsErpAgentRoute
@@ -1012,6 +1020,7 @@ export interface FileRoutesById {
   '/_app/reports/dashboards': typeof AppReportsDashboardsRouteWithChildren
   '/_app/reports/weekly': typeof AppReportsWeeklyRoute
   '/_app/sequences/$id': typeof AppSequencesIdRoute
+  '/_app/settings/alerts': typeof AppSettingsAlertsRoute
   '/_app/settings/automations': typeof AppSettingsAutomationsRouteWithChildren
   '/_app/settings/briefing': typeof AppSettingsBriefingRoute
   '/_app/settings/erp-agent': typeof AppSettingsErpAgentRoute
@@ -1127,6 +1136,7 @@ export interface FileRouteTypes {
     | '/reports/dashboards'
     | '/reports/weekly'
     | '/sequences/$id'
+    | '/settings/alerts'
     | '/settings/automations'
     | '/settings/briefing'
     | '/settings/erp-agent'
@@ -1240,6 +1250,7 @@ export interface FileRouteTypes {
     | '/reports/dashboards'
     | '/reports/weekly'
     | '/sequences/$id'
+    | '/settings/alerts'
     | '/settings/automations'
     | '/settings/briefing'
     | '/settings/erp-agent'
@@ -1354,6 +1365,7 @@ export interface FileRouteTypes {
     | '/_app/reports/dashboards'
     | '/_app/reports/weekly'
     | '/_app/sequences/$id'
+    | '/_app/settings/alerts'
     | '/_app/settings/automations'
     | '/_app/settings/briefing'
     | '/_app/settings/erp-agent'
@@ -1905,6 +1917,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsAutomationsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/settings/alerts': {
+      id: '/_app/settings/alerts'
+      path: '/settings/alerts'
+      fullPath: '/settings/alerts'
+      preLoaderRoute: typeof AppSettingsAlertsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/sequences/$id': {
       id: '/_app/sequences/$id'
       path: '/$id'
@@ -2429,6 +2448,7 @@ interface AppRouteChildren {
   AppWhatsappRoute: typeof AppWhatsappRoute
   AppWinLossRoute: typeof AppWinLossRoute
   AppInviteTokenRoute: typeof AppInviteTokenRoute
+  AppSettingsAlertsRoute: typeof AppSettingsAlertsRoute
   AppSettingsAutomationsRoute: typeof AppSettingsAutomationsRouteWithChildren
   AppSettingsBriefingRoute: typeof AppSettingsBriefingRoute
   AppSettingsErpAgentRoute: typeof AppSettingsErpAgentRoute
@@ -2491,6 +2511,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppWhatsappRoute: AppWhatsappRoute,
   AppWinLossRoute: AppWinLossRoute,
   AppInviteTokenRoute: AppInviteTokenRoute,
+  AppSettingsAlertsRoute: AppSettingsAlertsRoute,
   AppSettingsAutomationsRoute: AppSettingsAutomationsRouteWithChildren,
   AppSettingsBriefingRoute: AppSettingsBriefingRoute,
   AppSettingsErpAgentRoute: AppSettingsErpAgentRoute,

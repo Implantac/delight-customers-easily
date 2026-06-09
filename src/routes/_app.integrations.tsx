@@ -316,37 +316,35 @@ function ConnectHubDashboard() {
     0,
   );
 
+  const [isAdvanced, setIsAdvanced] = useState(false);
+
   return (
-    <div className="page-container max-w-[1200px]">
+    <div className="page-container max-w-[1200px] space-y-8">
       <PageHeader
         icon={Plug}
-        title="ConnectHub"
-        subtitle="Integração inteligente com seu ERP sem necessidade de código."
+        title="ConnectHub ERP"
+        subtitle="Sua ponte comercial inteligente. Consumimos dados do seu ERP e transformamos em inteligência de vendas."
         action={
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              className="gap-2 h-9 px-4"
-              onClick={() => {
-                health.refetch();
-                jobs.refetch();
-              }}
-              disabled={health.isFetching}
-            >
-              <RefreshCw
-                className={`h-4 w-4 ${health.isFetching ? "animate-spin" : ""}`}
-              />
-              Sincronizar
-            </Button>
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted border border-border/40 mr-4">
+              <span className={cn("text-[10px] font-bold uppercase tracking-widest", !isAdvanced ? "text-primary" : "text-muted-foreground")}>Simples</span>
+              <button 
+                onClick={() => setIsAdvanced(!isAdvanced)}
+                className={cn("w-8 h-4 rounded-full relative transition-colors", isAdvanced ? "bg-primary" : "bg-muted-foreground/30")}
+              >
+                <div className={cn("absolute top-0.5 w-3 h-3 rounded-full bg-white transition-all", isAdvanced ? "left-4.5" : "left-0.5")} />
+              </button>
+              <span className={cn("text-[10px] font-bold uppercase tracking-widest", isAdvanced ? "text-primary" : "text-muted-foreground")}>Avançado</span>
+            </div>
             <Link to="/integrations/connect/wizard">
-              <Button size="sm" className="gap-2 h-9 px-4 bg-primary text-primary-foreground hover:shadow-glow transition-all">
+              <Button size="sm" className="gap-2 h-9 px-6 bg-primary text-primary-foreground hover:shadow-glow transition-all rounded-full font-bold">
                 <Plus className="h-4 w-4" /> Novo Conector
               </Button>
             </Link>
           </div>
         }
       />
+
 
       {/* Resumo de status */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -368,23 +366,32 @@ function ConnectHubDashboard() {
       </div>
 
 
+      {/* Recursos Avançados - Só aparecem no modo avançado */}
+      {isAdvanced && (
+        <div className="space-y-3 animate-in-page">
+          <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Recursos Técnicos & Logs</h2>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+            {ADVANCED_LINKS.map(link => (
+              <Link key={link.to} to={link.to} className="p-3 rounded-xl border border-border/40 bg-card/50 hover:border-primary/30 transition-all flex flex-col items-center text-center gap-2">
+                <link.icon className="h-4 w-4 text-primary" />
+                <span className="text-[10px] font-bold uppercase">{link.label}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* ERPs conectados */}
-      <div className="space-y-3">
+      <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold">Seus ERPs conectados</h2>
+            <h2 className="text-xl font-display font-bold tracking-tight">Sua Pontes Ativas</h2>
             <p className="text-sm text-muted-foreground">
-              Status, última sincronização e ações rápidas por conector.
+              ERPs que alimentam sua inteligência comercial hoje.
             </p>
           </div>
-          {rows.length > 0 && (
-            <Link to="/integrations/health">
-              <Button variant="ghost" size="sm" className="gap-1">
-                Ver tudo <ChevronRight className="h-4 w-4" />
-              </Button>
-            </Link>
-          )}
         </div>
+
 
         {health.isLoading ? (
           <div className="grid gap-4 md:grid-cols-2">

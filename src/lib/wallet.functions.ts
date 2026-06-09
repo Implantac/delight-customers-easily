@@ -10,6 +10,12 @@ export type WalletRow = {
   name: string;
   industry: string | null;
   size: string | null;
+  city: string | null;
+  state: string | null;
+  representative_id: string | null;
+  representative_name: string | null;
+  cnae: string | null;
+  channel: string | null;
   wonRevenue: number;
   openPipeline: number;
   lastPurchaseAt: string | null;
@@ -18,10 +24,13 @@ export type WalletRow = {
   frequency: number; // pedidos nos últimos 12m
   activitiesLast30: number;
   overdueAmount: number;
+  potential: number; // 0-100
   score: number; // 0-100
   status: "ativo" | "atencao" | "risco" | "novo" | "inativo";
   buckets: Array<"visitar" | "reativar" | "risco" | "sem_contato" | "inadimplente">;
+  nextAiAction: string | null;
 };
+
 
 /**
  * Carteira Comercial — visão única e densa do relacionamento por empresa.
@@ -38,10 +47,10 @@ export const getCommercialWallet = createServerFn({ method: "POST" })
     const ts30 = now - 30 * DAY;
     const ts365 = now - 365 * DAY;
 
-    const [companiesRes, dealsRes, actsRes, invRes] = await Promise.all([
+    const [companiesRes, dealsRes, actsRes, invRes, repsRes] = await Promise.all([
       supabase
         .from("companies")
-        .select("id, name, industry, size, created_at")
+        .select("id, name, industry, size, created_at, city, state, user_id, custom_values")
         .eq("organization_id", org),
       supabase
         .from("deals")
@@ -56,6 +65,9 @@ export const getCommercialWallet = createServerFn({ method: "POST" })
         .from("invoices")
         .select("id, company_id, amount, status, due_date, paid_at")
         .eq("organization_id", org),
+      supabase
+        .from("profiles")
+        .select("id, full_name"),
     ]);
 
     if (companiesRes.error) throw new Error(companiesRes.error.message);
@@ -63,6 +75,10 @@ export const getCommercialWallet = createServerFn({ method: "POST" })
     const deals = dealsRes.data ?? [];
     const acts = actsRes.data ?? [];
     const invoices = invRes.data ?? [];
+    const profiles = repsRes.data ?? [];
+
+    const profilesMap = new Map<string, string>();
+    for (const p of profiles) profilesMap.set(p.id, p.full_name || "Desconhecido");
 
     // Index contact->company para atividades sem deal
     const { data: contactList } = await supabase
@@ -106,10 +122,13 @@ export const getCommercialWallet = createServerFn({ method: "POST" })
 
       const daysSince = lastPurchaseTs ? Math.floor((now - lastPurchaseTs) / DAY) : null;
 
+      // Potential: baseado no histórico + ticket médio (simulado)
+      const potential = Math.min(100, Math.round((wonRevenue / 5000) + (ticketAvg / 500)));
+
       // Score 0-100: histórico + recência + atividade + penaliza inadimplência
       let score = 0;
-      score += Math.min(40, wonRevenue / 1000); // até 40 pelo histórico (R$40k = 40)
-      if (daysSince !== null) score += Math.max(0, 30 - daysSince / 5); // 30 se comprou hoje, decai
+      score += Math.min(40, wonRevenue / 1000); 
+      if (daysSince !== null) score += Math.max(0, 30 - daysSince / 5); 
       score += Math.min(20, activitiesLast30 * 4);
       score += Math.min(10, frequency * 2);
       if (overdueAmount > 0) score -= 20;
@@ -132,16 +151,30 @@ export const getCommercialWallet = createServerFn({ method: "POST" })
       if (daysSince !== null && daysSince > 180) buckets.push("risco");
       if (activitiesLast30 === 0) buckets.push("sem_contato");
       if (openPipeline > 0 && activitiesLast30 === 0) buckets.push("visitar");
-      // "visitar" extra: ticket alto + 30-60d sem comprar
       if (ticketAvg > 5000 && daysSince !== null && daysSince >= 30 && daysSince < 60) {
         buckets.push("visitar");
       }
+
+      // Next AI Action (Simulada)
+      let nextAiAction = "Manter relacionamento";
+      if (status === "atencao") nextAiAction = "Ligar para entender sumiço";
+      if (status === "risco") nextAiAction = "Visita técnica de urgência";
+      if (buckets.includes("reativar")) nextAiAction = "Oferta de reativação (10% desc)";
+      if (overdueAmount > 0) nextAiAction = "Consultar financeiro";
+
+      const cv = (co.custom_values || {}) as any;
 
       return {
         company_id: co.id,
         name: co.name,
         industry: co.industry,
         size: co.size,
+        city: co.city,
+        state: co.state,
+        representative_id: co.user_id,
+        representative_name: profilesMap.get(co.user_id) || null,
+        cnae: cv.cnae || null,
+        channel: cv.channel || "Direto",
         wonRevenue,
         openPipeline,
         lastPurchaseAt: lastPurchaseTs ? new Date(lastPurchaseTs).toISOString() : null,
@@ -150,11 +183,14 @@ export const getCommercialWallet = createServerFn({ method: "POST" })
         frequency,
         activitiesLast30,
         overdueAmount,
+        potential,
         score,
         status,
         buckets: Array.from(new Set(buckets)),
+        nextAiAction,
       };
     });
+
 
     rows.sort((a, b) => b.score - a.score);
 

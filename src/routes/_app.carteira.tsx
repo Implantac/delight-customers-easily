@@ -18,8 +18,9 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Briefcase, Search, ArrowRight, TrendingUp, AlertTriangle, Clock, Flame, Receipt, Download,
-  Megaphone, Workflow, X,
+  Megaphone, Workflow, X, Sparkles,
 } from "lucide-react";
+
 import { toCSV, downloadCSV } from "@/lib/csv-export";
 
 export const Route = createFileRoute("/_app/carteira")({
@@ -62,7 +63,10 @@ function CarteiraPage() {
   const [bucket, setBucket] = useState<Bucket>("todos");
   const [q, setQ] = useState("");
   const [industry, setIndustry] = useState<string>("all");
+  const [repFilter, setRepFilter] = useState<string>("all");
+  const [stateFilter, setStateFilter] = useState<string>("all");
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  
   const toggle = (id: string) =>
     setSelected((s) => {
       const n = new Set(s);
@@ -84,10 +88,27 @@ function CarteiraPage() {
     return data.rows.filter((r) => {
       if (bucket !== "todos" && !r.buckets.includes(bucket as any)) return false;
       if (industry !== "all" && r.industry !== industry) return false;
+      if (repFilter !== "all" && r.representative_id !== repFilter) return false;
+      if (stateFilter !== "all" && r.state !== stateFilter) return false;
       if (term && !r.name.toLowerCase().includes(term)) return false;
       return true;
     });
-  }, [data, bucket, q, industry]);
+  }, [data, bucket, q, industry, repFilter, stateFilter]);
+
+  const uniqueReps = useMemo(() => {
+    if (!data) return [];
+    const reps = new Map();
+    data.rows.forEach(r => {
+      if (r.representative_id) reps.set(r.representative_id, r.representative_name);
+    });
+    return Array.from(reps.entries()).map(([id, name]) => ({ id, name }));
+  }, [data]);
+
+  const uniqueStates = useMemo(() => {
+    if (!data) return [];
+    return Array.from(new Set(data.rows.map(r => r.state).filter(Boolean))).sort() as string[];
+  }, [data]);
+
 
   return (
     <div className="space-y-6 p-4 md:p-6">
@@ -127,18 +148,18 @@ function CarteiraPage() {
           </TabsList>
         </Tabs>
 
-        <div className="flex flex-col md:flex-row gap-2">
-          <div className="relative flex-1">
+        <div className="flex flex-wrap gap-2">
+          <div className="relative flex-1 min-w-[200px]">
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              placeholder="Buscar cliente..."
+              placeholder="Buscar por cliente, cidade..."
               className="pl-8"
             />
           </div>
           <Select value={industry} onValueChange={setIndustry}>
-            <SelectTrigger className="w-full md:w-56">
+            <SelectTrigger className="w-full md:w-44">
               <SelectValue placeholder="Segmento" />
             </SelectTrigger>
             <SelectContent>
@@ -148,6 +169,29 @@ function CarteiraPage() {
               ))}
             </SelectContent>
           </Select>
+          <Select value={repFilter} onValueChange={setRepFilter}>
+            <SelectTrigger className="w-full md:w-44">
+              <SelectValue placeholder="Representante" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos Representantes</SelectItem>
+              {uniqueReps.map((r) => (
+                <SelectItem key={r.id} value={r.id}>{r.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select value={stateFilter} onValueChange={setStateFilter}>
+            <SelectTrigger className="w-full md:w-32">
+              <SelectValue placeholder="Estado" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todos Estados</SelectItem>
+              {uniqueStates.map((s) => (
+                <SelectItem key={s} value={s}>{s}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
           <Button
             variant="outline"
             className="gap-2 shrink-0"
@@ -284,22 +328,21 @@ function CarteiraPage() {
                       aria-label="Selecionar todos"
                     />
                   </th>
-                  <th className="text-left px-3 py-2">Cliente</th>
+                  <th className="text-left px-3 py-2">Cliente / Local</th>
+                  <th className="text-left px-3 py-2 hidden lg:table-cell">Responsável</th>
                   <th className="text-right px-3 py-2">Score</th>
+                  <th className="text-right px-3 py-2 hidden md:table-cell">Potencial</th>
                   <th className="text-left px-3 py-2">Status</th>
                   <th className="text-right px-3 py-2 hidden md:table-cell">Faturado</th>
-                  <th className="text-right px-3 py-2 hidden lg:table-cell">Ticket médio</th>
                   <th className="text-right px-3 py-2 hidden lg:table-cell">Pipeline</th>
                   <th className="text-right px-3 py-2 hidden md:table-cell">Última compra</th>
-                  <th className="text-right px-3 py-2 hidden xl:table-cell">Freq 12m</th>
-                  <th className="text-right px-3 py-2 hidden xl:table-cell">Ativ 30d</th>
-                  <th className="text-right px-3 py-2 hidden md:table-cell">Em atraso</th>
+                  <th className="text-left px-3 py-2 hidden xl:table-cell font-bold text-primary">Próxima Ação IA</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.slice(0, 200).map((r) => (
-                  <tr key={r.company_id} className="border-t hover:bg-accent/30">
+                  <tr key={r.company_id} className="border-t hover:bg-accent/30 group">
                     <td className="px-3 py-2">
                       <Checkbox
                         checked={selected.has(r.company_id)}
@@ -308,30 +351,33 @@ function CarteiraPage() {
                       />
                     </td>
                     <td className="px-3 py-2">
-                      <div className="font-medium truncate max-w-[240px]">{r.name}</div>
-                      {r.industry && <div className="text-xs text-muted-foreground truncate">{r.industry}</div>}
+                      <div className="font-medium truncate max-w-[240px] group-hover:text-primary transition-colors">{r.name}</div>
+                      <div className="text-[10px] text-muted-foreground uppercase tracking-tight">
+                        {r.city ? `${r.city} - ${r.state || ""}` : (r.industry || "—")}
+                      </div>
+                    </td>
+                    <td className="px-3 py-2 hidden lg:table-cell">
+                      <div className="text-xs truncate max-w-[120px]">{r.representative_name || "—"}</div>
                     </td>
                     <td className="px-3 py-2 text-right">{scorePill(r.score)}</td>
+                    <td className="px-3 py-2 text-right hidden md:table-cell">
+                      <div className="text-xs font-bold text-muted-foreground">{r.potential}%</div>
+                    </td>
                     <td className="px-3 py-2">{statusBadge(r.status)}</td>
                     <td className="px-3 py-2 text-right font-mono hidden md:table-cell">{fmt(r.wonRevenue)}</td>
-                    <td className="px-3 py-2 text-right font-mono hidden lg:table-cell">{fmt(r.ticketAvg)}</td>
                     <td className="px-3 py-2 text-right font-mono hidden lg:table-cell">{fmt(r.openPipeline)}</td>
                     <td className="px-3 py-2 text-right hidden md:table-cell">
                       {r.daysSinceLastPurchase === null
                         ? <span className="text-muted-foreground">—</span>
                         : <span className={r.daysSinceLastPurchase > 90 ? "text-amber-600" : ""}>{r.daysSinceLastPurchase}d</span>}
                     </td>
-                    <td className="px-3 py-2 text-right hidden xl:table-cell">{r.frequency}</td>
-                    <td className="px-3 py-2 text-right hidden xl:table-cell">
-                      {r.activitiesLast30 === 0
-                        ? <span className="inline-flex items-center gap-1 text-amber-600"><Flame className="h-3 w-3" />0</span>
-                        : r.activitiesLast30}
-                    </td>
-                    <td className="px-3 py-2 text-right font-mono hidden md:table-cell">
-                      {r.overdueAmount > 0 ? <span className="text-destructive">{fmt(r.overdueAmount)}</span> : <span className="text-muted-foreground">—</span>}
+                    <td className="px-3 py-2 hidden xl:table-cell">
+                      <div className="flex items-center gap-1.5 text-xs font-medium text-primary bg-primary/5 px-2 py-1 rounded-full border border-primary/10 w-fit">
+                        <Sparkles className="h-3 w-3" /> {r.nextAiAction}
+                      </div>
                     </td>
                     <td className="px-3 py-2 text-right">
-                      <Button asChild size="sm" variant="ghost" className="gap-1">
+                      <Button asChild size="sm" variant="ghost" className="gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                         <Link to="/companies/$id" params={{ id: r.company_id }}>
                           Abrir <ArrowRight className="h-3 w-3" />
                         </Link>
@@ -340,6 +386,7 @@ function CarteiraPage() {
                   </tr>
                 ))}
               </tbody>
+
             </table>
           </div>
           {filtered.length > 200 && (
