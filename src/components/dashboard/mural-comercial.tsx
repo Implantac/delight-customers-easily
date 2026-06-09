@@ -1,47 +1,83 @@
 import { motion } from "framer-motion";
-import { Sparkles, TrendingUp, Users, MapPin, Rocket, ArrowRight } from "lucide-react";
+import { Sparkles, TrendingUp, Users, MapPin, Rocket, ArrowRight, BrainCircuit, Target, Zap, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useAuth } from "@/lib/auth";
+import { cn } from "@/lib/utils";
 
 export function MuralComercial() {
   const { user } = useAuth();
   const firstName = user?.user_metadata?.full_name?.split(" ")[0] || "Comercial";
 
   const metrics = [
-    { label: "em oportunidades", value: "R$ 184.000", icon: TrendingUp, color: "text-emerald-500" },
-    { label: "clientes para recuperar", value: "17", icon: Users, color: "text-rose-500" },
-    { label: "prospects na rota hoje", value: "23", icon: MapPin, color: "text-blue-500" },
-    { label: "campanhas recomendadas", value: "5", icon: Rocket, color: "text-violet-500" },
+    { 
+      label: "Oportunidades", 
+      value: "R$ 482.000", 
+      description: "Valor total em aberto",
+      icon: TrendingUp, 
+      color: "text-emerald-500",
+      bg: "bg-emerald-500/10"
+    },
+    { 
+      label: "Atenção Necessária", 
+      value: "17", 
+      description: "Clientes precisam de retorno",
+      icon: Users, 
+      color: "text-rose-500",
+      bg: "bg-rose-500/10"
+    },
+    { 
+      label: "Alto Potencial", 
+      value: "3 Regiões", 
+      description: "Oportunidades geolocalizadas",
+      icon: Target, 
+      color: "text-blue-500",
+      bg: "bg-blue-500/10"
+    },
+    { 
+      label: "Visitas Sugeridas", 
+      value: "12 Prospects", 
+      description: "Na rota de João hoje",
+      icon: MapPin, 
+      color: "text-violet-500",
+      bg: "bg-violet-500/10"
+    },
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <motion.div 
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        className="relative"
       >
-        <h2 className="text-3xl font-bold tracking-tight mb-2">Bom dia, {firstName}.</h2>
-        <p className="text-muted-foreground">Hoje identificamos oportunidades reais de crescimento para sua carteira.</p>
+        <div className="absolute -left-4 top-0 h-full w-1 bg-gradient-to-b from-primary to-transparent rounded-full opacity-50" />
+        <h2 className="text-4xl font-display font-bold tracking-tight mb-2 flex items-center gap-3">
+          Bom dia, {firstName} <span className="text-2xl animate-pulse">✨</span>
+        </h2>
+        <p className="text-muted-foreground text-lg max-w-2xl leading-relaxed">
+          Sua equipe possui um pipeline robusto. Identificamos pontos de ação imediatos para acelerar o fechamento.
+        </p>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {metrics.map((m, i) => (
           <motion.div
             key={m.label}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: i * 0.1 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.1, duration: 0.5 }}
           >
-            <Card className="p-4 border-border/40 bg-card/50 backdrop-blur-sm hover:border-primary/20 transition-all group">
-              <div className="flex items-center gap-3">
-                <div className={`p-2 rounded-lg bg-secondary/50 ${m.color}`}>
-                  <m.icon className="h-4 w-4" />
+            <Card className="relative overflow-hidden p-6 border-border/40 bg-card/40 backdrop-blur-xl hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/5 transition-all group border-l-4" style={{ borderLeftColor: `var(--${m.color.split('-')[1]}-500)` }}>
+              <div className="flex flex-col gap-4">
+                <div className={cn("p-3 w-fit rounded-xl transition-colors", m.bg, m.color)}>
+                  <m.icon className="h-6 w-6" />
                 </div>
                 <div>
-                  <div className="text-xl font-bold">{m.value}</div>
-                  <div className="text-[11px] text-muted-foreground uppercase tracking-wider">{m.label}</div>
+                  <div className="text-3xl font-display font-bold tracking-tight">{m.value}</div>
+                  <div className="text-sm font-semibold text-foreground/80 mt-1">{m.label}</div>
+                  <div className="text-[12px] text-muted-foreground mt-1 font-medium">{m.description}</div>
                 </div>
               </div>
             </Card>
@@ -49,23 +85,38 @@ export function MuralComercial() {
         ))}
       </div>
 
-      <div className="flex flex-wrap gap-2">
-        <Button size="sm" variant="outline" className="h-9 rounded-full px-4 border-primary/20 bg-primary/5 hover:bg-primary/10 transition-all">
-          Recuperar clientes
-        </Button>
-        <Button size="sm" variant="outline" className="h-9 rounded-full px-4 border-primary/20 bg-primary/5 hover:bg-primary/10 transition-all">
-          Gerar agenda
-        </Button>
-        <Button size="sm" variant="outline" className="h-9 rounded-full px-4 border-primary/20 bg-primary/5 hover:bg-primary/10 transition-all">
-          Criar campanha
-        </Button>
-        <Button size="sm" variant="outline" className="h-9 rounded-full px-4 border-primary/20 bg-primary/5 hover:bg-primary/10 transition-all">
-          Abrir mapa
-        </Button>
-        <Button size="sm" variant="ghost" className="h-9 rounded-full px-4 text-primary font-medium hover:bg-primary/5">
-          Ver oportunidades <ArrowRight className="ml-2 h-4 w-4" />
-        </Button>
-      </div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+        className="p-8 rounded-3xl bg-gradient-to-br from-primary/10 via-background to-background border border-primary/20 relative overflow-hidden group shadow-xl shadow-primary/5"
+      >
+        <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+          <BrainCircuit className="h-32 w-32 text-primary" />
+        </div>
+        
+        <div className="relative z-10 space-y-6">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 text-primary text-xs font-bold uppercase tracking-widest">
+            <Sparkles className="h-3 w-3" /> Assistente Comercial Ativo
+          </div>
+          
+          <h3 className="text-2xl font-display font-bold max-w-xl">
+            Deseja gerar um plano de ação inteligente para converter as 12 visitas em oportunidades reais hoje?
+          </h3>
+          
+          <div className="flex flex-wrap gap-4">
+            <Button size="lg" className="rounded-full px-8 bg-primary hover:scale-105 transition-transform font-bold group">
+              Gerar Plano de Ação <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
+            <Button size="lg" variant="outline" className="rounded-full px-8 border-primary/20 hover:bg-primary/5 font-semibold">
+              <Zap className="mr-2 h-5 w-5 text-amber-500" /> Otimizar Rotas
+            </Button>
+            <Button size="lg" variant="ghost" className="rounded-full px-8 hover:bg-primary/5 text-primary font-semibold">
+              <MessageSquare className="mr-2 h-5 w-5" /> Consultar IA
+            </Button>
+          </div>
+        </div>
+      </motion.div>
     </div>
   );
 }
