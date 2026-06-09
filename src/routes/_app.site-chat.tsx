@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
 import { useCurrentOrg } from "@/lib/org";
+import { cn } from "@/lib/utils";
 import {
   listSiteChatSessions,
   listSiteChatMessages,
@@ -18,7 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/page-header";
 import { 
   MessageSquare, Send, Loader2, ExternalLink, UserPlus, X, Settings as SettingsIcon,
-  Instagram, Facebook, Linkedin, Mail, Phone, MessageCircle, Twitter
+  Instagram, Facebook, Linkedin, Mail, Phone, MessageCircle, Twitter, LayoutGrid
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -26,6 +27,7 @@ import { ptBR } from "date-fns/locale";
 export const Route = createFileRoute("/_app/site-chat")({
   component: SiteChatInboxPage,
 });
+
 
 
 function SiteChatInboxPage() {
