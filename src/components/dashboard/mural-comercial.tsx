@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Sparkles, TrendingUp, Users, MapPin, Rocket, ArrowRight, BrainCircuit, Target, Zap, MessageSquare, Headphones, Heart, LayoutDashboard, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Sparkles, TrendingUp, Users, MapPin, Rocket, ArrowRight, BrainCircuit, Target, Zap, MessageSquare, Headphones, Heart, LayoutDashboard, AlertCircle, CheckCircle2, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useAuth } from "@/lib/auth";
@@ -45,10 +45,10 @@ export function MuralComercial() {
     },
   ];
 
-  const sectors = [
-    { name: "Implantação", status: "Em dia", progress: 92, icon: Rocket, color: "text-violet-500" },
-    { name: "Suporte", status: "3 tickets críticos", progress: 75, icon: Headphones, color: "text-rose-500" },
-    { name: "Pós-Venda", status: "Saúde 8.5/10", progress: 85, icon: Heart, color: "text-emerald-500" },
+  const insights = [
+    { name: "Ciclo de Venda", status: "Reduzido em 12%", progress: 88, icon: Zap, color: "text-amber-500" },
+    { name: "Conversão Lead/Ouv", status: "+5% este mês", progress: 65, icon: Target, color: "text-blue-500" },
+    { name: "Retenção de Oport.", status: "Estável", progress: 94, icon: ShieldCheck, color: "text-emerald-500" },
   ];
 
   return (
@@ -131,12 +131,12 @@ export function MuralComercial() {
         >
           <div className="flex items-center justify-between px-2">
             <h4 className="text-sm font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-              <LayoutDashboard className="h-4 w-4" /> Snapshot Setores
+              <Zap className="h-4 w-4" /> Inteligência de Vendas
             </h4>
-            <Button variant="link" size="sm" className="text-xs text-primary font-bold">Ver Tudo</Button>
+            <Button variant="link" size="sm" className="text-xs text-primary font-bold">Relatórios</Button>
           </div>
           
-          {sectors.map((s, i) => (
+          {insights.map((s, i) => (
             <Card key={s.name} className="border-border/40 bg-card/30 backdrop-blur-sm group hover:border-primary/20 transition-all overflow-hidden">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between mb-3">
@@ -149,15 +149,10 @@ export function MuralComercial() {
                       <div className="text-[10px] text-muted-foreground font-medium">{s.status}</div>
                     </div>
                   </div>
-                  {s.progress === 100 ? (
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                  ) : s.progress < 80 ? (
-                    <AlertCircle className="h-4 w-4 text-rose-500" />
-                  ) : null}
                 </div>
                 <div className="space-y-1.5">
                   <div className="flex justify-between text-[10px] font-bold">
-                    <span className="text-muted-foreground">Eficiência</span>
+                    <span className="text-muted-foreground">Performance</span>
                     <span>{s.progress}%</span>
                   </div>
                   <Progress value={s.progress} className="h-1" />

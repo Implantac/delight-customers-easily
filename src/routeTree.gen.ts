@@ -16,18 +16,14 @@ import { Route as PTokenRouteImport } from './routes/p.$token'
 import { Route as AppWinLossRouteImport } from './routes/_app.win-loss'
 import { Route as AppWhatsappRouteImport } from './routes/_app.whatsapp'
 import { Route as AppWelcomeRouteImport } from './routes/_app.welcome'
-import { Route as AppSuporteRouteImport } from './routes/_app.suporte'
 import { Route as AppSiteChatRouteImport } from './routes/_app.site-chat'
 import { Route as AppSetupWizardRouteImport } from './routes/_app.setup-wizard'
 import { Route as AppSequencesRouteImport } from './routes/_app.sequences'
 import { Route as AppRetentionRouteImport } from './routes/_app.retention'
 import { Route as AppRepresentantesRouteImport } from './routes/_app.representantes'
 import { Route as AppReportsRouteImport } from './routes/_app.reports'
-import { Route as AppQaRouteImport } from './routes/_app.qa'
-import { Route as AppPosVendasRouteImport } from './routes/_app.pos-vendas'
 import { Route as AppPipelineRouteImport } from './routes/_app.pipeline'
 import { Route as AppOportunidadesRouteImport } from './routes/_app.oportunidades'
-import { Route as AppOnboardingRouteImport } from './routes/_app.onboarding'
 import { Route as AppNbaRouteImport } from './routes/_app.nba'
 import { Route as AppMytasksRouteImport } from './routes/_app.mytasks'
 import { Route as AppMultiEmpresaRouteImport } from './routes/_app.multi-empresa'
@@ -45,7 +41,6 @@ import { Route as AppGeoProspeccaoRouteImport } from './routes/_app.geo-prospecc
 import { Route as AppGeoCoberturaRouteImport } from './routes/_app.geo-cobertura'
 import { Route as AppGeoRouteImport } from './routes/_app.geo'
 import { Route as AppForecastRouteImport } from './routes/_app.forecast'
-import { Route as AppDesenvolvimentoRouteImport } from './routes/_app.desenvolvimento'
 import { Route as AppDashboardExecutivoRouteImport } from './routes/_app.dashboard-executivo'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppCustomer360RouteImport } from './routes/_app.customer-360'
@@ -157,11 +152,6 @@ const AppWelcomeRoute = AppWelcomeRouteImport.update({
   path: '/welcome',
   getParentRoute: () => AppRoute,
 } as any)
-const AppSuporteRoute = AppSuporteRouteImport.update({
-  id: '/suporte',
-  path: '/suporte',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppSiteChatRoute = AppSiteChatRouteImport.update({
   id: '/site-chat',
   path: '/site-chat',
@@ -192,16 +182,6 @@ const AppReportsRoute = AppReportsRouteImport.update({
   path: '/reports',
   getParentRoute: () => AppRoute,
 } as any)
-const AppQaRoute = AppQaRouteImport.update({
-  id: '/qa',
-  path: '/qa',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppPosVendasRoute = AppPosVendasRouteImport.update({
-  id: '/pos-vendas',
-  path: '/pos-vendas',
-  getParentRoute: () => AppRoute,
-} as any)
 const AppPipelineRoute = AppPipelineRouteImport.update({
   id: '/pipeline',
   path: '/pipeline',
@@ -210,11 +190,6 @@ const AppPipelineRoute = AppPipelineRouteImport.update({
 const AppOportunidadesRoute = AppOportunidadesRouteImport.update({
   id: '/oportunidades',
   path: '/oportunidades',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppOnboardingRoute = AppOnboardingRouteImport.update({
-  id: '/onboarding',
-  path: '/onboarding',
   getParentRoute: () => AppRoute,
 } as any)
 const AppNbaRoute = AppNbaRouteImport.update({
@@ -301,11 +276,6 @@ const AppGeoRoute = AppGeoRouteImport.update({
 const AppForecastRoute = AppForecastRouteImport.update({
   id: '/forecast',
   path: '/forecast',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppDesenvolvimentoRoute = AppDesenvolvimentoRouteImport.update({
-  id: '/desenvolvimento',
-  path: '/desenvolvimento',
   getParentRoute: () => AppRoute,
 } as any)
 const AppDashboardExecutivoRoute = AppDashboardExecutivoRouteImport.update({
@@ -734,7 +704,6 @@ export interface FileRoutesByFullPath {
   '/customer-360': typeof AppCustomer360Route
   '/dashboard': typeof AppDashboardRoute
   '/dashboard-executivo': typeof AppDashboardExecutivoRoute
-  '/desenvolvimento': typeof AppDesenvolvimentoRoute
   '/forecast': typeof AppForecastRoute
   '/geo': typeof AppGeoRoute
   '/geo-cobertura': typeof AppGeoCoberturaRoute
@@ -752,18 +721,14 @@ export interface FileRoutesByFullPath {
   '/multi-empresa': typeof AppMultiEmpresaRouteWithChildren
   '/mytasks': typeof AppMytasksRoute
   '/nba': typeof AppNbaRoute
-  '/onboarding': typeof AppOnboardingRoute
   '/oportunidades': typeof AppOportunidadesRoute
   '/pipeline': typeof AppPipelineRoute
-  '/pos-vendas': typeof AppPosVendasRoute
-  '/qa': typeof AppQaRoute
   '/reports': typeof AppReportsRouteWithChildren
   '/representantes': typeof AppRepresentantesRoute
   '/retention': typeof AppRetentionRoute
   '/sequences': typeof AppSequencesRouteWithChildren
   '/setup-wizard': typeof AppSetupWizardRoute
   '/site-chat': typeof AppSiteChatRoute
-  '/suporte': typeof AppSuporteRoute
   '/welcome': typeof AppWelcomeRoute
   '/whatsapp': typeof AppWhatsappRoute
   '/win-loss': typeof AppWinLossRoute
@@ -848,7 +813,6 @@ export interface FileRoutesByTo {
   '/customer-360': typeof AppCustomer360Route
   '/dashboard': typeof AppDashboardRoute
   '/dashboard-executivo': typeof AppDashboardExecutivoRoute
-  '/desenvolvimento': typeof AppDesenvolvimentoRoute
   '/forecast': typeof AppForecastRoute
   '/geo': typeof AppGeoRoute
   '/geo-cobertura': typeof AppGeoCoberturaRoute
@@ -866,18 +830,14 @@ export interface FileRoutesByTo {
   '/multi-empresa': typeof AppMultiEmpresaRouteWithChildren
   '/mytasks': typeof AppMytasksRoute
   '/nba': typeof AppNbaRoute
-  '/onboarding': typeof AppOnboardingRoute
   '/oportunidades': typeof AppOportunidadesRoute
   '/pipeline': typeof AppPipelineRoute
-  '/pos-vendas': typeof AppPosVendasRoute
-  '/qa': typeof AppQaRoute
   '/reports': typeof AppReportsRouteWithChildren
   '/representantes': typeof AppRepresentantesRoute
   '/retention': typeof AppRetentionRoute
   '/sequences': typeof AppSequencesRouteWithChildren
   '/setup-wizard': typeof AppSetupWizardRoute
   '/site-chat': typeof AppSiteChatRoute
-  '/suporte': typeof AppSuporteRoute
   '/welcome': typeof AppWelcomeRoute
   '/whatsapp': typeof AppWhatsappRoute
   '/win-loss': typeof AppWinLossRoute
@@ -964,7 +924,6 @@ export interface FileRoutesById {
   '/_app/customer-360': typeof AppCustomer360Route
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/dashboard-executivo': typeof AppDashboardExecutivoRoute
-  '/_app/desenvolvimento': typeof AppDesenvolvimentoRoute
   '/_app/forecast': typeof AppForecastRoute
   '/_app/geo': typeof AppGeoRoute
   '/_app/geo-cobertura': typeof AppGeoCoberturaRoute
@@ -982,18 +941,14 @@ export interface FileRoutesById {
   '/_app/multi-empresa': typeof AppMultiEmpresaRouteWithChildren
   '/_app/mytasks': typeof AppMytasksRoute
   '/_app/nba': typeof AppNbaRoute
-  '/_app/onboarding': typeof AppOnboardingRoute
   '/_app/oportunidades': typeof AppOportunidadesRoute
   '/_app/pipeline': typeof AppPipelineRoute
-  '/_app/pos-vendas': typeof AppPosVendasRoute
-  '/_app/qa': typeof AppQaRoute
   '/_app/reports': typeof AppReportsRouteWithChildren
   '/_app/representantes': typeof AppRepresentantesRoute
   '/_app/retention': typeof AppRetentionRoute
   '/_app/sequences': typeof AppSequencesRouteWithChildren
   '/_app/setup-wizard': typeof AppSetupWizardRoute
   '/_app/site-chat': typeof AppSiteChatRoute
-  '/_app/suporte': typeof AppSuporteRoute
   '/_app/welcome': typeof AppWelcomeRoute
   '/_app/whatsapp': typeof AppWhatsappRoute
   '/_app/win-loss': typeof AppWinLossRoute
@@ -1080,7 +1035,6 @@ export interface FileRouteTypes {
     | '/customer-360'
     | '/dashboard'
     | '/dashboard-executivo'
-    | '/desenvolvimento'
     | '/forecast'
     | '/geo'
     | '/geo-cobertura'
@@ -1098,18 +1052,14 @@ export interface FileRouteTypes {
     | '/multi-empresa'
     | '/mytasks'
     | '/nba'
-    | '/onboarding'
     | '/oportunidades'
     | '/pipeline'
-    | '/pos-vendas'
-    | '/qa'
     | '/reports'
     | '/representantes'
     | '/retention'
     | '/sequences'
     | '/setup-wizard'
     | '/site-chat'
-    | '/suporte'
     | '/welcome'
     | '/whatsapp'
     | '/win-loss'
@@ -1194,7 +1144,6 @@ export interface FileRouteTypes {
     | '/customer-360'
     | '/dashboard'
     | '/dashboard-executivo'
-    | '/desenvolvimento'
     | '/forecast'
     | '/geo'
     | '/geo-cobertura'
@@ -1212,18 +1161,14 @@ export interface FileRouteTypes {
     | '/multi-empresa'
     | '/mytasks'
     | '/nba'
-    | '/onboarding'
     | '/oportunidades'
     | '/pipeline'
-    | '/pos-vendas'
-    | '/qa'
     | '/reports'
     | '/representantes'
     | '/retention'
     | '/sequences'
     | '/setup-wizard'
     | '/site-chat'
-    | '/suporte'
     | '/welcome'
     | '/whatsapp'
     | '/win-loss'
@@ -1309,7 +1254,6 @@ export interface FileRouteTypes {
     | '/_app/customer-360'
     | '/_app/dashboard'
     | '/_app/dashboard-executivo'
-    | '/_app/desenvolvimento'
     | '/_app/forecast'
     | '/_app/geo'
     | '/_app/geo-cobertura'
@@ -1327,18 +1271,14 @@ export interface FileRouteTypes {
     | '/_app/multi-empresa'
     | '/_app/mytasks'
     | '/_app/nba'
-    | '/_app/onboarding'
     | '/_app/oportunidades'
     | '/_app/pipeline'
-    | '/_app/pos-vendas'
-    | '/_app/qa'
     | '/_app/reports'
     | '/_app/representantes'
     | '/_app/retention'
     | '/_app/sequences'
     | '/_app/setup-wizard'
     | '/_app/site-chat'
-    | '/_app/suporte'
     | '/_app/welcome'
     | '/_app/whatsapp'
     | '/_app/win-loss'
@@ -1490,13 +1430,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppWelcomeRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/suporte': {
-      id: '/_app/suporte'
-      path: '/suporte'
-      fullPath: '/suporte'
-      preLoaderRoute: typeof AppSuporteRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/_app/site-chat': {
       id: '/_app/site-chat'
       path: '/site-chat'
@@ -1539,20 +1472,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppReportsRouteImport
       parentRoute: typeof AppRoute
     }
-    '/_app/qa': {
-      id: '/_app/qa'
-      path: '/qa'
-      fullPath: '/qa'
-      preLoaderRoute: typeof AppQaRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/pos-vendas': {
-      id: '/_app/pos-vendas'
-      path: '/pos-vendas'
-      fullPath: '/pos-vendas'
-      preLoaderRoute: typeof AppPosVendasRouteImport
-      parentRoute: typeof AppRoute
-    }
     '/_app/pipeline': {
       id: '/_app/pipeline'
       path: '/pipeline'
@@ -1565,13 +1484,6 @@ declare module '@tanstack/react-router' {
       path: '/oportunidades'
       fullPath: '/oportunidades'
       preLoaderRoute: typeof AppOportunidadesRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/onboarding': {
-      id: '/_app/onboarding'
-      path: '/onboarding'
-      fullPath: '/onboarding'
-      preLoaderRoute: typeof AppOnboardingRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/nba': {
@@ -1691,13 +1603,6 @@ declare module '@tanstack/react-router' {
       path: '/forecast'
       fullPath: '/forecast'
       preLoaderRoute: typeof AppForecastRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/desenvolvimento': {
-      id: '/_app/desenvolvimento'
-      path: '/desenvolvimento'
-      fullPath: '/desenvolvimento'
-      preLoaderRoute: typeof AppDesenvolvimentoRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/dashboard-executivo': {
@@ -2414,7 +2319,6 @@ interface AppRouteChildren {
   AppCustomer360Route: typeof AppCustomer360Route
   AppDashboardRoute: typeof AppDashboardRoute
   AppDashboardExecutivoRoute: typeof AppDashboardExecutivoRoute
-  AppDesenvolvimentoRoute: typeof AppDesenvolvimentoRoute
   AppForecastRoute: typeof AppForecastRoute
   AppGeoRoute: typeof AppGeoRoute
   AppGeoCoberturaRoute: typeof AppGeoCoberturaRoute
@@ -2432,18 +2336,14 @@ interface AppRouteChildren {
   AppMultiEmpresaRoute: typeof AppMultiEmpresaRouteWithChildren
   AppMytasksRoute: typeof AppMytasksRoute
   AppNbaRoute: typeof AppNbaRoute
-  AppOnboardingRoute: typeof AppOnboardingRoute
   AppOportunidadesRoute: typeof AppOportunidadesRoute
   AppPipelineRoute: typeof AppPipelineRoute
-  AppPosVendasRoute: typeof AppPosVendasRoute
-  AppQaRoute: typeof AppQaRoute
   AppReportsRoute: typeof AppReportsRouteWithChildren
   AppRepresentantesRoute: typeof AppRepresentantesRoute
   AppRetentionRoute: typeof AppRetentionRoute
   AppSequencesRoute: typeof AppSequencesRouteWithChildren
   AppSetupWizardRoute: typeof AppSetupWizardRoute
   AppSiteChatRoute: typeof AppSiteChatRoute
-  AppSuporteRoute: typeof AppSuporteRoute
   AppWelcomeRoute: typeof AppWelcomeRoute
   AppWhatsappRoute: typeof AppWhatsappRoute
   AppWinLossRoute: typeof AppWinLossRoute
@@ -2477,7 +2377,6 @@ const AppRouteChildren: AppRouteChildren = {
   AppCustomer360Route: AppCustomer360Route,
   AppDashboardRoute: AppDashboardRoute,
   AppDashboardExecutivoRoute: AppDashboardExecutivoRoute,
-  AppDesenvolvimentoRoute: AppDesenvolvimentoRoute,
   AppForecastRoute: AppForecastRoute,
   AppGeoRoute: AppGeoRoute,
   AppGeoCoberturaRoute: AppGeoCoberturaRoute,
@@ -2495,18 +2394,14 @@ const AppRouteChildren: AppRouteChildren = {
   AppMultiEmpresaRoute: AppMultiEmpresaRouteWithChildren,
   AppMytasksRoute: AppMytasksRoute,
   AppNbaRoute: AppNbaRoute,
-  AppOnboardingRoute: AppOnboardingRoute,
   AppOportunidadesRoute: AppOportunidadesRoute,
   AppPipelineRoute: AppPipelineRoute,
-  AppPosVendasRoute: AppPosVendasRoute,
-  AppQaRoute: AppQaRoute,
   AppReportsRoute: AppReportsRouteWithChildren,
   AppRepresentantesRoute: AppRepresentantesRoute,
   AppRetentionRoute: AppRetentionRoute,
   AppSequencesRoute: AppSequencesRouteWithChildren,
   AppSetupWizardRoute: AppSetupWizardRoute,
   AppSiteChatRoute: AppSiteChatRoute,
-  AppSuporteRoute: AppSuporteRoute,
   AppWelcomeRoute: AppWelcomeRoute,
   AppWhatsappRoute: AppWhatsappRoute,
   AppWinLossRoute: AppWinLossRoute,
