@@ -37,7 +37,7 @@ export const Route = createFileRoute("/_app/integrations/connect/wizard")({
   component: ConnectWizard,
 });
 
-type Step = 1 | 2 | 3 | 4;
+type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 
 function ConnectWizard() {
   const { orgId } = useCurrentOrg();
@@ -47,6 +47,8 @@ function ConnectWizard() {
   const [step, setStep] = useState<Step>(1);
   const [description, setDescription] = useState("");
   const [selectedProvider, setSelectedProvider] = useState<string | null>(null);
+  const [connectionType, setConnectionType] = useState<string | null>(null);
+  const [testResult, setTestResult] = useState<{ success: boolean; message: string } | null>(null);
   const [aiResult, setAiResult] = useState<{
     provider: string;
     confidence: number;
@@ -75,15 +77,12 @@ function ConnectWizard() {
 
   if (!canManage) {
     return (
-      <div className="p-6">
-        <Card>
-          <CardContent className="p-8 text-center text-muted-foreground">
-            Sem acesso ao wizard.
-          </CardContent>
-        </Card>
+      <div className="p-6 text-center text-muted-foreground">
+        Sem acesso ao wizard.
       </div>
     );
   }
+
 
   return (
     <div className="p-6 space-y-6 max-w-3xl mx-auto">
