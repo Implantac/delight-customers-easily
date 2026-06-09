@@ -23,6 +23,7 @@ import { Route as AppSequencesRouteImport } from './routes/_app.sequences'
 import { Route as AppRetentionRouteImport } from './routes/_app.retention'
 import { Route as AppRepresentantesRouteImport } from './routes/_app.representantes'
 import { Route as AppReportsRouteImport } from './routes/_app.reports'
+import { Route as AppPosVendasRouteImport } from './routes/_app.pos-vendas'
 import { Route as AppPipelineRouteImport } from './routes/_app.pipeline'
 import { Route as AppOportunidadesRouteImport } from './routes/_app.oportunidades'
 import { Route as AppOnboardingRouteImport } from './routes/_app.onboarding'
@@ -186,6 +187,11 @@ const AppRepresentantesRoute = AppRepresentantesRouteImport.update({
 const AppReportsRoute = AppReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPosVendasRoute = AppPosVendasRouteImport.update({
+  id: '/pos-vendas',
+  path: '/pos-vendas',
   getParentRoute: () => AppRoute,
 } as any)
 const AppPipelineRoute = AppPipelineRouteImport.update({
@@ -730,6 +736,7 @@ export interface FileRoutesByFullPath {
   '/onboarding': typeof AppOnboardingRoute
   '/oportunidades': typeof AppOportunidadesRoute
   '/pipeline': typeof AppPipelineRoute
+  '/pos-vendas': typeof AppPosVendasRoute
   '/reports': typeof AppReportsRouteWithChildren
   '/representantes': typeof AppRepresentantesRoute
   '/retention': typeof AppRetentionRoute
@@ -840,6 +847,7 @@ export interface FileRoutesByTo {
   '/onboarding': typeof AppOnboardingRoute
   '/oportunidades': typeof AppOportunidadesRoute
   '/pipeline': typeof AppPipelineRoute
+  '/pos-vendas': typeof AppPosVendasRoute
   '/reports': typeof AppReportsRouteWithChildren
   '/representantes': typeof AppRepresentantesRoute
   '/retention': typeof AppRetentionRoute
@@ -952,6 +960,7 @@ export interface FileRoutesById {
   '/_app/onboarding': typeof AppOnboardingRoute
   '/_app/oportunidades': typeof AppOportunidadesRoute
   '/_app/pipeline': typeof AppPipelineRoute
+  '/_app/pos-vendas': typeof AppPosVendasRoute
   '/_app/reports': typeof AppReportsRouteWithChildren
   '/_app/representantes': typeof AppRepresentantesRoute
   '/_app/retention': typeof AppRetentionRoute
@@ -1064,6 +1073,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/oportunidades'
     | '/pipeline'
+    | '/pos-vendas'
     | '/reports'
     | '/representantes'
     | '/retention'
@@ -1174,6 +1184,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/oportunidades'
     | '/pipeline'
+    | '/pos-vendas'
     | '/reports'
     | '/representantes'
     | '/retention'
@@ -1285,6 +1296,7 @@ export interface FileRouteTypes {
     | '/_app/onboarding'
     | '/_app/oportunidades'
     | '/_app/pipeline'
+    | '/_app/pos-vendas'
     | '/_app/reports'
     | '/_app/representantes'
     | '/_app/retention'
@@ -1489,6 +1501,13 @@ declare module '@tanstack/react-router' {
       path: '/reports'
       fullPath: '/reports'
       preLoaderRoute: typeof AppReportsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/pos-vendas': {
+      id: '/_app/pos-vendas'
+      path: '/pos-vendas'
+      fullPath: '/pos-vendas'
+      preLoaderRoute: typeof AppPosVendasRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/pipeline': {
@@ -2358,6 +2377,7 @@ interface AppRouteChildren {
   AppOnboardingRoute: typeof AppOnboardingRoute
   AppOportunidadesRoute: typeof AppOportunidadesRoute
   AppPipelineRoute: typeof AppPipelineRoute
+  AppPosVendasRoute: typeof AppPosVendasRoute
   AppReportsRoute: typeof AppReportsRouteWithChildren
   AppRepresentantesRoute: typeof AppRepresentantesRoute
   AppRetentionRoute: typeof AppRetentionRoute
@@ -2417,6 +2437,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppOnboardingRoute: AppOnboardingRoute,
   AppOportunidadesRoute: AppOportunidadesRoute,
   AppPipelineRoute: AppPipelineRoute,
+  AppPosVendasRoute: AppPosVendasRoute,
   AppReportsRoute: AppReportsRouteWithChildren,
   AppRepresentantesRoute: AppRepresentantesRoute,
   AppRetentionRoute: AppRetentionRoute,
