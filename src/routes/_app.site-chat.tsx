@@ -16,13 +16,17 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/page-header";
-import { MessageSquare, Send, Loader2, ExternalLink, UserPlus, X, Settings as SettingsIcon } from "lucide-react";
+import { 
+  MessageSquare, Send, Loader2, ExternalLink, UserPlus, X, Settings as SettingsIcon,
+  Instagram, Facebook, Linkedin, Mail, Phone, MessageCircle, Twitter
+} from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
 export const Route = createFileRoute("/_app/site-chat")({
   component: SiteChatInboxPage,
 });
+
 
 function SiteChatInboxPage() {
   const { orgId } = useCurrentOrg();
