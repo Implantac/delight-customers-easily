@@ -9,7 +9,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { motion } from "framer-motion";
 import {
   AlertTriangle, TrendingUp, Target, Users, ArrowRight,
-  Flame, HeartPulse, Award, Gauge, Sparkles,
+  Flame, HeartPulse, Award, Gauge, Sparkles, BrainCircuit,
+  Zap, MessageSquare, MapPin, Calendar, CheckSquare
 } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { NextActionBlock } from "@/components/next-action-block";
@@ -25,6 +26,7 @@ import { getForecast } from "@/lib/forecast.functions";
 import { getRetentionInsights } from "@/lib/churn.functions";
 
 export const Route = createFileRoute("/_app/dashboard")({ component: DashboardPage });
+
 
 const fmtBRL = (n: number) =>
   n.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
