@@ -62,7 +62,10 @@ function CarteiraPage() {
   const [bucket, setBucket] = useState<Bucket>("todos");
   const [q, setQ] = useState("");
   const [industry, setIndustry] = useState<string>("all");
+  const [repFilter, setRepFilter] = useState<string>("all");
+  const [stateFilter, setStateFilter] = useState<string>("all");
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  
   const toggle = (id: string) =>
     setSelected((s) => {
       const n = new Set(s);
@@ -84,10 +87,27 @@ function CarteiraPage() {
     return data.rows.filter((r) => {
       if (bucket !== "todos" && !r.buckets.includes(bucket as any)) return false;
       if (industry !== "all" && r.industry !== industry) return false;
+      if (repFilter !== "all" && r.representative_id !== repFilter) return false;
+      if (stateFilter !== "all" && r.state !== stateFilter) return false;
       if (term && !r.name.toLowerCase().includes(term)) return false;
       return true;
     });
-  }, [data, bucket, q, industry]);
+  }, [data, bucket, q, industry, repFilter, stateFilter]);
+
+  const uniqueReps = useMemo(() => {
+    if (!data) return [];
+    const reps = new Map();
+    data.rows.forEach(r => {
+      if (r.representative_id) reps.set(r.representative_id, r.representative_name);
+    });
+    return Array.from(reps.entries()).map(([id, name]) => ({ id, name }));
+  }, [data]);
+
+  const uniqueStates = useMemo(() => {
+    if (!data) return [];
+    return Array.from(new Set(data.rows.map(r => r.state).filter(Boolean))).sort() as string[];
+  }, [data]);
+
 
   return (
     <div className="space-y-6 p-4 md:p-6">
