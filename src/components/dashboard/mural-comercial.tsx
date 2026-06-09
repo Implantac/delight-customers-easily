@@ -1,9 +1,10 @@
 import { motion } from "framer-motion";
-import { Sparkles, TrendingUp, Users, MapPin, Rocket, ArrowRight, BrainCircuit, Target, Zap, MessageSquare } from "lucide-react";
+import { Sparkles, TrendingUp, Users, MapPin, Rocket, ArrowRight, BrainCircuit, Target, Zap, MessageSquare, Headphones, Heart, LayoutDashboard, AlertCircle, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
+import { Progress } from "@/components/ui/progress";
 
 export function MuralComercial() {
   const { user } = useAuth();
@@ -42,6 +43,12 @@ export function MuralComercial() {
       color: "text-violet-500",
       bg: "bg-violet-500/10"
     },
+  ];
+
+  const sectors = [
+    { name: "Implantação", status: "Em dia", progress: 92, icon: Rocket, color: "text-violet-500" },
+    { name: "Suporte", status: "3 tickets críticos", progress: 75, icon: Headphones, color: "text-rose-500" },
+    { name: "Pós-Venda", status: "Saúde 8.5/10", progress: 85, icon: Heart, color: "text-emerald-500" },
   ];
 
   return (
