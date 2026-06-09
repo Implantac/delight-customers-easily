@@ -1,27 +1,30 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/page-header";
-import { Card } from "@/components/ui/card";
-import { Headphones, MessageSquare, Clock, CheckCircle2, AlertCircle, Plus, Mail, ShieldAlert } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Headphones, MessageSquare, Clock, CheckCircle2, AlertCircle, Plus, Mail, ShieldAlert, BarChart3, Users, Zap, Search, LifeBuoy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SectorAssistant } from "@/components/sector-assistant";
+import { ErpSyncHealth } from "@/components/erp-sync-health";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_app/suporte")({ component: SupportPage });
 
 function SupportPage() {
   const tickets = [
-    { id: "TK-102", subject: "Erro na integração Bling", customer: "Móveis Estrela", status: "Em Aberto", priority: "Alta", time: "2h" },
-    { id: "TK-105", subject: "Dúvida sobre relatórios", customer: "Tech Solutions", status: "Em Atendimento", priority: "Média", time: "15m" },
-    { id: "TK-108", subject: "Solicitação de novo campo", customer: "Indústria Alfa", status: "Aguardando", priority: "Baixa", time: "1d" },
+    { id: "TK-102", subject: "Erro na integração Bling", customer: "Móveis Estrela", status: "Aberto", priority: "Crítica", time: "2h", avatar: "ME" },
+    { id: "TK-105", subject: "Dúvida sobre relatórios", customer: "Tech Solutions", status: "Em Atendimento", priority: "Média", time: "15m", avatar: "TS" },
+    { id: "TK-108", subject: "Solicitação de novo campo", customer: "Indústria Alfa", status: "Aguardando", priority: "Baixa", time: "1d", avatar: "IA" },
   ];
 
   return (
-    <div className="space-y-6 p-4 md:p-8">
+    <div className="space-y-8 p-4 md:p-8">
       <PageHeader
-        title="Suporte & Atendimento"
-        subtitle="Gerencie tickets, chamados e garanta o sucesso imediato do cliente."
+        title="Centro de Suporte & Sucesso"
+        subtitle="Gerencie tickets, monitore SLAs e garanta o sucesso imediato do cliente com IA."
         icon={Headphones}
-        action={<Button className="font-bold"><Plus className="mr-2 h-4 w-4" />Novo Ticket</Button>}
+        action={<Button className="font-bold gap-2"><Plus className="h-4 w-4" />Novo Ticket</Button>}
       />
 
       <SectorAssistant 
