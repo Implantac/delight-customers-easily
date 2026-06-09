@@ -316,37 +316,35 @@ function ConnectHubDashboard() {
     0,
   );
 
+  const [isAdvanced, setIsAdvanced] = useState(false);
+
   return (
-    <div className="page-container max-w-[1200px]">
+    <div className="page-container max-w-[1200px] space-y-8">
       <PageHeader
         icon={Plug}
-        title="ConnectHub"
-        subtitle="Integração inteligente com seu ERP sem necessidade de código."
+        title="ConnectHub ERP"
+        subtitle="Sua ponte comercial inteligente. Consumimos dados do seu ERP e transformamos em inteligência de vendas."
         action={
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              className="gap-2 h-9 px-4"
-              onClick={() => {
-                health.refetch();
-                jobs.refetch();
-              }}
-              disabled={health.isFetching}
-            >
-              <RefreshCw
-                className={`h-4 w-4 ${health.isFetching ? "animate-spin" : ""}`}
-              />
-              Sincronizar
-            </Button>
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted border border-border/40 mr-4">
+              <span className={cn("text-[10px] font-bold uppercase tracking-widest", !isAdvanced ? "text-primary" : "text-muted-foreground")}>Simples</span>
+              <button 
+                onClick={() => setIsAdvanced(!isAdvanced)}
+                className={cn("w-8 h-4 rounded-full relative transition-colors", isAdvanced ? "bg-primary" : "bg-muted-foreground/30")}
+              >
+                <div className={cn("absolute top-0.5 w-3 h-3 rounded-full bg-white transition-all", isAdvanced ? "left-4.5" : "left-0.5")} />
+              </button>
+              <span className={cn("text-[10px] font-bold uppercase tracking-widest", isAdvanced ? "text-primary" : "text-muted-foreground")}>Avançado</span>
+            </div>
             <Link to="/integrations/connect/wizard">
-              <Button size="sm" className="gap-2 h-9 px-4 bg-primary text-primary-foreground hover:shadow-glow transition-all">
+              <Button size="sm" className="gap-2 h-9 px-6 bg-primary text-primary-foreground hover:shadow-glow transition-all rounded-full font-bold">
                 <Plus className="h-4 w-4" /> Novo Conector
               </Button>
             </Link>
           </div>
         }
       />
+
 
       {/* Resumo de status */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
