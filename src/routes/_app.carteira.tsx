@@ -327,22 +327,21 @@ function CarteiraPage() {
                       aria-label="Selecionar todos"
                     />
                   </th>
-                  <th className="text-left px-3 py-2">Cliente</th>
+                  <th className="text-left px-3 py-2">Cliente / Local</th>
+                  <th className="text-left px-3 py-2 hidden lg:table-cell">Responsável</th>
                   <th className="text-right px-3 py-2">Score</th>
+                  <th className="text-right px-3 py-2 hidden md:table-cell">Potencial</th>
                   <th className="text-left px-3 py-2">Status</th>
                   <th className="text-right px-3 py-2 hidden md:table-cell">Faturado</th>
-                  <th className="text-right px-3 py-2 hidden lg:table-cell">Ticket médio</th>
                   <th className="text-right px-3 py-2 hidden lg:table-cell">Pipeline</th>
                   <th className="text-right px-3 py-2 hidden md:table-cell">Última compra</th>
-                  <th className="text-right px-3 py-2 hidden xl:table-cell">Freq 12m</th>
-                  <th className="text-right px-3 py-2 hidden xl:table-cell">Ativ 30d</th>
-                  <th className="text-right px-3 py-2 hidden md:table-cell">Em atraso</th>
+                  <th className="text-left px-3 py-2 hidden xl:table-cell font-bold text-primary">Próxima Ação IA</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.slice(0, 200).map((r) => (
-                  <tr key={r.company_id} className="border-t hover:bg-accent/30">
+                  <tr key={r.company_id} className="border-t hover:bg-accent/30 group">
                     <td className="px-3 py-2">
                       <Checkbox
                         checked={selected.has(r.company_id)}
@@ -351,30 +350,33 @@ function CarteiraPage() {
                       />
                     </td>
                     <td className="px-3 py-2">
-                      <div className="font-medium truncate max-w-[240px]">{r.name}</div>
-                      {r.industry && <div className="text-xs text-muted-foreground truncate">{r.industry}</div>}
+                      <div className="font-medium truncate max-w-[240px] group-hover:text-primary transition-colors">{r.name}</div>
+                      <div className="text-[10px] text-muted-foreground uppercase tracking-tight">
+                        {r.city ? `${r.city} - ${r.state || ""}` : (r.industry || "—")}
+                      </div>
+                    </td>
+                    <td className="px-3 py-2 hidden lg:table-cell">
+                      <div className="text-xs truncate max-w-[120px]">{r.representative_name || "—"}</div>
                     </td>
                     <td className="px-3 py-2 text-right">{scorePill(r.score)}</td>
+                    <td className="px-3 py-2 text-right hidden md:table-cell">
+                      <div className="text-xs font-bold text-muted-foreground">{r.potential}%</div>
+                    </td>
                     <td className="px-3 py-2">{statusBadge(r.status)}</td>
                     <td className="px-3 py-2 text-right font-mono hidden md:table-cell">{fmt(r.wonRevenue)}</td>
-                    <td className="px-3 py-2 text-right font-mono hidden lg:table-cell">{fmt(r.ticketAvg)}</td>
                     <td className="px-3 py-2 text-right font-mono hidden lg:table-cell">{fmt(r.openPipeline)}</td>
                     <td className="px-3 py-2 text-right hidden md:table-cell">
                       {r.daysSinceLastPurchase === null
                         ? <span className="text-muted-foreground">—</span>
                         : <span className={r.daysSinceLastPurchase > 90 ? "text-amber-600" : ""}>{r.daysSinceLastPurchase}d</span>}
                     </td>
-                    <td className="px-3 py-2 text-right hidden xl:table-cell">{r.frequency}</td>
-                    <td className="px-3 py-2 text-right hidden xl:table-cell">
-                      {r.activitiesLast30 === 0
-                        ? <span className="inline-flex items-center gap-1 text-amber-600"><Flame className="h-3 w-3" />0</span>
-                        : r.activitiesLast30}
-                    </td>
-                    <td className="px-3 py-2 text-right font-mono hidden md:table-cell">
-                      {r.overdueAmount > 0 ? <span className="text-destructive">{fmt(r.overdueAmount)}</span> : <span className="text-muted-foreground">—</span>}
+                    <td className="px-3 py-2 hidden xl:table-cell">
+                      <div className="flex items-center gap-1.5 text-xs font-medium text-primary bg-primary/5 px-2 py-1 rounded-full border border-primary/10 w-fit">
+                        <Sparkles className="h-3 w-3" /> {r.nextAiAction}
+                      </div>
                     </td>
                     <td className="px-3 py-2 text-right">
-                      <Button asChild size="sm" variant="ghost" className="gap-1">
+                      <Button asChild size="sm" variant="ghost" className="gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                         <Link to="/companies/$id" params={{ id: r.company_id }}>
                           Abrir <ArrowRight className="h-3 w-3" />
                         </Link>
@@ -383,6 +385,7 @@ function CarteiraPage() {
                   </tr>
                 ))}
               </tbody>
+
             </table>
           </div>
           {filtered.length > 200 && (
