@@ -298,6 +298,7 @@
   .font-sans    { font-family: var(--font-sans); }
 
   .page-container {
+
     width: 100%;
     margin-inline: auto;
     padding: 1rem 0.875rem;
