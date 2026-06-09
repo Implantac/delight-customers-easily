@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PageHeader } from "@/components/page-header";
 import { Card } from "@/components/ui/card";
-import { ShieldCheck, CheckSquare, ListChecks, FileWarning, Search, Microscope } from "lucide-react";
+import { ShieldCheck, CheckSquare, ListChecks, FileWarning, Search, Microscope, FileText, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { SectorAssistant } from "@/components/sector-assistant";
 
 export const Route = createFileRoute("/_app/qa")({ component: QAPage });
 
@@ -21,7 +22,23 @@ function QAPage() {
         title="Q.A & Qualidade"
         subtitle="Controle de qualidade de implementações, testes de software e validação de dados."
         icon={Microscope}
-        action={<Button><CheckSquare className="mr-2 h-4 w-4" />Nova Inspeção</Button>}
+        action={<Button className="font-bold"><CheckSquare className="mr-2 h-4 w-4" />Nova Inspeção</Button>}
+      />
+
+      <SectorAssistant 
+        sector="Q.A"
+        recommendations={[
+          {
+            title: "Inspeção de Implantação",
+            description: "O cliente 'Móveis Estrela' terminou a fase de setup. Iniciar inspeção de qualidade antes da virada?",
+            icon: CheckCircle
+          },
+          {
+            title: "Regressão de Performance",
+            description: "O dashboard executivo apresentou lentidão em 30% dos carregamentos. Gerar log detalhado?",
+            icon: FileText
+          }
+        ]}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -29,6 +46,7 @@ function QAPage() {
         <StatCard label="Taxa de Sucesso" value="94.2%" icon={ShieldCheck} color="text-emerald-500" />
         <StatCard label="Issues Reportadas" value="18" icon={FileWarning} color="text-rose-500" />
       </div>
+
 
       <Card className="border-border/40 overflow-hidden">
         <div className="p-6 border-b border-border/40 bg-muted/20 flex items-center justify-between">
