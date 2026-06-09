@@ -53,19 +53,20 @@ const TONE_CLASS: Record<NavTone, string> = {
 
 const navigationGroups: NavGroup[] = [
   {
-    label: "Crescimento",
+    label: "Visão Geral",
     items: [
-      { to: "/dashboard", label: "Central de Crescimento", icon: Sparkles, tone: "accent" },
-      { to: "/oportunidades", label: "Oportunidades", icon: Target, tone: "accent" },
-      { to: "/inteligencia-comercial", label: "IA Comercial", icon: Sparkles, tone: "violet" },
+      { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, tone: "accent" },
+      { to: "/meu-dia", label: "Meu Dia", icon: Sun, tone: "accent" },
     ],
   },
   {
-    label: "Relacionamento",
+    label: "Comercial",
     items: [
       { to: "/carteira", label: "Carteira Comercial", icon: Briefcase, tone: "info" },
-      { to: "/contacts", label: "Clientes", icon: Users, tone: "info" },
       { to: "/leads", label: "Leads", icon: Flame, tone: "accent" },
+      { to: "/contacts", label: "Clientes", icon: Users, tone: "info" },
+      { to: "/oportunidades", label: "Oportunidades", icon: Target, tone: "accent" },
+      { to: "/pipeline", label: "Pipeline", icon: GitBranch, tone: "accent" },
     ],
   },
   {
@@ -79,7 +80,7 @@ const navigationGroups: NavGroup[] = [
     ],
   },
   {
-    label: "Equipe",
+    label: "Equipe e Campo",
     items: [
       { to: "/representantes", label: "Representantes", icon: Award, tone: "success", managerOnly: true },
       { to: "/calendar", label: "Agenda", icon: CalendarIcon, tone: "primary" },
@@ -87,35 +88,38 @@ const navigationGroups: NavGroup[] = [
     ],
   },
   {
-    label: "Comunicação",
+    label: "Comunicação Omnichannel",
     items: [
       { to: "/whatsapp", label: "WhatsApp", icon: MessageSquare, tone: "success" },
       { to: "/site-chat", label: "Omnichannel", icon: MessagesSquare, tone: "success" },
-      { to: "/chat", label: "Chat Interno", icon: MessagesSquare, tone: "success" },
+      { to: "/chat", label: "Chat Interno", icon: MessageSquare, tone: "success" },
     ],
   },
   {
-    label: "Inteligência",
+    label: "Inteligência e Estratégia",
     items: [
+      { to: "/marketing-intel", label: "Marketing", icon: Megaphone, tone: "violet" },
+      { to: "/influencers", label: "Influencers", icon: Trophy, tone: "accent" },
       { to: "/geo", label: "Geointeligência", icon: Map, tone: "info" },
-      { to: "/reports", label: "Relatórios", icon: BarChart3, tone: "info", managerOnly: true },
-      { to: "/forecast", label: "Forecast", icon: TrendingUp, tone: "info", managerOnly: true },
+      { to: "/inteligencia-comercial", label: "IA Comercial", icon: Sparkles, tone: "violet" },
+      { to: "/reports", label: "Relatórios Comerciais", icon: BarChart3, tone: "info", managerOnly: true },
     ],
   },
   {
-    label: "Integrações",
+    label: "Conectividade",
     items: [
-      { to: "/integrations", label: "ConnectHub", icon: Plug, tone: "primary", managerOnly: true },
+      { to: "/integrations", label: "ConnectHub ERP", icon: Plug, tone: "primary", managerOnly: true },
     ],
   },
   {
-    label: "Administração",
+    label: "Configurações",
     items: [
-      { to: "/companies", label: "Empresas", icon: Building, tone: "primary" },
+      { to: "/multi-empresa", label: "Empresas", icon: Building, tone: "primary", managerOnly: true },
       { to: "/settings/organization", label: "Configurações", icon: Settings, tone: "primary", managerOnly: true },
     ],
   },
 ];
+
 
 
 export function AppSidebar() {
