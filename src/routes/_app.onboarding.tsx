@@ -2,8 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Rocket, Plus, Trash2, Pencil, Check, X, ListChecks, CalendarDays, Building2, BookOpen, Clock, FileText, LayoutDashboard, Share2 } from "lucide-react";
+import { Rocket, Plus, Trash2, Pencil, Check, X, ListChecks, CalendarDays, Building2, BookOpen, Clock, FileText, LayoutDashboard, Share2, AlertTriangle, ChevronRight, Download } from "lucide-react";
 import { useCurrentOrg } from "@/lib/org";
+import { cn } from "@/lib/utils";
 import {
   listOnboardingTemplates, upsertOnboardingTemplate, deleteOnboardingTemplate,
   listOnboardingProjects, createOnboardingProject, toggleProjectStep,
