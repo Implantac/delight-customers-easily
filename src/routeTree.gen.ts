@@ -23,6 +23,7 @@ import { Route as AppSequencesRouteImport } from './routes/_app.sequences'
 import { Route as AppRetentionRouteImport } from './routes/_app.retention'
 import { Route as AppRepresentantesRouteImport } from './routes/_app.representantes'
 import { Route as AppReportsRouteImport } from './routes/_app.reports'
+import { Route as AppQaRouteImport } from './routes/_app.qa'
 import { Route as AppPosVendasRouteImport } from './routes/_app.pos-vendas'
 import { Route as AppPipelineRouteImport } from './routes/_app.pipeline'
 import { Route as AppOportunidadesRouteImport } from './routes/_app.oportunidades'
@@ -188,6 +189,11 @@ const AppRepresentantesRoute = AppRepresentantesRouteImport.update({
 const AppReportsRoute = AppReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppQaRoute = AppQaRouteImport.update({
+  id: '/qa',
+  path: '/qa',
   getParentRoute: () => AppRoute,
 } as any)
 const AppPosVendasRoute = AppPosVendasRouteImport.update({
@@ -744,6 +750,7 @@ export interface FileRoutesByFullPath {
   '/oportunidades': typeof AppOportunidadesRoute
   '/pipeline': typeof AppPipelineRoute
   '/pos-vendas': typeof AppPosVendasRoute
+  '/qa': typeof AppQaRoute
   '/reports': typeof AppReportsRouteWithChildren
   '/representantes': typeof AppRepresentantesRoute
   '/retention': typeof AppRetentionRoute
@@ -856,6 +863,7 @@ export interface FileRoutesByTo {
   '/oportunidades': typeof AppOportunidadesRoute
   '/pipeline': typeof AppPipelineRoute
   '/pos-vendas': typeof AppPosVendasRoute
+  '/qa': typeof AppQaRoute
   '/reports': typeof AppReportsRouteWithChildren
   '/representantes': typeof AppRepresentantesRoute
   '/retention': typeof AppRetentionRoute
@@ -970,6 +978,7 @@ export interface FileRoutesById {
   '/_app/oportunidades': typeof AppOportunidadesRoute
   '/_app/pipeline': typeof AppPipelineRoute
   '/_app/pos-vendas': typeof AppPosVendasRoute
+  '/_app/qa': typeof AppQaRoute
   '/_app/reports': typeof AppReportsRouteWithChildren
   '/_app/representantes': typeof AppRepresentantesRoute
   '/_app/retention': typeof AppRetentionRoute
@@ -1084,6 +1093,7 @@ export interface FileRouteTypes {
     | '/oportunidades'
     | '/pipeline'
     | '/pos-vendas'
+    | '/qa'
     | '/reports'
     | '/representantes'
     | '/retention'
@@ -1196,6 +1206,7 @@ export interface FileRouteTypes {
     | '/oportunidades'
     | '/pipeline'
     | '/pos-vendas'
+    | '/qa'
     | '/reports'
     | '/representantes'
     | '/retention'
@@ -1309,6 +1320,7 @@ export interface FileRouteTypes {
     | '/_app/oportunidades'
     | '/_app/pipeline'
     | '/_app/pos-vendas'
+    | '/_app/qa'
     | '/_app/reports'
     | '/_app/representantes'
     | '/_app/retention'
@@ -1513,6 +1525,13 @@ declare module '@tanstack/react-router' {
       path: '/reports'
       fullPath: '/reports'
       preLoaderRoute: typeof AppReportsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/qa': {
+      id: '/_app/qa'
+      path: '/qa'
+      fullPath: '/qa'
+      preLoaderRoute: typeof AppQaRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/pos-vendas': {
@@ -2398,6 +2417,7 @@ interface AppRouteChildren {
   AppOportunidadesRoute: typeof AppOportunidadesRoute
   AppPipelineRoute: typeof AppPipelineRoute
   AppPosVendasRoute: typeof AppPosVendasRoute
+  AppQaRoute: typeof AppQaRoute
   AppReportsRoute: typeof AppReportsRouteWithChildren
   AppRepresentantesRoute: typeof AppRepresentantesRoute
   AppRetentionRoute: typeof AppRetentionRoute
@@ -2459,6 +2479,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppOportunidadesRoute: AppOportunidadesRoute,
   AppPipelineRoute: AppPipelineRoute,
   AppPosVendasRoute: AppPosVendasRoute,
+  AppQaRoute: AppQaRoute,
   AppReportsRoute: AppReportsRouteWithChildren,
   AppRepresentantesRoute: AppRepresentantesRoute,
   AppRetentionRoute: AppRetentionRoute,

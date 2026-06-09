@@ -68,6 +68,16 @@ const navigationGroups: NavGroup[] = [
     ],
   },
   {
+    label: "Operação por Setor",
+    items: [
+      { to: "/onboarding", label: "Implantação", icon: Rocket, tone: "violet" },
+      { to: "/suporte", label: "Suporte", icon: Headphones, tone: "rose" },
+      { to: "/pos-vendas", label: "Pós-Vendas & CS", icon: Heart, tone: "rose" },
+      { to: "/desenvolvimento", label: "Desenvolvimento", icon: Code2, tone: "primary" },
+      { to: "/qa", label: "Q.A & Qualidade", icon: Microscope, tone: "success" },
+    ],
+  },
+  {
     label: "Equipe",
     items: [
       { to: "/representantes", label: "Representantes", icon: Award, tone: "success", managerOnly: true },
@@ -105,6 +115,7 @@ const navigationGroups: NavGroup[] = [
     ],
   },
 ];
+
 
 export function AppSidebar() {
   const { user, signOut } = useAuth();
