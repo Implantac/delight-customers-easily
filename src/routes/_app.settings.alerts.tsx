@@ -67,29 +67,30 @@ function SmartAlertsPage() {
           title="Resumo da Rota (Representante)" 
           desc="Envia a rota sugerida, clientes prioritários e follow-ups pendentes no início do dia."
           checked={alerts.rep_morning}
-          onChange={v => setAlerts({...alerts, rep_morning: v})}
+          onChange={(v: boolean) => setAlerts({...alerts, rep_morning: v})}
         />
 
         <AlertToggle 
           title="Performance Diária (Gestor)" 
           desc="Resumo consolidado de oportunidades ganhas, perdidas e atingimento de meta do grupo."
           checked={alerts.manager_daily}
-          onChange={v => setAlerts({...alerts, manager_daily: v})}
+          onChange={(v: boolean) => setAlerts({...alerts, manager_daily: v})}
         />
 
         <AlertToggle 
           title="Alerta de Churn (Urgente)" 
           desc="Notificação imediata quando a IA detecta risco alto de perda de um cliente Tier 1."
           checked={alerts.churn_risk}
-          onChange={v => setAlerts({...alerts, churn_risk: v})}
+          onChange={(v: boolean) => setAlerts({...alerts, churn_risk: v})}
         />
 
         <AlertToggle 
           title="Leads Quentes (Imediato)" 
           desc="Avisa o vendedor responsável assim que um lead com score > 80 interage nos canais."
           checked={alerts.lead_hot}
-          onChange={v => setAlerts({...alerts, lead_hot: v})}
+          onChange={(v: boolean) => setAlerts({...alerts, lead_hot: v})}
         />
+
       </div>
 
       <div className="pt-6 border-t border-border/40 flex justify-end gap-3">
