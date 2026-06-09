@@ -18,8 +18,9 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Briefcase, Search, ArrowRight, TrendingUp, AlertTriangle, Clock, Flame, Receipt, Download,
-  Megaphone, Workflow, X,
+  Megaphone, Workflow, X, Sparkles,
 } from "lucide-react";
+
 import { toCSV, downloadCSV } from "@/lib/csv-export";
 
 export const Route = createFileRoute("/_app/carteira")({
