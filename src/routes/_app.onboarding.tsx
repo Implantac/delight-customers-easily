@@ -2,14 +2,15 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Rocket, Plus, Trash2, Pencil, Check, X, ListChecks, CalendarDays, Building2 } from "lucide-react";
+import { Rocket, Plus, Trash2, Pencil, Check, X, ListChecks, CalendarDays, Building2, BookOpen, Clock, FileText, LayoutDashboard, Share2, AlertTriangle, ChevronRight, Download } from "lucide-react";
 import { useCurrentOrg } from "@/lib/org";
+import { cn } from "@/lib/utils";
 import {
   listOnboardingTemplates, upsertOnboardingTemplate, deleteOnboardingTemplate,
   listOnboardingProjects, createOnboardingProject, toggleProjectStep,
   updateProjectStatus, deleteOnboardingProject,
 } from "@/lib/onboarding.functions";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -21,6 +22,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogD
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
+import { ProjectTimeline } from "@/components/onboarding/project-timeline";
+import { PageHeader } from "@/components/page-header";
+import { ErpSyncHealth } from "@/components/erp-sync-health";
 
 export const Route = createFileRoute("/_app/onboarding")({ component: OnboardingPage });
 
@@ -149,143 +153,153 @@ function OnboardingPage() {
   const totals = projsData?.totals ?? { not_started: 0, in_progress: 0, completed: 0, late: 0, avg_progress: 0 };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-            <Rocket className="h-6 w-6" /> Onboarding de Clientes
-          </h1>
-          <p className="text-sm text-muted-foreground">Acelere a ativação de novos clientes com playbooks padronizados.</p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={openNewTpl}><ListChecks className="h-4 w-4 mr-1" /> Novo template</Button>
-          <Button onClick={() => { setProjDraft(emptyProj()); setProjDlg(true); }}>
-            <Plus className="h-4 w-4 mr-1" /> Novo onboarding
-          </Button>
-        </div>
+    <div className="space-y-8 p-4 md:p-8">
+      <PageHeader
+        title="Implantação & Onboarding"
+        subtitle="Acelere a ativação de novos clientes com playbooks padronizados e gestão de treinamentos."
+        icon={Rocket}
+        action={
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={openNewTpl} className="hidden md:flex">
+              <ListChecks className="h-4 w-4 mr-2" /> Templates
+            </Button>
+            <Button onClick={() => { setProjDraft(emptyProj()); setProjDlg(true); }} className="font-bold">
+              <Plus className="h-4 w-4 mr-2" /> Novo Onboarding
+            </Button>
+          </div>
+        }
+      />
+
+      <div className="grid gap-6 md:grid-cols-4">
+        <StatsCard title="Ativos" value={totals.in_progress} icon={Clock} color="text-blue-500" />
+        <StatsCard title="Sucesso" value={totals.completed} icon={Check} color="text-emerald-500" />
+        <StatsCard title="Atrasados" value={totals.late} icon={AlertTriangle} color="text-rose-500" />
+        <StatsCard title="Saúde Média" value={`${totals.avg_progress}%`} icon={Rocket} color="text-violet-500" />
       </div>
 
-      <div className="grid gap-3 md:grid-cols-4">
-        <Card><CardContent className="p-4">
-          <p className="text-xs text-muted-foreground">Em andamento</p>
-          <p className="text-2xl font-bold text-primary">{totals.in_progress}</p>
-        </CardContent></Card>
-        <Card><CardContent className="p-4">
-          <p className="text-xs text-muted-foreground">Concluídos</p>
-          <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">{totals.completed}</p>
-        </CardContent></Card>
-        <Card><CardContent className="p-4">
-          <p className="text-xs text-muted-foreground">Atrasados</p>
-          <p className="text-2xl font-bold text-red-600 dark:text-red-400">{totals.late}</p>
-        </CardContent></Card>
-        <Card><CardContent className="p-4">
-          <p className="text-xs text-muted-foreground">Progresso médio</p>
-          <p className="text-2xl font-bold">{totals.avg_progress}%</p>
-        </CardContent></Card>
-      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 space-y-6">
+          <Tabs defaultValue="projects" className="w-full">
+            <div className="flex items-center justify-between mb-4">
+              <TabsList className="bg-muted/50 p-1">
+                <TabsTrigger value="projects" className="gap-2">
+                  <LayoutDashboard className="h-4 w-4" /> Projetos
+                </TabsTrigger>
+                <TabsTrigger value="training" className="gap-2">
+                  <BookOpen className="h-4 w-4" /> Treinamentos
+                </TabsTrigger>
+                <TabsTrigger value="docs" className="gap-2">
+                  <FileText className="h-4 w-4" /> Documentos
+                </TabsTrigger>
+              </TabsList>
+            </div>
 
-      <Tabs defaultValue="projects">
-        <TabsList>
-          <TabsTrigger value="projects">Projetos</TabsTrigger>
-          <TabsTrigger value="templates">Templates</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="projects" className="space-y-3">
-          <Tabs value={filter} onValueChange={setFilter}>
-            <TabsList>
-              <TabsTrigger value="all">Todos</TabsTrigger>
-              <TabsTrigger value="not_started">Não iniciados</TabsTrigger>
-              <TabsTrigger value="in_progress">Em andamento</TabsTrigger>
-              <TabsTrigger value="completed">Concluídos</TabsTrigger>
-            </TabsList>
-          </Tabs>
-
-          {isLoading ? (
-            <div className="space-y-2">{[1, 2, 3].map((i) => <Skeleton key={i} className="h-20 w-full" />)}</div>
-          ) : (projsData?.projects ?? []).length === 0 ? (
-            <Card><CardContent className="flex flex-col items-center py-12 text-center text-muted-foreground">
-              <Rocket className="h-10 w-10 mb-2 opacity-40" />
-              <p className="text-sm">Nenhum onboarding em andamento.</p>
-            </CardContent></Card>
-          ) : (
-            <Card><CardContent className="p-0">
-              <div className="divide-y">
-                {(projsData?.projects ?? []).map((p: any) => (
-                  <div key={p.id} className="p-3 flex items-center gap-3 hover:bg-accent/30 cursor-pointer"
-                    onClick={() => setDetail(p)}>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <p className="font-semibold text-sm">{p.name}</p>
-                        <Badge variant={STATUS_BADGE[p.status]} className="text-[10px]">{STATUS_LABEL[p.status]}</Badge>
-                        {p.health === "red" && <Badge variant="destructive" className="text-[10px]">Atrasado</Badge>}
-                        {p.companies?.name && (
-                          <span className="text-xs text-muted-foreground flex items-center gap-1">
-                            <Building2 className="h-3 w-3" /> {p.companies.name}
-                          </span>
-                        )}
-                      </div>
-                      <div className="mt-1 h-1 rounded-full bg-muted overflow-hidden max-w-xs">
-                        <div className="h-full bg-primary transition-all" style={{ width: `${p.progress_pct}%` }} />
-                      </div>
-                      <div className="flex gap-3 mt-1 text-[11px] text-muted-foreground">
-                        <span>{p.progress_pct}% concluído</span>
-                        {p.due_at && (
-                          <span className="flex items-center gap-1">
-                            <CalendarDays className="h-3 w-3" /> Previsto: {new Date(p.due_at).toLocaleDateString("pt-BR")}
-                          </span>
-                        )}
-                        {p.onboarding_templates?.name && (
-                          <span>Template: {p.onboarding_templates.name}</span>
-                        )}
-                      </div>
-                    </div>
-                    <Button size="sm" variant="ghost" onClick={(e) => { e.stopPropagation(); if (confirm("Excluir?")) delProj.mutate(p.id); }}>
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
+            <TabsContent value="projects" className="space-y-4 outline-none">
+              <div className="flex items-center gap-2 mb-2">
+                {["all", "not_started", "in_progress", "completed"].map((f) => (
+                  <Button
+                    key={f}
+                    variant={filter === f ? "secondary" : "ghost"}
+                    size="sm"
+                    className="text-[10px] uppercase tracking-widest font-bold"
+                    onClick={() => setFilter(f)}
+                  >
+                    {f === "all" ? "Todos" : STATUS_LABEL[f] || f}
+                  </Button>
                 ))}
               </div>
-            </CardContent></Card>
-          )}
-        </TabsContent>
 
-        <TabsContent value="templates" className="space-y-3">
-          {!(tplsData?.templates ?? []).length ? (
-            <Card><CardContent className="flex flex-col items-center py-12 text-center text-muted-foreground">
-              <ListChecks className="h-10 w-10 mb-2 opacity-40" />
-              <p className="text-sm">Nenhum template ainda.</p>
-            </CardContent></Card>
-          ) : (
-            <div className="grid gap-3 md:grid-cols-2">
-              {(tplsData?.templates ?? []).map((t: any) => (
-                <Card key={t.id}><CardContent className="p-4">
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <p className="font-semibold">{t.name}</p>
-                        <Badge variant={t.is_active ? "default" : "outline"} className="text-[10px]">
-                          {t.is_active ? "Ativo" : "Inativo"}
-                        </Badge>
-                      </div>
-                      {t.description && <p className="text-xs text-muted-foreground mt-1">{t.description}</p>}
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {(t.steps ?? []).length} etapas · {t.duration_days} dias
-                      </p>
-                    </div>
-                    <div className="flex gap-1">
-                      <Button size="sm" variant="ghost" onClick={() => openEditTpl(t)}><Pencil className="h-4 w-4" /></Button>
-                      <Button size="sm" variant="ghost"
-                        onClick={() => { if (confirm("Excluir template?")) delTpl.mutate(t.id); }}>
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
+              {isLoading ? (
+                <div className="space-y-3">{[1, 2, 3].map((i) => <Skeleton key={i} className="h-24 w-full rounded-xl" />)}</div>
+              ) : (projsData?.projects ?? []).length === 0 ? (
+                <Card className="border-dashed"><CardContent className="flex flex-col items-center py-16 text-center text-muted-foreground">
+                  <Rocket className="h-12 w-12 mb-4 opacity-20" />
+                  <p className="text-sm font-medium">Nenhum onboarding encontrado nesta categoria.</p>
                 </CardContent></Card>
-              ))}
-            </div>
-          )}
-        </TabsContent>
-      </Tabs>
+              ) : (
+                <div className="grid gap-4">
+                  {(projsData?.projects ?? []).map((p: any) => (
+                    <Card key={p.id} className="group hover:border-primary/30 transition-all cursor-pointer overflow-hidden border-border/40"
+                      onClick={() => setDetail(p)}>
+                      <CardContent className="p-0">
+                        <div className="p-5 flex items-center gap-4">
+                          <div className={cn(
+                            "w-12 h-12 rounded-xl flex items-center justify-center shrink-0",
+                            p.status === "completed" ? "bg-emerald-500/10 text-emerald-500" : "bg-primary/10 text-primary"
+                          )}>
+                            <Building2 className="h-6 w-6" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-1">
+                              <h4 className="font-bold text-base truncate">{p.name}</h4>
+                              <Badge variant={STATUS_BADGE[p.status]} className="text-[9px] uppercase tracking-tighter">
+                                {STATUS_LABEL[p.status]}
+                              </Badge>
+                            </div>
+                            <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                              <span className="flex items-center gap-1"><CalendarDays className="h-3 w-3" /> {new Date(p.started_at).toLocaleDateString("pt-BR")}</span>
+                              <span className="flex items-center gap-1"><ListChecks className="h-3 w-3" /> {(p.steps_done_count || 0)}/{(p.steps_total_count || 0)} etapas</span>
+                            </div>
+                          </div>
+                          <div className="text-right hidden sm:block">
+                            <div className="text-lg font-bold font-mono">{p.progress_pct}%</div>
+                            <div className="w-24 h-1.5 bg-muted rounded-full overflow-hidden mt-1">
+                              <div className="h-full bg-primary transition-all duration-500" style={{ width: `${p.progress_pct}%` }} />
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              )}
+            </TabsContent>
+
+            <TabsContent value="training" className="outline-none">
+              <Card className="border-border/40">
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <BookOpen className="h-5 w-5 text-primary" /> Cronograma de Treinamentos
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <TrainingItem title="Treinamento Administrativo" date="14 Jun, 14:00" attendee="João (Admin)" status="confirmed" />
+                    <TrainingItem title="Configuração de Regras de Negócio" date="16 Jun, 10:00" attendee="Maria (Gestora)" status="pending" />
+                    <TrainingItem title="Treinamento Time de Vendas" date="20 Jun, 09:00" attendee="Toda Equipe" status="planned" />
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="docs" className="outline-none">
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <DocCard title="Playbook de Implantação" type="PDF" size="2.4 MB" />
+                  <DocCard title="Checklist de Homologação" type="XLSX" size="156 KB" />
+                  <DocCard title="Manual do Administrador" type="PDF" size="5.1 MB" />
+                  <DocCard title="Script de Importação ERP" type="DOCX" size="88 KB" />
+               </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+
+        <div className="space-y-6">
+          <ErpSyncHealth />
+          
+          <Card className="border-primary/20 bg-primary/5">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm flex items-center gap-2">
+                <Share2 className="h-4 w-4 text-primary" /> Compartilhar Portal do Cliente
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-xs text-muted-foreground">Envie um link seguro para o cliente acompanhar o progresso em tempo real.</p>
+              <Button className="w-full font-bold" variant="outline">Copiar Link do Portal</Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
 
       {/* Template dialog */}
       <Dialog open={tplDlg} onOpenChange={setTplDlg}>
@@ -431,6 +445,63 @@ function OnboardingPage() {
           )}
         </DialogContent>
       </Dialog>
+    </div>
+  );
+}
+
+function StatsCard({ title, value, icon: Icon, color }: any) {
+  return (
+    <Card className="border-border/40 bg-card/50 backdrop-blur-sm">
+      <CardContent className="p-4">
+        <div className="flex items-center justify-between mb-2">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{title}</p>
+          <Icon className={cn("h-4 w-4", color)} />
+        </div>
+        <p className="text-2xl font-display font-bold">{value}</p>
+      </CardContent>
+    </Card>
+  );
+}
+
+function TrainingItem({ title, date, attendee, status }: any) {
+  const statusConfig: any = {
+    confirmed: { label: "Confirmado", color: "bg-emerald-500/10 text-emerald-500" },
+    pending: { label: "Aguardando", color: "bg-amber-500/10 text-amber-500" },
+    planned: { label: "Planejado", color: "bg-blue-500/10 text-blue-500" },
+  };
+  return (
+    <div className="flex items-center justify-between p-3 rounded-xl border border-border/40 bg-background/50 hover:border-primary/20 transition-all">
+      <div className="flex gap-3 items-center">
+        <div className="p-2 rounded-lg bg-secondary">
+          <CalendarDays className="h-4 w-4 text-primary" />
+        </div>
+        <div>
+          <div className="text-sm font-bold">{title}</div>
+          <div className="text-[10px] text-muted-foreground">{date} • {attendee}</div>
+        </div>
+      </div>
+      <Badge variant="outline" className={cn("text-[10px] uppercase border-none", statusConfig[status].color)}>
+        {statusConfig[status].label}
+      </Badge>
+    </div>
+  );
+}
+
+function DocCard({ title, type, size }: any) {
+  return (
+    <div className="flex items-center justify-between p-4 rounded-xl border border-border/40 bg-background/50 hover:border-primary/20 transition-all group">
+      <div className="flex gap-3 items-center">
+        <div className="p-2 rounded-lg bg-primary/5 group-hover:bg-primary/10 transition-colors">
+          <FileText className="h-5 w-5 text-primary" />
+        </div>
+        <div>
+          <div className="text-sm font-bold">{title}</div>
+          <div className="text-[10px] text-muted-foreground uppercase">{type} • {size}</div>
+        </div>
+      </div>
+      <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
+        <Download className="h-4 w-4" />
+      </Button>
     </div>
   );
 }
