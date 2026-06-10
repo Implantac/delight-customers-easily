@@ -185,7 +185,7 @@ function MetricCard({
     <Card className="p-4">
       <div className="flex items-center justify-between">
         <p className="text-xs text-muted-foreground">{label}</p>
-        <Icon className={`h-4 w-4 ${cls || "text-muted-foreground"}`} aria-hidden="true" />
+        {Icon && <Icon className={`h-4 w-4 ${cls || "text-muted-foreground"}`} />}
       </div>
       <p className={`text-2xl font-bold mt-1 ${cls}`}>{value}</p>
     </Card>
