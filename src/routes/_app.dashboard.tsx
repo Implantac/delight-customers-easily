@@ -54,6 +54,7 @@ const STAGE_LABEL: Record<string, string> = {
 function DashboardPage() {
   const { user } = useAuth();
   const { orgId } = useCurrentOrg();
+  const navigate = useNavigate();
 
   const forecast = useServerFn(getForecast);
   const retention = useServerFn(getRetentionInsights);
