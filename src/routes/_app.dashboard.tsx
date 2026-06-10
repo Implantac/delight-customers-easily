@@ -212,10 +212,6 @@ function DashboardPage() {
         <ChurnRiskCard />
       </section>
 
-      {/* Onboarding / Setup */}
-      <section data-tour="dashboard-checklist">
-        <OnboardingChecklist />
-      </section>
 
       <ProductTour tourId="dashboard-v3" steps={[]} />
     </div>
