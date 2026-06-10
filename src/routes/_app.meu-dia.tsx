@@ -139,8 +139,8 @@ function MyDayPage() {
     <div className="p-4 md:p-8 space-y-6">
       <PageHeader
         icon={Sun}
-        title={`${greeting}${first ? `, ${first}` : ""}`}
-        subtitle={new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long" })}
+        title={`${greeting}${first ? `, ${first}` : ""}!`}
+        subtitle="Aqui está o seu plano tático para vender mais hoje."
         action={
           <div className="flex gap-2">
             <Button
