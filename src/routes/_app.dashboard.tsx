@@ -219,9 +219,9 @@ function DashboardPage() {
           <TrendingUp className="h-5 w-5 text-primary" /> Performance & Diagnóstico
         </h2>
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-      <section className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-        <TopOpportunities />
-        <BusinessHealthCard />
+          <TopOpportunities />
+          <BusinessHealthCard />
+        </div>
       </section>
 
       <section className="grid grid-cols-1 gap-8 lg:grid-cols-2">
@@ -229,10 +229,10 @@ function DashboardPage() {
         <ChurnRiskCard />
       </section>
 
-
       <ProductTour tourId="dashboard-v3" steps={[]} />
     </div>
   );
+}
 }
 
 
