@@ -110,54 +110,56 @@ export function NextActionBlock({
       ) : (
         <ul className="divide-y divide-border">
           {items.map((r: any) => (
-            <li key={r.id} className="py-3 flex items-start gap-3">
+            <li key={r.id} className="py-4 flex items-start gap-4 first:pt-0 last:pb-0 group/item">
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
-                  <p className="text-sm font-medium truncate">{r.title}</p>
+                <div className="flex items-center gap-2 flex-wrap mb-1">
+                  <p className="text-sm font-bold group-hover/item:text-primary transition-colors">{r.title}</p>
                   {r.impact_brl ? (
-                    <Badge variant="outline" className="text-xs">
+                    <Badge variant="outline" className="text-[10px] font-bold border-emerald-500/30 text-emerald-600 bg-emerald-50/50">
                       {fmtBRL(Number(r.impact_brl))}
                     </Badge>
                   ) : null}
                   {r.priority >= 85 && (
-                    <Badge className="text-xs bg-destructive text-destructive-foreground">
+                    <Badge className="text-[10px] font-bold bg-rose-500 text-white border-none uppercase tracking-widest px-1.5 py-0">
                       urgente
                     </Badge>
                   )}
                 </div>
                 {r.reason && (
-                  <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">{r.reason}</p>
+                  <p className="text-xs text-muted-foreground/80 leading-relaxed max-w-xl">{r.reason}</p>
                 )}
               </div>
-              <div className="flex items-center gap-1 shrink-0">
+              <div className="flex items-center gap-2 shrink-0">
                 {r.action_href && (
-                  <Button asChild size="sm" variant="default">
+                  <Button asChild size="sm" className="h-8 rounded-lg font-bold">
                     <Link to={r.action_href}>
                       {r.action_label}
-                      <ArrowRight className="h-3.5 w-3.5 ml-1" />
+                      <ArrowRight className="h-3.5 w-3.5 ml-1.5" />
                     </Link>
                   </Button>
                 )}
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="h-8 w-8"
-                  title="Marcar como feita"
-                  onClick={() => resolveMut.mutate({ id: r.id, status: "done" })}
-                  disabled={resolveMut.isPending}
-                >
-                  <Check className="h-3.5 w-3.5" />
-                </Button>
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  className="h-8 w-8"
-                  title="Descartar"
-                  onClick={() => resolveMut.mutate({ id: r.id, status: "dismissed" })}
-                  disabled={resolveMut.isPending}
-                >
-                  <X className="h-3.5 w-3.5" />
-                </Button>
+                <div className="flex items-center bg-secondary/50 rounded-lg p-0.5 border border-border/50">
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="h-7 w-7 hover:bg-emerald-500 hover:text-white transition-all"
+                    title="Marcar como feita"
+                    onClick={() => resolveMut.mutate({ id: r.id, status: "done" })}
+                    disabled={resolveMut.isPending}
+                  >
+                    <Check className="h-3.5 w-3.5" />
+                  </Button>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="h-7 w-7 hover:bg-rose-500 hover:text-white transition-all"
+                    title="Descartar"
+                    onClick={() => resolveMut.mutate({ id: r.id, status: "dismissed" })}
+                    disabled={resolveMut.isPending}
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </Button>
+                </div>
               </div>
             </li>
           ))}
