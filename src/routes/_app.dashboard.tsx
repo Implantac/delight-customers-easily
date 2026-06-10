@@ -153,6 +153,16 @@ function DashboardPage() {
         <MuralComercial />
       </section>
 
+      {/* Boas-vindas Personalizado */}
+      <section className="animate-in-page">
+        <h2 className="text-3xl font-display font-bold tracking-tight">
+          Bom dia, {(user?.user_metadata?.full_name ?? user?.email ?? "").split(" ")[0]}!
+        </h2>
+        <p className="text-muted-foreground mt-1 text-lg">
+          Aqui está o panorama estratégico da sua operação comercial hoje.
+        </p>
+      </section>
+
       {/* O QUE FAZER HOJE - Painel de Ações Imediatas */}
       <section className="space-y-4">
         <div className="flex items-center justify-between">
