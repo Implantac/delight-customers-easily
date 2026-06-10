@@ -227,4 +227,3 @@ function LoginPage() {
     </div>
   );
 }
-}
