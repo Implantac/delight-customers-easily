@@ -183,8 +183,8 @@ function NbaPage() {
                     </div>
                   </div>
                   <div className="flex flex-col gap-2 shrink-0">
-                    <Button size="sm" onClick={() => handled.mutate(i)} disabled={handled.isPending}>
-                      <CheckCircle2 className="h-4 w-4 mr-1" /> Criar tarefa
+                    <Button size="sm" onClick={() => handled.mutate(i)} disabled={handled.isPending} className="bg-primary hover:shadow-glow transition-all">
+                      <CheckCircle2 className="h-4 w-4 mr-1" /> Executar ação
                     </Button>
                     {i.company_id && (
                       <Button asChild size="sm" variant="outline">
