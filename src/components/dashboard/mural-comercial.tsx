@@ -75,7 +75,7 @@ export function MuralComercial() {
           <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs font-semibold text-muted-foreground uppercase tracking-tight">
             <span className="flex items-center gap-1.5"><Users className="h-4 w-4 text-rose-500" /> <strong className="text-foreground">17</strong> clientes precisam de atenção</span>
             <span className="flex items-center gap-1.5"><Target className="h-4 w-4 text-blue-500" /> <strong className="text-foreground">3</strong> regiões com alto potencial</span>
-            <span className="flex items-center gap-1.5"><MapPin className="h-4 w-4 text-violet-500" /> <strong className="text-foreground">João</strong> pode visitar <strong className="text-foreground">12</strong> prospects hoje</span>
+            <span className="flex items-center gap-1.5"><MapPin className="h-4 w-4 text-violet-500" /> <strong className="text-foreground">Sua equipe</strong> pode visitar <strong className="text-foreground">12</strong> prospects hoje</span>
           </div>
         </div>
       </motion.div>
