@@ -27,7 +27,8 @@ export function MuralComercial() {
       description: "Clientes precisam de retorno",
       icon: Users, 
       color: "text-rose-500",
-      bg: "bg-rose-500/10"
+      bg: "bg-rose-500/10",
+      to: "/carteira"
     },
     { 
       label: "Alto Potencial", 
