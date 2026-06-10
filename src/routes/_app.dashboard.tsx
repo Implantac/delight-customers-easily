@@ -24,6 +24,7 @@ import { MuralComercial } from "@/components/dashboard/mural-comercial";
 import { useCurrentOrg } from "@/lib/org";
 import { getForecast } from "@/lib/forecast.functions";
 import { getRetentionInsights } from "@/lib/churn.functions";
+import { useAuth } from "@/lib/auth";
 
 export const Route = createFileRoute("/_app/dashboard")({ component: DashboardPage });
 
