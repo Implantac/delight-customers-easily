@@ -218,19 +218,6 @@ function DashboardPage() {
   );
 }
 
-function ActionItem({ icon: Icon, label, sub }: any) {
-  return (
-    <div className="flex items-start gap-3 p-3 rounded-xl border border-border/40 hover:border-primary/30 transition-all cursor-pointer bg-card/50">
-      <div className="p-2 rounded-lg bg-secondary/80">
-        <Icon className="h-3.5 w-3.5 text-primary" />
-      </div>
-      <div>
-        <div className="text-sm font-bold">{label}</div>
-        <div className="text-[10px] text-muted-foreground uppercase">{sub}</div>
-      </div>
-    </div>
-  );
-}
 
 
 function CountTile({
