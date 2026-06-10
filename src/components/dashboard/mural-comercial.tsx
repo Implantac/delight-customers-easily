@@ -111,30 +111,31 @@ export function MuralComercial() {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4 }}
-          className="lg:col-span-2 p-8 rounded-3xl bg-gradient-to-br from-primary/10 via-background to-background border border-primary/20 relative overflow-hidden group shadow-xl shadow-primary/5"
+          className="lg:col-span-2 p-8 rounded-3xl bg-card border border-border/50 relative overflow-hidden group shadow-xl shadow-black/5"
         >
-          <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
-            <BrainCircuit className="h-32 w-32 text-primary" />
-          </div>
-          
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
           <div className="relative z-10 space-y-6">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 text-primary text-[10px] font-bold uppercase tracking-widest">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-widest border border-primary/20">
               <Sparkles className="h-3 w-3" /> Copiloto Comercial Ativo
             </div>
             
-            <h3 className="text-3xl font-display font-bold max-w-xl leading-tight">
-              Deseja gerar um plano de ação inteligente para converter as visitas sugeridas em oportunidades reais hoje?
+            <h3 className="text-3xl font-display font-semibold max-w-xl leading-tight">
+              Pronto para maximizar sua performance comercial hoje?
             </h3>
             
-            <div className="flex flex-wrap gap-4">
-              <Button asChild size="lg" className="rounded-full px-8 bg-primary hover:scale-105 transition-transform font-bold group shadow-lg shadow-primary/20">
+            <p className="text-muted-foreground text-sm max-w-md">
+              A IA analisou seus leads, rotas e oportunidades. Gere o plano de ação otimizado e foque no que realmente traz receita.
+            </p>
+            
+            <div className="flex flex-wrap gap-4 pt-2">
+              <Button asChild size="lg" className="rounded-xl px-8 bg-primary hover:bg-primary/90 transition-all font-bold shadow-lg shadow-primary/20">
                 <Link to="/nba">
-                  Gerar Plano de Ação <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  Gerar Plano de Ação <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="rounded-full px-8 border-primary/20 hover:bg-primary/5 font-semibold">
+              <Button asChild size="lg" variant="outline" className="rounded-xl px-8 font-semibold">
                 <Link to="/geo-rota">
-                  <Zap className="mr-2 h-5 w-5 text-amber-500" /> Otimizar Rotas
+                  <Zap className="mr-2 h-4 w-4 text-amber-500" /> Otimizar Rotas
                 </Link>
               </Button>
             </div>
@@ -148,33 +149,25 @@ export function MuralComercial() {
           className="space-y-4"
         >
           <div className="flex items-center justify-between px-2">
-            <h4 className="text-sm font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-              <Zap className="h-4 w-4" /> Inteligência de Vendas
+            <h4 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+              <Zap className="h-4 w-4" /> Inteligência em tempo real
             </h4>
-            <Button variant="link" size="sm" className="text-xs text-primary font-bold">Relatórios</Button>
           </div>
           
           {insights.map((s, i) => (
-            <Card key={s.name} className="border-border/40 bg-card/30 backdrop-blur-sm group hover:border-primary/20 transition-all overflow-hidden">
+            <Card key={s.name} className="border-border/40 bg-card/50 backdrop-blur-sm hover:border-primary/20 transition-all">
               <CardContent className="p-4">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className={cn("p-2 rounded-lg bg-secondary", s.color)}>
-                      <s.icon className="h-4 w-4" />
-                    </div>
-                    <div>
-                      <div className="text-sm font-bold">{s.name}</div>
-                      <div className="text-[10px] text-muted-foreground font-medium">{s.status}</div>
-                    </div>
+                <div className="flex items-center gap-3">
+                  <div className={cn("p-2 rounded-lg bg-secondary", s.color)}>
+                    <s.icon className="h-4 w-4" />
                   </div>
-                </div>
-                <div className="space-y-1.5">
-                  <div className="flex justify-between text-[10px] font-bold">
-                    <span className="text-muted-foreground">Performance</span>
-                    <span>{s.progress}%</span>
+                  <div className=\"flex-1\">
+                    <div className="text-sm font-semibold">{s.name}</div>
+                    <div className="text-[11px] text-muted-foreground font-medium">{s.status}</div>
                   </div>
-                  <Progress value={s.progress} className="h-1" />
+                  <div className=\"text-xs font-bold\">{s.progress}%</div>
                 </div>
+                <Progress value={s.progress} className="h-1.5 mt-3" />
               </CardContent>
             </Card>
           ))}
