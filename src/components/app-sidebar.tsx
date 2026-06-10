@@ -246,6 +246,15 @@ export function AppSidebar() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        
+        {!collapsed && (
+          <div className=\"px-4 py-3 mt-auto\">
+            <div className=\"flex items-center justify-between text-[8px] font-black uppercase tracking-[0.3em] text-muted-foreground/30\">
+              <span>Enterprise v3.0.4</span>
+              <div className=\"h-1 w-1 rounded-full bg-emerald-500/50\" />
+            </div>
+          </div>
+        )}
       </SidebarFooter>
     </Sidebar>
   );
