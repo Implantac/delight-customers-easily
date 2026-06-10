@@ -154,7 +154,7 @@ export function AppSidebar() {
               {!collapsed && (
                 <>
                   <div className="flex-1 text-left text-sm leading-tight min-w-0">
-                    <p className="truncate font-display font-semibold tracking-tight">{org?.name ?? "USE CRM"}</p>
+                    <p className="truncate font-display font-semibold tracking-tight">{org?.name ?? "USE PATRIUM"}</p>
                     <p className="truncate text-[11px] text-muted-foreground">Inteligência Comercial</p>
                   </div>
                   <ChevronsUpDown className="h-3.5 w-3.5 text-muted-foreground" />
