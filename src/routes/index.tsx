@@ -116,10 +116,10 @@ export const Route = createFileRoute("/")({
 function LandingPage() {
   const { user, loading } = useAuth();
   const ctaHref = user ? "/dashboard" : "/login";
-  const ctaLabel = user ? "Ir para o app" : "Começar grátis";
+  const ctaLabel = user ? "Ir para o painel" : "Começar agora";
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground selection:bg-primary/20 selection:text-primary">
       <SiteHeader ctaHref={ctaHref} ctaLabel={loading ? "Entrar" : ctaLabel} />
       <main>
         <Hero ctaHref={ctaHref} ctaLabel={loading ? "Entrar" : ctaLabel} />
@@ -145,17 +145,17 @@ function SiteHeader({ ctaHref, ctaLabel }: { ctaHref: string; ctaLabel: string }
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2 font-semibold tracking-tight">
-          <span className="grid h-8 w-8 place-items-center rounded-lg bg-[var(--gradient-accent)] text-[#1f2740] shadow-[var(--shadow-glow)] ring-1 ring-white/15">
-            <Sparkles className="h-4 w-4" />
+          <span className="grid h-10 w-10 place-items-center rounded-xl bg-primary text-primary-foreground shadow-lg shadow-primary/20 ring-1 ring-white/10">
+            <Sparkles className="h-5 w-5" />
           </span>
-          <span>USE PATRIUM</span>
+          <span className="text-xl font-display font-bold tracking-tighter">USE PATRIUM</span>
         </Link>
         <nav className="hidden items-center gap-7 text-sm text-muted-foreground md:flex">
-          <a href="#features" className="transition-colors hover:text-foreground">Recursos</a>
-          <a href="#workflow" className="transition-colors hover:text-foreground">Como funciona</a>
-          <a href="#ai" className="transition-colors hover:text-foreground">IA</a>
-          <a href="#pricing" className="transition-colors hover:text-foreground">Planos</a>
-          <a href="#faq" className="transition-colors hover:text-foreground">FAQ</a>
+          <a href="#features" className="transition-colors hover:text-primary font-medium">Recursos</a>
+          <a href="#workflow" className="transition-colors hover:text-primary font-medium">Como funciona</a>
+          <a href="#ai" className="transition-colors hover:text-primary font-medium">IA</a>
+          <a href="#pricing" className="transition-colors hover:text-primary font-medium">Planos</a>
+          <a href="#faq" className="transition-colors hover:text-primary font-medium">FAQ</a>
         </nav>
         <div className="flex items-center gap-2">
           <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
@@ -180,34 +180,34 @@ function Hero({ ctaHref, ctaLabel }: { ctaHref: string; ctaLabel: string }) {
     <section className="relative overflow-hidden border-b border-border/60">
       {/* Decorative glow */}
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute left-1/2 top-[-20%] h-[600px] w-[900px] -translate-x-1/2 rounded-full bg-accent/15 blur-3xl" />
-        <div className="absolute right-[-10%] top-[10%] h-[400px] w-[600px] rounded-full bg-primary/10 blur-3xl" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent,var(--background)_70%)]" />
+        <div className="absolute left-1/2 top-[-20%] h-[600px] w-[900px] -translate-x-1/2 rounded-full bg-primary/10 blur-[120px]" />
+        <div className="absolute right-[-10%] top-[10%] h-[400px] w-[600px] rounded-full bg-primary/5 blur-[100px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent,var(--background)_80%)]" />
       </div>
 
       <div className="mx-auto max-w-6xl px-4 pb-20 pt-20 md:pt-28">
         <div className="mx-auto max-w-3xl text-center">
-          <Badge variant="secondary" className="mb-6 gap-1.5 rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-accent-foreground">
-            <Sparkles className="h-3.5 w-3.5 text-accent" />
-            <span className="text-foreground/80">Novo: agente de IA comercial integrado</span>
+          <Badge variant="secondary" className="mb-8 gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-primary shadow-sm backdrop-blur-md">
+            <Sparkles className="h-3.5 w-3.5 animate-pulse" />
+            <span className="text-[11px] font-bold uppercase tracking-widest">Novo: Agente de IA Comercial Integrado</span>
           </Badge>
-          <h1 className="text-balance font-display text-4xl font-semibold tracking-tight md:text-6xl">
-            O CRM que <span className="bg-gradient-to-r from-accent to-[#e8a05a] bg-clip-text text-transparent">trabalha com o seu time</span>, não contra ele.
+          <h1 className="text-balance font-display text-5xl font-bold tracking-tighter md:text-8xl leading-[0.9]">
+            Venda mais com <span className="bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">Inteligência Real</span>.
           </h1>
-          <p className="mt-5 text-pretty text-lg text-muted-foreground md:text-xl">
-            Centralize contatos, pipeline, WhatsApp, contratos e propostas. Deixe a IA priorizar o próximo lead,
-            redigir follow-ups e detectar negócios em risco — antes que escapem.
+          <p className="mt-8 text-pretty text-lg text-muted-foreground md:text-2xl font-medium max-w-2xl mx-auto leading-relaxed">
+            Centralize pipeline, WhatsApp e propostas em um único centro de comando. 
+            Deixe a nossa IA priorizar leads e detectar riscos antes que virem perdas.
           </p>
 
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Button asChild size="lg" className="h-12 px-6 text-base">
+            <Button asChild size="lg" className="h-14 px-10 text-base font-bold rounded-2xl shadow-xl shadow-primary/20 hover:scale-105 transition-all">
               <Link to={ctaHref}>
                 {ctaLabel}
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="h-12 px-6 text-base">
-              <a href="#features">Ver recursos</a>
+            <Button asChild size="lg" variant="outline" className="h-14 px-10 text-base font-bold rounded-2xl border-border/60 backdrop-blur-sm hover:bg-muted/50 transition-all">
+              <a href="#features">Ver Recursos</a>
             </Button>
           </div>
 
