@@ -130,12 +130,18 @@ function NbaPage() {
       {q.isLoading ? (
         <p className="text-sm text-muted-foreground">Carregando…</p>
       ) : items.length === 0 ? (
-        <Card className="p-12 text-center space-y-2">
-          <Sparkles className="h-10 w-10 mx-auto text-muted-foreground" />
-          <p className="font-medium">Sem ações sugeridas no momento</p>
-          <p className="text-sm text-muted-foreground">
-            Atualize o Customer 360 e as previsões de IA para gerar a fila.
-          </p>
+        <Card className="p-12 text-center space-y-4 border-dashed bg-muted/20">
+          <Sparkles className="h-12 w-12 mx-auto text-primary/40 animate-pulse" />
+          <div className="max-w-md mx-auto space-y-2">
+            <p className="font-bold text-lg">Sua inteligência artificial está processando dados...</p>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              O USE PATRIUM analisa continuamente o comportamento dos clientes e o histórico do ERP para gerar seu plano de ação.
+              Certifique-se de que o ConnectHub está sincronizado.
+            </p>
+          </div>
+          <Button asChild variant="outline" size="sm" className="mt-4">
+            <Link to="/integrations">Ver ConnectHub</Link>
+          </Button>
         </Card>
       ) : (
         <div className="space-y-2">
