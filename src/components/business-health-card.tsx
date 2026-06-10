@@ -60,17 +60,17 @@ export function BusinessHealthCard() {
         </div>
       </div>
 
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-5 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
         {data.pillars.map((p) => (
-          <div key={p.key} className="space-y-1.5">
+          <div key={p.key} className="space-y-3">
             <div className="flex items-center justify-between gap-2">
-              <span className="text-xs font-medium">{p.label}</span>
-              <span className={`text-xs font-semibold ${toneOf(p.score)}`}>{p.score}</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80">{p.label}</span>
+              <span className={`text-xs font-bold tabular-nums ${toneOf(p.score)}`}>{p.score}</span>
             </div>
-            <div className="h-1.5 bg-muted rounded overflow-hidden">
-              <div className={`h-full ${barTone(p.score)}`} style={{ width: `${p.score}%` }} />
+            <div className="h-1.5 bg-secondary rounded-full overflow-hidden">
+              <div className={`h-full ${barTone(p.score)} transition-all duration-1000`} style={{ width: `${p.score}%` }} />
             </div>
-            <p className="text-[11px] text-muted-foreground leading-tight" title={p.detail}>{p.value}</p>
+            <p className="text-[10px] text-muted-foreground/70 font-medium leading-tight line-clamp-2" title={p.detail}>{p.value}</p>
           </div>
         ))}
       </div>
