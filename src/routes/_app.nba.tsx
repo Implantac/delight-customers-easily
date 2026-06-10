@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
@@ -44,6 +44,7 @@ const SEGMENTS = [
 
 function NbaPage() {
   const { orgId } = useCurrentOrg();
+  const navigate = useNavigate();
   const callList = useServerFn(listNbaQueue);
   const callCreate = useServerFn(createNbaTask);
   const [segment, setSegment] = useState("all");
@@ -88,7 +89,10 @@ function NbaPage() {
           type: i.action === "visit" ? "meeting" : i.action === "call" ? "call" : "task",
         },
       }),
-    onSuccess: () => toast.success("Tarefa criada na sua agenda"),
+    onSuccess: () => {
+      toast.success("Ação confirmada e integrada à sua agenda comercial");
+      navigate({ to: "/meu-dia" });
+    },
     onError: (e: any) => toast.error(e?.message ?? "Erro ao criar tarefa"),
   });
 
@@ -96,8 +100,8 @@ function NbaPage() {
     <div className="p-4 md:p-8 space-y-6">
       <PageHeader
         icon={Sparkles}
-        title="Próximas ações (NBA)"
-        subtitle="Fila priorizada de Next Best Actions — comece pela primeira e siga em ordem"
+        title="Plano de Ação (IA)"
+        subtitle={new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long" })}
       />
 
       <Card className="p-4 grid grid-cols-1 md:grid-cols-4 gap-3">
@@ -130,12 +134,18 @@ function NbaPage() {
       {q.isLoading ? (
         <p className="text-sm text-muted-foreground">Carregando…</p>
       ) : items.length === 0 ? (
-        <Card className="p-12 text-center space-y-2">
-          <Sparkles className="h-10 w-10 mx-auto text-muted-foreground" />
-          <p className="font-medium">Sem ações sugeridas no momento</p>
-          <p className="text-sm text-muted-foreground">
-            Atualize o Customer 360 e as previsões de IA para gerar a fila.
-          </p>
+        <Card className="p-12 text-center space-y-4 border-dashed bg-muted/20">
+          <Sparkles className="h-12 w-12 mx-auto text-primary/40 animate-pulse" />
+          <div className="max-w-md mx-auto space-y-2">
+            <p className="font-bold text-lg">Sua inteligência artificial está processando dados...</p>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              O USE PATRIUM analisa continuamente o comportamento dos clientes e o histórico do ERP para gerar seu plano de ação.
+              Certifique-se de que o ConnectHub está sincronizado.
+            </p>
+          </div>
+          <Button asChild variant="outline" size="sm" className="mt-4">
+            <Link to="/integrations">Ver ConnectHub</Link>
+          </Button>
         </Card>
       ) : (
         <div className="space-y-2">
@@ -177,8 +187,8 @@ function NbaPage() {
                     </div>
                   </div>
                   <div className="flex flex-col gap-2 shrink-0">
-                    <Button size="sm" onClick={() => handled.mutate(i)} disabled={handled.isPending}>
-                      <CheckCircle2 className="h-4 w-4 mr-1" /> Criar tarefa
+                    <Button size="sm" onClick={() => handled.mutate(i)} disabled={handled.isPending} className="bg-primary hover:shadow-glow transition-all">
+                      <CheckCircle2 className="h-4 w-4 mr-1" /> Executar ação
                     </Button>
                     {i.company_id && (
                       <Button asChild size="sm" variant="outline">

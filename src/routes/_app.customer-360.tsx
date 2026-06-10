@@ -41,7 +41,7 @@ export const Route = createFileRoute("/_app/customer-360")({
   component: Customer360Page,
   head: () => ({
     meta: [
-      { title: "Customer 360 — USE CRM" },
+      { title: "Customer 360 — USE PATRIUM" },
       { name: "description", content: "Visão consolidada de cada cliente: ERP, atividades, WhatsApp e IA." },
     ],
   }),

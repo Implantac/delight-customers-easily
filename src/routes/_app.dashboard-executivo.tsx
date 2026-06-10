@@ -46,7 +46,7 @@ function DashboardExecutivoPage() {
   return (
     <div className="space-y-6 p-6">
       <PageHeader
-        title="Dashboard Executivo Consolidado"
+        title="Gestão Comercial Global"
         subtitle="Visão tenant → empresas → filiais. Receita, pedidos e clientes únicos no período."
         icon={Building2}
         action={

@@ -29,13 +29,13 @@ function WelcomePage() {
     <div className="mx-auto max-w-5xl space-y-8 p-6">
       <div>
         <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs text-primary">
-          <Sparkles className="h-3.5 w-3.5" /> Bem-vindo ao USE CRM
+          <Sparkles className="h-3.5 w-3.5" /> Bem-vindo ao USE PATRIUM
         </div>
         <h1 className="mt-3 text-3xl font-semibold tracking-tight md:text-4xl">
           Oi, {firstName}! Vamos colocar seu CRM no ar.
         </h1>
         <p className="mt-2 max-w-2xl text-muted-foreground">
-          Em poucos minutos você terá seu time vendendo dentro do USE CRM. Siga os
+          Em poucos minutos você terá seu time vendendo dentro do USE PATRIUM. Siga os
           próximos passos abaixo — pode pular e voltar quando quiser.
         </p>
       </div>

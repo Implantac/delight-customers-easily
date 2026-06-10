@@ -6,9 +6,10 @@ import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
 
+import { Link } from "@tanstack/react-router";
+
 export function MuralComercial() {
   const { user } = useAuth();
-  const firstName = user?.user_metadata?.full_name?.split(" ")[0] || "Comercial";
 
   const metrics = [
     { 
@@ -17,7 +18,8 @@ export function MuralComercial() {
       description: "Valor total em aberto",
       icon: TrendingUp, 
       color: "text-emerald-500",
-      bg: "bg-emerald-500/10"
+      bg: "bg-emerald-500/10",
+      to: "/pipeline"
     },
     { 
       label: "Atenção Necessária", 
@@ -25,7 +27,8 @@ export function MuralComercial() {
       description: "Clientes precisam de retorno",
       icon: Users, 
       color: "text-rose-500",
-      bg: "bg-rose-500/10"
+      bg: "bg-rose-500/10",
+      to: "/carteira"
     },
     { 
       label: "Alto Potencial", 
@@ -33,15 +36,17 @@ export function MuralComercial() {
       description: "Oportunidades geolocalizadas",
       icon: Target, 
       color: "text-blue-500",
-      bg: "bg-blue-500/10"
+      bg: "bg-blue-500/10",
+      to: "/geo"
     },
     { 
       label: "Visitas Sugeridas", 
       value: "12 Prospects", 
-      description: "Na rota de João hoje",
+      description: "Prontos para visitar hoje",
       icon: MapPin, 
       color: "text-violet-500",
-      bg: "bg-violet-500/10"
+      bg: "bg-violet-500/10",
+      to: "/geo-rota"
     },
   ];
 
@@ -57,15 +62,22 @@ export function MuralComercial() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="relative"
+        className="relative mb-6"
       >
         <div className="absolute -left-4 top-0 h-full w-1 bg-gradient-to-b from-primary to-transparent rounded-full opacity-50" />
-        <h2 className="text-4xl font-display font-bold tracking-tight mb-2 flex items-center gap-3">
-          Bom dia, {firstName} <span className="text-2xl animate-pulse">✨</span>
+        <h2 className="text-[10px] font-bold tracking-widest mb-3 uppercase text-primary/60 flex items-center gap-2">
+          <div className="h-1 w-8 bg-primary/40 rounded-full" /> Insights da Operação
         </h2>
-        <p className="text-muted-foreground text-lg max-w-2xl leading-relaxed">
-          Sua equipe possui um pipeline robusto. Identificamos pontos de ação imediatos para acelerar o fechamento.
-        </p>
+        <div className="flex flex-col gap-4 max-w-3xl">
+          <p className="text-muted-foreground text-xl leading-relaxed">
+            Identificamos <span className="text-foreground font-bold underline decoration-primary/40 underline-offset-4">R$ 482.000</span> em oportunidades prioritárias.
+          </p>
+          <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs font-semibold text-muted-foreground uppercase tracking-tight">
+            <span className="flex items-center gap-1.5"><Users className="h-4 w-4 text-rose-500" /> <strong className="text-foreground">17</strong> clientes precisam de atenção</span>
+            <span className="flex items-center gap-1.5"><Target className="h-4 w-4 text-blue-500" /> <strong className="text-foreground">3</strong> regiões com alto potencial</span>
+            <span className="flex items-center gap-1.5"><MapPin className="h-4 w-4 text-violet-500" /> <strong className="text-foreground">Sua equipe</strong> pode visitar <strong className="text-foreground">12</strong> prospects hoje</span>
+          </div>
+        </div>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -76,18 +88,20 @@ export function MuralComercial() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1, duration: 0.5 }}
           >
-            <Card className="relative overflow-hidden p-6 border-border/40 bg-card/40 backdrop-blur-xl hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/5 transition-all group border-l-4" style={{ borderLeftColor: `var(--${m.color.split('-')[1]}-500)` }}>
-              <div className="flex flex-col gap-4">
-                <div className={cn("p-3 w-fit rounded-xl transition-colors", m.bg, m.color)}>
-                  <m.icon className="h-6 w-6" />
+            <Link to={m.to as any}>
+              <Card className="relative overflow-hidden p-6 border-border/40 bg-card/40 backdrop-blur-xl hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/5 transition-all group border-l-4 h-full" style={{ borderLeftColor: `var(--${m.color.split('-')[1]}-500)` }}>
+                <div className="flex flex-col gap-4">
+                  <div className={cn("p-3 w-fit rounded-xl transition-colors", m.bg, m.color)}>
+                    <m.icon className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <div className="text-3xl font-display font-bold tracking-tight">{m.value}</div>
+                    <div className="text-sm font-semibold text-foreground/80 mt-1">{m.label}</div>
+                    <div className="text-[12px] text-muted-foreground mt-1 font-medium">{m.description}</div>
+                  </div>
                 </div>
-                <div>
-                  <div className="text-3xl font-display font-bold tracking-tight">{m.value}</div>
-                  <div className="text-sm font-semibold text-foreground/80 mt-1">{m.label}</div>
-                  <div className="text-[12px] text-muted-foreground mt-1 font-medium">{m.description}</div>
-                </div>
-              </div>
-            </Card>
+              </Card>
+            </Link>
           </motion.div>
         ))}
       </div>
@@ -109,15 +123,19 @@ export function MuralComercial() {
             </div>
             
             <h3 className="text-3xl font-display font-bold max-w-xl leading-tight">
-              Deseja gerar um plano de ação inteligente para converter as 12 visitas em oportunidades reais hoje?
+              Deseja gerar um plano de ação inteligente para converter as visitas sugeridas em oportunidades reais hoje?
             </h3>
             
             <div className="flex flex-wrap gap-4">
-              <Button size="lg" className="rounded-full px-8 bg-primary hover:scale-105 transition-transform font-bold group shadow-lg shadow-primary/20">
-                Gerar Plano de Ação <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              <Button asChild size="lg" className="rounded-full px-8 bg-primary hover:scale-105 transition-transform font-bold group shadow-lg shadow-primary/20">
+                <Link to="/nba">
+                  Gerar Plano de Ação <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
               </Button>
-              <Button size="lg" variant="outline" className="rounded-full px-8 border-primary/20 hover:bg-primary/5 font-semibold">
-                <Zap className="mr-2 h-5 w-5 text-amber-500" /> Otimizar Rotas
+              <Button asChild size="lg" variant="outline" className="rounded-full px-8 border-primary/20 hover:bg-primary/5 font-semibold">
+                <Link to="/geo-rota">
+                  <Zap className="mr-2 h-5 w-5 text-amber-500" /> Otimizar Rotas
+                </Link>
               </Button>
             </div>
           </div>
