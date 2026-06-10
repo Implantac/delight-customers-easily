@@ -122,8 +122,10 @@ export function MuralComercial() {
             </h3>
             
             <div className="flex flex-wrap gap-4">
-              <Button size="lg" className="rounded-full px-8 bg-primary hover:scale-105 transition-transform font-bold group shadow-lg shadow-primary/20">
-                Gerar Plano de Ação <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              <Button asChild size="lg" className="rounded-full px-8 bg-primary hover:scale-105 transition-transform font-bold group shadow-lg shadow-primary/20">
+                <Link to="/nba">
+                  Gerar Plano de Ação <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
               </Button>
               <Button size="lg" variant="outline" className="rounded-full px-8 border-primary/20 hover:bg-primary/5 font-semibold">
                 <Zap className="mr-2 h-5 w-5 text-amber-500" /> Otimizar Rotas
