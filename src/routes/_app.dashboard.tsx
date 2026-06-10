@@ -148,7 +148,7 @@ function DashboardPage() {
   const riskRows = (ret?.rows ?? []).filter((r) => r.level === "risco").slice(0, 5);
 
   return (
-    <div className="page-container max-w-[1400px] space-y-10">
+    <div className="p-4 md:p-8 max-w-[1600px] mx-auto space-y-12">
       {/* Mural Comercial / Command Center Header */}
       <section className="animate-in-page">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-4">
