@@ -55,27 +55,50 @@ const Logo3D = ({ rotationSpeed = 1.2 }: SceneProps) => {
           rotationIntensity={0.5} 
           floatIntensity={0.5}
         >
-          <Text
-            font="https://fonts.gstatic.com/s/inter/v12/UcCOjFws63Fel03dPV1icpZ7S2cA.woff"
-            fontSize={0.8}
-            color={primaryColor}
-            anchorX="center"
-            anchorY="middle"
-            maxWidth={10}
-            lineHeight={1}
-            letterSpacing={0.1}
-            textAlign="center"
-            position={[0, -0.5, 0]}
-          >
-            USE PATRIUM
-            <meshStandardMaterial 
-              color={primaryColor} 
-              metalness={0.9} 
-              roughness={0.1} 
-              emissive={secondaryColor}
-              emissiveIntensity={0.1}
-            />
-          </Text>
+          <group position={[0, -0.2, 0]}>
+            <Text
+              font="https://fonts.gstatic.com/s/inter/v12/UcCOjFws63Fel03dPV1icpZ7S2cA.woff"
+              fontSize={1.2}
+              color={primaryColor}
+              anchorX="center"
+              anchorY="middle"
+              maxWidth={10}
+              lineHeight={1}
+              letterSpacing={0.2}
+              textAlign="center"
+              position={[0, 0.4, 0]}
+            >
+              USE
+              <meshStandardMaterial 
+                color={primaryColor} 
+                metalness={1} 
+                roughness={0} 
+                emissive={primaryColor}
+                emissiveIntensity={0.5}
+              />
+            </Text>
+            <Text
+              font="https://fonts.gstatic.com/s/inter/v12/UcCOjFws63Fel03dPV1icpZ7S2cA.woff"
+              fontSize={1.4}
+              color={primaryColor}
+              anchorX="center"
+              anchorY="middle"
+              maxWidth={10}
+              lineHeight={1}
+              letterSpacing={0.4}
+              textAlign="center"
+              position={[0, -0.6, 0]}
+            >
+              PATRIUM
+              <meshStandardMaterial 
+                color={primaryColor} 
+                metalness={1} 
+                roughness={0} 
+                emissive={primaryColor}
+                emissiveIntensity={0.5}
+              />
+            </Text>
+          </group>
         </Float>
         
         {/* Subtexto Estratégico */}
