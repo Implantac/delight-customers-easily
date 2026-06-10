@@ -38,13 +38,15 @@ export function BusinessHealthCard() {
   const TrendIcon = data.delta == null ? Minus : data.delta > 0 ? TrendingUp : data.delta < 0 ? TrendingDown : Minus;
 
   return (
-    <Card className="p-5 border-primary/30">
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex items-center gap-2">
-          <HeartPulse className="h-5 w-5 text-primary" />
+    <Card className="p-6 md:p-8 border-border/40 bg-card/40 backdrop-blur-sm rounded-3xl shadow-xl shadow-black/5">
+      <div className="flex items-start justify-between gap-4 mb-8">
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/20">
+            <HeartPulse className="h-6 w-6 text-primary" />
+          </div>
           <div>
-            <h3 className="text-sm font-semibold">Business Health Score</h3>
-            <p className="text-xs text-muted-foreground">Saúde geral do negócio agora</p>
+            <h3 className="text-lg font-display font-bold">Saúde do Negócio</h3>
+            <p className="text-[11px] text-muted-foreground font-bold uppercase tracking-widest opacity-70">Business Health Score</p>
           </div>
         </div>
         <div className="text-right">
