@@ -106,16 +106,16 @@ const navigationGroups: NavGroup[] = [
       { to: "/forecast", label: "Previsão", icon: TrendingUp, tone: "info", managerOnly: true },
       { to: "/integrations", label: "ConnectHub ERP", icon: Plug, tone: "primary", managerOnly: true },
       { to: "/settings/alerts", label: "Alertas Inteligentes", icon: Bell, tone: "violet", managerOnly: true },
-      { to: \"/settings/organization\", label: \"Configurações\", icon: Settings, tone: \"primary\", managerOnly: true },
+      { to: "/settings/organization", label: "Configurações", icon: Settings, tone: "primary", managerOnly: true },
     ],
   },
   {
-    label: \"Pós-Venda & Sucesso\",
+    label: "Pós-Venda & Sucesso",
     items: [
-      { to: \"/implatacao\", label: \"Implantação\", icon: Rocket, tone: \"info\" },
-      { to: \"/suporte\", label: \"Suporte\", icon: Headphones, tone: \"success\" },
-      { to: \"/qa\", label: \"Q.A (Qualidade)\", icon: Microscope, tone: \"violet\" },
-      { to: \"/pos-vendas\", label: \"Pós-Vendas\", icon: Heart, tone: \"rose\" },
+      { to: "/implatacao", label: "Implantação", icon: Rocket, tone: "info" },
+      { to: "/suporte", label: "Suporte", icon: Headphones, tone: "success" },
+      { to: "/qa", label: "Q.A (Qualidade)", icon: Microscope, tone: "violet" },
+      { to: "/pos-vendas", label: "Pós-Vendas", icon: Heart, tone: "rose" },
     ],
   },
 ];
