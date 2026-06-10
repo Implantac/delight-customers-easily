@@ -165,11 +165,6 @@ export function AppSidebar() {
               {!collapsed && <ChevronsUpDown className="h-3.5 w-3.5 text-muted-foreground" />}
             </SidebarMenuButton>
           </DropdownMenuTrigger>
-                  <ChevronsUpDown className="h-3.5 w-3.5 text-muted-foreground" />
-                </>
-              )}
-            </SidebarMenuButton>
-          </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-56">
             <DropdownMenuLabel>Organizações</DropdownMenuLabel>
             {memberships.map((m) => (
