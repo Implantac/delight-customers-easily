@@ -71,12 +71,18 @@ export function NextActionBlock({
   const items = data?.items ?? [];
 
   return (
-    <Card className="p-4 md:p-5 border-primary/30">
-      <div className="flex items-center justify-between gap-3 mb-3">
-        <div className="flex items-center gap-2">
-          <Sparkles className="h-4 w-4 text-primary" />
-          <h3 className="text-sm font-semibold">{title}</h3>
-          {items.length > 0 && <Badge variant="secondary">{items.length}</Badge>}
+    <Card className="p-6 md:p-8 border-border/40 bg-card/40 backdrop-blur-sm rounded-3xl shadow-xl shadow-black/5">
+      <div className="flex items-center justify-between gap-3 mb-6">
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-xl bg-primary/10 border border-primary/20">
+            <Sparkles className="h-5 w-5 text-primary" />
+          </div>
+          <h3 className="text-lg font-display font-bold">{title}</h3>
+          {items.length > 0 && (
+            <Badge variant="secondary" className="rounded-full px-2 py-0 text-[10px] bg-primary/20 text-primary border-primary/20">
+              {items.length}
+            </Badge>
+          )}
         </div>
         {showRegenerate && (
           <Button
