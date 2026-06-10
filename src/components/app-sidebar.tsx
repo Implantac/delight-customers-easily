@@ -10,6 +10,7 @@ import {
   Sun as SunIcon, ListChecks, CheckSquare, TrendingUp, Trophy, Repeat, DollarSign,
   Goal, GraduationCap, Workflow, FileInput, LineChart, Compass, MessagesSquare,
   Network, Headphones, Heart, Code2, Microscope, Bell, type LucideIcon,
+  ChevronRight,
 } from "lucide-react";
 
 import { useAuth } from "@/lib/auth";
@@ -155,8 +156,8 @@ export function AppSidebar() {
               {!collapsed && (
                 <>
                   <div className="flex-1 text-left text-sm leading-tight min-w-0">
-                    <p className="truncate font-display font-semibold tracking-tight">{org?.name ?? "USE PATRIUM"}</p>
-                    <p className="truncate text-[11px] text-muted-foreground">Inteligência Comercial</p>
+                    <p className="truncate font-display font-bold tracking-tight text-primary">USE PATRIUM</p>
+                    <p className="truncate text-[10px] text-muted-foreground uppercase font-bold tracking-widest opacity-60">Sales Intelligence</p>
                   </div>
                   <ChevronsUpDown className="h-3.5 w-3.5 text-muted-foreground" />
                 </>
@@ -250,8 +251,9 @@ const NavItem = memo(function NavItem({ to, label, Icon, active, tone }: NavItem
           preload="intent"
           className="relative transition-all duration-300 hover:pl-5 group"
         >
-          <Icon className={`h-4 w-4 transition-all duration-300 group-hover:scale-110 ${TONE_CLASS[tone]}`} />
-          <span className="transition-all duration-300 group-hover:tracking-tight">{label}</span>
+          <Icon className={`h-4 w-4 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 ${TONE_CLASS[tone]}`} />
+          <span className="transition-all duration-300 group-hover:tracking-tight group-hover:text-primary font-medium">{label}</span>
+          <ChevronRight className="ml-auto h-3 w-3 opacity-0 group-hover:opacity-40 transition-opacity" />
           {active && (
             <motion.div 
               layoutId="active-nav"
