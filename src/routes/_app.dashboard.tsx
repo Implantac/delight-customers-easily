@@ -149,7 +149,7 @@ function DashboardPage() {
   return (
     <div className="page-container max-w-[1400px] space-y-10">
       {/* Mural Comercial / Command Center Header */}
-      <section>
+      <section className="animate-in-page">
         <MuralComercial />
       </section>
 
