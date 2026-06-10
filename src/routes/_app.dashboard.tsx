@@ -172,9 +172,6 @@ function DashboardPage() {
             <CheckSquare className="h-5 w-5 text-primary" />
             <h2 className="text-xl font-display font-bold tracking-tight uppercase">O QUE FAZER HOJE</h2>
           </div>
-          <Badge variant="outline" className="bg-primary/5 text-primary border-primary/10">
-            {new Date().toLocaleDateString("pt-BR", { weekday: 'long', day: '2-digit', month: 'long' })}
-          </Badge>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
