@@ -88,18 +88,20 @@ export function MuralComercial() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.1, duration: 0.5 }}
           >
-            <Card className="relative overflow-hidden p-6 border-border/40 bg-card/40 backdrop-blur-xl hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/5 transition-all group border-l-4" style={{ borderLeftColor: `var(--${m.color.split('-')[1]}-500)` }}>
-              <div className="flex flex-col gap-4">
-                <div className={cn("p-3 w-fit rounded-xl transition-colors", m.bg, m.color)}>
-                  <m.icon className="h-6 w-6" />
+            <Link to={m.to as any}>
+              <Card className="relative overflow-hidden p-6 border-border/40 bg-card/40 backdrop-blur-xl hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/5 transition-all group border-l-4 h-full" style={{ borderLeftColor: `var(--${m.color.split('-')[1]}-500)` }}>
+                <div className="flex flex-col gap-4">
+                  <div className={cn("p-3 w-fit rounded-xl transition-colors", m.bg, m.color)}>
+                    <m.icon className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <div className="text-3xl font-display font-bold tracking-tight">{m.value}</div>
+                    <div className="text-sm font-semibold text-foreground/80 mt-1">{m.label}</div>
+                    <div className="text-[12px] text-muted-foreground mt-1 font-medium">{m.description}</div>
+                  </div>
                 </div>
-                <div>
-                  <div className="text-3xl font-display font-bold tracking-tight">{m.value}</div>
-                  <div className="text-sm font-semibold text-foreground/80 mt-1">{m.label}</div>
-                  <div className="text-[12px] text-muted-foreground mt-1 font-medium">{m.description}</div>
-                </div>
-              </div>
-            </Card>
+              </Card>
+            </Link>
           </motion.div>
         ))}
       </div>
