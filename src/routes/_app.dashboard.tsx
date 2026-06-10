@@ -150,6 +150,17 @@ function DashboardPage() {
     <div className="page-container max-w-[1400px] space-y-10">
       {/* Mural Comercial / Command Center Header */}
       <section className="animate-in-page">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-2">
+          <div className="space-y-1">
+            <h2 className="text-4xl md:text-5xl font-display font-bold tracking-tight">
+              Bom dia, {(user?.user_metadata?.full_name ?? user?.email ?? "").split(" ")[0]}!
+            </h2>
+            <p className="text-muted-foreground text-lg">Aqui está o panorama estratégico da sua operação comercial hoje.</p>
+          </div>
+          <Badge variant="outline" className="h-fit py-1.5 px-4 bg-primary/5 text-primary border-primary/10 text-sm font-medium">
+            {new Date().toLocaleDateString("pt-BR", { weekday: 'long', day: '2-digit', month: 'long' })}
+          </Badge>
+        </div>
         <MuralComercial />
       </section>
 
