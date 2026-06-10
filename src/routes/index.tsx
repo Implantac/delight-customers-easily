@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { ThreeDLogo } from "@/components/ui/three-d-logo";
 import {
   Accordion,
   AccordionContent,
@@ -23,6 +24,7 @@ import {
   Target,
   Workflow,
   Zap,
+  TrendingUp,
 } from "lucide-react";
 
 const SITE_URL = "https://delight-customers-easily.lovable.app";
@@ -225,63 +227,28 @@ function Hero({ ctaHref, ctaLabel }: { ctaHref: string; ctaLabel: string }) {
           </ul>
         </div>
 
-        {/* Visual mock */}
+        {/* Visual 3D Hero Element */}
         <div className="mx-auto mt-16 max-w-5xl">
-          <div className="rounded-2xl border border-border/80 bg-card p-2 shadow-2xl shadow-primary/5">
-            <div className="rounded-xl border border-border/60 bg-gradient-to-br from-muted/40 via-background to-background p-6">
-              <div className="grid gap-4 md:grid-cols-3">
-                <MockCard
-                  icon={<LineChart className="h-4 w-4" />}
-                  label="Pipeline ativo"
-                  value="R$ 1.284.500"
-                  hint="+18% vs. mês anterior"
-                />
-                <MockCard
-                  icon={<Target className="h-4 w-4" />}
-                  label="Taxa de fechamento"
-                  value="32%"
-                  hint="Meta: 28%"
-                  positive
-                />
-                <MockCard
-                  icon={<CalendarCheck className="h-4 w-4" />}
-                  label="Atividades hoje"
-                  value="47"
-                  hint="9 follow-ups priorizados"
-                />
+          <div className="relative aspect-video w-full rounded-3xl border border-primary/20 bg-card/30 shadow-2xl backdrop-blur-sm overflow-hidden group">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10 pointer-events-none" />
+            <ThreeDLogo className="h-full w-full" rotationSpeed={1.5} />
+            
+            {/* Overlay informativo flutuante */}
+            <div className="absolute bottom-8 left-8 right-8 flex justify-between items-end pointer-events-none">
+              <div className="bg-background/80 backdrop-blur-md p-4 rounded-2xl border border-border/40 shadow-xl animate-in fade-in slide-in-from-bottom-4 duration-1000">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-primary mb-1">Status do Sistema</p>
+                <div className="flex items-center gap-3">
+                  <div className="flex h-2 w-2 rounded-full bg-success animate-pulse" />
+                  <span className="text-xs font-medium">Motores de IA Operacionais</span>
+                </div>
               </div>
-              <div className="mt-6 grid gap-3 md:grid-cols-4">
-                {["Prospecção", "Qualificação", "Proposta", "Fechamento"].map((stage, i) => (
-                  <div
-                    key={stage}
-                    className="rounded-lg border border-border/70 bg-card p-4"
-                  >
-                    <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      <span>{stage}</span>
-                      <span>{[24, 17, 9, 4][i]}</span>
-                    </div>
-                    <div className="mt-3 space-y-2">
-                      <div className="h-2 rounded-full bg-muted">
-                        <div
-                          className="h-2 rounded-full bg-accent"
-                          style={{ width: `${[80, 60, 40, 25][i]}%` }}
-                        />
-                      </div>
-                      <div className="h-2 rounded-full bg-muted">
-                        <div
-                          className="h-2 rounded-full bg-accent/70"
-                          style={{ width: `${[60, 45, 30, 15][i]}%` }}
-                        />
-                      </div>
-                      <div className="h-2 rounded-full bg-muted">
-                        <div
-                          className="h-2 rounded-full bg-accent/40"
-                          style={{ width: `${[40, 30, 20, 10][i]}%` }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                ))}
+              
+              <div className="bg-background/80 backdrop-blur-md p-4 rounded-2xl border border-border/40 shadow-xl animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-200">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-primary mb-1">Performance Global</p>
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="h-3.5 w-3.5 text-success" />
+                  <span className="text-xs font-bold">+32% Conversão</span>
+                </div>
               </div>
             </div>
           </div>
