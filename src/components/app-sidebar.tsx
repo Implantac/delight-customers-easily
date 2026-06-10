@@ -150,15 +150,18 @@ export function AppSidebar() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton size="lg" className="data-[state=open]:bg-sidebar-accent transition-all duration-200">
-              <div className="relative flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm ring-1 ring-white/15">
-                <Sparkles className="h-4 w-4" />
+              <div className="relative flex h-8 w-full items-center justify-start overflow-hidden">
+                <img 
+                  src="https://hckncgrfhedoswsdkyni.supabase.co/storage/v1/object/public/uploads/9fa2115e-e837-46f2-abac-57d602f8b76a/logo.png" 
+                  alt="USE PATRIUM" 
+                  className="h-6 w-auto object-contain"
+                />
               </div>
               {!collapsed && (
-                <>
-                  <div className="flex-1 text-left text-sm leading-tight min-w-0">
-                    <p className="truncate font-display font-bold tracking-tight text-primary">USE PATRIUM</p>
-                    <p className="truncate text-[10px] text-muted-foreground uppercase font-bold tracking-widest opacity-60">Sales Intelligence</p>
-                  </div>
+                <div className="flex-1 text-left text-sm leading-tight min-w-0 ml-1">
+                  <p className="truncate text-[10px] text-muted-foreground uppercase font-bold tracking-widest opacity-60">Sales Intelligence</p>
+                </div>
+              )}
                   <ChevronsUpDown className="h-3.5 w-3.5 text-muted-foreground" />
                 </>
               )}
