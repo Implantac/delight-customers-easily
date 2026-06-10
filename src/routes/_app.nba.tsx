@@ -157,7 +157,7 @@ function NbaPage() {
                 <div className="flex items-start gap-4">
                   <div className={`p-2 rounded-lg border ${meta.cls}`}>
                     <div className="h-5 w-5">
-                      {Icon && <Icon size={20} />}
+                      {Icon && <Icon />}
                     </div>
                   </div>
                   <div className="flex-1 min-w-0 space-y-1">
