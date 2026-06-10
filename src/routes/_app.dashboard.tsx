@@ -12,7 +12,7 @@ import {
   Flame, HeartPulse, Award, Gauge, Sparkles, BrainCircuit,
   Zap, MessageSquare, MapPin, Calendar, CheckSquare
 } from "lucide-react";
-import { PageHeader } from "@/components/page-header";
+
 import { NextActionBlock } from "@/components/next-action-block";
 import { BusinessHealthCard } from "@/components/business-health-card";
 import { OnboardingChecklist } from "@/components/onboarding-checklist";
