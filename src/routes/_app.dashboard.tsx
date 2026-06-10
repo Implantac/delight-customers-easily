@@ -233,7 +233,6 @@ function DashboardPage() {
     </div>
   );
 }
-}
 
 
 
