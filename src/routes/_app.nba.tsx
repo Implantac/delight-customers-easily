@@ -96,8 +96,8 @@ function NbaPage() {
     <div className="p-4 md:p-8 space-y-6">
       <PageHeader
         icon={Sparkles}
-        title="Próximas ações (NBA)"
-        subtitle="Fila priorizada de Next Best Actions — comece pela primeira e siga em ordem"
+        title="Plano de Ação (IA)"
+        subtitle="Sua fila estratégica priorizada pela inteligência artificial. Siga a ordem para maximizar resultados."
       />
 
       <Card className="p-4 grid grid-cols-1 md:grid-cols-4 gap-3">
