@@ -89,8 +89,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { rel: "stylesheet", href: appCss },
       { rel: "manifest", href: "/manifest.webmanifest" },
-      { rel: "icon", href: "/icon-512.png", type: "image/png" },
-      { rel: "apple-touch-icon", href: "/icon-512.png" },
+      { rel: "icon", href: "https://hckncgrfhedoswsdkyni.supabase.co/storage/v1/object/public/uploads/9fa2115e-e837-46f2-abac-57d602f8b76a/logo.png", type: "image/png" },
+      { rel: "apple-touch-icon", href: "https://hckncgrfhedoswsdkyni.supabase.co/storage/v1/object/public/uploads/9fa2115e-e837-46f2-abac-57d602f8b76a/logo.png" },
     ],
     scripts: [
       {
@@ -100,7 +100,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@type": "Organization",
           name: "USE PATRIUM",
           url: "https://delight-customers-easily.lovable.app",
-          logo: "https://delight-customers-easily.lovable.app/icon-512.png",
+          logo: "https://hckncgrfhedoswsdkyni.supabase.co/storage/v1/object/public/uploads/9fa2115e-e837-46f2-abac-57d602f8b76a/logo.png",
         }),
       },
     ],

@@ -60,10 +60,13 @@ function LoginPage() {
       <div className="pointer-events-none absolute -top-32 left-1/2 h-[480px] w-[480px] -translate-x-1/2 rounded-full bg-[var(--gradient-primary)] opacity-20 blur-3xl" />
       <div className="relative w-full max-w-md">
         <div className="mb-8 flex flex-col items-center gap-3">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--gradient-primary)] text-primary-foreground shadow-[var(--shadow-glow)]">
-            <Briefcase className="h-7 w-7" />
+          <div className="flex h-16 w-full items-center justify-center">
+            <img 
+              src="https://hckncgrfhedoswsdkyni.supabase.co/storage/v1/object/public/uploads/9fa2115e-e837-46f2-abac-57d602f8b76a/logo.png" 
+              alt="USE PATRIUM" 
+              className="h-full w-auto object-contain"
+            />
           </div>
-          <h1 className="bg-[var(--gradient-primary)] bg-clip-text text-3xl font-bold tracking-tight text-transparent">USE PATRIUM</h1>
           <p className="text-sm text-muted-foreground">Gerencie seu pipeline com simplicidade</p>
         </div>
         <Card className="border-border/60 p-6 shadow-[var(--shadow-md)] backdrop-blur">
