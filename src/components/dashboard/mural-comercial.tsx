@@ -106,18 +106,18 @@ export function MuralComercial() {
             key={m.label}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.1, duration: 0.5 }}
+            transition={{ delay: i * 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
             <Link to={m.to as any}>
-              <Card className="relative overflow-hidden p-6 border-border/40 bg-card/40 backdrop-blur-xl hover:border-primary/30 hover:shadow-2xl hover:shadow-primary/5 transition-all group border-l-4 h-full" style={{ borderLeftColor: `var(--${m.color.split('-')[1]}-500)` }}>
+              <Card className="relative overflow-hidden p-6 border-border/40 bg-card/20 backdrop-blur-md hover:border-primary/20 hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] transition-all duration-500 group rounded-[1.5rem] h-full">
                 <div className="flex flex-col gap-4">
-                  <div className={cn("p-3 w-fit rounded-xl transition-colors", m.bg, m.color)}>
-                    <m.icon className="h-6 w-6" />
+                  <div className={cn("p-2.5 w-fit rounded-xl transition-all duration-500 group-hover:scale-110 group-hover:rotate-3", m.bg, m.color)}>
+                    <m.icon className="h-5 w-5" />
                   </div>
                   <div>
-                    <div className="text-3xl font-display font-bold tracking-tight">{m.value}</div>
-                    <div className="text-sm font-semibold text-foreground/80 mt-1">{m.label}</div>
-                    <div className="text-[12px] text-muted-foreground mt-1 font-medium">{m.description}</div>
+                    <div className="text-2xl font-display font-bold tracking-tight tabular-nums">{m.value}</div>
+                    <div className="text-[10px] font-black uppercase tracking-[0.1em] text-foreground/60 mt-1">{m.label}</div>
+                    <div className="text-[11px] text-muted-foreground mt-1.5 font-medium leading-relaxed opacity-70">{m.description}</div>
                   </div>
                 </div>
               </Card>
