@@ -42,10 +42,11 @@ export function MuralComercial() {
     { 
       label: "Visitas Sugeridas", 
       value: "12 Prospects", 
-      description: "Na rota de João hoje",
+      description: "Prontos para visitar hoje",
       icon: MapPin, 
       color: "text-violet-500",
-      bg: "bg-violet-500/10"
+      bg: "bg-violet-500/10",
+      to: "/geo-rota"
     },
   ];
 
