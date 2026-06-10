@@ -105,6 +105,10 @@ const navigationGroups: NavGroup[] = [
     label: "Gestão do Grupo",
     items: [
       { to: "/multi-empresa", label: "Empresas e Filiais", icon: Building, tone: "primary", managerOnly: true },
+      { to: "/dashboard-executivo", label: "Gestão Global", icon: LayoutDashboard, tone: "primary", managerOnly: true },
+      { to: "/commissions", label: "Comissões", icon: DollarSign, tone: "success", managerOnly: true },
+      { to: "/goals", label: "Metas & Ranking", icon: Trophy, tone: "accent", managerOnly: true },
+      { to: "/forecast", label: "Previsão", icon: TrendingUp, tone: "info", managerOnly: true },
       { to: "/settings/alerts", label: "Alertas Inteligentes", icon: Bell, tone: "violet", managerOnly: true },
       { to: "/settings/organization", label: "Configurações", icon: Settings, tone: "primary", managerOnly: true },
     ],
