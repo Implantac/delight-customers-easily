@@ -206,7 +206,7 @@ function WeeklyExec() {
         </section>
 
         <footer className="border-t pt-4 text-xs text-gray-500 text-center">
-          USE CRM · Relatório confidencial gerado automaticamente
+          USE PATRIUM · Relatório confidencial gerado automaticamente
         </footer>
       </div>
 
