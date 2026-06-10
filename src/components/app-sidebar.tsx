@@ -109,6 +109,15 @@ const navigationGroups: NavGroup[] = [
       { to: "/settings/organization", label: "Configurações", icon: Settings, tone: "primary", managerOnly: true },
     ],
   },
+  {
+    label: "Pós-Venda & Sucesso",
+    items: [
+      { to: "/implatacao", label: "Implantação", icon: Rocket, tone: "info" },
+      { to: "/suporte", label: "Suporte", icon: Headphones, tone: "success" },
+      { to: "/qa", label: "Q.A (Qualidade)", icon: Microscope, tone: "violet" },
+      { to: "/pos-vendas", label: "Pós-Vendas", icon: Heart, tone: "rose" },
+    ],
+  },
 ];
 
 export function AppSidebar() {
@@ -237,6 +246,15 @@ export function AppSidebar() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        
+        {!collapsed && (
+          <div className="px-4 py-3 mt-auto">
+            <div className="flex items-center justify-between text-[8px] font-black uppercase tracking-[0.3em] text-muted-foreground/30">
+              <span>Enterprise v3.0.4</span>
+              <div className="h-1 w-1 rounded-full bg-emerald-500/50" />
+            </div>
+          </div>
+        )}
       </SidebarFooter>
     </Sidebar>
   );

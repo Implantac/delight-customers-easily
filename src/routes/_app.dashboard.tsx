@@ -148,24 +148,42 @@ function DashboardPage() {
   const riskRows = (ret?.rows ?? []).filter((r) => r.level === "risco").slice(0, 5);
 
   return (
-    <div className="p-4 md:p-8 max-w-[1600px] mx-auto space-y-12 pb-24 overflow-x-hidden">
+    <div className="relative p-4 md:p-8 max-w-[1600px] mx-auto space-y-12 pb-24 overflow-x-hidden">
+      {/* Background Decor - High Tech Feel */}
+      <div className="absolute inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.07]" 
+           style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, currentColor 1px, transparent 0)', backgroundSize: '40px 40px' }} />
+      
       {/* Mural Comercial / Command Center Header */}
-      <section className="animate-in-page">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
-          <div className="space-y-4">
+      <section className="relative z-10 animate-in-page">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 mb-12 relative">
+          {/* Subtle Scanline Effect */}
+          <div className="absolute -top-10 -left-10 w-full h-full bg-gradient-to-b from-primary/5 to-transparent opacity-20 pointer-events-none animate-pulse" />
+          
+          <div className="space-y-4 relative z-10">
             <div className="flex items-center gap-3">
-              <div className="h-[2px] w-12 bg-primary rounded-full" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary/80">Operação Comercial</span>
+              <motion.div 
+                initial={{ width: 0 }}
+                animate={{ width: 32 }}
+                transition={{ duration: 1, ease: "easeOut" }}
+                className="h-[1px] bg-primary rounded-full" 
+              />
+              <span className="text-[9px] font-black uppercase tracking-[0.5em] text-primary/60">Sistema Operacional Ativo</span>
+              <div className="flex items-center gap-2 ml-4 px-2.5 py-1 rounded-full bg-emerald-500/5 border border-emerald-500/10 backdrop-blur-md">
+                <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)] animate-pulse" />
+                <span className="text-[8px] font-black text-emerald-500 uppercase tracking-widest">Sincronização 100%</span>
+              </div>
             </div>
-            <h1 className="text-4xl md:text-7xl font-display font-bold tracking-tighter leading-none">
-              Bem-vindo, <span className="text-primary">{(user?.user_metadata?.full_name ?? user?.email ?? "").split(" ")[0]}</span>.
+            <h1 className="text-3xl md:text-5xl font-display font-bold tracking-tight leading-tight text-foreground/90">
+              Olá, <span className="text-primary italic">{(user?.user_metadata?.full_name ?? user?.email ?? "").split(" ")[0]}</span>.
             </h1>
-            <p className="text-muted-foreground text-lg md:text-2xl font-medium max-w-2xl leading-relaxed">
-              Sua central de inteligência está pronta. Vamos vender mais hoje?
+            <p className="text-muted-foreground/60 text-base md:text-lg font-medium max-w-xl leading-relaxed">
+              Sua inteligência de vendas está processando novos dados. <br className="hidden md:block" />
+              Otimizamos <span className="text-foreground font-bold">suas próximas ações</span> para maximizar a conversão hoje.
             </p>
           </div>
-          <div className="flex flex-col items-end gap-3">
-            <Badge variant="outline" className="h-fit py-2.5 px-6 bg-primary/5 text-primary border-primary/20 text-xs font-bold rounded-2xl shadow-sm uppercase tracking-widest backdrop-blur-md ring-1 ring-primary/10">
+          <div className="flex flex-col items-start lg:items-end gap-3 relative z-10">
+            <div className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 mb-1">Janela de Operação</div>
+            <Badge variant="outline" className="h-fit py-3.5 px-8 bg-card/20 text-primary border-primary/10 text-[10px] font-black rounded-2xl shadow-2xl uppercase tracking-[0.2em] backdrop-blur-3xl ring-1 ring-primary/5">
               {new Date().toLocaleDateString("pt-BR", { weekday: 'long', day: '2-digit', month: 'long' })}
             </Badge>
           </div>
@@ -175,32 +193,36 @@ function DashboardPage() {
       </section>
 
       {/* KPI Command Bar - Refined with Glassmorphism and Micro-interactions */}
-      <section className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 relative z-10">
         {kpis.map((k, i) => (
           <motion.div
             key={k.label}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.1, duration: 0.5, ease: "easeOut" }}
+            transition={{ delay: i * 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
             <Link to={k.href as any} className="group block h-full">
-              <Card className="relative overflow-hidden h-full p-8 border-border/40 bg-gradient-to-br from-card/80 to-card/30 backdrop-blur-xl hover:border-primary/40 transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] hover:-translate-y-1 rounded-[2.5rem] group-hover:ring-1 group-hover:ring-primary/10">
-                <div className="absolute top-0 right-0 p-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+              <Card className="relative overflow-hidden h-full p-8 border-border/40 bg-card/40 backdrop-blur-2xl hover:border-primary/40 transition-all duration-700 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.15)] hover:-translate-y-2 rounded-[2rem] group-hover:ring-1 group-hover:ring-primary/20">
+                {/* Decorative glow */}
+                <div className="absolute -right-20 -top-20 w-40 h-40 bg-primary/5 rounded-full blur-[80px] group-hover:bg-primary/10 transition-colors duration-700" />
+                
+                <div className="absolute top-0 right-0 p-8 opacity-0 group-hover:opacity-100 transition-all duration-700 translate-x-4 group-hover:translate-x-0">
                   <ArrowRight className="h-4 w-4 text-primary" />
                 </div>
                 
-                <div className="flex items-center justify-between mb-6">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60">{k.label}</span>
-                  <div className={`p-3 rounded-2xl bg-secondary/50 ${k.tone} border border-border/30 shadow-inner group-hover:scale-110 transition-transform duration-500`}>
-                    <k.icon className="h-5 w-5" />
+                <div className="flex items-center justify-between mb-8">
+                  <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/50">{k.label}</span>
+                  <div className={`p-3.5 rounded-2xl bg-secondary/50 ${k.tone} border border-border/20 shadow-sm group-hover:scale-110 group-hover:shadow-lg transition-all duration-700`}>
+                    <k.icon className="h-4 w-4" />
                   </div>
                 </div>
                 
-                <div className="space-y-1">
-                  <div className="text-4xl font-display font-bold tabular-nums tracking-tighter group-hover:text-primary transition-colors duration-500">{k.value}</div>
-                  <div className="flex items-center gap-2 mt-3">
-                    <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-                    <span className="text-xs text-muted-foreground font-medium tracking-tight line-clamp-1">{k.sub}</span>
+                <div className="space-y-2">
+                  <div className="text-3xl font-display font-bold tabular-nums tracking-tight group-hover:text-primary transition-colors duration-700">{k.value}</div>
+                  <div className="flex items-center gap-2 mt-4">
+                    <div className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-primary/5 border border-primary/10">
+                       <span className="text-[10px] text-primary font-bold tracking-tight line-clamp-1">{k.sub}</span>
+                    </div>
                   </div>
                 </div>
               </Card>
