@@ -155,26 +155,35 @@ function DashboardPage() {
       
       {/* Mural Comercial / Command Center Header */}
       <section className="relative z-10 animate-in-page">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 mb-12">
-          <div className="space-y-4">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8 mb-12 relative">
+          {/* Subtle Scanline Effect */}
+          <div className="absolute -top-10 -left-10 w-full h-full bg-gradient-to-b from-primary/5 to-transparent opacity-20 pointer-events-none animate-pulse" />
+          
+          <div className="space-y-4 relative z-10">
             <div className="flex items-center gap-3">
-              <div className="h-[1px] w-8 bg-primary rounded-full" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary/70">Terminal de Inteligência</span>
-              <div className="flex items-center gap-1.5 ml-2 px-2 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
-                <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-[9px] font-bold text-emerald-500 uppercase tracking-widest">Live Connect</span>
+              <motion.div 
+                initial={{ width: 0 }}
+                animate={{ width: 32 }}
+                transition={{ duration: 1, ease: "easeOut" }}
+                className="h-[1px] bg-primary rounded-full" 
+              />
+              <span className="text-[9px] font-black uppercase tracking-[0.5em] text-primary/60">Sistema Operacional Ativo</span>
+              <div className="flex items-center gap-2 ml-4 px-2.5 py-1 rounded-full bg-emerald-500/5 border border-emerald-500/10 backdrop-blur-md">
+                <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)] animate-pulse" />
+                <span className="text-[8px] font-black text-emerald-500 uppercase tracking-widest">Sincronização 100%</span>
               </div>
             </div>
-            <h1 className="text-3xl md:text-5xl font-display font-bold tracking-tight leading-tight">
-              Olá, <span className="text-primary/90">{(user?.user_metadata?.full_name ?? user?.email ?? "").split(" ")[0]}</span>.
+            <h1 className="text-3xl md:text-5xl font-display font-bold tracking-tight leading-tight text-foreground/90">
+              Olá, <span className="text-primary italic">{(user?.user_metadata?.full_name ?? user?.email ?? "").split(" ")[0]}</span>.
             </h1>
-            <p className="text-muted-foreground/80 text-base md:text-lg font-medium max-w-xl leading-relaxed">
-              Sua central de operações está sincronizada. Detectamos <span className="text-foreground font-bold">4 oportunidades</span> de alta conversão para hoje.
+            <p className="text-muted-foreground/60 text-base md:text-lg font-medium max-w-xl leading-relaxed">
+              Sua inteligência de vendas está processando novos dados. <br className="hidden md:block" />
+              Otimizamos <span className="text-foreground font-bold">suas próximas ações</span> para maximizar a conversão hoje.
             </p>
           </div>
-          <div className="flex flex-col items-start lg:items-end gap-3">
-            <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/40 mb-1">Status do Ciclo Atual</div>
-            <Badge variant="outline" className="h-fit py-3 px-6 bg-card/40 text-primary border-primary/20 text-[10px] font-black rounded-xl shadow-sm uppercase tracking-[0.2em] backdrop-blur-xl ring-1 ring-primary/5">
+          <div className="flex flex-col items-start lg:items-end gap-3 relative z-10">
+            <div className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground/30 mb-1">Janela de Operação</div>
+            <Badge variant="outline" className="h-fit py-3.5 px-8 bg-card/20 text-primary border-primary/10 text-[10px] font-black rounded-2xl shadow-2xl uppercase tracking-[0.2em] backdrop-blur-3xl ring-1 ring-primary/5">
               {new Date().toLocaleDateString("pt-BR", { weekday: 'long', day: '2-digit', month: 'long' })}
             </Badge>
           </div>
