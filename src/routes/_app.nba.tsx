@@ -156,7 +156,9 @@ function NbaPage() {
               <Card key={i.erp_customer_id} className="p-4 hover:border-primary/40 transition-colors">
                 <div className="flex items-start gap-4">
                   <div className={`p-2 rounded-lg border ${meta.cls}`}>
-                    {Icon && <Icon className="h-5 w-5" as="svg" />}
+                    <div className="h-5 w-5">
+                      {Icon && <Icon className="h-full w-full" />}
+                    </div>
                   </div>
                   <div className="flex-1 min-w-0 space-y-1">
                     <div className="flex flex-wrap items-center gap-2">
