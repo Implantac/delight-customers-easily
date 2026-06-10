@@ -6,6 +6,8 @@ import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
 
+import { Link } from "@tanstack/react-router";
+
 export function MuralComercial() {
   const { user } = useAuth();
   const firstName = user?.user_metadata?.full_name?.split(" ")[0] || "Comercial";
