@@ -161,11 +161,11 @@ export function MuralComercial() {
                   <div className={cn("p-2 rounded-lg bg-secondary", s.color)}>
                     <s.icon className="h-4 w-4" />
                   </div>
-                  <div className=\"flex-1\">
+                  <div className="flex-1">
                     <div className="text-sm font-semibold">{s.name}</div>
                     <div className="text-[11px] text-muted-foreground font-medium">{s.status}</div>
                   </div>
-                  <div className=\"text-xs font-bold\">{s.progress}%</div>
+                  <div className="text-xs font-bold">{s.progress}%</div>
                 </div>
                 <Progress value={s.progress} className="h-1.5 mt-3" />
               </CardContent>
