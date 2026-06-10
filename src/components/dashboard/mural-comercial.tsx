@@ -57,25 +57,45 @@ export function MuralComercial() {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       <motion.div 
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="relative mb-6"
+        className="relative"
       >
-        <div className="absolute -left-4 top-0 h-full w-1 bg-gradient-to-b from-primary to-transparent rounded-full opacity-50" />
-        <h2 className="text-[10px] font-bold tracking-widest mb-3 uppercase text-primary/60 flex items-center gap-2">
-          <div className="h-1 w-8 bg-primary/40 rounded-full" /> Insights da Operação
-        </h2>
-        <div className="flex flex-col gap-4 max-w-3xl">
-          <p className="text-muted-foreground text-xl leading-relaxed">
-            Identificamos <span className="text-foreground font-bold underline decoration-primary/40 underline-offset-4">R$ 482.000</span> em oportunidades prioritárias.
-          </p>
-          <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs font-semibold text-muted-foreground uppercase tracking-tight">
-            <span className="flex items-center gap-1.5"><Users className="h-4 w-4 text-rose-500" /> <strong className="text-foreground">17</strong> clientes precisam de atenção</span>
-            <span className="flex items-center gap-1.5"><Target className="h-4 w-4 text-blue-500" /> <strong className="text-foreground">3</strong> regiões com alto potencial</span>
-            <span className="flex items-center gap-1.5"><MapPin className="h-4 w-4 text-violet-500" /> <strong className="text-foreground">Sua equipe</strong> pode visitar <strong className="text-foreground">12</strong> prospects hoje</span>
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-wrap gap-4 items-center">
+             <div className="bg-primary/10 text-primary border border-primary/20 px-4 py-2 rounded-2xl flex items-center gap-3 shadow-sm shadow-primary/5">
+                <div className="relative">
+                  <TrendingUp className="h-5 w-5" />
+                  <motion.div 
+                    animate={{ scale: [1, 1.2, 1] }} 
+                    transition={{ repeat: Infinity, duration: 2 }}
+                    className="absolute -top-1 -right-1 h-2 w-2 bg-primary rounded-full" 
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[10px] font-bold uppercase tracking-widest opacity-60">Volume em Aberto</span>
+                  <span className="text-xl font-display font-bold tabular-nums leading-none mt-0.5">R$ 482.000</span>
+                </div>
+             </div>
+
+             <div className="bg-rose-500/5 text-rose-500 border border-rose-500/20 px-4 py-2 rounded-2xl flex items-center gap-3">
+                <Users className="h-5 w-5" />
+                <div className="flex flex-col">
+                  <span className="text-[10px] font-bold uppercase tracking-widest opacity-60">Atenção Crítica</span>
+                  <span className="text-xl font-display font-bold tabular-nums leading-none mt-0.5">17 Clientes</span>
+                </div>
+             </div>
+
+             <div className="bg-blue-500/5 text-blue-500 border border-blue-500/20 px-4 py-2 rounded-2xl flex items-center gap-3">
+                <Target className="h-5 w-5" />
+                <div className="flex flex-col">
+                  <span className="text-[10px] font-bold uppercase tracking-widest opacity-60">Regiões Quentes</span>
+                  <span className="text-xl font-display font-bold tabular-nums leading-none mt-0.5">3 Áreas</span>
+                </div>
+             </div>
           </div>
         </div>
       </motion.div>
