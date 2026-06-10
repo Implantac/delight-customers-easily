@@ -57,6 +57,7 @@ const navigationGroups: NavGroup[] = [
     items: [
       { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, tone: "accent" },
       { to: "/meu-dia", label: "Meu Dia", icon: Sun, tone: "accent" },
+      { to: "/nba", label: "Ações Próximas", icon: Sparkles, tone: "accent" },
     ],
   },
   {
