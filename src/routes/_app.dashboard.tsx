@@ -52,6 +52,7 @@ const STAGE_LABEL: Record<string, string> = {
  *  • Clientes em risco (churn alto).
  */
 function DashboardPage() {
+  const { user } = useAuth();
   const { orgId } = useCurrentOrg();
 
   const forecast = useServerFn(getForecast);
