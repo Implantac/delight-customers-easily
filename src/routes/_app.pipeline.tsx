@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { useCurrentOrg } from "@/lib/org";
 import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -280,18 +281,20 @@ function PipelinePage() {
                   if (d && d.stage !== stage.id) move.mutate({ id: dragId, stage: stage.id, prevStage: d.stage as Stage, deal: { title: d.title, value: d.value } });
                   setDragId(null);
                 }}
-                className={`flex w-[80vw] shrink-0 flex-col rounded-2xl border bg-secondary/20 p-2.5 transition-all md:w-auto md:shrink ${
+                className={`flex w-[85vw] shrink-0 flex-col rounded-[2rem] border bg-secondary/10 p-4 transition-all duration-500 md:w-auto md:shrink ${
                   dragOverStage === stage.id && dragId
-                    ? "border-primary/40 bg-primary/5 ring-4 ring-primary/5 scale-[1.02]"
-                    : "border-border/30"
+                    ? "border-primary/40 bg-primary/5 ring-8 ring-primary/5 scale-[1.01]"
+                    : "border-border/30 hover:border-border/60 shadow-sm"
                 }`}
               >
-                <div className="sticky top-0 z-10 -mx-2.5 -mt-2.5 mb-3 rounded-t-2xl bg-background/60 px-4 py-3 backdrop-blur-xl border-b border-border/10">
+                <div className="sticky top-0 z-10 -mx-4 -mt-4 mb-4 rounded-t-[2rem] bg-card/60 px-5 py-4 backdrop-blur-xl border-b border-border/10">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold tracking-tight">{stage.label}</span>
-                    <span className="rounded-full bg-background px-2 py-0.5 text-xs text-muted-foreground">{items.length}</span>
+                    <span className="text-[13px] font-bold uppercase tracking-widest text-foreground/80">{stage.label}</span>
+                    <Badge variant="secondary" className="rounded-full px-2 py-0 text-[10px] bg-secondary/80 font-bold border-none">
+                      {items.length}
+                    </Badge>
                   </div>
-                  <p className="mt-0.5 text-xs text-muted-foreground">{fmtBRL(sum)}</p>
+                  <p className="mt-1 text-sm font-display font-bold tracking-tight text-primary/80">{fmtBRL(sum)}</p>
                 </div>
 
                 <div className="flex-1 space-y-2">
@@ -314,17 +317,17 @@ function PipelinePage() {
                         onDragStart={() => setDragId(d.id)}
                         onDragEnd={() => { setDragId(null); setDragOverStage(null); }}
                         onClick={() => setSelectedId(d.id)}
-                        className={`group cursor-grab border-l-[3px] p-4 transition-all duration-200 hover:-translate-y-1 hover:shadow-md active:cursor-grabbing bg-card border-border/50 ${stage.color} ${
+                        className={`group cursor-grab border-l-[4px] p-5 transition-all duration-300 hover:-translate-y-1 active:cursor-grabbing bg-card/80 backdrop-blur-sm border-border/40 rounded-2xl shadow-sm hover:shadow-xl ${stage.color} ${
                           isDragging ? "opacity-30 rotate-2 scale-90" : ""
                         }`}
                         title={d._score.reasons.join(" · ")}
                       >
                         <div className="flex items-start justify-between gap-2">
-                          <h4 className="flex-1 text-sm font-medium leading-tight">{d.title}</h4>
-                          <span className={`flex h-2 w-2 shrink-0 rounded-full ${heat.dot} ring-2 ${heat.ring}`} />
+                          <h4 className="flex-1 text-sm font-bold leading-snug group-hover:text-primary transition-colors">{d.title}</h4>
+                          <span className={`flex h-2 w-2 shrink-0 rounded-full ${heat.dot} ring-4 ${heat.ring} mt-1`} />
                         </div>
-                        <div className="mt-1 flex items-baseline justify-between gap-2">
-                          <p className="text-sm font-semibold text-primary">{fmtBRL(Number(d.value))}</p>
+                        <div className="mt-2 flex items-baseline justify-between gap-2">
+                          <p className="text-[15px] font-display font-bold text-foreground">{fmtBRL(Number(d.value))}</p>
                           {d.stage !== "won" && d.stage !== "lost" && (
                             <span className="text-[10px] font-medium text-muted-foreground">
                               {d._score.probability}%

@@ -2,7 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
-import { Check, Circle, Sparkles } from "lucide-react";
+import { Check, Circle, Sparkles, ArrowRight } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
 type Step = { key: string; label: string; to: string; done: boolean };
@@ -46,26 +47,39 @@ export function OnboardingChecklist() {
   if (completed === steps.length) return null;
 
   return (
-    <Card className="p-5">
-      <div className="flex items-center gap-2">
-        <Sparkles className="h-4 w-4 text-primary" />
-        <h3 className="text-sm font-semibold">Comece por aqui</h3>
-        <span className="ml-auto text-xs text-muted-foreground">{completed} de {steps.length}</span>
+    <Card className="p-8 rounded-[2.5rem] shadow-xl shadow-black/5 border-border/40 bg-card/40 backdrop-blur-xl">
+      <div className="flex items-center justify-between gap-4 mb-8">
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 rounded-2xl bg-primary/10 border border-primary/20">
+            <Sparkles className="h-5 w-5 text-primary" />
+          </div>
+          <div>
+            <h3 className="font-display font-bold text-lg leading-none">Comece por aqui</h3>
+            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest mt-1 opacity-70">Onboarding do Time</p>
+          </div>
+        </div>
+        <Badge variant="secondary" className="rounded-full px-3 py-0.5 text-xs bg-primary/20 text-primary border-primary/20 font-bold">
+          {completed}/{steps.length}
+        </Badge>
       </div>
-      <ul className="mt-3 space-y-2">
+      <ul className="space-y-3">
         {steps.map((s) => (
           <li key={s.key}>
             <Link
               to={s.to}
               className={cn(
-                "flex items-center gap-2 rounded-md border p-2.5 text-sm transition hover:bg-accent",
-                s.done && "opacity-60",
+                "flex items-center gap-3 rounded-2xl border border-border/40 p-4 text-sm font-medium transition-all duration-300",
+                s.done ? "opacity-50 bg-secondary/30 grayscale-[0.5]" : "bg-card hover:border-primary/30 hover:shadow-lg hover:-translate-y-0.5 shadow-sm shadow-black/[0.02]",
               )}
             >
-              {s.done
-                ? <Check className="h-4 w-4 text-success" />
-                : <Circle className="h-4 w-4 text-muted-foreground" />}
-              <span className={cn(s.done && "line-through")}>{s.label}</span>
+              <div className={cn(
+                "h-6 w-6 rounded-full flex items-center justify-center border transition-colors",
+                s.done ? "bg-success/10 border-success/30 text-success" : "bg-muted/50 border-border/60 text-muted-foreground",
+              )}>
+                {s.done ? <Check className="h-3.5 w-3.5" /> : <Circle className="h-3 w-3" />}
+              </div>
+              <span className={cn("flex-1", s.done && "line-through text-muted-foreground")}>{s.label}</span>
+              {!s.done && <ArrowRight className="h-3.5 w-3.5 text-primary opacity-0 group-hover:opacity-100 transition-opacity" />}
             </Link>
           </li>
         ))}

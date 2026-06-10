@@ -49,13 +49,18 @@ export function Customer360Mini() {
   const empty = !loading && champItems.length === 0 && riskItems.length === 0;
 
   return (
-    <Card className="p-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Sparkles className="h-4 w-4 text-primary" />
-          <h3 className="font-semibold">Customer 360</h3>
+    <Card className="p-8 rounded-[2.5rem] shadow-xl shadow-black/5 border-border/40 bg-gradient-to-br from-card to-primary/5">
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-4">
+          <div className="bg-primary/10 p-3 rounded-2xl">
+            <Sparkles className="h-6 w-6 text-primary" />
+          </div>
+          <div>
+            <h3 className="font-display font-bold text-xl tracking-tight leading-none text-foreground">Customer 360</h3>
+            <p className="text-xs text-muted-foreground font-medium mt-1 uppercase tracking-widest opacity-70">Visão Geral da Carteira</p>
+          </div>
         </div>
-        <Button asChild size="sm" variant="ghost">
+        <Button variant="ghost" size="sm" className="text-primary hover:text-primary/80 hover:bg-primary/5 rounded-xl font-bold text-xs uppercase tracking-widest" asChild>
           <Link to="/customer-360">
             Ver tudo <ArrowRight className="ml-1 h-3 w-3" />
           </Link>

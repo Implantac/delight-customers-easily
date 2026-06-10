@@ -37,13 +37,18 @@ export function ChurnRiskCard() {
   });
 
   return (
-    <Card className="p-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <AlertTriangle className="h-4 w-4 text-red-600" />
-          <h3 className="font-semibold">Risco de churn</h3>
+    <Card className="p-8 border-rose-100/50 bg-gradient-to-br from-card to-rose-50/10 rounded-[2.5rem] shadow-xl shadow-black/5">
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-4">
+          <div className="bg-rose-100 p-3 rounded-2xl shadow-inner">
+            <AlertTriangle className="h-6 w-6 text-rose-600" />
+          </div>
+          <div>
+            <h3 className="font-display font-bold text-xl tracking-tight leading-none text-foreground">Risco de Churn</h3>
+            <p className="text-xs text-muted-foreground font-medium mt-1 uppercase tracking-widest opacity-70">Retenção Preditiva</p>
+          </div>
         </div>
-        <Button asChild size="sm" variant="ghost">
+        <Button variant="ghost" size="sm" className="text-rose-600 hover:text-rose-700 hover:bg-rose-50 rounded-xl font-bold text-xs uppercase tracking-widest" asChild>
           <Link to="/inteligencia-comercial">
             Ver tudo <ArrowRight className="ml-1 h-3 w-3" />
           </Link>
