@@ -44,6 +44,7 @@ const SEGMENTS = [
 
 function NbaPage() {
   const { orgId } = useCurrentOrg();
+  const navigate = useNavigate();
   const callList = useServerFn(listNbaQueue);
   const callCreate = useServerFn(createNbaTask);
   const [segment, setSegment] = useState("all");
