@@ -118,7 +118,7 @@ export function MuralComercial() {
             </div>
             
             <h3 className="text-3xl font-display font-bold max-w-xl leading-tight">
-              Deseja gerar um plano de ação inteligente para converter as 12 visitas em oportunidades reais hoje?
+              Deseja gerar um plano de ação inteligente para converter as visitas sugeridas em oportunidades reais hoje?
             </h3>
             
             <div className="flex flex-wrap gap-4">
