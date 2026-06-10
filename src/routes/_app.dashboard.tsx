@@ -156,67 +156,23 @@ function DashboardPage() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <CheckSquare className="h-5 w-5 text-primary" />
-            <h2 className="text-xl font-display font-bold tracking-tight">O QUE FAZER HOJE</h2>
+            <h2 className="text-xl font-display font-bold tracking-tight uppercase">O QUE FAZER HOJE</h2>
           </div>
           <Badge variant="outline" className="bg-primary/5 text-primary border-primary/10">
             {new Date().toLocaleDateString("pt-BR", { weekday: 'long', day: '2-digit', month: 'long' })}
           </Badge>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Plano do Dia */}
-          <Card className="p-6 border-primary/10 bg-gradient-to-br from-background to-primary/5">
-            <h3 className="font-bold flex items-center gap-2 mb-4">
-              <Calendar className="h-4 w-4 text-primary" /> Seu Plano do Dia
-            </h3>
-            <div className="space-y-4">
-              <ActionItem icon={MapPin} label="12 Visitas na Rota" sub="Região: Campinas / Indaiatuba" />
-              <ActionItem icon={MessageSquare} label="8 Follow-ups Atrasados" sub="Prioridade Alta" />
-              <ActionItem icon={TrendingUp} label="R$ 15k em Reativação" sub="3 clientes sem compra 60d+" />
-            </div>
-            <Button className="w-full mt-6 rounded-full" variant="outline">
-              Ver Agenda Completa
-            </Button>
-          </Card>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Plano do Dia (IA) */}
+          <div className="lg:col-span-2">
+            <NextActionBlock surface="dashboard" title="Plano de Ação Sugerido pela IA" limit={4} showRegenerate />
+          </div>
 
-          {/* Clientes em Risco / Atenção */}
-          <Card className="p-6 border-rose-500/10">
-            <h3 className="font-bold flex items-center gap-2 mb-4 text-rose-600">
-              <AlertTriangle className="h-4 w-4" /> Clientes em Risco
-            </h3>
-            <div className="space-y-4">
-              {!retentionQuery.isLoading && riskRows.map(r => (
-                <div key={r.company_id} className="flex items-center justify-between group cursor-pointer">
-                  <div>
-                    <div className="text-sm font-semibold group-hover:text-primary transition-colors">{r.name}</div>
-                    <div className="text-[10px] text-muted-foreground uppercase">{r.risk} de churn</div>
-                  </div>
-                  <Button size="sm" variant="ghost" className="h-8 w-8 p-0 rounded-full">
-                    <ArrowRight className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
-              {riskRows.length === 0 && <div className="text-sm text-muted-foreground italic">Nenhum risco detectado.</div>}
-            </div>
-            <Button className="w-full mt-6 rounded-full border-rose-500/20 text-rose-600 hover:bg-rose-500/5" variant="outline">
-              Ver Todos em Risco
-            </Button>
-          </Card>
-
-          {/* Leads Quentes */}
-          <Card className="p-6 border-amber-500/10">
-            <h3 className="font-bold flex items-center gap-2 mb-4 text-amber-600">
-              <Flame className="h-4 w-4" /> Leads Prioritários
-            </h3>
-            <div className="space-y-4">
-              <ActionItem icon={Zap} label="Tech Solutions" sub="Score 94 · Vindo do WhatsApp" />
-              <ActionItem icon={Zap} label="Indústria Alfa" sub="Score 88 · Campanha Influencer" />
-              <ActionItem icon={Zap} label="Global Logistics" sub="Score 82 · Site Chat" />
-            </div>
-            <Button className="w-full mt-6 rounded-full border-amber-500/20 text-amber-600 hover:bg-amber-500/5" variant="outline">
-              Acompanhar Leads
-            </Button>
-          </Card>
+          {/* Onboarding / Setup */}
+          <div data-tour="dashboard-checklist">
+            <OnboardingChecklist />
+          </div>
         </div>
       </section>
 
