@@ -10,7 +10,6 @@ import { Link } from "@tanstack/react-router";
 
 export function MuralComercial() {
   const { user } = useAuth();
-  const firstName = user?.user_metadata?.full_name?.split(" ")[0] || "Comercial";
 
   const metrics = [
     { 
