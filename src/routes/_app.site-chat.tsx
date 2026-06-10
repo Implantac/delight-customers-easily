@@ -19,7 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { PageHeader } from "@/components/page-header";
 import { 
   MessageSquare, Send, Loader2, ExternalLink, UserPlus, X, Settings as SettingsIcon,
-  Instagram, Facebook, Linkedin, Mail, Phone, MessageCircle, Twitter, LayoutGrid
+  Mail, Phone, MessageCircle, LayoutGrid
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -120,8 +120,8 @@ function SiteChatInboxPage() {
           <div className="p-3 border-b flex gap-1 overflow-x-auto no-scrollbar">
              <ChannelFilter icon={LayoutGrid} active />
              <ChannelFilter icon={MessageCircle} color="text-emerald-500" />
-             <ChannelFilter icon={Instagram} color="text-rose-500" />
-             <ChannelFilter icon={Facebook} color="text-blue-600" />
+             <ChannelFilter icon={MessageSquare} color="text-rose-500" />
+             <ChannelFilter icon={MessageSquare} color="text-blue-600" />
              <ChannelFilter icon={Mail} color="text-violet-500" />
           </div>
           
