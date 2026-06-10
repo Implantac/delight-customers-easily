@@ -57,11 +57,11 @@ export function MuralComercial() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="relative mb-10"
+        className="relative mb-6"
       >
         <div className="absolute -left-4 top-0 h-full w-1 bg-gradient-to-b from-primary to-transparent rounded-full opacity-50" />
-        <h2 className="text-4xl md:text-5xl font-display font-bold tracking-tight mb-3 flex items-center gap-3">
-          Bom dia, {firstName} <span className="text-2xl animate-bounce">👋</span>
+        <h2 className="text-xl font-display font-bold tracking-tight mb-2 uppercase text-muted-foreground flex items-center gap-2">
+          Mural Comercial <span className="text-xs font-normal lowercase">(insights em tempo real)</span>
         </h2>
         <div className="flex flex-col gap-4 max-w-3xl">
           <p className="text-muted-foreground text-xl leading-relaxed">
