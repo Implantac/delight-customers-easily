@@ -57,25 +57,45 @@ export function MuralComercial() {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       <motion.div 
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="relative mb-6"
+        className="relative"
       >
-        <div className="absolute -left-4 top-0 h-full w-1 bg-gradient-to-b from-primary to-transparent rounded-full opacity-50" />
-        <h2 className="text-[10px] font-bold tracking-widest mb-3 uppercase text-primary/60 flex items-center gap-2">
-          <div className="h-1 w-8 bg-primary/40 rounded-full" /> Insights da Operação
-        </h2>
-        <div className="flex flex-col gap-4 max-w-3xl">
-          <p className="text-muted-foreground text-xl leading-relaxed">
-            Identificamos <span className="text-foreground font-bold underline decoration-primary/40 underline-offset-4">R$ 482.000</span> em oportunidades prioritárias.
-          </p>
-          <div className="flex flex-wrap gap-x-6 gap-y-2 text-xs font-semibold text-muted-foreground uppercase tracking-tight">
-            <span className="flex items-center gap-1.5"><Users className="h-4 w-4 text-rose-500" /> <strong className="text-foreground">17</strong> clientes precisam de atenção</span>
-            <span className="flex items-center gap-1.5"><Target className="h-4 w-4 text-blue-500" /> <strong className="text-foreground">3</strong> regiões com alto potencial</span>
-            <span className="flex items-center gap-1.5"><MapPin className="h-4 w-4 text-violet-500" /> <strong className="text-foreground">Sua equipe</strong> pode visitar <strong className="text-foreground">12</strong> prospects hoje</span>
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-wrap gap-4 items-center">
+             <div className="bg-primary/10 text-primary border border-primary/20 px-4 py-2 rounded-2xl flex items-center gap-3 shadow-sm shadow-primary/5">
+                <div className="relative">
+                  <TrendingUp className="h-5 w-5" />
+                  <motion.div 
+                    animate={{ scale: [1, 1.2, 1] }} 
+                    transition={{ repeat: Infinity, duration: 2 }}
+                    className="absolute -top-1 -right-1 h-2 w-2 bg-primary rounded-full" 
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[10px] font-bold uppercase tracking-widest opacity-60">Volume em Aberto</span>
+                  <span className="text-xl font-display font-bold tabular-nums leading-none mt-0.5">R$ 482.000</span>
+                </div>
+             </div>
+
+             <div className="bg-rose-500/5 text-rose-500 border border-rose-500/20 px-4 py-2 rounded-2xl flex items-center gap-3">
+                <Users className="h-5 w-5" />
+                <div className="flex flex-col">
+                  <span className="text-[10px] font-bold uppercase tracking-widest opacity-60">Atenção Crítica</span>
+                  <span className="text-xl font-display font-bold tabular-nums leading-none mt-0.5">17 Clientes</span>
+                </div>
+             </div>
+
+             <div className="bg-blue-500/5 text-blue-500 border border-blue-500/20 px-4 py-2 rounded-2xl flex items-center gap-3">
+                <Target className="h-5 w-5" />
+                <div className="flex flex-col">
+                  <span className="text-[10px] font-bold uppercase tracking-widest opacity-60">Regiões Quentes</span>
+                  <span className="text-xl font-display font-bold tabular-nums leading-none mt-0.5">3 Áreas</span>
+                </div>
+             </div>
           </div>
         </div>
       </motion.div>
@@ -111,30 +131,31 @@ export function MuralComercial() {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4 }}
-          className="lg:col-span-2 p-8 rounded-3xl bg-gradient-to-br from-primary/10 via-background to-background border border-primary/20 relative overflow-hidden group shadow-xl shadow-primary/5"
+          className="lg:col-span-2 p-8 rounded-3xl bg-card border border-border/50 relative overflow-hidden group shadow-xl shadow-black/5"
         >
-          <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
-            <BrainCircuit className="h-32 w-32 text-primary" />
-          </div>
-          
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent pointer-events-none" />
           <div className="relative z-10 space-y-6">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 text-primary text-[10px] font-bold uppercase tracking-widest">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-widest border border-primary/20">
               <Sparkles className="h-3 w-3" /> Copiloto Comercial Ativo
             </div>
             
-            <h3 className="text-3xl font-display font-bold max-w-xl leading-tight">
-              Deseja gerar um plano de ação inteligente para converter as visitas sugeridas em oportunidades reais hoje?
+            <h3 className="text-3xl font-display font-semibold max-w-xl leading-tight">
+              Pronto para maximizar sua performance comercial hoje?
             </h3>
             
-            <div className="flex flex-wrap gap-4">
-              <Button asChild size="lg" className="rounded-full px-8 bg-primary hover:scale-105 transition-transform font-bold group shadow-lg shadow-primary/20">
+            <p className="text-muted-foreground text-sm max-w-md">
+              A IA analisou seus leads, rotas e oportunidades. Gere o plano de ação otimizado e foque no que realmente traz receita.
+            </p>
+            
+            <div className="flex flex-wrap gap-4 pt-2">
+              <Button asChild size="lg" className="rounded-xl px-8 bg-primary hover:bg-primary/90 transition-all font-bold shadow-lg shadow-primary/20">
                 <Link to="/nba">
-                  Gerar Plano de Ação <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  Gerar Plano de Ação <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="rounded-full px-8 border-primary/20 hover:bg-primary/5 font-semibold">
+              <Button asChild size="lg" variant="outline" className="rounded-xl px-8 font-semibold">
                 <Link to="/geo-rota">
-                  <Zap className="mr-2 h-5 w-5 text-amber-500" /> Otimizar Rotas
+                  <Zap className="mr-2 h-4 w-4 text-amber-500" /> Otimizar Rotas
                 </Link>
               </Button>
             </div>
@@ -148,33 +169,25 @@ export function MuralComercial() {
           className="space-y-4"
         >
           <div className="flex items-center justify-between px-2">
-            <h4 className="text-sm font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-              <Zap className="h-4 w-4" /> Inteligência de Vendas
+            <h4 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+              <Zap className="h-4 w-4" /> Inteligência em tempo real
             </h4>
-            <Button variant="link" size="sm" className="text-xs text-primary font-bold">Relatórios</Button>
           </div>
           
           {insights.map((s, i) => (
-            <Card key={s.name} className="border-border/40 bg-card/30 backdrop-blur-sm group hover:border-primary/20 transition-all overflow-hidden">
+            <Card key={s.name} className="border-border/40 bg-card/50 backdrop-blur-sm hover:border-primary/20 transition-all">
               <CardContent className="p-4">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className={cn("p-2 rounded-lg bg-secondary", s.color)}>
-                      <s.icon className="h-4 w-4" />
-                    </div>
-                    <div>
-                      <div className="text-sm font-bold">{s.name}</div>
-                      <div className="text-[10px] text-muted-foreground font-medium">{s.status}</div>
-                    </div>
+                <div className="flex items-center gap-3">
+                  <div className={cn("p-2 rounded-lg bg-secondary", s.color)}>
+                    <s.icon className="h-4 w-4" />
                   </div>
-                </div>
-                <div className="space-y-1.5">
-                  <div className="flex justify-between text-[10px] font-bold">
-                    <span className="text-muted-foreground">Performance</span>
-                    <span>{s.progress}%</span>
+                  <div className="flex-1">
+                    <div className="text-sm font-semibold">{s.name}</div>
+                    <div className="text-[11px] text-muted-foreground font-medium">{s.status}</div>
                   </div>
-                  <Progress value={s.progress} className="h-1" />
+                  <div className="text-xs font-bold">{s.progress}%</div>
                 </div>
+                <Progress value={s.progress} className="h-1.5 mt-3" />
               </CardContent>
             </Card>
           ))}

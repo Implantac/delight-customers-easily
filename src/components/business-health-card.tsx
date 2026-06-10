@@ -38,13 +38,15 @@ export function BusinessHealthCard() {
   const TrendIcon = data.delta == null ? Minus : data.delta > 0 ? TrendingUp : data.delta < 0 ? TrendingDown : Minus;
 
   return (
-    <Card className="p-5 border-primary/30">
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex items-center gap-2">
-          <HeartPulse className="h-5 w-5 text-primary" />
+    <Card className="p-6 md:p-8 border-border/40 bg-card/40 backdrop-blur-sm rounded-3xl shadow-xl shadow-black/5">
+      <div className="flex items-start justify-between gap-4 mb-8">
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/20">
+            <HeartPulse className="h-6 w-6 text-primary" />
+          </div>
           <div>
-            <h3 className="text-sm font-semibold">Business Health Score</h3>
-            <p className="text-xs text-muted-foreground">Saúde geral do negócio agora</p>
+            <h3 className="text-lg font-display font-bold">Saúde do Negócio</h3>
+            <p className="text-[11px] text-muted-foreground font-bold uppercase tracking-widest opacity-70">Business Health Score</p>
           </div>
         </div>
         <div className="text-right">
@@ -58,17 +60,17 @@ export function BusinessHealthCard() {
         </div>
       </div>
 
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-5 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
         {data.pillars.map((p) => (
-          <div key={p.key} className="space-y-1.5">
+          <div key={p.key} className="space-y-3">
             <div className="flex items-center justify-between gap-2">
-              <span className="text-xs font-medium">{p.label}</span>
-              <span className={`text-xs font-semibold ${toneOf(p.score)}`}>{p.score}</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80">{p.label}</span>
+              <span className={`text-xs font-bold tabular-nums ${toneOf(p.score)}`}>{p.score}</span>
             </div>
-            <div className="h-1.5 bg-muted rounded overflow-hidden">
-              <div className={`h-full ${barTone(p.score)}`} style={{ width: `${p.score}%` }} />
+            <div className="h-1.5 bg-secondary rounded-full overflow-hidden">
+              <div className={`h-full ${barTone(p.score)} transition-all duration-1000`} style={{ width: `${p.score}%` }} />
             </div>
-            <p className="text-[11px] text-muted-foreground leading-tight" title={p.detail}>{p.value}</p>
+            <p className="text-[10px] text-muted-foreground/70 font-medium leading-tight line-clamp-2" title={p.detail}>{p.value}</p>
           </div>
         ))}
       </div>
