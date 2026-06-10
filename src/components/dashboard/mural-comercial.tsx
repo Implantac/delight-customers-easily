@@ -57,15 +57,22 @@ export function MuralComercial() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="relative"
+        className="relative mb-10"
       >
         <div className="absolute -left-4 top-0 h-full w-1 bg-gradient-to-b from-primary to-transparent rounded-full opacity-50" />
-        <h2 className="text-4xl font-display font-bold tracking-tight mb-2 flex items-center gap-3">
-          Bom dia, {firstName} <span className="text-2xl animate-pulse">✨</span>
+        <h2 className="text-4xl md:text-5xl font-display font-bold tracking-tight mb-3 flex items-center gap-3">
+          Bom dia, {firstName} <span className="text-2xl animate-bounce">👋</span>
         </h2>
-        <p className="text-muted-foreground text-lg max-w-2xl leading-relaxed">
-          Sua equipe possui um pipeline robusto. Identificamos pontos de ação imediatos para acelerar o fechamento.
-        </p>
+        <div className="flex flex-col gap-4 max-w-3xl">
+          <p className="text-muted-foreground text-xl leading-relaxed">
+            Sua equipe possui <span className="text-foreground font-bold underline decoration-primary/40 underline-offset-4">R$ 482.000</span> em oportunidades abertas.
+          </p>
+          <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm font-medium text-muted-foreground">
+            <span className="flex items-center gap-1.5"><Users className="h-4 w-4 text-rose-500" /> <strong className="text-foreground">17</strong> clientes precisam de atenção</span>
+            <span className="flex items-center gap-1.5"><Target className="h-4 w-4 text-blue-500" /> <strong className="text-foreground">3</strong> regiões com alto potencial</span>
+            <span className="flex items-center gap-1.5"><MapPin className="h-4 w-4 text-violet-500" /> <strong className="text-foreground">João</strong> pode visitar <strong className="text-foreground">12</strong> prospects hoje</span>
+          </div>
+        </div>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
