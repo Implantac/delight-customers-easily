@@ -162,6 +162,9 @@ export function AppSidebar() {
                   <p className="truncate text-[10px] text-muted-foreground uppercase font-bold tracking-widest opacity-60">Sales Intelligence</p>
                 </div>
               )}
+              {!collapsed && <ChevronsUpDown className="h-3.5 w-3.5 text-muted-foreground" />}
+            </SidebarMenuButton>
+          </DropdownMenuTrigger>
                   <ChevronsUpDown className="h-3.5 w-3.5 text-muted-foreground" />
                 </>
               )}

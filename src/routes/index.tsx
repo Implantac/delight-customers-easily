@@ -144,11 +144,12 @@ function SiteHeader({ ctaHref, ctaLabel }: { ctaHref: string; ctaLabel: string }
   return (
     <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-        <Link to="/" className="flex items-center gap-2 font-semibold tracking-tight">
-          <span className="grid h-10 w-10 place-items-center rounded-xl bg-primary text-primary-foreground shadow-lg shadow-primary/20 ring-1 ring-white/10">
-            <Sparkles className="h-5 w-5" />
-          </span>
-          <span className="text-xl font-display font-bold tracking-tighter">USE PATRIUM</span>
+        <Link to="/" className="flex items-center gap-2">
+          <img 
+            src="https://hckncgrfhedoswsdkyni.supabase.co/storage/v1/object/public/uploads/9fa2115e-e837-46f2-abac-57d602f8b76a/logo.png" 
+            alt="USE PATRIUM" 
+            className="h-8 w-auto object-contain"
+          />
         </Link>
         <nav className="hidden items-center gap-7 text-sm text-muted-foreground md:flex">
           <a href="#features" className="transition-colors hover:text-primary font-medium">Recursos</a>
