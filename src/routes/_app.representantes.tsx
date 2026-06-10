@@ -62,7 +62,7 @@ function RepsPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Representantes"
+        title="Equipe de Vendas"
         subtitle="Quem está acima, quem está atrás e quem precisa de ajuda hoje."
         icon={Award}
         action={
