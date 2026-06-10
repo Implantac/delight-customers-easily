@@ -151,41 +151,25 @@ function DashboardPage() {
     <div className="p-4 md:p-8 max-w-[1600px] mx-auto space-y-12 pb-24">
       {/* Mural Comercial / Command Center Header */}
       <section className="animate-in-page">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-4">
-          <div className="space-y-1">
-            <h2 className="text-4xl md:text-5xl font-display font-bold tracking-tight">
-              Bom dia, {(user?.user_metadata?.full_name ?? user?.email ?? "").split(" ")[0]}! <span className="animate-bounce inline-block">👋</span>
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-8">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <div className="h-1 w-12 bg-primary rounded-full" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">Command Center</span>
+            </div>
+            <h2 className="text-4xl md:text-6xl font-display font-bold tracking-tight">
+              Bom dia, {(user?.user_metadata?.full_name ?? user?.email ?? "").split(" ")[0]}!
             </h2>
-            <p className="text-muted-foreground text-lg">Aqui está o panorama estratégico da sua operação comercial hoje.</p>
+            <p className="text-muted-foreground text-xl max-w-2xl">Aqui está o panorama estratégico da sua operação comercial hoje.</p>
           </div>
-          <Badge variant="outline" className="h-fit py-1.5 px-4 bg-primary/5 text-primary border-primary/10 text-sm font-medium rounded-full shadow-sm">
-            {new Date().toLocaleDateString("pt-BR", { weekday: 'long', day: '2-digit', month: 'long' })}
-          </Badge>
+          <div className="flex flex-col items-end gap-2">
+            <Badge variant="outline" className="h-fit py-2 px-6 bg-card text-foreground border-border/50 text-xs font-bold rounded-xl shadow-sm uppercase tracking-widest">
+              {new Date().toLocaleDateString("pt-BR", { weekday: 'long', day: '2-digit', month: 'long' })}
+            </Badge>
+          </div>
         </div>
+        
         <MuralComercial />
-      </section>
-
-
-      {/* O QUE FAZER HOJE - Painel de Ações Imediatas */}
-      <section className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <CheckSquare className="h-5 w-5 text-primary" />
-            <h2 className="text-xl font-display font-bold tracking-tight uppercase">O QUE FAZER HOJE</h2>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Plano do Dia (IA) */}
-          <div className="lg:col-span-2">
-            <NextActionBlock surface="dashboard" title="Plano de Ação Sugerido pela IA" limit={4} showRegenerate />
-          </div>
-
-          {/* Onboarding / Setup */}
-          <div data-tour="dashboard-checklist">
-            <OnboardingChecklist />
-          </div>
-        </div>
       </section>
 
       {/* KPI Command Bar */}
@@ -198,35 +182,72 @@ function DashboardPage() {
             transition={{ delay: i * 0.1 }}
           >
             <Link to={k.href as any} className="group block h-full">
-              <Card className="h-full p-5 border-border/40 hover:border-primary/20 transition-all hover:shadow-lg hover:shadow-primary/5">
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{k.label}</span>
-                  <div className={`p-2 rounded-lg bg-secondary/50 ${k.tone}`}>
+              <Card className="h-full p-6 border-border/40 bg-card/40 backdrop-blur-sm hover:border-primary/20 transition-all hover:shadow-2xl hover:shadow-primary/5 rounded-2xl">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70">{k.label}</span>
+                  <div className={`p-2.5 rounded-xl bg-secondary/50 ${k.tone} border border-border/50`}>
                     <k.icon className="h-4 w-4" />
                   </div>
                 </div>
-                <div className="text-2xl font-display font-bold">{k.value}</div>
-                <div className="text-[11px] text-muted-foreground mt-1 truncate">{k.sub}</div>
+                <div className="text-3xl font-display font-bold tabular-nums tracking-tight">{k.value}</div>
+                <div className="text-[11px] text-muted-foreground mt-2 font-medium flex items-center gap-1.5 opacity-80">
+                  <div className="h-1 w-1 rounded-full bg-primary/40" />
+                  {k.sub}
+                </div>
               </Card>
             </Link>
           </motion.div>
         ))}
       </section>
 
+      {/* O QUE FAZER HOJE - Painel de Ações Imediatas */}
+      <section className="space-y-6">
+        <div className="flex items-center justify-between px-2">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
+              <CheckSquare className="h-5 w-5 text-primary" />
+            </div>
+            <h2 className="text-xl font-display font-bold tracking-tight uppercase">Prioridades do Dia</h2>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Plano do Dia (IA) */}
+          <div className="lg:col-span-2">
+            <NextActionBlock 
+              surface="dashboard" 
+              title="Ações Recomendadas" 
+              limit={4} 
+              showRegenerate 
+            />
+          </div>
+
+          {/* Onboarding / Setup ou Business Health */}
+          <div className="space-y-8">
+            <BusinessHealthCard />
+            <div data-tour="dashboard-checklist">
+              <OnboardingChecklist />
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Oportunidades & Saúde */}
-      <section className="space-y-4">
-        <h2 className="text-xl font-display font-bold tracking-tight uppercase flex items-center gap-2">
-          <TrendingUp className="h-5 w-5 text-primary" /> Performance & Diagnóstico
-        </h2>
+      <section className="space-y-6">
+        <div className="flex items-center gap-3 px-2">
+          <div className="p-2 rounded-lg bg-primary/10 border border-primary/20">
+            <TrendingUp className="h-5 w-5 text-primary" />
+          </div>
+          <h2 className="text-xl font-display font-bold tracking-tight uppercase">Performance & Pipeline</h2>
+        </div>
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
           <TopOpportunities />
-          <BusinessHealthCard />
+          <ChurnRiskCard />
         </div>
       </section>
 
       <section className="grid grid-cols-1 gap-8 lg:grid-cols-2">
         <Customer360Mini />
-        <ChurnRiskCard />
       </section>
 
       <ProductTour tourId="dashboard-v3" steps={[]} />
