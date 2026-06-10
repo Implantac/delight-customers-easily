@@ -18,7 +18,8 @@ export function MuralComercial() {
       description: "Valor total em aberto",
       icon: TrendingUp, 
       color: "text-emerald-500",
-      bg: "bg-emerald-500/10"
+      bg: "bg-emerald-500/10",
+      to: "/pipeline"
     },
     { 
       label: "Atenção Necessária", 
