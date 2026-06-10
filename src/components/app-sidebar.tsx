@@ -73,9 +73,9 @@ const navigationGroups: NavGroup[] = [
   {
     label: "Operação de Campo",
     items: [
-      { to: "/representantes", label: "Representantes", icon: Award, tone: "success", managerOnly: true },
       { to: "/calendar", label: "Agenda", icon: CalendarIcon, tone: "primary" },
       { to: "/geo-rota", label: "Visitas e Rotas", icon: RouteIcon, tone: "info" },
+      { to: "/representantes", label: "Equipe de Vendas", icon: Award, tone: "success", managerOnly: true },
     ],
   },
   {
@@ -92,13 +92,6 @@ const navigationGroups: NavGroup[] = [
       { to: "/influencers", label: "Influencer ROI", icon: Trophy, tone: "accent" },
       { to: "/geo", label: "Geointeligência", icon: Map, tone: "info" },
       { to: "/inteligencia-comercial", label: "IA Comercial", icon: Sparkles, tone: "violet" },
-      { to: "/reports", label: "Relatórios de Vendas", icon: BarChart3, tone: "info", managerOnly: true },
-    ],
-  },
-  {
-    label: "Conectividade",
-    items: [
-      { to: "/integrations", label: "ConnectHub ERP", icon: Plug, tone: "primary", managerOnly: true },
     ],
   },
   {
@@ -109,6 +102,7 @@ const navigationGroups: NavGroup[] = [
       { to: "/commissions", label: "Comissões", icon: DollarSign, tone: "success", managerOnly: true },
       { to: "/goals", label: "Metas & Ranking", icon: Trophy, tone: "accent", managerOnly: true },
       { to: "/forecast", label: "Previsão", icon: TrendingUp, tone: "info", managerOnly: true },
+      { to: "/integrations", label: "ConnectHub ERP", icon: Plug, tone: "primary", managerOnly: true },
       { to: "/settings/alerts", label: "Alertas Inteligentes", icon: Bell, tone: "violet", managerOnly: true },
       { to: "/settings/organization", label: "Configurações", icon: Settings, tone: "primary", managerOnly: true },
     ],
