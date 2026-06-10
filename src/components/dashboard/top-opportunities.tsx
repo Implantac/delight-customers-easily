@@ -140,18 +140,18 @@ export function TopOpportunities() {
   }
 
   return (
-    <Card className="p-6 relative overflow-hidden border-orange-100/50 bg-gradient-to-br from-card to-orange-50/10">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-2">
-          <div className="bg-orange-100 p-2 rounded-lg">
-            <Flame className="h-5 w-5 text-orange-600" />
+    <Card className="p-8 relative overflow-hidden border-orange-100/50 bg-gradient-to-br from-card to-orange-50/10 rounded-[2.5rem] shadow-xl shadow-black/5">
+      <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center gap-4">
+          <div className="bg-orange-100 p-3 rounded-2xl shadow-inner">
+            <Flame className="h-6 w-6 text-orange-600" />
           </div>
           <div>
-            <h3 className="font-semibold text-lg leading-none">Top Oportunidades</h3>
-            <p className="text-xs text-muted-foreground mt-1">Ranking por potencial e chance de fechamento</p>
+            <h3 className="font-display font-bold text-xl tracking-tight leading-none text-foreground">Top Oportunidades</h3>
+            <p className="text-xs text-muted-foreground font-medium mt-1 uppercase tracking-widest opacity-70">Power Ranking IA</p>
           </div>
         </div>
-        <Button variant="ghost" size="sm" asChild>
+        <Button variant="ghost" size="sm" className="text-orange-600 hover:text-orange-700 hover:bg-orange-50 rounded-xl font-bold text-xs uppercase tracking-widest" asChild>
           <Link to="/pipeline">Ver tudo <ArrowUpRight className="ml-1 h-3 w-3" /></Link>
         </Button>
       </div>
