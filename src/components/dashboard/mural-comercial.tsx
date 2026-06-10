@@ -36,7 +36,8 @@ export function MuralComercial() {
       description: "Oportunidades geolocalizadas",
       icon: Target, 
       color: "text-blue-500",
-      bg: "bg-blue-500/10"
+      bg: "bg-blue-500/10",
+      to: "/geo"
     },
     { 
       label: "Visitas Sugeridas", 
