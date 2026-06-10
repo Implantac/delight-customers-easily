@@ -89,7 +89,10 @@ function NbaPage() {
           type: i.action === "visit" ? "meeting" : i.action === "call" ? "call" : "task",
         },
       }),
-    onSuccess: () => toast.success("Ação confirmada e integrada à sua agenda comercial"),
+    onSuccess: () => {
+      toast.success("Ação confirmada e integrada à sua agenda comercial");
+      navigate({ to: "/meu-dia" });
+    },
     onError: (e: any) => toast.error(e?.message ?? "Erro ao criar tarefa"),
   });
 
