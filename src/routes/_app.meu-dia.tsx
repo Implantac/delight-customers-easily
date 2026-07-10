@@ -21,6 +21,7 @@ import { listMyTasks } from "@/lib/mytasks.functions";
 import { getForecast } from "@/lib/forecast.functions";
 import { generateSmartAgenda } from "@/lib/smart-agenda.functions";
 import { downloadVisitReportPdf } from "@/lib/pdf-export";
+import { DailyBriefing } from "@/components/dashboard/daily-briefing";
 
 export const Route = createFileRoute("/_app/meu-dia")({ component: MyDayPage });
 
@@ -193,6 +194,9 @@ function MyDayPage() {
           </div>
         }
       />
+
+      {/* Copiloto de Vendas — Briefing diário */}
+      <DailyBriefing />
 
       {/* Métricas pessoais — meta, gap, atingimento */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
