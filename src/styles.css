@@ -498,21 +498,35 @@
     color: var(--foreground);
   }
 
-  /* Sidebar minimal — Linear/Attio style */
+  /* Sidebar minimal — hover escopado item-a-item (Linear/Attio) */
   [data-sidebar="menu-button"] {
     border-radius: var(--radius-md);
-    transition: all 140ms var(--ease-out);
-    margin: 0 4px;
+    margin: 1px 6px;
     height: 34px;
+    color: var(--sidebar-foreground);
+    background: transparent;
+    transition:
+      background-color 120ms var(--ease-out),
+      color 120ms var(--ease-out);
   }
-  [data-sidebar="menu-button"]:hover {
-    background: var(--sidebar-accent);
-    color: var(--foreground);
+  /* Estado hover — apenas o item sob o cursor */
+  [data-sidebar="menu-button"]:hover:not([data-active="true"]) {
+    background: color-mix(in oklab, var(--sidebar-primary) 12%, transparent);
+    color: var(--sidebar-primary-foreground, #fff);
   }
+  /* Estado ativo — persistente, sem se confundir com hover */
   [data-sidebar="menu-button"][data-active="true"] {
-    background: var(--sidebar-accent);
-    color: var(--foreground);
-    font-weight: 500;
+    background: color-mix(in oklab, var(--sidebar-primary) 20%, transparent);
+    color: #fff;
+    font-weight: 600;
+  }
+  [data-sidebar="menu-button"][data-active="true"]:hover {
+    background: color-mix(in oklab, var(--sidebar-primary) 26%, transparent);
+  }
+  /* Foco por teclado */
+  [data-sidebar="menu-button"]:focus-visible {
+    outline: 2px solid var(--sidebar-ring);
+    outline-offset: -2px;
   }
   
   /* Badge refinements */

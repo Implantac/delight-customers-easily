@@ -265,21 +265,32 @@ const NavItem = memo(function NavItem({ to, label, Icon, active, tone }: NavItem
   return (
     <SidebarMenuItem>
       <SidebarMenuButton asChild isActive={active} tooltip={label}>
-        <Link 
-          to={to as any} 
+        <Link
+          to={to as any}
           preload="intent"
-          className="relative transition-all duration-300 hover:pl-5 group"
+          className="nav-item group/nav relative"
         >
-          <Icon className={`h-4 w-4 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 ${TONE_CLASS[tone]}`} />
-          <span className="transition-all duration-300 group-hover:tracking-tight group-hover:text-primary font-medium">{label}</span>
-          <ChevronRight className="ml-auto h-3 w-3 opacity-0 group-hover:opacity-40 transition-opacity" />
+          {/* Indicador ativo — barra vertical à esquerda */}
           {active && (
-            <motion.div 
-              layoutId="active-nav"
-              className="absolute left-1 h-1 w-1 rounded-full bg-primary"
+            <motion.span
+              layoutId="active-nav-indicator"
+              className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-primary"
               transition={ENTERPRISE_TRANSITION}
             />
           )}
+          <Icon
+            className={`h-4 w-4 shrink-0 transition-colors duration-150 ${
+              active ? "text-primary" : TONE_CLASS[tone]
+            } group-hover/nav:text-primary`}
+          />
+          <span
+            className={`font-medium transition-colors duration-150 ${
+              active ? "text-foreground" : "text-sidebar-foreground"
+            } group-hover/nav:text-foreground`}
+          >
+            {label}
+          </span>
+          <ChevronRight className="ml-auto h-3 w-3 opacity-0 transition-opacity duration-150 group-hover/nav:opacity-40" />
         </Link>
       </SidebarMenuButton>
     </SidebarMenuItem>
