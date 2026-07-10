@@ -39,7 +39,7 @@ export function PageHeader({
   return (
     <div
       className={cn(
-        "sticky top-11 z-20 -mx-4 mb-4 border-b border-border/40 bg-background/80 px-4 backdrop-blur-xl sm:-mx-6 sm:px-6",
+        "sticky top-11 z-20 mb-4 border-b border-border/40 bg-background/85 backdrop-blur-xl",
         className,
       )}
     >
@@ -83,3 +83,4 @@ export function PageHeader({
     </div>
   );
 }
+
