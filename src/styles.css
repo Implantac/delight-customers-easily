@@ -150,65 +150,66 @@
    Navy profundo como background, laranja vibrante como assinatura.
    ========================================================= */
 .dark {
-  --background: #181d2e;
-  --foreground: #e8eaf0;
-  --card: #1f2740;
-  --card-foreground: #e8eaf0;
-  --popover: #1f2740;
-  --popover-foreground: #e8eaf0;
+  --background: #14100c;
+  --foreground: #f2e8dc;
+  --card: #1e1712;
+  --card-foreground: #f2e8dc;
+  --popover: #1e1712;
+  --popover-foreground: #f2e8dc;
 
-  --primary: #e8a05a;
-  --primary-foreground: #1f2740;
+  --primary: #f5843a;
+  --primary-foreground: #1a0f08;
 
-  --secondary: #2a3450;
-  --secondary-foreground: #e8eaf0;
-  --muted: #232c47;
-  --muted-foreground: #8e97ad;
-  --accent: #e8a05a;
-  --accent-foreground: #1f2740;
+  --secondary: #2a1f16;
+  --secondary-foreground: #f2e8dc;
+  --muted: #241b13;
+  --muted-foreground: #a89680;
+  --accent: #f5b26b;
+  --accent-foreground: #1a0f08;
 
-  --destructive: #d94d4d;
+  --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --success: #4a9d6a;
+  --success: #10b981;
   --success-foreground: #ffffff;
-  --warning: #e0a93a;
-  --warning-foreground: #1f2740;
-  --info: #4a7ec0;
-  --info-foreground: #ffffff;
+  --warning: #f59e0b;
+  --warning-foreground: #1a0f08;
+  --info: #60a5fa;
+  --info-foreground: #0a0f1f;
 
-  --border: #2a3450;
-  --input: #232c47;
-  --ring: #e8a05a;
+  --border: #2f2318;
+  --input: #241b13;
+  --ring: #f5843a;
 
-  --sidebar: #131827;
-  --sidebar-foreground: #c8ccd8;
-  --sidebar-primary: #e8a05a;
-  --sidebar-primary-foreground: #1f2740;
-  --sidebar-accent: #2a3450;
+  --sidebar: #0f0b08;
+  --sidebar-foreground: #d8c8b0;
+  --sidebar-primary: #f5843a;
+  --sidebar-primary-foreground: #1a0f08;
+  --sidebar-accent: #2a1f16;
   --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: #232c47;
-  --sidebar-ring: #e8a05a;
+  --sidebar-border: #241b13;
+  --sidebar-ring: #f5843a;
 
-  --chart-1: #e8a05a;
-  --chart-2: #4a7ec0;
-  --chart-3: #4a9d6a;
-  --chart-4: #8a7cc0;
-  --chart-5: #c46a8a;
+  --chart-1: #f5843a;
+  --chart-2: #f5b26b;
+  --chart-3: #b8842a;
+  --chart-4: #7a4a20;
+  --chart-5: #4a2e18;
 
-  --primary-glow: #f0b87a;
-  --accent-glow: #f0b87a;
-  --gradient-primary: linear-gradient(135deg, #e8a05a, #f0b87a);
-  --gradient-accent: linear-gradient(135deg, #d98a3d, #e8a05a);
-  --gradient-subtle: linear-gradient(180deg, color-mix(in oklab, #e8a05a 8%, transparent), transparent);
+  --primary-glow: #ffb37a;
+  --accent-glow: #ffd4a0;
+  --gradient-primary: linear-gradient(135deg, #d95f18 0%, #f5843a 50%, #f5b26b 100%);
+  --gradient-accent: linear-gradient(135deg, #b8482a, #f5843a 60%, #f5b26b);
+  --gradient-subtle: linear-gradient(180deg, color-mix(in oklab, #f5843a 10%, transparent), transparent);
   --gradient-mesh:
-    radial-gradient(ellipse 90% 60% at 50% -10%, color-mix(in oklab, #e8a05a 9%, transparent), transparent 60%),
-    radial-gradient(ellipse 70% 50% at 100% 0%, color-mix(in oklab, #2a3450 45%, transparent), transparent 55%);
+    radial-gradient(ellipse 90% 60% at 30% -10%, color-mix(in oklab, #f5843a 14%, transparent), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 100% 0%, color-mix(in oklab, #d95f18 20%, transparent), transparent 55%),
+    radial-gradient(ellipse 80% 55% at 50% 100%, color-mix(in oklab, #7a4a20 25%, transparent), transparent 60%);
 
   --shadow-xs: 0 1px 2px 0 color-mix(in oklab, #000 35%, transparent);
   --shadow-sm: 0 1px 3px 0 color-mix(in oklab, #000 45%, transparent), 0 1px 2px -1px color-mix(in oklab, #000 35%, transparent);
   --shadow-md: 0 6px 16px -4px color-mix(in oklab, #000 55%, transparent), 0 2px 5px -2px color-mix(in oklab, #000 40%, transparent);
   --shadow-lg: 0 18px 36px -8px color-mix(in oklab, #000 65%, transparent), 0 6px 12px -4px color-mix(in oklab, #000 45%, transparent);
-  --shadow-glow: 0 8px 28px -8px color-mix(in oklab, #e8a05a 35%, transparent);
+  --shadow-glow: 0 10px 30px -8px color-mix(in oklab, #f5843a 50%, transparent);
 }
 
 @layer base {
