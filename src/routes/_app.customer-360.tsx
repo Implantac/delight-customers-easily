@@ -97,6 +97,8 @@ function Customer360Page() {
   const [search, setSearch] = useState("");
   const [segment, setSegment] = useState<string>("");
   const [sort, setSort] = useState<"monetary" | "recency" | "open_value">("monetary");
+  const [quickFilter, setQuickFilter] = useState<"" | "vip" | "risk" | "stale7" | "openpipe">("");
+
 
   // Selection state — keyed by company_id (only companies can be acted upon)
   const [selected, setSelected] = useState<Set<string>>(new Set());
@@ -127,7 +129,22 @@ function Customer360Page() {
     onError: (e: any) => toast.error("Falha", { description: e?.message }),
   });
 
-  const items = q.data?.items ?? [];
+  const rawItems = q.data?.items ?? [];
+  const items = useMemo(() => {
+    if (!quickFilter) return rawItems;
+    const now = Date.now();
+    return rawItems.filter((c: any) => {
+      if (quickFilter === "vip") return c.rfm_segment === "campeoes" || c.rfm_segment === "fieis";
+      if (quickFilter === "risk") return c.rfm_segment === "em_risco" || c.rfm_segment === "hibernando" || c.trend === "down";
+      if (quickFilter === "openpipe") return (c.open_deals_count ?? 0) > 0;
+      if (quickFilter === "stale7") {
+        const ts = c.last_activity_at ? new Date(c.last_activity_at).getTime() : 0;
+        return !ts || (now - ts) > 7 * 24 * 3600 * 1000;
+      }
+      return true;
+    });
+  }, [rawItems, quickFilter]);
+
 
   // Per-company ERP sync status (last sync, conflicts) — shown as a chip in each row
   const visibleCompanyIds = useMemo(
@@ -245,6 +262,34 @@ function Customer360Page() {
           </Select>
         </CardContent>
       </Card>
+
+      {/* Chips de foco rápido — persona-driven, sem lógica de ERP */}
+      <div className="flex flex-wrap items-center gap-2 mb-4 px-1">
+        <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 mr-1">Foco rápido:</span>
+        {[
+          { k: "", label: "Todos", cls: "bg-muted/40 text-foreground" },
+          { k: "vip", label: "⭐ VIP", cls: "bg-emerald-500/15 text-emerald-700 border-emerald-500/30" },
+          { k: "risk", label: "⚠ Em risco", cls: "bg-amber-500/15 text-amber-700 border-amber-500/30" },
+          { k: "stale7", label: "⏳ Sem follow-up 7d", cls: "bg-rose-500/15 text-rose-700 border-rose-500/30" },
+          { k: "openpipe", label: "📈 Pipeline aberto", cls: "bg-primary/15 text-primary border-primary/30" },
+        ].map((f) => (
+          <button
+            key={f.k || "all"}
+            onClick={() => setQuickFilter(f.k as any)}
+            className={cn(
+              "rounded-full border px-3 py-1 text-xs font-bold transition-all hover:scale-[1.03] hover:shadow-sm",
+              quickFilter === f.k
+                ? `${f.cls} border-current shadow-sm ring-2 ring-current/20`
+                : "bg-muted/20 text-muted-foreground border-border/40 hover:bg-muted/40",
+            )}
+          >
+            {f.label}
+          </button>
+        ))}
+      </div>
+
+
+
 
       {/* Barra de ações em massa — aparece quando há seleção */}
       {selectedCompanyIds.length > 0 && (
