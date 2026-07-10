@@ -286,6 +286,9 @@ function Customer360Page() {
             {f.label}
           </button>
         ))}
+      </div>
+
+
 
 
       {/* Barra de ações em massa — aparece quando há seleção */}
