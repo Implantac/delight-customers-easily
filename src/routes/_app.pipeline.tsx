@@ -67,11 +67,33 @@ function PipelinePage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("deals")
-        .select("id, title, stage, value, user_id, updated_at, created_at, contacts(name), companies(name)")
+        .select("id, title, stage, value, user_id, updated_at, created_at, expected_close, contact_id, company_id, contacts(name), companies(name)")
         .eq("organization_id", orgId!)
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data;
+    },
+  });
+
+  // Última entrada no estágio atual por deal — usa deal_events (event_type = 'stage_changed').
+  // Serve para mostrar "no estágio há Xd" real, sem depender de updated_at genérico.
+  const { data: stageEntries } = useQuery({
+    queryKey: ["deal-stage-entries", orgId],
+    enabled: !!orgId,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("deal_events")
+        .select("deal_id, created_at, to_value")
+        .eq("organization_id", orgId!)
+        .eq("event_type", "stage_changed")
+        .order("created_at", { ascending: false })
+        .limit(1000);
+      if (error) throw error;
+      const map = new Map<string, string>();
+      for (const e of data ?? []) {
+        if (!map.has(e.deal_id)) map.set(e.deal_id, e.created_at);
+      }
+      return map;
     },
   });
 
