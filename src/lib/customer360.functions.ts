@@ -138,7 +138,7 @@ export const getCustomer360Timeline = createServerFn({ method: 'GET' })
     const dealIds = (deals ?? []).map((d) => d.id);
 
     // Atividades (ligadas a esses deals ou contatos)
-    let activitiesPromise: Promise<any> = Promise.resolve({ data: [] });
+    let activitiesPromise: PromiseLike<{ data: any[] | null }> = Promise.resolve({ data: [] });
     if (dealIds.length > 0 || contactIds.length > 0) {
       let aq = supabase
         .from('activities')
@@ -155,7 +155,7 @@ export const getCustomer360Timeline = createServerFn({ method: 'GET' })
     }
 
     // WhatsApp (via conversas dos contatos)
-    let waPromise: Promise<any> = Promise.resolve({ data: [] });
+    let waPromise: PromiseLike<{ data: any[] | null }> = Promise.resolve({ data: [] });
     if (contactIds.length > 0) {
       const { data: convs } = await supabase
         .from('whatsapp_conversations')
