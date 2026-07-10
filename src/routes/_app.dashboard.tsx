@@ -193,6 +193,9 @@ function DashboardPage() {
         <MuralComercial />
       </section>
 
+      {/* O QUE PRECISO FAZER HOJE — Sinais acionáveis */}
+      <DoTodayPanel />
+
       {/* KPI Command Bar - Refined with Glassmorphism and Micro-interactions */}
       <section className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 relative z-10">
         {kpis.map((k, i) => (
