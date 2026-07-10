@@ -22,6 +22,42 @@ import {
 } from "lucide-react";
 
 import { toCSV, downloadCSV } from "@/lib/csv-export";
+import { ActionCard, type ActionCardProps } from "@/components/action-card";
+
+function rowToAction(r: WalletRow): ActionCardProps {
+  const b = r.buckets[0];
+  const tone: ActionCardProps["tone"] =
+    b === "risco" || b === "inadimplente" ? "risk"
+    : b === "reativar" || b === "sem_contato" ? "reactivation"
+    : b === "visitar" ? "priority"
+    : "neutral";
+  const channel: ActionCardProps["channel"] =
+    b === "visitar" ? "visita"
+    : b === "reativar" || b === "sem_contato" ? "whatsapp"
+    : b === "inadimplente" ? "ligacao"
+    : "whatsapp";
+  const reason =
+    b === "risco" ? `Score ${r.score} caindo — ${r.daysSinceLastPurchase ?? "?"}d sem compra`
+    : b === "inadimplente" ? `${r.overdueAmount ? fmt(r.overdueAmount) : "Valores"} em atraso`
+    : b === "reativar" ? `${r.daysSinceLastPurchase ?? "?"}d sem compra • ticket médio ${fmt(r.ticketAvg)}`
+    : b === "sem_contato" ? `Sem atividade há 30d+ • pipeline ${fmt(r.openPipeline)}`
+    : b === "visitar" ? `Pronto para visita • potencial ${r.potential}%`
+    : (r.nextAiAction ?? "Cliente ativo");
+  const deadline = b === "visitar" || b === "inadimplente"
+    ? new Date(Date.now() + 86400000).toISOString()
+    : new Date(Date.now() + 3 * 86400000).toISOString();
+  return {
+    title: r.name,
+    subtitle: r.city ? `${r.city}${r.state ? " - " + r.state : ""}` : (r.industry ?? undefined),
+    reason,
+    impact_brl: r.openPipeline || r.ticketAvg || r.wonRevenue,
+    channel,
+    deadline,
+    score: r.score,
+    tone,
+    href: `/companies/${r.company_id}`,
+  };
+}
 
 export const Route = createFileRoute("/_app/carteira")({
   component: CarteiraPage,
@@ -295,6 +331,32 @@ function CarteiraPage() {
       )}
 
 
+
+      {!isLoading && filtered.length > 0 && (
+        <section className="space-y-2">
+          <div className="flex items-baseline justify-between">
+            <div>
+              <h2 className="text-sm font-semibold flex items-center gap-2">
+                <Sparkles className="h-3.5 w-3.5 text-primary" /> Recomendações da IA
+              </h2>
+              <p className="text-[11px] text-muted-foreground">
+                Top ações prioritárias {bucket !== "todos" ? `em "${BUCKET_LABEL[bucket]}"` : "da sua carteira"} — motivo, canal e prazo.
+              </p>
+            </div>
+            <span className="text-[11px] text-muted-foreground">
+              {Math.min(6, filtered.length)} de {filtered.length}
+            </span>
+          </div>
+          <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+            {[...filtered]
+              .sort((a, b) => (b.score ?? 0) - (a.score ?? 0))
+              .slice(0, 6)
+              .map((r) => (
+                <ActionCard key={`rec-${r.company_id}`} {...rowToAction(r)} />
+              ))}
+          </div>
+        </section>
+      )}
 
       {isLoading ? (
         <div className="space-y-2">
