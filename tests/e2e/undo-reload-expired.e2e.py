@@ -45,11 +45,23 @@ async def main():
         assert stored, "delete persistente deveria ter escrito no localStorage"
         await page.screenshot(path=str(OUT / "1_after_delete.png"))
 
-        # === 2) Aguarda expirar (TTL 1s + margem) ===
-        await page.wait_for_timeout(1500)
+        # === 2) Reload IMEDIATO (dentro da janela) para descartar o toast em
+        #        memória sem disparar onExpire — a persistência fica só no
+        #        localStorage. Assim garantimos que a mensagem pós-reload vem
+        #        do fluxo de detecção de expiração, e não do toast anterior. ===
+        await page.reload(wait_until="domcontentloaded")
+        await page.wait_for_load_state("networkidle")
 
-        # === 3) Reload — na carga, readUndo deve devolver null (expirado)
-        #        e o harness dispara "Prazo para desfazer expirado" ===
+        # === 3) Aguarda passar a janela de 1s no timestamp do storage ===
+        await page.wait_for_function(
+            f"() => {{ const raw = localStorage.getItem({STORAGE_KEY!r});"
+            "if (!raw) return true;"
+            "try {{ return JSON.parse(raw).expiresAt <= Date.now(); }} catch {{ return true; }} }}",
+            timeout=3000,
+        )
+
+        # === 4) Reload novamente — agora expirado. useEffect detecta e
+        #        dispara "Prazo para desfazer expirado". ===
         await page.reload(wait_until="domcontentloaded")
         await page.wait_for_load_state("networkidle")
 
