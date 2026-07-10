@@ -1,4 +1,4 @@
-import { CheckSquare, Phone, Mail, Users, FileText, KanbanSquare, MessageCircle, Receipt, Trophy, XCircle, FormInput } from "lucide-react";
+import { CheckSquare, Phone, Mail, Users, FileText, KanbanSquare, MessageCircle, Receipt, Trophy, XCircle, FormInput, CalendarPlus } from "lucide-react";
 
 export type TimelineItem = {
   id: string;
