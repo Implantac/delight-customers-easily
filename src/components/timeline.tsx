@@ -1,4 +1,4 @@
-import { CheckSquare, Phone, Mail, Users, FileText, KanbanSquare, MessageCircle, Receipt, Trophy, XCircle, FormInput, CalendarPlus, Pencil } from "lucide-react";
+import { CheckSquare, Phone, Mail, Users, FileText, KanbanSquare, MessageCircle, Receipt, Trophy, XCircle, FormInput, CalendarPlus, Pencil, Trash2 } from "lucide-react";
 
 export type TimelineItem = {
   id: string;
@@ -96,11 +96,13 @@ export function Timeline({
   emptyLabel = "Nada por aqui.",
   onScheduleFollowUp,
   onEdit,
+  onDelete,
 }: {
   items: TimelineItem[];
   emptyLabel?: string;
   onScheduleFollowUp?: (item: TimelineItem) => void;
   onEdit?: (item: TimelineItem) => void;
+  onDelete?: (item: TimelineItem) => void;
 }) {
   if (items.length === 0) {
     return (
@@ -158,6 +160,17 @@ export function Timeline({
                       className="inline-flex h-6 w-6 items-center justify-center rounded-md border border-border/60 bg-background/60 text-muted-foreground opacity-0 transition hover:border-primary/60 hover:bg-primary/10 hover:text-primary focus-visible:opacity-100 group-hover:opacity-100"
                     >
                       <Pencil className="h-3 w-3" />
+                    </button>
+                  )}
+                  {onDelete && item.kind === "activity" && (
+                    <button
+                      type="button"
+                      onClick={() => onDelete(item)}
+                      title="Excluir este follow-up"
+                      aria-label="Excluir follow-up"
+                      className="inline-flex h-6 w-6 items-center justify-center rounded-md border border-border/60 bg-background/60 text-muted-foreground opacity-0 transition hover:border-destructive/60 hover:bg-destructive/10 hover:text-destructive focus-visible:opacity-100 group-hover:opacity-100"
+                    >
+                      <Trash2 className="h-3 w-3" />
                     </button>
                   )}
                   {onScheduleFollowUp && (
