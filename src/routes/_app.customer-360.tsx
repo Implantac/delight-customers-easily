@@ -105,6 +105,14 @@ function Customer360Page() {
   // Selection state — keyed by company_id (only companies can be acted upon)
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [dialog, setDialog] = useState<"activity" | "campaign" | "rep" | "whatsapp" | null>(null);
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  const toggleExpanded = (id: string) =>
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
 
   const q = useQuery({
     queryKey: ["customer-360", orgId, search, segment, sort],
