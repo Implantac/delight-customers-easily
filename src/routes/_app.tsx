@@ -42,17 +42,18 @@ function AppLayout() {
       <div className="flex min-h-screen w-full bg-background">
         <AppSidebar />
         <div className="flex flex-1 flex-col min-w-0">
-          <header className="sticky top-0 z-30 flex h-16 items-center gap-2 border-b border-border/40 bg-background/60 px-4 backdrop-blur-xl md:gap-4 md:px-6">
-            <SidebarTrigger className="shrink-0 text-muted-foreground hover:text-foreground transition-colors" />
-            <div className="h-4 w-px bg-border/60 hidden md:block" />
+          <header className="sticky top-0 z-30 flex h-11 items-center gap-2 border-b border-border/40 bg-background/70 px-3 backdrop-blur-xl md:px-4">
+            <SidebarTrigger className="shrink-0 h-7 w-7 text-muted-foreground hover:text-foreground transition-colors" />
+            <div className="h-3.5 w-px bg-border/60 hidden md:block" />
             <div className="flex-1 min-w-0">
               <CommandPaletteTrigger />
             </div>
-            <div className="flex items-center gap-1 md:gap-2">
+            <div className="flex items-center gap-0.5 md:gap-1">
               <NotificationsBell />
               <ThemeToggle />
             </div>
           </header>
+
           <main className="flex-1 overflow-auto pb-20 md:pb-0">
             <AnimatePresence mode="wait">
               <motion.div
