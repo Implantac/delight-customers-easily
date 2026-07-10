@@ -119,16 +119,22 @@ const Logo3D = ({ rotationSpeed = 1.2 }: SceneProps) => {
 
 export const ThreeDLogo = ({ className = "h-[400px] w-full", rotationSpeed = 1.2 }: { className?: string, rotationSpeed?: number }) => {
   return (
-    <div className={className}>
+    <div
+      className={className}
+      style={{ pointerEvents: "none", touchAction: "pan-y" }}
+      aria-hidden="true"
+    >
       <Canvas
         shadows
         camera={{ position: [0, 0, 6], fov: 40 }}
         gl={{ antialias: true, alpha: true }}
+        eventSource={undefined}
+        style={{ pointerEvents: "none", touchAction: "pan-y" }}
       >
         <ambientLight intensity={0.5} />
         <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1.5} castShadow />
         <pointLight position={[-10, -10, -10]} intensity={0.5} />
-        
+
         <React.Suspense fallback={null}>
           <Logo3D rotationSpeed={rotationSpeed} />
           <Environment preset="city" />
