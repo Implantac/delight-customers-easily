@@ -332,6 +332,32 @@ function CarteiraPage() {
 
 
 
+      {!isLoading && filtered.length > 0 && (
+        <section className="space-y-2">
+          <div className="flex items-baseline justify-between">
+            <div>
+              <h2 className="text-sm font-semibold flex items-center gap-2">
+                <Sparkles className="h-3.5 w-3.5 text-primary" /> Recomendações da IA
+              </h2>
+              <p className="text-[11px] text-muted-foreground">
+                Top ações prioritárias {bucket !== "todos" ? `em "${BUCKET_LABEL[bucket]}"` : "da sua carteira"} — motivo, canal e prazo.
+              </p>
+            </div>
+            <span className="text-[11px] text-muted-foreground">
+              {Math.min(6, filtered.length)} de {filtered.length}
+            </span>
+          </div>
+          <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+            {[...filtered]
+              .sort((a, b) => (b.score ?? 0) - (a.score ?? 0))
+              .slice(0, 6)
+              .map((r) => (
+                <ActionCard key={`rec-${r.company_id}`} {...rowToAction(r)} />
+              ))}
+          </div>
+        </section>
+      )}
+
       {isLoading ? (
         <div className="space-y-2">
           {Array.from({ length: 8 }).map((_, i) => <Skeleton key={i} className="h-14 w-full" />)}
