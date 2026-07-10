@@ -568,6 +568,7 @@ function InlineTimeline({ orgId, companyId }: { orgId: string; companyId: string
   const [deleting, setDeleting] = useState<TimelineItem | null>(null);
   const qc = useQueryClient();
   const deleteFn = useServerFn(deleteActivity);
+  const restoreFn = useServerFn(restoreActivity);
 
   const invalidate = () =>
     qc.invalidateQueries({ queryKey: ["customer-360-timeline", orgId, companyId] });
@@ -579,7 +580,25 @@ function InlineTimeline({ orgId, companyId }: { orgId: string; companyId: string
       if ((r?.deleted ?? 0) === 0) {
         toast.warning("Nenhum follow-up removido");
       } else {
-        toast.success("Follow-up excluído");
+        const snap = r?.snapshot;
+        toast.success("Follow-up excluído", {
+          action: snap
+            ? {
+                label: "Desfazer",
+                onClick: () => {
+                  restoreFn({ data: { organizationId: orgId, snapshot: snap } })
+                    .then(() => {
+                      toast.success("Follow-up restaurado");
+                      invalidate();
+                    })
+                    .catch((e: any) =>
+                      toast.error("Falha ao restaurar", { description: e?.message }),
+                    );
+                },
+              }
+            : undefined,
+          duration: 8000,
+        });
       }
       setDeleting(null);
       invalidate();
