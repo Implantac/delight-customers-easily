@@ -129,7 +129,22 @@ function Customer360Page() {
     onError: (e: any) => toast.error("Falha", { description: e?.message }),
   });
 
-  const items = q.data?.items ?? [];
+  const rawItems = q.data?.items ?? [];
+  const items = useMemo(() => {
+    if (!quickFilter) return rawItems;
+    const now = Date.now();
+    return rawItems.filter((c: any) => {
+      if (quickFilter === "vip") return c.rfm_segment === "campeoes" || c.rfm_segment === "fieis";
+      if (quickFilter === "risk") return c.rfm_segment === "em_risco" || c.rfm_segment === "hibernando" || c.trend === "down";
+      if (quickFilter === "openpipe") return (c.open_deals_count ?? 0) > 0;
+      if (quickFilter === "stale7") {
+        const ts = c.last_activity_at ? new Date(c.last_activity_at).getTime() : 0;
+        return !ts || (now - ts) > 7 * 24 * 3600 * 1000;
+      }
+      return true;
+    });
+  }, [rawItems, quickFilter]);
+
 
   // Per-company ERP sync status (last sync, conflicts) — shown as a chip in each row
   const visibleCompanyIds = useMemo(
