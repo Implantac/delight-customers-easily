@@ -38,31 +38,31 @@ export function BusinessHealthCard() {
   const TrendIcon = data.delta == null ? Minus : data.delta > 0 ? TrendingUp : data.delta < 0 ? TrendingDown : Minus;
 
   return (
-    <Card className="p-6 md:p-8 border-border/40 bg-card/40 backdrop-blur-sm rounded-3xl shadow-xl shadow-black/5">
-      <div className="flex items-start justify-between gap-4 mb-8">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/20">
-            <HeartPulse className="h-6 w-6 text-primary" />
+    <Card className="p-4 border-border/60 bg-card">
+      <div className="flex items-center justify-between gap-3 mb-4">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="h-7 w-7 shrink-0 grid place-items-center rounded-md border border-border/60 bg-card">
+            <HeartPulse className="h-3.5 w-3.5 text-primary" />
           </div>
-          <div>
-            <h3 className="text-lg font-display font-bold">Saúde do Negócio</h3>
-            <p className="text-[11px] text-muted-foreground font-bold uppercase tracking-widest opacity-70">Business Health Score</p>
+          <div className="min-w-0">
+            <h3 className="font-display text-sm font-semibold tracking-tight truncate">Saúde do Negócio</h3>
+            <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground/70 truncate">Business Health</p>
           </div>
         </div>
-        <div className="text-right">
-          <div className={`text-4xl font-bold leading-none ${toneOf(data.score)}`}>{data.score}</div>
+        <div className="text-right shrink-0">
+          <div className={`text-2xl font-display font-semibold leading-none tabular-nums ${toneOf(data.score)}`}>{data.score}</div>
           {data.delta != null && (
-            <div className="flex items-center justify-end gap-1 text-xs text-muted-foreground mt-1">
+            <div className="flex items-center justify-end gap-1 text-[10px] text-muted-foreground mt-0.5">
               <TrendIcon className="h-3 w-3" />
-              {data.delta > 0 ? "+" : ""}{data.delta} pts vs. anterior
+              {data.delta > 0 ? "+" : ""}{data.delta} pts
             </div>
           )}
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 mb-3">
         {data.pillars.map((p) => (
-          <div key={p.key} className="space-y-3">
+          <div key={p.key} className="space-y-1.5">
             <div className="flex items-center justify-between gap-2">
               <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80">{p.label}</span>
               <span className={`text-xs font-bold tabular-nums ${toneOf(p.score)}`}>{p.score}</span>
@@ -76,29 +76,28 @@ export function BusinessHealthCard() {
       </div>
 
       {data.topLevers.length > 0 && (
-        <div className="mt-5 border-t pt-4">
-          <p className="text-xs font-semibold mb-2 text-muted-foreground uppercase tracking-wide">
-            Alavancas de crescimento
+        <div className="mt-3 border-t border-border/40 pt-3">
+          <p className="text-[10px] font-semibold mb-1.5 text-muted-foreground/70 uppercase tracking-[0.12em]">
+            Alavancas
           </p>
-          <ul className="space-y-2">
-            {data.topLevers.map((l, i) => (
-              <li key={i} className="flex items-start justify-between gap-3">
+          <ul className="space-y-1">
+            {data.topLevers.slice(0, 3).map((l, i) => (
+              <li key={i} className="flex items-center justify-between gap-2">
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <p className="text-sm font-medium">{l.title}</p>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <p className="text-xs font-medium truncate">{l.title}</p>
                     {l.impact_brl ? (
-                      <Badge variant="outline" className="text-xs">
+                      <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-4">
                         {l.impact_brl.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 })}
                       </Badge>
                     ) : null}
                   </div>
-                  <p className="text-xs text-muted-foreground">{l.reason}</p>
+                  <p className="text-[10px] text-muted-foreground truncate">{l.reason}</p>
                 </div>
                 {l.href && (
-                  <Button asChild size="sm" variant="ghost">
+                  <Button asChild size="sm" variant="ghost" className="h-6 px-2 text-[10px]">
                     <Link to={l.href}>
-                      Ir
-                      <ArrowRight className="h-3 w-3 ml-1" />
+                      <ArrowRight className="h-3 w-3" />
                     </Link>
                   </Button>
                 )}
