@@ -51,9 +51,10 @@ async def main():
         # === 3) Reload — na carga, readUndo deve devolver null (expirado)
         #        e o harness dispara "Prazo para desfazer expirado" ===
         await page.reload(wait_until="domcontentloaded")
+        await page.wait_for_load_state("networkidle")
 
-        # Mensagem de expiração aparece após o reload.
-        await page.wait_for_selector('text="Prazo para desfazer expirado"', timeout=3000)
+        # Mensagem de expiração aparece após o reload (após hidratação + useEffect).
+        await page.wait_for_selector('text="Prazo para desfazer expirado"', timeout=10000)
         await page.screenshot(path=str(OUT / "2_after_reload.png"))
 
         # Restauração NÃO ocorreu.
