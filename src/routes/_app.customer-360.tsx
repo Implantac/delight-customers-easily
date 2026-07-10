@@ -6,8 +6,9 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useCurrentOrg } from "@/lib/org";
 import { useCanManage, useIsManager } from "@/lib/permissions";
-import { listCustomer360, refreshCustomer360 } from "@/lib/customer360.functions";
+import { listCustomer360, refreshCustomer360, getCustomer360Timeline } from "@/lib/customer360.functions";
 import { getCompanyErpStatus, type CompanyErpStatus } from "@/lib/erp-customer-status.functions";
+import { Timeline, type TimelineItem } from "@/components/timeline";
 import {
   bulkCreateActivityForCompanies,
   bulkAssignCompaniesOwner,
