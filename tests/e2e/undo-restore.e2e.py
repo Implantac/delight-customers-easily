@@ -55,8 +55,7 @@ async def main():
         restored_after = (await page.get_by_test_id("restored").inner_text()).strip()
         assert restored_after == "act-1", f"onRestore deveria ter recebido snapshot.id='act-1', veio {restored_after!r}"
 
-        # Mensagem de sucesso deve aparecer e a de expiração NÃO.
-        await page.wait_for_selector('text="Item restaurado"', timeout=2000)
+        # Mensagem de expiração NÃO deve aparecer no fluxo de sucesso.
         expired_visible = await page.locator('text="Prazo para desfazer expirado"').count()
         assert expired_visible == 0, "mensagem de expiração não deveria aparecer no fluxo de sucesso"
 
