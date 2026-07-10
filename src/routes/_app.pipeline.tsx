@@ -67,11 +67,33 @@ function PipelinePage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("deals")
-        .select("id, title, stage, value, user_id, updated_at, created_at, contacts(name), companies(name)")
+        .select("id, title, stage, value, user_id, updated_at, created_at, expected_close, contact_id, company_id, contacts(name), companies(name)")
         .eq("organization_id", orgId!)
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data;
+    },
+  });
+
+  // Última entrada no estágio atual por deal — usa deal_events (event_type = 'stage_changed').
+  // Serve para mostrar "no estágio há Xd" real, sem depender de updated_at genérico.
+  const { data: stageEntries } = useQuery({
+    queryKey: ["deal-stage-entries", orgId],
+    enabled: !!orgId,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("deal_events")
+        .select("deal_id, created_at, to_value")
+        .eq("organization_id", orgId!)
+        .eq("event_type", "stage_changed")
+        .order("created_at", { ascending: false })
+        .limit(1000);
+      if (error) throw error;
+      const map = new Map<string, string>();
+      for (const e of data ?? []) {
+        if (!map.has(e.deal_id)) map.set(e.deal_id, e.created_at);
+      }
+      return map;
     },
   });
 
@@ -329,24 +351,61 @@ function PipelinePage() {
                         <div className="mt-2 flex items-baseline justify-between gap-2">
                           <p className="text-[15px] font-display font-bold text-foreground">{fmtBRL(Number(d.value))}</p>
                           {d.stage !== "won" && d.stage !== "lost" && (
-                            <span className="text-[10px] font-medium text-muted-foreground">
-                              {d._score.probability}%
+                            <span className="text-[11px] font-semibold tabular-nums text-foreground/80">
+                              {d._score.probability}% <span className="font-normal text-muted-foreground">prob.</span>
                             </span>
                           )}
                         </div>
+                        {d.stage !== "won" && d.stage !== "lost" && (
+                          <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-muted/60" title={`Probabilidade estimada: ${d._score.probability}%`}>
+                            <div
+                              className={`h-full rounded-full transition-all ${
+                                d._score.probability >= 70 ? "bg-emerald-500"
+                                : d._score.probability >= 40 ? "bg-amber-500"
+                                : "bg-rose-500"
+                              }`}
+                              style={{ width: `${d._score.probability}%` }}
+                            />
+                          </div>
+                        )}
                         {((d.contacts as any)?.name || (d.companies as any)?.name) && (
-                          <p className="mt-1 truncate text-xs text-muted-foreground">
+                          <p className="mt-2 truncate text-xs text-muted-foreground">
                             {(d.contacts as any)?.name}{(d.contacts as any)?.name && (d.companies as any)?.name ? " · " : ""}{(d.companies as any)?.name}
                           </p>
                         )}
                         {(() => {
-                          const updated = d.updated_at ?? d.created_at;
-                          if (!updated || d.stage === "won" || d.stage === "lost") return null;
-                          const days = Math.floor((Date.now() - new Date(updated).getTime()) / 86400000);
-                          if (days < 14) return null;
+                          if (d.stage === "won" || d.stage === "lost") return null;
+                          const entered = stageEntries?.get(d.id) ?? d.created_at;
+                          if (!entered) return null;
+                          const days = Math.max(0, Math.floor((Date.now() - new Date(entered).getTime()) / 86400000));
+                          const stale = days >= 14;
                           return (
-                            <div className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-1.5 py-0.5 text-[10px] font-medium text-amber-700 dark:text-amber-400">
-                              <Clock className="h-2.5 w-2.5" /> parado {days}d
+                            <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                              <span
+                                className={`inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] font-medium ${
+                                  stale
+                                    ? "bg-amber-500/15 text-amber-700 dark:text-amber-400"
+                                    : "bg-muted text-muted-foreground"
+                                }`}
+                                title={`Entrou no estágio em ${new Date(entered).toLocaleDateString("pt-BR")}`}
+                              >
+                                <Clock className="h-2.5 w-2.5" />
+                                {days === 0 ? "hoje" : `${days}d no estágio`}
+                              </span>
+                              {d.expected_close && (() => {
+                                const dd = Math.floor((new Date(d.expected_close as string).getTime() - Date.now()) / 86400000);
+                                if (dd < 0) return (
+                                  <span className="inline-flex items-center gap-1 rounded-full bg-rose-500/15 px-1.5 py-0.5 text-[10px] font-medium text-rose-700 dark:text-rose-400">
+                                    atrasado {Math.abs(dd)}d
+                                  </span>
+                                );
+                                if (dd <= 7) return (
+                                  <span className="inline-flex items-center gap-1 rounded-full bg-primary/15 px-1.5 py-0.5 text-[10px] font-medium text-primary">
+                                    fecha em {dd}d
+                                  </span>
+                                );
+                                return null;
+                              })()}
                             </div>
                           );
                         })()}
