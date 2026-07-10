@@ -21,6 +21,9 @@ export const bulkCreateActivityForCompanies = createServerFn({ method: "POST" })
         type: z.enum(ACTIVITY_TYPES).default("task"),
         dueDate: z.string().datetime().optional(),
         description: z.string().max(2000).optional(),
+        /** Amarração ao evento de origem na timeline do Customer 360. */
+        sourceKind: z.string().min(1).max(32).optional(),
+        sourceId: z.string().min(1).max(128).optional(),
       })
       .parse(i),
   )
@@ -50,6 +53,9 @@ export const bulkCreateActivityForCompanies = createServerFn({ method: "POST" })
       due_date: data.dueDate ?? null,
       description: data.description ?? null,
       contact_id: contactByCompany.get(companyId) ?? null,
+      company_id: companyId,
+      source_kind: data.sourceKind ?? null,
+      source_id: data.sourceId ?? null,
     }));
 
     const { error } = await supabase.from("activities").insert(rows);
