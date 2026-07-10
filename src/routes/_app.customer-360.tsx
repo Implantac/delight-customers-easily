@@ -556,6 +556,44 @@ function Customer360Page() {
   );
 }
 
+const UNDO_TTL_MS = 30_000;
+const undoKey = (orgId: string, companyId: string) => `c360:undo:${orgId}:${companyId}`;
+
+type UndoEntry = { snapshot: any; expiresAt: number };
+
+function readUndo(orgId: string, companyId: string): UndoEntry | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(undoKey(orgId, companyId));
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as UndoEntry;
+    if (!parsed?.snapshot || !parsed?.expiresAt || parsed.expiresAt < Date.now()) {
+      window.localStorage.removeItem(undoKey(orgId, companyId));
+      return null;
+    }
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+function writeUndo(orgId: string, companyId: string, snapshot: any) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(
+      undoKey(orgId, companyId),
+      JSON.stringify({ snapshot, expiresAt: Date.now() + UNDO_TTL_MS }),
+    );
+  } catch {}
+}
+
+function clearUndo(orgId: string, companyId: string) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.removeItem(undoKey(orgId, companyId));
+  } catch {}
+}
+
 function InlineTimeline({ orgId, companyId }: { orgId: string; companyId: string }) {
   const fn = useServerFn(getCustomer360Timeline);
   const q = useQuery({
@@ -573,6 +611,36 @@ function InlineTimeline({ orgId, companyId }: { orgId: string; companyId: string
   const invalidate = () =>
     qc.invalidateQueries({ queryKey: ["customer-360-timeline", orgId, companyId] });
 
+  const restoreSnapshot = (snap: any) =>
+    restoreFn({ data: { organizationId: orgId, snapshot: snap } })
+      .then(() => {
+        clearUndo(orgId, companyId);
+        toast.success("Follow-up restaurado");
+        invalidate();
+      })
+      .catch((e: any) => toast.error("Falha ao restaurar", { description: e?.message }));
+
+  // Re-oferece "Desfazer" após reload, enquanto o snapshot ainda estiver dentro do TTL.
+  const rehydrated = useRef(false);
+  useEffect(() => {
+    if (rehydrated.current) return;
+    rehydrated.current = true;
+    const entry = readUndo(orgId, companyId);
+    if (!entry) return;
+    const remaining = Math.max(1000, entry.expiresAt - Date.now());
+    toast("Follow-up excluído recentemente", {
+      description: `"${entry.snapshot?.title ?? ""}" — restaurar?`,
+      action: {
+        label: "Desfazer",
+        onClick: () => restoreSnapshot(entry.snapshot),
+      },
+      duration: remaining,
+      onDismiss: () => clearUndo(orgId, companyId),
+      onAutoClose: () => clearUndo(orgId, companyId),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orgId, companyId]);
+
   const delMut = useMutation({
     mutationFn: (activityId: string) =>
       deleteFn({ data: { organizationId: orgId, activityId } }),
@@ -581,20 +649,12 @@ function InlineTimeline({ orgId, companyId }: { orgId: string; companyId: string
         toast.warning("Nenhum follow-up removido");
       } else {
         const snap = r?.snapshot;
+        if (snap) writeUndo(orgId, companyId, snap);
         toast.success("Follow-up excluído", {
           action: snap
             ? {
                 label: "Desfazer",
-                onClick: () => {
-                  restoreFn({ data: { organizationId: orgId, snapshot: snap } })
-                    .then(() => {
-                      toast.success("Follow-up restaurado");
-                      invalidate();
-                    })
-                    .catch((e: any) =>
-                      toast.error("Falha ao restaurar", { description: e?.message }),
-                    );
-                },
+                onClick: () => restoreSnapshot(snap),
               }
             : undefined,
           duration: 8000,
