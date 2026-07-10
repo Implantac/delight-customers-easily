@@ -22,16 +22,25 @@ async def main():
         # Garante estado limpo
         await page.evaluate(f"localStorage.removeItem({STORAGE_KEY!r})")
 
-        # Aguarda hidratação para o onClick ser atachado antes de clicar.
-        await page.wait_for_function("() => !!window.__TSR_ROUTER__ || document.readyState === 'complete'")
-        await page.wait_for_timeout(300)
-        await page.get_by_test_id("trigger-persist-1s").click()
+        # Aguarda a hidratação do React antes de clicar (senão o onClick não dispara).
+        await page.wait_for_load_state("networkidle")
+        await page.wait_for_timeout(500)
 
-        # Chave foi escrita no localStorage (pode levar um instante).
-        await page.wait_for_function(
-            f"() => localStorage.getItem({STORAGE_KEY!r}) !== null",
-            timeout=3000,
-        )
+        # Clica e tenta escrever no localStorage — pode precisar de nova tentativa
+        # se a hidratação demorar mais que o esperado.
+        for attempt in range(3):
+            await page.get_by_test_id("trigger-persist-1s").click()
+            try:
+                await page.wait_for_function(
+                    f"() => localStorage.getItem({STORAGE_KEY!r}) !== null",
+                    timeout=2000,
+                )
+                break
+            except Exception:
+                if attempt == 2:
+                    raise
+                await page.wait_for_timeout(500)
+
         stored = await page.evaluate(f"localStorage.getItem({STORAGE_KEY!r})")
         assert stored, "delete persistente deveria ter escrito no localStorage"
         await page.screenshot(path=str(OUT / "1_after_delete.png"))
