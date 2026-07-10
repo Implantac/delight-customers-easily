@@ -452,6 +452,21 @@ function Customer360Page() {
                       </div>
                     </div>
                     <div className="flex gap-1 shrink-0">
+                      {c.company_id && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => toggleExpanded(c.company_id)}
+                          className="gap-1"
+                          aria-expanded={expanded.has(c.company_id)}
+                        >
+                          <Clock className="h-3.5 w-3.5" />
+                          Timeline
+                          {expanded.has(c.company_id)
+                            ? <ChevronUp className="h-3.5 w-3.5" />
+                            : <ChevronDown className="h-3.5 w-3.5" />}
+                        </Button>
+                      )}
                       {wa && (
                         <Button asChild variant="outline" size="sm" className="gap-1">
                           <a href={wa} target="_blank" rel="noopener noreferrer">
@@ -477,6 +492,18 @@ function Customer360Page() {
                     <Metric label="Ganhos 12m" value={fmtBRL(c.won_deals_value_365d)} sub={`${c.won_deals_count_365d ?? 0} fechados`} />
                     <Metric label="Atividades 30d" value={`${c.activities_30d ?? 0}`} sub={c.last_activity_at ? `últ. ${fmtDate(c.last_activity_at)}` : "sem atividade"} />
                   </div>
+
+                  {c.company_id && expanded.has(c.company_id) && orgId && (
+                    <div className="mt-4 pt-4 border-t border-border/40">
+                      <div className="flex items-center gap-2 mb-3">
+                        <Clock className="h-4 w-4 text-primary" />
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                          Timeline omnichannel — últimos eventos
+                        </h4>
+                      </div>
+                      <InlineTimeline orgId={orgId} companyId={c.company_id} />
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             );
