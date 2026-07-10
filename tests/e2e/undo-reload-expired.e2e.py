@@ -16,8 +16,8 @@ async def main():
         page.on("pageerror", lambda e: errors.append(str(e)))
 
         # === 1) Delete persistente com TTL curto (1s) ===
-        await page.goto(URL, wait_until="networkidle")
-        await page.wait_for_selector('[data-testid="trigger-persist-1s"]')
+        await page.goto(URL, wait_until="domcontentloaded")
+        await page.wait_for_selector('[data-testid="trigger-persist-1s"]', timeout=15000)
 
         # Garante estado limpo
         await page.evaluate(f"localStorage.removeItem({STORAGE_KEY!r})")
