@@ -162,6 +162,17 @@ export function Timeline({
                       <Pencil className="h-3 w-3" />
                     </button>
                   )}
+                  {onDelete && item.kind === "activity" && (
+                    <button
+                      type="button"
+                      onClick={() => onDelete(item)}
+                      title="Excluir este follow-up"
+                      aria-label="Excluir follow-up"
+                      className="inline-flex h-6 w-6 items-center justify-center rounded-md border border-border/60 bg-background/60 text-muted-foreground opacity-0 transition hover:border-destructive/60 hover:bg-destructive/10 hover:text-destructive focus-visible:opacity-100 group-hover:opacity-100"
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </button>
+                  )}
                   {onScheduleFollowUp && (
                     <button
                       type="button"
