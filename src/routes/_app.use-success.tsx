@@ -259,7 +259,7 @@ function ActionsPanel({ actions }: { actions: Awaited<ReturnType<typeof getUseSu
               </div>
               {a.href && (
                 <Button asChild size="sm" variant="ghost" className="h-7 px-2 text-[11px] shrink-0">
-                  <Link to={a.href}>
+                  <Link to={a.href as any}>
                     Abrir <ArrowRight className="ml-1 h-3 w-3" />
                   </Link>
                 </Button>
