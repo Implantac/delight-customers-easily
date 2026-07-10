@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       activities: {
         Row: {
+          company_id: string | null
           completed: boolean
           contact_id: string | null
           created_at: string
@@ -24,12 +25,15 @@ export type Database = {
           due_date: string | null
           id: string
           organization_id: string
+          source_id: string | null
+          source_kind: string | null
           title: string
           type: Database["public"]["Enums"]["activity_type"]
           updated_at: string
           user_id: string
         }
         Insert: {
+          company_id?: string | null
           completed?: boolean
           contact_id?: string | null
           created_at?: string
@@ -38,12 +42,15 @@ export type Database = {
           due_date?: string | null
           id?: string
           organization_id: string
+          source_id?: string | null
+          source_kind?: string | null
           title: string
           type?: Database["public"]["Enums"]["activity_type"]
           updated_at?: string
           user_id: string
         }
         Update: {
+          company_id?: string | null
           completed?: boolean
           contact_id?: string | null
           created_at?: string
@@ -52,6 +59,8 @@ export type Database = {
           due_date?: string | null
           id?: string
           organization_id?: string
+          source_id?: string | null
+          source_kind?: string | null
           title?: string
           type?: Database["public"]["Enums"]["activity_type"]
           updated_at?: string
