@@ -145,6 +145,23 @@ function Customer360Page() {
     });
   }, [rawItems, quickFilter]);
 
+  // Distribuição para a faixa de KPIs (sempre sobre a base sem quick-filter)
+  const kpis = useMemo(() => {
+    const now = Date.now();
+    let vip = 0, risk = 0, stale = 0, open = 0, openValue = 0;
+    for (const c of rawItems as any[]) {
+      if (c.rfm_segment === "campeoes" || c.rfm_segment === "fieis") vip++;
+      if (c.rfm_segment === "em_risco" || c.rfm_segment === "hibernando" || c.trend === "down") risk++;
+      const ts = c.last_activity_at ? new Date(c.last_activity_at).getTime() : 0;
+      if (!ts || now - ts > 7 * 24 * 3600 * 1000) stale++;
+      if ((c.open_deals_count ?? 0) > 0) {
+        open++;
+        openValue += Number(c.open_deals_value ?? 0);
+      }
+    }
+    return { total: rawItems.length, vip, risk, stale, open, openValue };
+  }, [rawItems]);
+
 
   // Per-company ERP sync status (last sync, conflicts) — shown as a chip in each row
   const visibleCompanyIds = useMemo(
