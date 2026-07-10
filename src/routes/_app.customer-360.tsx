@@ -556,43 +556,8 @@ function Customer360Page() {
   );
 }
 
-const UNDO_TTL_MS = 30_000;
-const undoKey = (orgId: string, companyId: string) => `c360:undo:${orgId}:${companyId}`;
+import { readUndo, writeUndo, clearUndo } from "@/lib/undo-store";
 
-type UndoEntry = { snapshot: any; expiresAt: number };
-
-function readUndo(orgId: string, companyId: string): UndoEntry | null {
-  if (typeof window === "undefined") return null;
-  try {
-    const raw = window.localStorage.getItem(undoKey(orgId, companyId));
-    if (!raw) return null;
-    const parsed = JSON.parse(raw) as UndoEntry;
-    if (!parsed?.snapshot || !parsed?.expiresAt || parsed.expiresAt < Date.now()) {
-      window.localStorage.removeItem(undoKey(orgId, companyId));
-      return null;
-    }
-    return parsed;
-  } catch {
-    return null;
-  }
-}
-
-function writeUndo(orgId: string, companyId: string, snapshot: any) {
-  if (typeof window === "undefined") return;
-  try {
-    window.localStorage.setItem(
-      undoKey(orgId, companyId),
-      JSON.stringify({ snapshot, expiresAt: Date.now() + UNDO_TTL_MS }),
-    );
-  } catch {}
-}
-
-function clearUndo(orgId: string, companyId: string) {
-  if (typeof window === "undefined") return;
-  try {
-    window.localStorage.removeItem(undoKey(orgId, companyId));
-  } catch {}
-}
 
 function InlineTimeline({ orgId, companyId }: { orgId: string; companyId: string }) {
   const fn = useServerFn(getCustomer360Timeline);
