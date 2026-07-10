@@ -149,6 +149,17 @@ export function Timeline({
                   <time className="text-[11px] text-muted-foreground tabular-nums">
                     {formatDate(item.date)}
                   </time>
+                  {onEdit && item.kind === "activity" && (
+                    <button
+                      type="button"
+                      onClick={() => onEdit(item)}
+                      title="Editar este follow-up"
+                      aria-label="Editar follow-up"
+                      className="inline-flex h-6 w-6 items-center justify-center rounded-md border border-border/60 bg-background/60 text-muted-foreground opacity-0 transition hover:border-primary/60 hover:bg-primary/10 hover:text-primary focus-visible:opacity-100 group-hover:opacity-100"
+                    >
+                      <Pencil className="h-3 w-3" />
+                    </button>
+                  )}
                   {onScheduleFollowUp && (
                     <button
                       type="button"
