@@ -187,11 +187,11 @@ export function AppSidebar() {
         </DropdownMenu>
       </SidebarHeader>
 
-      <SidebarContent>
+      <SidebarContent className="py-1">
         {groups.map((group) => (
           <SidebarGroup key={group.label}>
             {!collapsed && (
-              <div className="px-3 mb-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50">
+              <div className="px-3 pt-2 pb-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground/50">
                 {group.label}
               </div>
             )}
@@ -212,6 +212,7 @@ export function AppSidebar() {
           </SidebarGroup>
         ))}
       </SidebarContent>
+
 
       <SidebarFooter className="border-t">
         <DropdownMenu>
