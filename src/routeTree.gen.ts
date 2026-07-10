@@ -17,6 +17,7 @@ import { Route as DevUndoToastRouteImport } from './routes/dev.undo-toast'
 import { Route as AppWinLossRouteImport } from './routes/_app.win-loss'
 import { Route as AppWhatsappRouteImport } from './routes/_app.whatsapp'
 import { Route as AppWelcomeRouteImport } from './routes/_app.welcome'
+import { Route as AppUseSuccessRouteImport } from './routes/_app.use-success'
 import { Route as AppSiteChatRouteImport } from './routes/_app.site-chat'
 import { Route as AppSetupWizardRouteImport } from './routes/_app.setup-wizard'
 import { Route as AppSequencesRouteImport } from './routes/_app.sequences'
@@ -156,6 +157,11 @@ const AppWhatsappRoute = AppWhatsappRouteImport.update({
 const AppWelcomeRoute = AppWelcomeRouteImport.update({
   id: '/welcome',
   path: '/welcome',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppUseSuccessRoute = AppUseSuccessRouteImport.update({
+  id: '/use-success',
+  path: '/use-success',
   getParentRoute: () => AppRoute,
 } as any)
 const AppSiteChatRoute = AppSiteChatRouteImport.update({
@@ -735,6 +741,7 @@ export interface FileRoutesByFullPath {
   '/sequences': typeof AppSequencesRouteWithChildren
   '/setup-wizard': typeof AppSetupWizardRoute
   '/site-chat': typeof AppSiteChatRoute
+  '/use-success': typeof AppUseSuccessRoute
   '/welcome': typeof AppWelcomeRoute
   '/whatsapp': typeof AppWhatsappRoute
   '/win-loss': typeof AppWinLossRoute
@@ -845,6 +852,7 @@ export interface FileRoutesByTo {
   '/sequences': typeof AppSequencesRouteWithChildren
   '/setup-wizard': typeof AppSetupWizardRoute
   '/site-chat': typeof AppSiteChatRoute
+  '/use-success': typeof AppUseSuccessRoute
   '/welcome': typeof AppWelcomeRoute
   '/whatsapp': typeof AppWhatsappRoute
   '/win-loss': typeof AppWinLossRoute
@@ -957,6 +965,7 @@ export interface FileRoutesById {
   '/_app/sequences': typeof AppSequencesRouteWithChildren
   '/_app/setup-wizard': typeof AppSetupWizardRoute
   '/_app/site-chat': typeof AppSiteChatRoute
+  '/_app/use-success': typeof AppUseSuccessRoute
   '/_app/welcome': typeof AppWelcomeRoute
   '/_app/whatsapp': typeof AppWhatsappRoute
   '/_app/win-loss': typeof AppWinLossRoute
@@ -1069,6 +1078,7 @@ export interface FileRouteTypes {
     | '/sequences'
     | '/setup-wizard'
     | '/site-chat'
+    | '/use-success'
     | '/welcome'
     | '/whatsapp'
     | '/win-loss'
@@ -1179,6 +1189,7 @@ export interface FileRouteTypes {
     | '/sequences'
     | '/setup-wizard'
     | '/site-chat'
+    | '/use-success'
     | '/welcome'
     | '/whatsapp'
     | '/win-loss'
@@ -1290,6 +1301,7 @@ export interface FileRouteTypes {
     | '/_app/sequences'
     | '/_app/setup-wizard'
     | '/_app/site-chat'
+    | '/_app/use-success'
     | '/_app/welcome'
     | '/_app/whatsapp'
     | '/_app/win-loss'
@@ -1448,6 +1460,13 @@ declare module '@tanstack/react-router' {
       path: '/welcome'
       fullPath: '/welcome'
       preLoaderRoute: typeof AppWelcomeRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/use-success': {
+      id: '/_app/use-success'
+      path: '/use-success'
+      fullPath: '/use-success'
+      preLoaderRoute: typeof AppUseSuccessRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/site-chat': {
@@ -2364,6 +2383,7 @@ interface AppRouteChildren {
   AppSequencesRoute: typeof AppSequencesRouteWithChildren
   AppSetupWizardRoute: typeof AppSetupWizardRoute
   AppSiteChatRoute: typeof AppSiteChatRoute
+  AppUseSuccessRoute: typeof AppUseSuccessRoute
   AppWelcomeRoute: typeof AppWelcomeRoute
   AppWhatsappRoute: typeof AppWhatsappRoute
   AppWinLossRoute: typeof AppWinLossRoute
@@ -2422,6 +2442,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSequencesRoute: AppSequencesRouteWithChildren,
   AppSetupWizardRoute: AppSetupWizardRoute,
   AppSiteChatRoute: AppSiteChatRoute,
+  AppUseSuccessRoute: AppUseSuccessRoute,
   AppWelcomeRoute: AppWelcomeRoute,
   AppWhatsappRoute: AppWhatsappRoute,
   AppWinLossRoute: AppWinLossRoute,
@@ -2481,13 +2502,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
