@@ -23,6 +23,7 @@ import { ProductTour } from "@/components/product-tour";
 import { MuralComercial } from "@/components/dashboard/mural-comercial";
 import { DoTodayPanel } from "@/components/dashboard/do-today-panel";
 import { DailyBriefing } from "@/components/dashboard/daily-briefing";
+import { GrowthPulse } from "@/components/dashboard/growth-pulse";
 import { useCurrentOrg } from "@/lib/org";
 import { getForecast } from "@/lib/forecast.functions";
 import { getRetentionInsights } from "@/lib/churn.functions";
@@ -171,6 +172,9 @@ function DashboardPage() {
           {new Date().toLocaleDateString("pt-BR", { weekday: "short", day: "2-digit", month: "short" })}
         </Badge>
       </header>
+
+      {/* Growth Pulse — USE Success + próxima jogada */}
+      <GrowthPulse />
 
       {/* KPI strip compacto */}
       <section className="grid grid-cols-2 gap-2 sm:gap-2.5 md:grid-cols-4">
