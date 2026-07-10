@@ -128,7 +128,8 @@ export const getActivity = createServerFn({ method: "GET" })
     return row;
   });
 
-/** Remove UMA atividade (usado para excluir follow-up direto na timeline). */
+/** Remove UMA atividade (usado para excluir follow-up direto na timeline).
+ *  Retorna também o snapshot da linha removida, para permitir "Desfazer". */
 export const deleteActivity = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((i) =>
@@ -141,14 +142,70 @@ export const deleteActivity = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const { supabase } = context;
+    const { data: snap } = await supabase
+      .from("activities")
+      .select(
+        "id, organization_id, user_id, title, type, due_date, description, completed, company_id, deal_id, contact_id, source_kind, source_id, created_at",
+      )
+      .eq("id", data.activityId)
+      .eq("organization_id", data.organizationId)
+      .maybeSingle();
     const { error, count } = await supabase
       .from("activities")
       .delete({ count: "exact" })
       .eq("id", data.activityId)
       .eq("organization_id", data.organizationId);
     if (error) throw new Error(error.message);
-    return { deleted: count ?? 0 };
+    return { deleted: count ?? 0, snapshot: snap ?? null };
   });
+
+/** Restaura uma atividade removida (undo do delete), preservando o id original. */
+export const restoreActivity = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i) =>
+    z
+      .object({
+        organizationId: z.string().uuid(),
+        snapshot: z.object({
+          id: z.string().uuid(),
+          user_id: z.string().uuid(),
+          title: z.string(),
+          type: z.string(),
+          due_date: z.string().nullable().optional(),
+          description: z.string().nullable().optional(),
+          completed: z.boolean().optional(),
+          company_id: z.string().uuid().nullable().optional(),
+          deal_id: z.string().uuid().nullable().optional(),
+          contact_id: z.string().uuid().nullable().optional(),
+          source_kind: z.string().nullable().optional(),
+          source_id: z.string().nullable().optional(),
+          created_at: z.string().optional(),
+        }),
+      })
+      .parse(i),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+    const s = data.snapshot;
+    const { error } = await supabase.from("activities").insert({
+      id: s.id,
+      organization_id: data.organizationId,
+      user_id: s.user_id,
+      title: s.title,
+      type: s.type as any,
+      due_date: s.due_date ?? null,
+      description: s.description ?? null,
+      completed: s.completed ?? false,
+      company_id: s.company_id ?? null,
+      deal_id: s.deal_id ?? null,
+      contact_id: s.contact_id ?? null,
+      source_kind: s.source_kind ?? null,
+      source_id: s.source_id ?? null,
+    });
+    if (error) throw new Error(error.message);
+    return { restored: 1, id: s.id };
+  });
+
 
 /** Atribui (ou transfere) o owner das empresas selecionadas a um usuário da org. */
 export const bulkAssignCompaniesOwner = createServerFn({ method: "POST" })
