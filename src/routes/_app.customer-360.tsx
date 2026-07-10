@@ -14,6 +14,8 @@ import {
   bulkAssignCompaniesOwner,
   bulkAddCompaniesToCampaign,
   bulkSendWhatsAppToCompanies,
+  updateActivity,
+  getActivity,
 } from "@/lib/customer360-bulk.functions";
 import { listCampaigns } from "@/lib/campaigns.functions";
 import { getRepsOverview } from "@/lib/reps.functions";
@@ -556,6 +558,7 @@ function InlineTimeline({ orgId, companyId }: { orgId: string; companyId: string
     staleTime: 60_000,
   });
   const [followUp, setFollowUp] = useState<TimelineItem | null>(null);
+  const [editing, setEditing] = useState<TimelineItem | null>(null);
   const qc = useQueryClient();
 
   if (q.isLoading) {
@@ -573,12 +576,15 @@ function InlineTimeline({ orgId, companyId }: { orgId: string; companyId: string
     meta: e.meta ?? null,
     completed: e.completed,
   }));
+  const invalidate = () =>
+    qc.invalidateQueries({ queryKey: ["customer-360-timeline", orgId, companyId] });
   return (
     <>
       <Timeline
         items={items}
         emptyLabel="Ainda não há eventos registrados para este cliente."
         onScheduleFollowUp={(it) => setFollowUp(it)}
+        onEdit={(it) => setEditing(it)}
       />
       {followUp && (
         <FollowUpDialog
@@ -588,7 +594,18 @@ function InlineTimeline({ orgId, companyId }: { orgId: string; companyId: string
           onClose={() => setFollowUp(null)}
           onDone={() => {
             setFollowUp(null);
-            qc.invalidateQueries({ queryKey: ["customer-360-timeline", orgId, companyId] });
+            invalidate();
+          }}
+        />
+      )}
+      {editing && (
+        <EditActivityDialog
+          orgId={orgId}
+          activityId={editing.id}
+          onClose={() => setEditing(null)}
+          onDone={() => {
+            setEditing(null);
+            invalidate();
           }}
         />
       )}
@@ -709,6 +726,140 @@ function FollowUpDialog({
     </Dialog>
   );
 }
+
+function EditActivityDialog({
+  orgId, activityId, onClose, onDone,
+}: {
+  orgId: string;
+  activityId: string;
+  onClose: () => void;
+  onDone: () => void;
+}) {
+  const getFn = useServerFn(getActivity);
+  const updateFn = useServerFn(updateActivity);
+  const q = useQuery({
+    queryKey: ["activity-detail", orgId, activityId],
+    queryFn: () => getFn({ data: { organizationId: orgId, activityId } }),
+    staleTime: 0,
+  });
+
+  const [title, setTitle] = useState("");
+  const [type, setType] = useState<"call" | "email" | "meeting" | "task" | "note">("task");
+  const [dueLocal, setDueLocal] = useState("");
+  const [description, setDescription] = useState("");
+  const [completed, setCompleted] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
+
+  if (q.data && !hydrated) {
+    const a = q.data;
+    setTitle(a.title ?? "");
+    setType((a.type as typeof type) ?? "task");
+    if (a.due_date) {
+      const d = new Date(a.due_date);
+      const pad = (n: number) => String(n).padStart(2, "0");
+      setDueLocal(`${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`);
+    } else {
+      setDueLocal("");
+    }
+    setDescription(a.description ?? "");
+    setCompleted(!!a.completed);
+    setHydrated(true);
+  }
+
+  const mut = useMutation({
+    mutationFn: () =>
+      updateFn({
+        data: {
+          organizationId: orgId,
+          activityId,
+          title: title.trim(),
+          type,
+          dueDate: dueLocal ? new Date(dueLocal).toISOString() : null,
+          description: description.trim() ? description.trim() : null,
+          completed,
+        },
+      }),
+    onSuccess: () => {
+      toast.success("Follow-up atualizado");
+      onDone();
+    },
+    onError: (e: any) => toast.error("Falha ao salvar", { description: e?.message }),
+  });
+
+  return (
+    <Dialog open onOpenChange={(o) => !o && onClose()}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Editar follow-up</DialogTitle>
+          <DialogDescription>
+            Ajuste título, tipo, data e conclusão desta atividade. As mudanças ficam persistidas no CRM.
+          </DialogDescription>
+        </DialogHeader>
+        {q.isLoading || !hydrated ? (
+          <div className="py-6 text-center text-sm text-muted-foreground">Carregando…</div>
+        ) : q.error ? (
+          <div className="py-6 text-center text-sm text-destructive">Falha ao carregar atividade.</div>
+        ) : (
+          <div className="space-y-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="ea-title">Título</Label>
+              <Input id="ea-title" value={title} onChange={(e) => setTitle(e.target.value)} maxLength={200} />
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label htmlFor="ea-type">Tipo</Label>
+                <Select value={type} onValueChange={(v) => setType(v as typeof type)}>
+                  <SelectTrigger id="ea-type"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="task">Tarefa</SelectItem>
+                    <SelectItem value="call">Ligação</SelectItem>
+                    <SelectItem value="email">E-mail</SelectItem>
+                    <SelectItem value="meeting">Reunião</SelectItem>
+                    <SelectItem value="note">Nota</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="ea-due">Quando</Label>
+                <Input
+                  id="ea-due"
+                  type="datetime-local"
+                  value={dueLocal}
+                  onChange={(e) => setDueLocal(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="ea-desc">Observações</Label>
+              <Textarea
+                id="ea-desc"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                rows={3}
+                maxLength={2000}
+              />
+            </div>
+            <label className="flex items-center gap-2 text-sm">
+              <Checkbox checked={completed} onCheckedChange={(v) => setCompleted(v === true)} />
+              Marcar como concluído
+            </label>
+          </div>
+        )}
+        <DialogFooter>
+          <Button variant="ghost" onClick={onClose} disabled={mut.isPending}>Cancelar</Button>
+          <Button
+            onClick={() => mut.mutate()}
+            disabled={mut.isPending || !hydrated || !title.trim()}
+          >
+            {mut.isPending ? "Salvando…" : "Salvar alterações"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+
 
 
 function BulkWhatsAppDialog({

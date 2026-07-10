@@ -63,6 +63,71 @@ export const bulkCreateActivityForCompanies = createServerFn({ method: "POST" })
     return { created: rows.length };
   });
 
+/** Atualiza UMA atividade (usado para editar follow-ups direto na timeline do Customer 360). */
+export const updateActivity = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i) =>
+    z
+      .object({
+        organizationId: z.string().uuid(),
+        activityId: z.string().uuid(),
+        title: z.string().min(1).max(200).optional(),
+        type: z.enum(ACTIVITY_TYPES).optional(),
+        dueDate: z.string().datetime().nullable().optional(),
+        description: z.string().max(2000).nullable().optional(),
+        completed: z.boolean().optional(),
+      })
+      .parse(i),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+    const patch: {
+      title?: string;
+      type?: (typeof ACTIVITY_TYPES)[number];
+      due_date?: string | null;
+      description?: string | null;
+      completed?: boolean;
+    } = {};
+    if (data.title !== undefined) patch.title = data.title;
+    if (data.type !== undefined) patch.type = data.type;
+    if (data.dueDate !== undefined) patch.due_date = data.dueDate;
+    if (data.description !== undefined) patch.description = data.description;
+    if (data.completed !== undefined) patch.completed = data.completed;
+    if (Object.keys(patch).length === 0) return { updated: 0 };
+
+    const { error, count } = await supabase
+      .from("activities")
+      .update(patch, { count: "exact" })
+      .eq("id", data.activityId)
+      .eq("organization_id", data.organizationId);
+    if (error) throw new Error(error.message);
+    return { updated: count ?? 0 };
+  });
+
+/** Lê UMA atividade (para pré-carregar o diálogo de edição na timeline). */
+export const getActivity = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i) =>
+    z
+      .object({
+        organizationId: z.string().uuid(),
+        activityId: z.string().uuid(),
+      })
+      .parse(i),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+    const { data: row, error } = await supabase
+      .from("activities")
+      .select("id, title, type, due_date, description, completed, source_kind, source_id")
+      .eq("id", data.activityId)
+      .eq("organization_id", data.organizationId)
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    if (!row) throw new Error("Atividade não encontrada");
+    return row;
+  });
+
 /** Atribui (ou transfere) o owner das empresas selecionadas a um usuário da org. */
 export const bulkAssignCompaniesOwner = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
