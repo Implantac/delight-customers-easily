@@ -128,6 +128,28 @@ export const getActivity = createServerFn({ method: "GET" })
     return row;
   });
 
+/** Remove UMA atividade (usado para excluir follow-up direto na timeline). */
+export const deleteActivity = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i) =>
+    z
+      .object({
+        organizationId: z.string().uuid(),
+        activityId: z.string().uuid(),
+      })
+      .parse(i),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+    const { error, count } = await supabase
+      .from("activities")
+      .delete({ count: "exact" })
+      .eq("id", data.activityId)
+      .eq("organization_id", data.organizationId);
+    if (error) throw new Error(error.message);
+    return { deleted: count ?? 0 };
+  });
+
 /** Atribui (ou transfere) o owner das empresas selecionadas a um usuário da org. */
 export const bulkAssignCompaniesOwner = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
