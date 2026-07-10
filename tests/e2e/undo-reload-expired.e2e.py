@@ -54,9 +54,10 @@ async def main():
 
         # === 3) Aguarda passar a janela de 1s no timestamp do storage ===
         await page.wait_for_function(
-            f"() => {{ const raw = localStorage.getItem({STORAGE_KEY!r});"
-            "if (!raw) return true;"
-            "try {{ return JSON.parse(raw).expiresAt <= Date.now(); }} catch {{ return true; }} }}",
+            "(key) => { const raw = localStorage.getItem(key);"
+            " if (!raw) return true;"
+            " try { return JSON.parse(raw).expiresAt <= Date.now(); } catch { return true; } }",
+            arg=STORAGE_KEY,
             timeout=3000,
         )
 
