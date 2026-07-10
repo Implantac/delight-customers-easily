@@ -556,6 +556,7 @@ function InlineTimeline({ orgId, companyId }: { orgId: string; companyId: string
     staleTime: 60_000,
   });
   const [followUp, setFollowUp] = useState<TimelineItem | null>(null);
+  const [editing, setEditing] = useState<TimelineItem | null>(null);
   const qc = useQueryClient();
 
   if (q.isLoading) {
@@ -573,12 +574,15 @@ function InlineTimeline({ orgId, companyId }: { orgId: string; companyId: string
     meta: e.meta ?? null,
     completed: e.completed,
   }));
+  const invalidate = () =>
+    qc.invalidateQueries({ queryKey: ["customer-360-timeline", orgId, companyId] });
   return (
     <>
       <Timeline
         items={items}
         emptyLabel="Ainda não há eventos registrados para este cliente."
         onScheduleFollowUp={(it) => setFollowUp(it)}
+        onEdit={(it) => setEditing(it)}
       />
       {followUp && (
         <FollowUpDialog
@@ -588,7 +592,18 @@ function InlineTimeline({ orgId, companyId }: { orgId: string; companyId: string
           onClose={() => setFollowUp(null)}
           onDone={() => {
             setFollowUp(null);
-            qc.invalidateQueries({ queryKey: ["customer-360-timeline", orgId, companyId] });
+            invalidate();
+          }}
+        />
+      )}
+      {editing && (
+        <EditActivityDialog
+          orgId={orgId}
+          activityId={editing.id}
+          onClose={() => setEditing(null)}
+          onDone={() => {
+            setEditing(null);
+            invalidate();
           }}
         />
       )}
