@@ -104,6 +104,30 @@ export const updateActivity = createServerFn({ method: "POST" })
     return { updated: count ?? 0 };
   });
 
+/** Lê UMA atividade (para pré-carregar o diálogo de edição na timeline). */
+export const getActivity = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i) =>
+    z
+      .object({
+        organizationId: z.string().uuid(),
+        activityId: z.string().uuid(),
+      })
+      .parse(i),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+    const { data: row, error } = await supabase
+      .from("activities")
+      .select("id, title, type, due_date, description, completed, source_kind, source_id")
+      .eq("id", data.activityId)
+      .eq("organization_id", data.organizationId)
+      .maybeSingle();
+    if (error) throw new Error(error.message);
+    if (!row) throw new Error("Atividade não encontrada");
+    return row;
+  });
+
 /** Atribui (ou transfere) o owner das empresas selecionadas a um usuário da org. */
 export const bulkAssignCompaniesOwner = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
