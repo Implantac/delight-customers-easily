@@ -21,6 +21,7 @@ import { ChurnRiskCard } from "@/components/churn-risk-card";
 import { TopOpportunities } from "@/components/dashboard/top-opportunities";
 import { ProductTour } from "@/components/product-tour";
 import { MuralComercial } from "@/components/dashboard/mural-comercial";
+import { DoTodayPanel } from "@/components/dashboard/do-today-panel";
 import { useCurrentOrg } from "@/lib/org";
 import { getForecast } from "@/lib/forecast.functions";
 import { getRetentionInsights } from "@/lib/churn.functions";
@@ -191,6 +192,9 @@ function DashboardPage() {
         
         <MuralComercial />
       </section>
+
+      {/* O QUE PRECISO FAZER HOJE — Sinais acionáveis */}
+      <DoTodayPanel />
 
       {/* KPI Command Bar - Refined with Glassmorphism and Micro-interactions */}
       <section className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 relative z-10">
