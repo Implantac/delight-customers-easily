@@ -38,31 +38,31 @@ export function BusinessHealthCard() {
   const TrendIcon = data.delta == null ? Minus : data.delta > 0 ? TrendingUp : data.delta < 0 ? TrendingDown : Minus;
 
   return (
-    <Card className="p-6 md:p-8 border-border/40 bg-card/40 backdrop-blur-sm rounded-3xl shadow-xl shadow-black/5">
-      <div className="flex items-start justify-between gap-4 mb-8">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-primary/10 border border-primary/20">
-            <HeartPulse className="h-6 w-6 text-primary" />
+    <Card className="p-4 border-border/60 bg-card">
+      <div className="flex items-center justify-between gap-3 mb-4">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="h-7 w-7 shrink-0 grid place-items-center rounded-md border border-border/60 bg-card">
+            <HeartPulse className="h-3.5 w-3.5 text-primary" />
           </div>
-          <div>
-            <h3 className="text-lg font-display font-bold">Saúde do Negócio</h3>
-            <p className="text-[11px] text-muted-foreground font-bold uppercase tracking-widest opacity-70">Business Health Score</p>
+          <div className="min-w-0">
+            <h3 className="font-display text-sm font-semibold tracking-tight truncate">Saúde do Negócio</h3>
+            <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground/70 truncate">Business Health</p>
           </div>
         </div>
-        <div className="text-right">
-          <div className={`text-4xl font-bold leading-none ${toneOf(data.score)}`}>{data.score}</div>
+        <div className="text-right shrink-0">
+          <div className={`text-2xl font-display font-semibold leading-none tabular-nums ${toneOf(data.score)}`}>{data.score}</div>
           {data.delta != null && (
-            <div className="flex items-center justify-end gap-1 text-xs text-muted-foreground mt-1">
+            <div className="flex items-center justify-end gap-1 text-[10px] text-muted-foreground mt-0.5">
               <TrendIcon className="h-3 w-3" />
-              {data.delta > 0 ? "+" : ""}{data.delta} pts vs. anterior
+              {data.delta > 0 ? "+" : ""}{data.delta} pts
             </div>
           )}
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 mb-3">
         {data.pillars.map((p) => (
-          <div key={p.key} className="space-y-3">
+          <div key={p.key} className="space-y-1.5">
             <div className="flex items-center justify-between gap-2">
               <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80">{p.label}</span>
               <span className={`text-xs font-bold tabular-nums ${toneOf(p.score)}`}>{p.score}</span>
