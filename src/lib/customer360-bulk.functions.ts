@@ -81,7 +81,13 @@ export const updateActivity = createServerFn({ method: "POST" })
   )
   .handler(async ({ data, context }) => {
     const { supabase } = context;
-    const patch: Record<string, unknown> = {};
+    const patch: {
+      title?: string;
+      type?: (typeof ACTIVITY_TYPES)[number];
+      due_date?: string | null;
+      description?: string | null;
+      completed?: boolean;
+    } = {};
     if (data.title !== undefined) patch.title = data.title;
     if (data.type !== undefined) patch.type = data.type;
     if (data.dueDate !== undefined) patch.due_date = data.dueDate;
