@@ -605,7 +605,9 @@ function InlineTimeline({ orgId, companyId }: { orgId: string; companyId: string
       durationMs,
       title,
       snapshotLabel: snap?.title ?? null,
-      onRestore: (s) => restoreSnapshot(s, Date.now() + durationMs),
+      onRestore: (s) => {
+        void restoreSnapshot(s, Date.now() + durationMs);
+      },
       onExpire: () => clearUndo(orgId, companyId),
     });
   };
