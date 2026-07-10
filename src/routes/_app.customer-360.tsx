@@ -636,7 +636,8 @@ function FollowUpDialog({
           type,
           dueDate: new Date(dueLocal).toISOString(),
           description: description.trim() || undefined,
-        },
+          sourceKind: sourceItem.kind,
+          sourceId: sourceItem.id,
       }),
     onSuccess: () => {
       toast.success("Follow-up agendado");
