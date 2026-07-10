@@ -97,6 +97,8 @@ function Customer360Page() {
   const [search, setSearch] = useState("");
   const [segment, setSegment] = useState<string>("");
   const [sort, setSort] = useState<"monetary" | "recency" | "open_value">("monetary");
+  const [quickFilter, setQuickFilter] = useState<"" | "vip" | "risk" | "stale7" | "openpipe">("");
+
 
   // Selection state — keyed by company_id (only companies can be acted upon)
   const [selected, setSelected] = useState<Set<string>>(new Set());
