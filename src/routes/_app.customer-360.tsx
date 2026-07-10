@@ -6,8 +6,9 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useCurrentOrg } from "@/lib/org";
 import { useCanManage, useIsManager } from "@/lib/permissions";
-import { listCustomer360, refreshCustomer360 } from "@/lib/customer360.functions";
+import { listCustomer360, refreshCustomer360, getCustomer360Timeline } from "@/lib/customer360.functions";
 import { getCompanyErpStatus, type CompanyErpStatus } from "@/lib/erp-customer-status.functions";
+import { Timeline, type TimelineItem } from "@/components/timeline";
 import {
   bulkCreateActivityForCompanies,
   bulkAssignCompaniesOwner,
@@ -35,6 +36,7 @@ import {
   Users, Search, RefreshCw, MessageSquare, Mail, Phone,
   TrendingUp, TrendingDown, Minus, Building, ExternalLink,
   CalendarPlus, UserCog, Megaphone, X, Database, AlertTriangle, CheckCircle2,
+  Clock, ChevronDown, ChevronUp,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/customer-360")({
@@ -103,6 +105,14 @@ function Customer360Page() {
   // Selection state — keyed by company_id (only companies can be acted upon)
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [dialog, setDialog] = useState<"activity" | "campaign" | "rep" | "whatsapp" | null>(null);
+  const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  const toggleExpanded = (id: string) =>
+    setExpanded((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
 
   const q = useQuery({
     queryKey: ["customer-360", orgId, search, segment, sort],
@@ -442,6 +452,21 @@ function Customer360Page() {
                       </div>
                     </div>
                     <div className="flex gap-1 shrink-0">
+                      {c.company_id && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => toggleExpanded(c.company_id)}
+                          className="gap-1"
+                          aria-expanded={expanded.has(c.company_id)}
+                        >
+                          <Clock className="h-3.5 w-3.5" />
+                          Timeline
+                          {expanded.has(c.company_id)
+                            ? <ChevronUp className="h-3.5 w-3.5" />
+                            : <ChevronDown className="h-3.5 w-3.5" />}
+                        </Button>
+                      )}
                       {wa && (
                         <Button asChild variant="outline" size="sm" className="gap-1">
                           <a href={wa} target="_blank" rel="noopener noreferrer">
@@ -467,6 +492,18 @@ function Customer360Page() {
                     <Metric label="Ganhos 12m" value={fmtBRL(c.won_deals_value_365d)} sub={`${c.won_deals_count_365d ?? 0} fechados`} />
                     <Metric label="Atividades 30d" value={`${c.activities_30d ?? 0}`} sub={c.last_activity_at ? `últ. ${fmtDate(c.last_activity_at)}` : "sem atividade"} />
                   </div>
+
+                  {c.company_id && expanded.has(c.company_id) && orgId && (
+                    <div className="mt-4 pt-4 border-t border-border/40">
+                      <div className="flex items-center gap-2 mb-3">
+                        <Clock className="h-4 w-4 text-primary" />
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                          Timeline omnichannel — últimos eventos
+                        </h4>
+                      </div>
+                      <InlineTimeline orgId={orgId} companyId={c.company_id} />
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             );
@@ -510,6 +547,32 @@ function Customer360Page() {
     </div>
   );
 }
+
+function InlineTimeline({ orgId, companyId }: { orgId: string; companyId: string }) {
+  const fn = useServerFn(getCustomer360Timeline);
+  const q = useQuery({
+    queryKey: ["customer-360-timeline", orgId, companyId],
+    queryFn: () => fn({ data: { organizationId: orgId, companyId, limit: 15 } }),
+    staleTime: 60_000,
+  });
+  if (q.isLoading) {
+    return <div className="text-xs text-muted-foreground py-4">Carregando timeline…</div>;
+  }
+  if (q.error) {
+    return <div className="text-xs text-destructive py-4">Falha ao carregar timeline.</div>;
+  }
+  const items: TimelineItem[] = (q.data?.items ?? []).map((e) => ({
+    id: e.id,
+    kind: e.kind,
+    type: e.type ?? null,
+    title: e.title,
+    date: e.date,
+    meta: e.meta ?? null,
+    completed: e.completed,
+  }));
+  return <Timeline items={items} emptyLabel="Ainda não há eventos registrados para este cliente." />;
+}
+
 
 function BulkWhatsAppDialog({
   orgId, companyIds, onClose, onDone,
