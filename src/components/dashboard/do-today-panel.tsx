@@ -50,11 +50,7 @@ export function DoTodayPanel() {
   const d = q.data;
   const loading = q.isLoading;
 
-    },
-  });
 
-  const d = q.data;
-  const loading = q.isLoading;
 
   const tiles: Tile[] = [
     {
