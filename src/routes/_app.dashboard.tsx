@@ -194,6 +194,9 @@ function DashboardPage() {
         <MuralComercial />
       </section>
 
+      {/* Copiloto de Vendas — Briefing diário */}
+      <DailyBriefing />
+
       {/* O QUE PRECISO FAZER HOJE — Sinais acionáveis */}
       <DoTodayPanel />
 
