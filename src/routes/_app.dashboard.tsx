@@ -24,6 +24,7 @@ import { MuralComercial } from "@/components/dashboard/mural-comercial";
 import { DoTodayPanel } from "@/components/dashboard/do-today-panel";
 import { DailyBriefing } from "@/components/dashboard/daily-briefing";
 import { GrowthPulse } from "@/components/dashboard/growth-pulse";
+import { GrowthCentral } from "@/components/dashboard/growth-central";
 import { useCurrentOrg } from "@/lib/org";
 import { getForecast } from "@/lib/forecast.functions";
 import { getRetentionInsights } from "@/lib/churn.functions";
@@ -202,6 +203,9 @@ function DashboardPage() {
           </motion.div>
         ))}
       </section>
+
+      {/* Central de Crescimento — Plano do dia unificado */}
+      <GrowthCentral />
 
       {/* Foco do dia + Saúde */}
       <section className="grid grid-cols-1 gap-4 md:grid-cols-12">

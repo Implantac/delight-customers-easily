@@ -1,18 +1,18 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion } from "framer-motion";
 import {
-  Rocket, TrendingUp, TrendingDown, Minus, ArrowRight, Sparkles,
+  Rocket, TrendingUp, TrendingDown, Minus, Sparkles,
   AlertTriangle, CheckCircle2, Activity,
 } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { useCurrentOrg } from "@/lib/org";
 import { getUseSuccessReport, type SuccessClass, type SuccessPillar } from "@/lib/use-success.functions";
+import { ActionCard } from "@/components/action-card";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_app/use-success")({
@@ -238,35 +238,19 @@ function ActionsPanel({ actions }: { actions: Awaited<ReturnType<typeof getUseSu
           <span>Todos os pilares acima de 70 pontos — nenhuma ação urgente.</span>
         </div>
       ) : (
-        <ul className="space-y-1.5">
+        <div className="space-y-1.5">
           {actions.map((a, i) => (
-            <li key={i} className="flex items-center justify-between gap-2 rounded-md border border-border/60 p-2.5 hover:bg-accent/30 transition-colors">
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  <p className="text-sm font-medium truncate">{a.title}</p>
-                  {a.impact_brl ? (
-                    <Badge variant="outline" className="h-4 px-1.5 text-[10px] tabular-nums">
-                      {fmtBRL(a.impact_brl)}
-                    </Badge>
-                  ) : null}
-                  {a.channel ? (
-                    <Badge variant="secondary" className="h-4 px-1.5 text-[10px] uppercase">
-                      {a.channel}
-                    </Badge>
-                  ) : null}
-                </div>
-                <p className="mt-0.5 text-[11px] text-muted-foreground truncate">{a.reason}</p>
-              </div>
-              {a.href && (
-                <Button asChild size="sm" variant="ghost" className="h-7 px-2 text-[11px] shrink-0">
-                  <Link to={a.href as any}>
-                    Abrir <ArrowRight className="ml-1 h-3 w-3" />
-                  </Link>
-                </Button>
-              )}
-            </li>
+            <ActionCard
+              key={i}
+              title={a.title}
+              reason={a.reason}
+              impact_brl={a.impact_brl}
+              channel={a.channel}
+              href={a.href}
+              tone="neutral"
+            />
           ))}
-        </ul>
+        </div>
       )}
     </Card>
   );
