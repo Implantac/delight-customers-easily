@@ -14,7 +14,7 @@ import { Timeline, type TimelineItem } from "@/components/timeline";
 import {
   ArrowLeft, Globe, Trash2, Users, KanbanSquare, Clock, History as HistoryIcon,
   Plug, TrendingUp, Receipt, Package, MessageCircle, Mail, Phone, Sparkles, LayoutGrid,
-  Building, Lightbulb,
+  Building, Lightbulb, FileText, Paperclip, Map as MapIcon, ShieldAlert, MessageSquare,
 } from "lucide-react";
 import { Attachments } from "@/components/attachments";
 import { TagPicker } from "@/components/tag-picker";
@@ -155,6 +155,27 @@ function CompanyDetail() {
         .limit(30);
       return data ?? [];
     },
+  });
+
+  const { data: proposals } = useQuery({
+    queryKey: ["company-proposals", id],
+    queryFn: async () =>
+      (await supabase
+        .from("proposals")
+        .select("id, title, status, valid_until, total, created_at, share_token")
+        .eq("company_id", id)
+        .order("created_at", { ascending: false })).data ?? [],
+  });
+
+  const { data: geoLocation } = useQuery({
+    queryKey: ["company-geo", id],
+    queryFn: async () =>
+      (await supabase
+        .from("geo_locations")
+        .select("latitude, longitude, street, number, neighborhood, city, state, cep")
+        .eq("subject_type", "company")
+        .eq("subject_id", id)
+        .maybeSingle()).data,
   });
 
   // ============ Inteligência comercial derivada ============
@@ -368,12 +389,17 @@ function CompanyDetail() {
 
           <Tabs defaultValue="overview" className="w-full">
             <TabsList className="w-full justify-start overflow-x-auto">
-              <TabsTrigger value="overview" className="gap-1.5"><LayoutGrid className="h-3.5 w-3.5" />Visão geral</TabsTrigger>
-              <TabsTrigger value="deals" className="gap-1.5"><KanbanSquare className="h-3.5 w-3.5" />Oportunidades{deals?.length ? ` · ${deals.length}` : ""}</TabsTrigger>
-              <TabsTrigger value="products" className="gap-1.5"><Package className="h-3.5 w-3.5" />Produtos</TabsTrigger>
-              <TabsTrigger value="invoices" className="gap-1.5"><Receipt className="h-3.5 w-3.5" />Faturas{invoices?.length ? ` · ${invoices.length}` : ""}</TabsTrigger>
+              <TabsTrigger value="overview" className="gap-1.5"><LayoutGrid className="h-3.5 w-3.5" />Resumo</TabsTrigger>
               <TabsTrigger value="timeline" className="gap-1.5"><Clock className="h-3.5 w-3.5" />Timeline</TabsTrigger>
-              <TabsTrigger value="ai" className="gap-1.5"><Sparkles className="h-3.5 w-3.5" />IA</TabsTrigger>
+              <TabsTrigger value="whatsapp" className="gap-1.5"><MessageSquare className="h-3.5 w-3.5" />WhatsApp{waMessages?.length ? ` · ${waMessages.length}` : ""}</TabsTrigger>
+              <TabsTrigger value="deals" className="gap-1.5"><KanbanSquare className="h-3.5 w-3.5" />Oportunidades{deals?.length ? ` · ${deals.length}` : ""}</TabsTrigger>
+              <TabsTrigger value="products" className="gap-1.5"><Package className="h-3.5 w-3.5" />Pedidos</TabsTrigger>
+              <TabsTrigger value="proposals" className="gap-1.5"><FileText className="h-3.5 w-3.5" />Propostas{proposals?.length ? ` · ${proposals.length}` : ""}</TabsTrigger>
+              <TabsTrigger value="invoices" className="gap-1.5"><Receipt className="h-3.5 w-3.5" />Faturas{invoices?.length ? ` · ${invoices.length}` : ""}</TabsTrigger>
+              <TabsTrigger value="files" className="gap-1.5"><Paperclip className="h-3.5 w-3.5" />Arquivos</TabsTrigger>
+              <TabsTrigger value="map" className="gap-1.5"><MapIcon className="h-3.5 w-3.5" />Mapa</TabsTrigger>
+              <TabsTrigger value="ai" className="gap-1.5"><Sparkles className="h-3.5 w-3.5" />Insights IA</TabsTrigger>
+              <TabsTrigger value="risk" className="gap-1.5"><ShieldAlert className="h-3.5 w-3.5" />Risco / Score</TabsTrigger>
               <TabsTrigger value="history" className="gap-1.5"><HistoryIcon className="h-3.5 w-3.5" />Histórico</TabsTrigger>
             </TabsList>
 
@@ -594,6 +620,155 @@ function CompanyDetail() {
                 </Card>
               )}
             </TabsContent>
+
+            <TabsContent value="whatsapp" className="mt-4">
+              <Card className="p-5">
+                <div className="flex items-center justify-between">
+                  <h3 className="flex items-center gap-2 text-sm font-semibold">
+                    <MessageSquare className="h-4 w-4 text-emerald-500" />
+                    Conversas WhatsApp {waMessages?.length ? `· ${waMessages.length}` : ""}
+                  </h3>
+                  {waLink && (
+                    <Button variant="ghost" size="sm" asChild>
+                      <a href={waLink} target="_blank" rel="noreferrer">Abrir no WhatsApp →</a>
+                    </Button>
+                  )}
+                </div>
+                <div className="mt-3 space-y-2">
+                  {(waMessages ?? []).length === 0 ? (
+                    <p className="text-sm text-muted-foreground">Nenhuma mensagem trocada com este cliente ainda.</p>
+                  ) : (
+                    waMessages!.map((m) => (
+                      <div
+                        key={m.id}
+                        className={`rounded-lg border p-3 text-sm ${
+                          m.direction === "outbound" ? "border-primary/20 bg-primary/5" : "border-border/40 bg-muted/30"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between gap-2 mb-1">
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                            {m.direction === "outbound" ? "Você → cliente" : "Cliente → você"}
+                          </span>
+                          <span className="text-[10px] text-muted-foreground tabular-nums">
+                            {new Date(m.created_at).toLocaleString("pt-BR")}
+                          </span>
+                        </div>
+                        <p className="leading-snug break-words">{m.body}</p>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="proposals" className="mt-4">
+              <Card className="p-5">
+                <div className="flex items-center justify-between">
+                  <h3 className="flex items-center gap-2 text-sm font-semibold">
+                    <FileText className="h-4 w-4" />Propostas {proposals?.length ? `· ${proposals.length}` : ""}
+                  </h3>
+                </div>
+                <div className="mt-3 space-y-2">
+                  {(proposals ?? []).length === 0 ? (
+                    <p className="text-sm text-muted-foreground">Nenhuma proposta registrada para esta empresa.</p>
+                  ) : (
+                    proposals!.map((p) => {
+                      const expired = p.valid_until && new Date(p.valid_until) < new Date() && p.status !== "accepted" && p.status !== "rejected";
+                      return (
+                        <div key={p.id} className="flex items-center justify-between rounded-md border p-3 text-sm">
+                          <div className="min-w-0">
+                            <p className="font-medium truncate">{p.title || "Proposta sem título"}</p>
+                            {p.valid_until && (
+                              <p className="text-xs text-muted-foreground">
+                                válida até {new Date(p.valid_until).toLocaleDateString("pt-BR")}
+                              </p>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2 shrink-0">
+                            <Badge variant={p.status === "accepted" ? "default" : p.status === "rejected" ? "destructive" : expired ? "destructive" : "secondary"}>
+                              {p.status === "accepted" ? "aceita" : p.status === "rejected" ? "recusada" : expired ? "expirada" : (p.status || "aberta")}
+                            </Badge>
+                            <span className="text-muted-foreground tabular-nums">{BRL(Number(p.total))}</span>
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="files" className="mt-4">
+              <Card className="p-5">
+                <h3 className="flex items-center gap-2 text-sm font-semibold mb-4">
+                  <Paperclip className="h-4 w-4" />Arquivos anexados
+                </h3>
+                <Attachments entityType="company" entityId={company.id} />
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="map" className="mt-4">
+              <Card className="p-5">
+                <h3 className="flex items-center gap-2 text-sm font-semibold">
+                  <MapIcon className="h-4 w-4" />Localização
+                </h3>
+                {geoLocation ? (
+                  <div className="mt-4 space-y-3">
+                    <div className="text-sm space-y-1">
+                      {(geoLocation.street || geoLocation.number) && (
+                        <p>{[geoLocation.street, geoLocation.number].filter(Boolean).join(", ")}{geoLocation.neighborhood ? ` — ${geoLocation.neighborhood}` : ""}</p>
+                      )}
+                      {(geoLocation.city || geoLocation.state) && (
+                        <p className="text-muted-foreground">{[geoLocation.city, geoLocation.state].filter(Boolean).join(" / ")}{geoLocation.cep ? ` · CEP ${geoLocation.cep}` : ""}</p>
+                      )}
+                    </div>
+                    {geoLocation.latitude != null && geoLocation.longitude != null && (
+                      <>
+                        <div className="overflow-hidden rounded-lg border border-border/40 bg-muted/20 aspect-[16/9]">
+                          <iframe
+                            title={`Mapa de ${company.name}`}
+                            className="h-full w-full"
+                            loading="lazy"
+                            referrerPolicy="no-referrer-when-downgrade"
+                            src={`https://www.openstreetmap.org/export/embed.html?bbox=${geoLocation.longitude - 0.01}%2C${geoLocation.latitude - 0.01}%2C${geoLocation.longitude + 0.01}%2C${geoLocation.latitude + 0.01}&layer=mapnik&marker=${geoLocation.latitude}%2C${geoLocation.longitude}`}
+                          />
+                        </div>
+                        <Button variant="ghost" size="sm" asChild>
+                          <a href={`https://www.google.com/maps?q=${geoLocation.latitude},${geoLocation.longitude}`} target="_blank" rel="noreferrer">
+                            Abrir no Google Maps →
+                          </a>
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                ) : (
+                  <p className="mt-3 text-sm text-muted-foreground">
+                    Nenhuma localização geográfica cadastrada para este cliente.
+                  </p>
+                )}
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="risk" className="mt-4 space-y-4">
+              {erpLink ? (
+                <PropensityPanel
+                  organizationId={erpLink.organization_id}
+                  erpCustomerId={erpLink.id}
+                />
+              ) : (
+                <Card className="p-5 border-dashed text-sm text-muted-foreground">
+                  Conecte esta empresa a um cliente do ERP para calcular score de propensão, risco de churn e recompra.
+                </Card>
+              )}
+              <Card className="p-5">
+                <h3 className="flex items-center gap-2 text-sm font-semibold mb-3">
+                  <ShieldAlert className="h-4 w-4 text-amber-500" />Saúde comercial
+                </h3>
+                <HealthScore contactId={primaryContact?.id} companyId={company.id} />
+              </Card>
+            </TabsContent>
+
+
 
             <TabsContent value="history" className="mt-4">
               <Card className="p-5">
