@@ -96,11 +96,13 @@ export function Timeline({
   emptyLabel = "Nada por aqui.",
   onScheduleFollowUp,
   onEdit,
+  onDelete,
 }: {
   items: TimelineItem[];
   emptyLabel?: string;
   onScheduleFollowUp?: (item: TimelineItem) => void;
   onEdit?: (item: TimelineItem) => void;
+  onDelete?: (item: TimelineItem) => void;
 }) {
   if (items.length === 0) {
     return (
