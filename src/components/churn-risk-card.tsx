@@ -55,7 +55,7 @@ export function ChurnRiskCard() {
         </Button>
       </div>
 
-      <div className="mt-4 space-y-2">
+      <div className="space-y-1.5">
         {q.isLoading ? (
           <>
             <Skeleton className="h-12 w-full" />
