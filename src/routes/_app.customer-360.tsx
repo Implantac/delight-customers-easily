@@ -16,6 +16,7 @@ import {
   bulkSendWhatsAppToCompanies,
   updateActivity,
   getActivity,
+  deleteActivity,
 } from "@/lib/customer360-bulk.functions";
 import { listCampaigns } from "@/lib/campaigns.functions";
 import { getRepsOverview } from "@/lib/reps.functions";
