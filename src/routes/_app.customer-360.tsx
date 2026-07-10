@@ -249,6 +249,31 @@ function Customer360Page() {
         }
       />
 
+      {/* Faixa de KPIs — distribuição da carteira, clicáveis */}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
+        {[
+          { k: "", label: "Carteira", value: kpis.total.toLocaleString("pt-BR"), sub: "clientes", cls: "border-border/40" },
+          { k: "vip", label: "⭐ VIP", value: kpis.vip.toLocaleString("pt-BR"), sub: "campeões + fiéis", cls: "border-emerald-500/30 bg-emerald-500/[0.04]" },
+          { k: "risk", label: "⚠ Em risco", value: kpis.risk.toLocaleString("pt-BR"), sub: "requerem ação", cls: "border-amber-500/30 bg-amber-500/[0.04]" },
+          { k: "stale7", label: "⏳ Sem follow-up 7d", value: kpis.stale.toLocaleString("pt-BR"), sub: "sem contato recente", cls: "border-rose-500/30 bg-rose-500/[0.04]" },
+          { k: "openpipe", label: "📈 Pipeline aberto", value: kpis.open.toLocaleString("pt-BR"), sub: fmtBRL(kpis.openValue), cls: "border-primary/30 bg-primary/[0.04]" },
+        ].map((k) => (
+          <button
+            key={k.k || "all"}
+            onClick={() => setQuickFilter(k.k as any)}
+            className={cn(
+              "text-left rounded-lg border p-3 transition-all hover:shadow-md hover:-translate-y-0.5",
+              k.cls,
+              quickFilter === k.k && "ring-2 ring-current/30 shadow-md",
+            )}
+          >
+            <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70">{k.label}</div>
+            <div className="mt-1 text-2xl font-bold tabular-nums">{k.value}</div>
+            <div className="text-[11px] text-muted-foreground truncate">{k.sub}</div>
+          </button>
+        ))}
+      </div>
+
       <Card className="border-border/40 bg-card/50 shadow-sm mb-6">
         <CardContent className="p-3 flex flex-wrap gap-3 items-center">
           <div className="relative flex-1 min-w-[240px]">
