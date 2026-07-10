@@ -36,6 +36,7 @@ import {
   Users, Search, RefreshCw, MessageSquare, Mail, Phone,
   TrendingUp, TrendingDown, Minus, Building, ExternalLink,
   CalendarPlus, UserCog, Megaphone, X, Database, AlertTriangle, CheckCircle2,
+  Clock, ChevronDown, ChevronUp,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/customer-360")({
