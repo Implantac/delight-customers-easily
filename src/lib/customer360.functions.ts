@@ -137,22 +137,18 @@ export const getCustomer360Timeline = createServerFn({ method: 'GET' })
     const contactIds = (contacts ?? []).map((c) => c.id);
     const dealIds = (deals ?? []).map((d) => d.id);
 
-    // Atividades (ligadas a esses deals ou contatos)
+    // Atividades (ligadas a esses deals, contatos OU diretamente à empresa via company_id)
     let activitiesPromise: PromiseLike<{ data: any[] | null }> = Promise.resolve({ data: [] });
-    if (dealIds.length > 0 || contactIds.length > 0) {
-      let aq = supabase
-        .from('activities')
-        .select('id, title, type, due_date, completed, created_at')
-        .eq('organization_id', orgId);
-      if (dealIds.length > 0 && contactIds.length > 0) {
-        aq = aq.or(`deal_id.in.(${dealIds.join(',')}),contact_id.in.(${contactIds.join(',')})`);
-      } else if (dealIds.length > 0) {
-        aq = aq.in('deal_id', dealIds);
-      } else {
-        aq = aq.in('contact_id', contactIds);
-      }
-      activitiesPromise = aq.order('due_date', { ascending: false, nullsFirst: false }).limit(20);
-    }
+    const activityFilters: string[] = [`company_id.eq.${companyId}`];
+    if (dealIds.length > 0) activityFilters.push(`deal_id.in.(${dealIds.join(',')})`);
+    if (contactIds.length > 0) activityFilters.push(`contact_id.in.(${contactIds.join(',')})`);
+    activitiesPromise = supabase
+      .from('activities')
+      .select('id, title, type, due_date, completed, created_at, source_kind, source_id')
+      .eq('organization_id', orgId)
+      .or(activityFilters.join(','))
+      .order('due_date', { ascending: false, nullsFirst: false })
+      .limit(30);
 
     // WhatsApp (via conversas dos contatos)
     let waPromise: PromiseLike<{ data: any[] | null }> = Promise.resolve({ data: [] });
@@ -187,7 +183,15 @@ export const getCustomer360Timeline = createServerFn({ method: 'GET' })
 
     const items: Customer360TimelineEvent[] = [];
 
+    const SOURCE_LABEL: Record<string, string> = {
+      whatsapp: 'WhatsApp', email: 'e-mail', deal: 'negócio',
+      won: 'ganho', lost: 'perda', invoice: 'fatura',
+      activity: 'atividade', form: 'formulário',
+    };
     for (const a of (activitiesR.data ?? []) as any[]) {
+      const srcMeta = a.source_kind
+        ? `↳ follow-up de ${SOURCE_LABEL[a.source_kind] ?? a.source_kind}`
+        : null;
       items.push({
         id: a.id,
         kind: 'activity',
@@ -195,6 +199,7 @@ export const getCustomer360Timeline = createServerFn({ method: 'GET' })
         title: a.title ?? 'Atividade',
         date: a.due_date ?? a.created_at,
         completed: !!a.completed,
+        meta: srcMeta,
       });
     }
     for (const d of (deals ?? []) as any[]) {
