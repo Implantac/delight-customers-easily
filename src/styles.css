@@ -10,9 +10,9 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  /* === Tipografia: Geist (Linear / Attio) === */
+  /* === Tipografia: Sora (display) + Geist (body) === */
   --font-sans: "Geist", "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-display: "Geist", "Space Grotesk", "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Sora", "Space Grotesk", "Geist", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono", "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
 
   --color-background: var(--background);
