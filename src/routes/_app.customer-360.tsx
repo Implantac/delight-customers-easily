@@ -611,48 +611,72 @@ function InlineTimeline({ orgId, companyId }: { orgId: string; companyId: string
   const invalidate = () =>
     qc.invalidateQueries({ queryKey: ["customer-360-timeline", orgId, companyId] });
 
-  const restoreSnapshot = (snap: any) =>
-    restoreFn({ data: { organizationId: orgId, snapshot: snap } })
+  const restoreSnapshot = (snap: any, endsAt?: number) => {
+    if (endsAt !== undefined && Date.now() >= endsAt) {
+      toast.error("Prazo para desfazer expirado");
+      clearUndo(orgId, companyId);
+      return;
+    }
+    const entry = readUndo(orgId, companyId);
+    if (!entry) {
+      toast.error("Prazo para desfazer expirado");
+      return;
+    }
+    return restoreFn({ data: { organizationId: orgId, snapshot: snap } })
       .then(() => {
         clearUndo(orgId, companyId);
         toast.success("Follow-up restaurado");
         invalidate();
       })
       .catch((e: any) => toast.error("Falha ao restaurar", { description: e?.message }));
+  };
 
   // Abre um toast de "Desfazer" com contagem regressiva atualizada a cada 1s.
   const showUndoToast = (snap: any, durationMs: number, title: string) => {
     const endsAt = Date.now() + durationMs;
     const snapTitle = snap?.title ? `"${snap.title}" · ` : "";
-    const render = (remainingSec: number) => ({
-      description: `${snapTitle}restaurar em ${remainingSec}s`,
-      action: {
-        label: `Desfazer (${remainingSec}s)`,
-        onClick: () => {
+    const render = (remainingSec: number) => {
+      const expired = remainingSec <= 0;
+      return {
+        description: expired
+          ? `${snapTitle}prazo expirado`
+          : `${snapTitle}restaurar em ${remainingSec}s`,
+        action: expired
+          ? {
+              label: "Desfazer (0s)",
+              onClick: (ev: React.MouseEvent) => {
+                ev.preventDefault();
+                toast.error("Prazo para desfazer expirado");
+              },
+            }
+          : {
+              label: `Desfazer (${remainingSec}s)`,
+              onClick: () => {
+                clearInterval(intervalId);
+                restoreSnapshot(snap, endsAt);
+              },
+            },
+        actionButtonStyle: expired
+          ? { opacity: 0.5, pointerEvents: "none" as const, cursor: "not-allowed" }
+          : undefined,
+        duration: Math.max(500, endsAt - Date.now()),
+        onDismiss: () => {
           clearInterval(intervalId);
-          restoreSnapshot(snap);
+          clearUndo(orgId, companyId);
         },
-      },
-      duration: Math.max(500, endsAt - Date.now()),
-      onDismiss: () => {
-        clearInterval(intervalId);
-        clearUndo(orgId, companyId);
-      },
-      onAutoClose: () => {
-        clearInterval(intervalId);
-        clearUndo(orgId, companyId);
-      },
-    });
+        onAutoClose: () => {
+          clearInterval(intervalId);
+          clearUndo(orgId, companyId);
+        },
+      };
+    };
     const initialRemaining = Math.max(1, Math.ceil(durationMs / 1000));
     const id = toast(title, render(initialRemaining));
     const intervalId = window.setInterval(() => {
       const remainingMs = endsAt - Date.now();
-      if (remainingMs <= 0) {
-        clearInterval(intervalId);
-        return;
-      }
-      const remainingSec = Math.max(1, Math.ceil(remainingMs / 1000));
+      const remainingSec = Math.max(0, Math.ceil(remainingMs / 1000));
       toast(title, { id, ...render(remainingSec) });
+      if (remainingMs <= 0) clearInterval(intervalId);
     }, 1000);
   };
 
