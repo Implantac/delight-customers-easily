@@ -12,7 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { useCurrentOrg } from "@/lib/org";
 import { getUseSuccessReport, type SuccessClass, type SuccessPillar } from "@/lib/use-success.functions";
-import { ActionCard, ActionCardEmpty } from "@/components/action-card";
+import { ActionCard } from "@/components/action-card";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_app/use-success")({
@@ -255,6 +255,3 @@ function ActionsPanel({ actions }: { actions: Awaited<ReturnType<typeof getUseSu
     </Card>
   );
 }
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _unused = ActionCardEmpty;
