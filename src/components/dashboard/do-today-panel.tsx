@@ -1,5 +1,4 @@
 import { Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import {
   MessageSquare,
@@ -16,8 +15,7 @@ import {
 
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { supabase } from "@/integrations/supabase/client";
-import { useCurrentOrg } from "@/lib/org";
+import { useDailySignals } from "@/lib/daily-signals";
 
 /**
  * "O que preciso fazer hoje?" — painel de sinais acionáveis no topo do Dashboard.
@@ -47,97 +45,11 @@ const toneMap: Record<Tone, { chip: string; ring: string; text: string; bar: str
   orange:  { chip: "bg-orange-500/10 text-orange-600 dark:text-orange-400", ring: "ring-orange-500/20",  text: "text-orange-600 dark:text-orange-400",   bar: "bg-orange-500" },
 };
 
-function todayISO() {
-  const d = new Date();
-  d.setHours(0, 0, 0, 0);
-  return d.toISOString();
-}
-function tomorrowISO() {
-  const d = new Date();
-  d.setHours(0, 0, 0, 0);
-  d.setDate(d.getDate() + 1);
-  return d.toISOString();
-}
-
 export function DoTodayPanel() {
-  const { orgId } = useCurrentOrg();
+  const q = useDailySignals();
+  const d = q.data;
+  const loading = q.isLoading;
 
-  const q = useQuery({
-    queryKey: ["do-today-panel", orgId],
-    enabled: !!orgId,
-    staleTime: 60_000,
-    queryFn: async () => {
-      const today = todayISO();
-      const tomorrow = tomorrowISO();
-
-      const [
-        overdue,
-        dueToday,
-        proposalsToday,
-        proposalsExpired,
-        bigDeals,
-        waMsgs,
-        inactives,
-      ] = await Promise.all([
-        // Follow-ups atrasados
-        supabase
-          .from("activities")
-          .select("id", { count: "exact", head: true })
-          .eq("completed", false)
-          .lt("due_date", today),
-        // Follow-ups agendados para hoje
-        supabase
-          .from("activities")
-          .select("id", { count: "exact", head: true })
-          .eq("completed", false)
-          .gte("due_date", today)
-          .lt("due_date", tomorrow),
-        // Propostas que vencem hoje
-        supabase
-          .from("proposals")
-          .select("id", { count: "exact", head: true })
-          .gte("valid_until", today)
-          .lt("valid_until", tomorrow)
-          .not("status", "in", "(accepted,rejected)"),
-        // Propostas expiradas sem resposta
-        supabase
-          .from("proposals")
-          .select("id", { count: "exact", head: true })
-          .lt("valid_until", today)
-          .not("status", "in", "(accepted,rejected)"),
-        // Oportunidades quentes (>= 100k) abertas
-        supabase
-          .from("deals")
-          .select("id", { count: "exact", head: true })
-          .gte("value", 100000)
-          .not("stage", "in", "(won,lost)"),
-        // WhatsApp com mensagens não lidas
-        supabase
-          .from("whatsapp_conversations")
-          .select("unread_count")
-          .eq("status", "open")
-          .gt("unread_count", 0),
-        // Clientes inativos (ERP metrics — sem compra há 60+ dias)
-        supabase
-          .from("erp_customer_metrics")
-          .select("id", { count: "exact", head: true })
-          .gte("recency_days", 60),
-      ]);
-
-      const waCount = (waMsgs.data ?? []).reduce(
-        (s, r: { unread_count: number | null }) => s + Number(r.unread_count || 0),
-        0,
-      );
-
-      return {
-        overdue: overdue.count ?? 0,
-        dueToday: dueToday.count ?? 0,
-        proposalsToday: proposalsToday.count ?? 0,
-        proposalsExpired: proposalsExpired.count ?? 0,
-        bigDeals: bigDeals.count ?? 0,
-        waMsgs: waCount,
-        inactives: inactives.count ?? 0,
-      };
     },
   });
 
