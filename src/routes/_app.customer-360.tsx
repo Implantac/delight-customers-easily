@@ -620,6 +620,42 @@ function InlineTimeline({ orgId, companyId }: { orgId: string; companyId: string
       })
       .catch((e: any) => toast.error("Falha ao restaurar", { description: e?.message }));
 
+  // Abre um toast de "Desfazer" com contagem regressiva atualizada a cada 1s.
+  const showUndoToast = (snap: any, durationMs: number, title: string) => {
+    const endsAt = Date.now() + durationMs;
+    const snapTitle = snap?.title ? `"${snap.title}" · ` : "";
+    const render = (remainingSec: number) => ({
+      description: `${snapTitle}restaurar em ${remainingSec}s`,
+      action: {
+        label: `Desfazer (${remainingSec}s)`,
+        onClick: () => {
+          clearInterval(intervalId);
+          restoreSnapshot(snap);
+        },
+      },
+      duration: Math.max(500, endsAt - Date.now()),
+      onDismiss: () => {
+        clearInterval(intervalId);
+        clearUndo(orgId, companyId);
+      },
+      onAutoClose: () => {
+        clearInterval(intervalId);
+        clearUndo(orgId, companyId);
+      },
+    });
+    const initialRemaining = Math.max(1, Math.ceil(durationMs / 1000));
+    const id = toast(title, render(initialRemaining));
+    const intervalId = window.setInterval(() => {
+      const remainingMs = endsAt - Date.now();
+      if (remainingMs <= 0) {
+        clearInterval(intervalId);
+        return;
+      }
+      const remainingSec = Math.max(1, Math.ceil(remainingMs / 1000));
+      toast(title, { id, ...render(remainingSec) });
+    }, 1000);
+  };
+
   // Re-oferece "Desfazer" após reload, enquanto o snapshot ainda estiver dentro do TTL.
   const rehydrated = useRef(false);
   useEffect(() => {
@@ -628,16 +664,7 @@ function InlineTimeline({ orgId, companyId }: { orgId: string; companyId: string
     const entry = readUndo(orgId, companyId);
     if (!entry) return;
     const remaining = Math.max(1000, entry.expiresAt - Date.now());
-    toast("Follow-up excluído recentemente", {
-      description: `"${entry.snapshot?.title ?? ""}" — restaurar?`,
-      action: {
-        label: "Desfazer",
-        onClick: () => restoreSnapshot(entry.snapshot),
-      },
-      duration: remaining,
-      onDismiss: () => clearUndo(orgId, companyId),
-      onAutoClose: () => clearUndo(orgId, companyId),
-    });
+    showUndoToast(entry.snapshot, remaining, "Follow-up excluído recentemente");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orgId, companyId]);
 
@@ -649,16 +676,12 @@ function InlineTimeline({ orgId, companyId }: { orgId: string; companyId: string
         toast.warning("Nenhum follow-up removido");
       } else {
         const snap = r?.snapshot;
-        if (snap) writeUndo(orgId, companyId, snap);
-        toast.success("Follow-up excluído", {
-          action: snap
-            ? {
-                label: "Desfazer",
-                onClick: () => restoreSnapshot(snap),
-              }
-            : undefined,
-          duration: 8000,
-        });
+        if (snap) {
+          writeUndo(orgId, companyId, snap);
+          showUndoToast(snap, 8000, "Follow-up excluído");
+        } else {
+          toast.success("Follow-up excluído");
+        }
       }
       setDeleting(null);
       invalidate();
