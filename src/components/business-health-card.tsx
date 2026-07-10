@@ -76,29 +76,28 @@ export function BusinessHealthCard() {
       </div>
 
       {data.topLevers.length > 0 && (
-        <div className="mt-5 border-t pt-4">
-          <p className="text-xs font-semibold mb-2 text-muted-foreground uppercase tracking-wide">
-            Alavancas de crescimento
+        <div className="mt-3 border-t border-border/40 pt-3">
+          <p className="text-[10px] font-semibold mb-1.5 text-muted-foreground/70 uppercase tracking-[0.12em]">
+            Alavancas
           </p>
-          <ul className="space-y-2">
-            {data.topLevers.map((l, i) => (
-              <li key={i} className="flex items-start justify-between gap-3">
+          <ul className="space-y-1">
+            {data.topLevers.slice(0, 3).map((l, i) => (
+              <li key={i} className="flex items-center justify-between gap-2">
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <p className="text-sm font-medium">{l.title}</p>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <p className="text-xs font-medium truncate">{l.title}</p>
                     {l.impact_brl ? (
-                      <Badge variant="outline" className="text-xs">
+                      <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-4">
                         {l.impact_brl.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 })}
                       </Badge>
                     ) : null}
                   </div>
-                  <p className="text-xs text-muted-foreground">{l.reason}</p>
+                  <p className="text-[10px] text-muted-foreground truncate">{l.reason}</p>
                 </div>
                 {l.href && (
-                  <Button asChild size="sm" variant="ghost">
+                  <Button asChild size="sm" variant="ghost" className="h-6 px-2 text-[10px]">
                     <Link to={l.href}>
-                      Ir
-                      <ArrowRight className="h-3 w-3 ml-1" />
+                      <ArrowRight className="h-3 w-3" />
                     </Link>
                   </Button>
                 )}
