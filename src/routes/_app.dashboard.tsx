@@ -150,31 +150,27 @@ function DashboardPage() {
   const riskRows = (ret?.rows ?? []).filter((r) => r.level === "risco").slice(0, 5);
 
   return (
-    <div className="p-4 md:p-6 max-w-[1600px] mx-auto space-y-6 pb-16">
+    <div className="p-4 md:p-6 max-w-[1600px] mx-auto space-y-5 pb-16">
       {/* Header compacto */}
-      <header className="flex flex-col md:flex-row md:items-end md:justify-between gap-3 pb-2 border-b border-border/40">
+      <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 pb-2 border-b border-border/40">
         <div className="min-w-0">
-          <div className="flex items-center gap-2 mb-1.5">
+          <div className="flex items-center gap-2 mb-1">
             <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.6)]" />
             <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-              Sincronizado · Dados em tempo real
+              Sincronizado · Tempo real
             </span>
           </div>
-          <h1 className="font-display text-xl md:text-2xl font-semibold tracking-tight text-foreground">
+          <h1 className="truncate font-display text-xl md:text-2xl font-semibold tracking-tight text-foreground">
             Olá, <span className="text-primary">{(user?.user_metadata?.full_name ?? user?.email ?? "").split(" ")[0]}</span>
           </h1>
-          <p className="mt-0.5 text-xs md:text-sm text-muted-foreground">
-            Suas prioridades comerciais de hoje, geradas por IA a partir dos seus dados reais.
+          <p className="mt-0.5 truncate text-xs text-muted-foreground">
+            Suas prioridades comerciais de hoje, geradas por IA.
           </p>
         </div>
-        <Badge variant="outline" className="h-fit py-1 px-2.5 text-[11px] font-medium capitalize w-fit">
-          {new Date().toLocaleDateString("pt-BR", { weekday: "long", day: "2-digit", month: "long" })}
+        <Badge variant="outline" className="h-fit py-1 px-2.5 text-[11px] font-medium capitalize">
+          {new Date().toLocaleDateString("pt-BR", { weekday: "short", day: "2-digit", month: "short" })}
         </Badge>
       </header>
-
-      <MuralComercial />
-      <DailyBriefing />
-      <DoTodayPanel />
 
       {/* KPI strip compacto */}
       <section className="grid grid-cols-2 gap-2.5 md:grid-cols-4">
@@ -203,37 +199,36 @@ function DashboardPage() {
         ))}
       </section>
 
-      {/* Copiloto + saúde */}
-      <section className="space-y-3">
-        <SectionTitle
-          icon={Sparkles}
-          title="Copiloto de Vendas"
-          subtitle="Recomendações estratégicas geradas por IA"
-          action={<Link to="/nba" className="text-[11px] font-semibold uppercase tracking-wider text-primary hover:underline">Ver tudo →</Link>}
-        />
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <div className="lg:col-span-2">
-            <NextActionBlock surface="dashboard" title="Prioridades de Hoje" limit={4} showRegenerate />
-          </div>
-          <div className="space-y-4">
-            <BusinessHealthCard />
-            <div data-tour="dashboard-checklist">
-              <OnboardingChecklist />
-            </div>
+      {/* Foco do dia + Saúde */}
+      <section className="grid grid-cols-1 gap-4 lg:grid-cols-12">
+        <div className="lg:col-span-8 space-y-4">
+          <DoTodayPanel />
+          <NextActionBlock surface="dashboard" title="Copiloto — Prioridades" limit={4} showRegenerate />
+        </div>
+        <div className="lg:col-span-4 space-y-4">
+          <BusinessHealthCard />
+          <div data-tour="dashboard-checklist">
+            <OnboardingChecklist />
           </div>
         </div>
+      </section>
+
+      {/* Briefing + Mural lado a lado */}
+      <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <DailyBriefing />
+        <MuralComercial />
       </section>
 
       {/* Pipeline + retenção */}
       <section className="space-y-3">
         <SectionTitle
           icon={TrendingUp}
-          title="Pipeline & Saúde de Carteira"
-          subtitle="Fluxo de receita e riscos de retenção"
+          title="Pipeline & Retenção"
+          subtitle="Fluxo de receita e riscos"
         />
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-          <TopOpportunities />
-          <ChurnRiskCard />
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
+          <div className="lg:col-span-8"><TopOpportunities /></div>
+          <div className="lg:col-span-4"><ChurnRiskCard /></div>
         </div>
       </section>
 
