@@ -13,6 +13,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PTokenRouteImport } from './routes/p.$token'
+import { Route as DevUndoToastRouteImport } from './routes/dev.undo-toast'
 import { Route as AppWinLossRouteImport } from './routes/_app.win-loss'
 import { Route as AppWhatsappRouteImport } from './routes/_app.whatsapp'
 import { Route as AppWelcomeRouteImport } from './routes/_app.welcome'
@@ -135,6 +136,11 @@ const IndexRoute = IndexRouteImport.update({
 const PTokenRoute = PTokenRouteImport.update({
   id: '/p/$token',
   path: '/p/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DevUndoToastRoute = DevUndoToastRouteImport.update({
+  id: '/dev/undo-toast',
+  path: '/dev/undo-toast',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppWinLossRoute = AppWinLossRouteImport.update({
@@ -732,6 +738,7 @@ export interface FileRoutesByFullPath {
   '/welcome': typeof AppWelcomeRoute
   '/whatsapp': typeof AppWhatsappRoute
   '/win-loss': typeof AppWinLossRoute
+  '/dev/undo-toast': typeof DevUndoToastRoute
   '/p/$token': typeof PTokenRoute
   '/campaigns/whatsapp': typeof AppCampaignsWhatsappRoute
   '/companies/$id': typeof AppCompaniesIdRoute
@@ -841,6 +848,7 @@ export interface FileRoutesByTo {
   '/welcome': typeof AppWelcomeRoute
   '/whatsapp': typeof AppWhatsappRoute
   '/win-loss': typeof AppWinLossRoute
+  '/dev/undo-toast': typeof DevUndoToastRoute
   '/p/$token': typeof PTokenRoute
   '/campaigns/whatsapp': typeof AppCampaignsWhatsappRoute
   '/companies/$id': typeof AppCompaniesIdRoute
@@ -952,6 +960,7 @@ export interface FileRoutesById {
   '/_app/welcome': typeof AppWelcomeRoute
   '/_app/whatsapp': typeof AppWhatsappRoute
   '/_app/win-loss': typeof AppWinLossRoute
+  '/dev/undo-toast': typeof DevUndoToastRoute
   '/p/$token': typeof PTokenRoute
   '/_app/campaigns/whatsapp': typeof AppCampaignsWhatsappRoute
   '/_app/companies/$id': typeof AppCompaniesIdRoute
@@ -1063,6 +1072,7 @@ export interface FileRouteTypes {
     | '/welcome'
     | '/whatsapp'
     | '/win-loss'
+    | '/dev/undo-toast'
     | '/p/$token'
     | '/campaigns/whatsapp'
     | '/companies/$id'
@@ -1172,6 +1182,7 @@ export interface FileRouteTypes {
     | '/welcome'
     | '/whatsapp'
     | '/win-loss'
+    | '/dev/undo-toast'
     | '/p/$token'
     | '/campaigns/whatsapp'
     | '/companies/$id'
@@ -1282,6 +1293,7 @@ export interface FileRouteTypes {
     | '/_app/welcome'
     | '/_app/whatsapp'
     | '/_app/win-loss'
+    | '/dev/undo-toast'
     | '/p/$token'
     | '/_app/campaigns/whatsapp'
     | '/_app/companies/$id'
@@ -1351,6 +1363,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   LoginRoute: typeof LoginRoute
+  DevUndoToastRoute: typeof DevUndoToastRoute
   PTokenRoute: typeof PTokenRoute
   ApiPublicInboundEmailRoute: typeof ApiPublicInboundEmailRoute
   ApiPublicInfluencerVisitRoute: typeof ApiPublicInfluencerVisitRoute
@@ -1407,6 +1420,13 @@ declare module '@tanstack/react-router' {
       path: '/p/$token'
       fullPath: '/p/$token'
       preLoaderRoute: typeof PTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dev/undo-toast': {
+      id: '/dev/undo-toast'
+      path: '/dev/undo-toast'
+      fullPath: '/dev/undo-toast'
+      preLoaderRoute: typeof DevUndoToastRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app/win-loss': {
@@ -2426,6 +2446,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   LoginRoute: LoginRoute,
+  DevUndoToastRoute: DevUndoToastRoute,
   PTokenRoute: PTokenRoute,
   ApiPublicInboundEmailRoute: ApiPublicInboundEmailRoute,
   ApiPublicInfluencerVisitRoute: ApiPublicInfluencerVisitRoute,
@@ -2460,3 +2481,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
