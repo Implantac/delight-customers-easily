@@ -1,4 +1,4 @@
-import { CheckSquare, Phone, Mail, Users, FileText, KanbanSquare, MessageCircle, Receipt, Trophy, XCircle, FormInput } from "lucide-react";
+import { CheckSquare, Phone, Mail, Users, FileText, KanbanSquare, MessageCircle, Receipt, Trophy, XCircle, FormInput, CalendarPlus } from "lucide-react";
 
 export type TimelineItem = {
   id: string;
@@ -91,7 +91,15 @@ function formatDate(iso: string) {
   return d.toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "2-digit" });
 }
 
-export function Timeline({ items, emptyLabel = "Nada por aqui." }: { items: TimelineItem[]; emptyLabel?: string }) {
+export function Timeline({
+  items,
+  emptyLabel = "Nada por aqui.",
+  onScheduleFollowUp,
+}: {
+  items: TimelineItem[];
+  emptyLabel?: string;
+  onScheduleFollowUp?: (item: TimelineItem) => void;
+}) {
   if (items.length === 0) {
     return (
       <div className="rounded-lg border border-dashed border-border/60 bg-muted/20 p-6 text-center">
@@ -135,9 +143,22 @@ export function Timeline({ items, emptyLabel = "Nada por aqui." }: { items: Time
                     {item.title}
                   </p>
                 </div>
-                <time className="shrink-0 text-[11px] text-muted-foreground tabular-nums">
-                  {formatDate(item.date)}
-                </time>
+                <div className="flex shrink-0 items-center gap-2">
+                  <time className="text-[11px] text-muted-foreground tabular-nums">
+                    {formatDate(item.date)}
+                  </time>
+                  {onScheduleFollowUp && (
+                    <button
+                      type="button"
+                      onClick={() => onScheduleFollowUp(item)}
+                      title="Agendar follow-up a partir deste evento"
+                      aria-label="Agendar follow-up"
+                      className="inline-flex h-6 w-6 items-center justify-center rounded-md border border-border/60 bg-background/60 text-muted-foreground opacity-0 transition hover:border-primary/60 hover:bg-primary/10 hover:text-primary focus-visible:opacity-100 group-hover:opacity-100"
+                    >
+                      <CalendarPlus className="h-3 w-3" />
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </li>

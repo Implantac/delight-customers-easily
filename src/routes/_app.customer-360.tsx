@@ -555,6 +555,9 @@ function InlineTimeline({ orgId, companyId }: { orgId: string; companyId: string
     queryFn: () => fn({ data: { organizationId: orgId, companyId, limit: 15 } }),
     staleTime: 60_000,
   });
+  const [followUp, setFollowUp] = useState<TimelineItem | null>(null);
+  const qc = useQueryClient();
+
   if (q.isLoading) {
     return <div className="text-xs text-muted-foreground py-4">Carregando timeline…</div>;
   }
@@ -570,7 +573,139 @@ function InlineTimeline({ orgId, companyId }: { orgId: string; companyId: string
     meta: e.meta ?? null,
     completed: e.completed,
   }));
-  return <Timeline items={items} emptyLabel="Ainda não há eventos registrados para este cliente." />;
+  return (
+    <>
+      <Timeline
+        items={items}
+        emptyLabel="Ainda não há eventos registrados para este cliente."
+        onScheduleFollowUp={(it) => setFollowUp(it)}
+      />
+      {followUp && (
+        <FollowUpDialog
+          orgId={orgId}
+          companyId={companyId}
+          sourceItem={followUp}
+          onClose={() => setFollowUp(null)}
+          onDone={() => {
+            setFollowUp(null);
+            qc.invalidateQueries({ queryKey: ["customer-360-timeline", orgId, companyId] });
+          }}
+        />
+      )}
+    </>
+  );
+}
+
+function FollowUpDialog({
+  orgId, companyId, sourceItem, onClose, onDone,
+}: {
+  orgId: string;
+  companyId: string;
+  sourceItem: TimelineItem;
+  onClose: () => void;
+  onDone: () => void;
+}) {
+  const fn = useServerFn(bulkCreateActivityForCompanies);
+  const defaultDue = useMemo(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 2);
+    d.setHours(9, 0, 0, 0);
+    // yyyy-MM-ddTHH:mm for datetime-local input
+    const pad = (n: number) => String(n).padStart(2, "0");
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }, []);
+  const [title, setTitle] = useState(`Follow-up: ${sourceItem.title}`.slice(0, 200));
+  const [type, setType] = useState<"call" | "email" | "meeting" | "task" | "note">(
+    sourceItem.kind === "whatsapp" ? "call"
+    : sourceItem.kind === "email" ? "email"
+    : sourceItem.kind === "deal" || sourceItem.kind === "won" || sourceItem.kind === "lost" ? "meeting"
+    : "task",
+  );
+  const [dueLocal, setDueLocal] = useState(defaultDue);
+  const [description, setDescription] = useState(
+    `Follow-up gerado a partir de: ${sourceItem.title}${sourceItem.meta ? ` (${sourceItem.meta})` : ""}`,
+  );
+
+  const mut = useMutation({
+    mutationFn: () =>
+      fn({
+        data: {
+          organizationId: orgId,
+          companyIds: [companyId],
+          title: title.trim(),
+          type,
+          dueDate: new Date(dueLocal).toISOString(),
+          description: description.trim() || undefined,
+        },
+      }),
+    onSuccess: () => {
+      toast.success("Follow-up agendado");
+      onDone();
+    },
+    onError: (e: any) => toast.error("Falha ao agendar", { description: e?.message }),
+  });
+
+  return (
+    <Dialog open onOpenChange={(o) => !o && onClose()}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Agendar follow-up</DialogTitle>
+          <DialogDescription>
+            Cria uma atividade vinculada a este cliente a partir do evento selecionado.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-3">
+          <div className="space-y-1.5">
+            <Label htmlFor="fu-title">Título</Label>
+            <Input id="fu-title" value={title} onChange={(e) => setTitle(e.target.value)} maxLength={200} />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="fu-type">Tipo</Label>
+              <Select value={type} onValueChange={(v) => setType(v as typeof type)}>
+                <SelectTrigger id="fu-type"><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="task">Tarefa</SelectItem>
+                  <SelectItem value="call">Ligação</SelectItem>
+                  <SelectItem value="email">E-mail</SelectItem>
+                  <SelectItem value="meeting">Reunião</SelectItem>
+                  <SelectItem value="note">Nota</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="fu-due">Quando</Label>
+              <Input
+                id="fu-due"
+                type="datetime-local"
+                value={dueLocal}
+                onChange={(e) => setDueLocal(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="fu-desc">Observações</Label>
+            <Textarea
+              id="fu-desc"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              rows={3}
+              maxLength={2000}
+            />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="ghost" onClick={onClose} disabled={mut.isPending}>Cancelar</Button>
+          <Button
+            onClick={() => mut.mutate()}
+            disabled={mut.isPending || !title.trim() || !dueLocal}
+          >
+            {mut.isPending ? "Agendando…" : "Agendar follow-up"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
 }
 
 
