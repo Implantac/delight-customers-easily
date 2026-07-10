@@ -600,51 +600,14 @@ function InlineTimeline({ orgId, companyId }: { orgId: string; companyId: string
 
   // Abre um toast de "Desfazer" com contagem regressiva atualizada a cada 1s.
   const showUndoToast = (snap: any, durationMs: number, title: string) => {
-    const endsAt = Date.now() + durationMs;
-    const snapTitle = snap?.title ? `"${snap.title}" · ` : "";
-    const render = (remainingSec: number) => {
-      const expired = remainingSec <= 0;
-      return {
-        description: expired
-          ? `${snapTitle}prazo expirado`
-          : `${snapTitle}restaurar em ${remainingSec}s`,
-        action: expired
-          ? {
-              label: "Desfazer (0s)",
-              onClick: (ev: React.MouseEvent) => {
-                ev.preventDefault();
-                toast.error("Prazo para desfazer expirado");
-              },
-            }
-          : {
-              label: `Desfazer (${remainingSec}s)`,
-              onClick: () => {
-                clearInterval(intervalId);
-                restoreSnapshot(snap, endsAt);
-              },
-            },
-        actionButtonStyle: expired
-          ? { opacity: 0.5, pointerEvents: "none" as const, cursor: "not-allowed" }
-          : undefined,
-        duration: Math.max(500, endsAt - Date.now()),
-        onDismiss: () => {
-          clearInterval(intervalId);
-          clearUndo(orgId, companyId);
-        },
-        onAutoClose: () => {
-          clearInterval(intervalId);
-          clearUndo(orgId, companyId);
-        },
-      };
-    };
-    const initialRemaining = Math.max(1, Math.ceil(durationMs / 1000));
-    const id = toast(title, render(initialRemaining));
-    const intervalId = window.setInterval(() => {
-      const remainingMs = endsAt - Date.now();
-      const remainingSec = Math.max(0, Math.ceil(remainingMs / 1000));
-      toast(title, { id, ...render(remainingSec) });
-      if (remainingMs <= 0) clearInterval(intervalId);
-    }, 1000);
+    showUndoToastShared({
+      snapshot: snap,
+      durationMs,
+      title,
+      snapshotLabel: snap?.title ?? null,
+      onRestore: (s) => restoreSnapshot(s, Date.now() + durationMs),
+      onExpire: () => clearUndo(orgId, companyId),
+    });
   };
 
   // Re-oferece "Desfazer" após reload, enquanto o snapshot ainda estiver dentro do TTL.
