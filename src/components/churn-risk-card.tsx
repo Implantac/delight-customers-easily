@@ -37,20 +37,20 @@ export function ChurnRiskCard() {
   });
 
   return (
-    <Card className="p-8 border-rose-100/50 bg-gradient-to-br from-card to-rose-50/10 rounded-[2.5rem] shadow-xl shadow-black/5">
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center gap-4">
-          <div className="bg-rose-100 p-3 rounded-2xl shadow-inner">
-            <AlertTriangle className="h-6 w-6 text-rose-600" />
+    <Card className="p-4 border-border/60 bg-card">
+      <div className="flex items-center justify-between gap-3 mb-3">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="h-7 w-7 shrink-0 grid place-items-center rounded-md border border-border/60 bg-card">
+            <AlertTriangle className="h-3.5 w-3.5 text-rose-500" />
           </div>
-          <div>
-            <h3 className="font-display font-bold text-xl tracking-tight leading-none text-foreground">Risco de Churn</h3>
-            <p className="text-xs text-muted-foreground font-medium mt-1 uppercase tracking-widest opacity-70">Retenção Preditiva</p>
+          <div className="min-w-0">
+            <h3 className="font-display text-sm font-semibold tracking-tight truncate">Risco de Churn</h3>
+            <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground/70 truncate">Retenção preditiva</p>
           </div>
         </div>
-        <Button variant="ghost" size="sm" className="text-rose-600 hover:text-rose-700 hover:bg-rose-50 rounded-xl font-bold text-xs uppercase tracking-widest" asChild>
+        <Button variant="ghost" size="sm" className="h-7 px-2 text-[11px] text-rose-600 hover:text-rose-700 hover:bg-rose-500/10" asChild>
           <Link to="/inteligencia-comercial">
-            Ver tudo <ArrowRight className="ml-1 h-3 w-3" />
+            Ver <ArrowRight className="ml-0.5 h-3 w-3" />
           </Link>
         </Button>
       </div>
