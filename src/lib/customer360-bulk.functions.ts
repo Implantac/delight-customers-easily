@@ -201,6 +201,7 @@ export const restoreActivity = createServerFn({ method: "POST" })
       contact_id: s.contact_id ?? null,
       source_kind: s.source_kind ?? null,
       source_id: s.source_id ?? null,
+      ...(s.created_at ? { created_at: s.created_at } : {}),
     });
     if (error) throw new Error(error.message);
     return { restored: 1, id: s.id };
