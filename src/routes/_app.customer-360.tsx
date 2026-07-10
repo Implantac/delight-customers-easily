@@ -560,7 +560,27 @@ function InlineTimeline({ orgId, companyId }: { orgId: string; companyId: string
   });
   const [followUp, setFollowUp] = useState<TimelineItem | null>(null);
   const [editing, setEditing] = useState<TimelineItem | null>(null);
+  const [deleting, setDeleting] = useState<TimelineItem | null>(null);
   const qc = useQueryClient();
+  const deleteFn = useServerFn(deleteActivity);
+
+  const invalidate = () =>
+    qc.invalidateQueries({ queryKey: ["customer-360-timeline", orgId, companyId] });
+
+  const delMut = useMutation({
+    mutationFn: (activityId: string) =>
+      deleteFn({ data: { organizationId: orgId, activityId } }),
+    onSuccess: (r: any) => {
+      if ((r?.deleted ?? 0) === 0) {
+        toast.warning("Nenhum follow-up removido");
+      } else {
+        toast.success("Follow-up excluído");
+      }
+      setDeleting(null);
+      invalidate();
+    },
+    onError: (e: any) => toast.error("Falha ao excluir", { description: e?.message }),
+  });
 
   if (q.isLoading) {
     return <div className="text-xs text-muted-foreground py-4">Carregando timeline…</div>;
@@ -577,8 +597,6 @@ function InlineTimeline({ orgId, companyId }: { orgId: string; companyId: string
     meta: e.meta ?? null,
     completed: e.completed,
   }));
-  const invalidate = () =>
-    qc.invalidateQueries({ queryKey: ["customer-360-timeline", orgId, companyId] });
   return (
     <>
       <Timeline
@@ -586,6 +604,7 @@ function InlineTimeline({ orgId, companyId }: { orgId: string; companyId: string
         emptyLabel="Ainda não há eventos registrados para este cliente."
         onScheduleFollowUp={(it) => setFollowUp(it)}
         onEdit={(it) => setEditing(it)}
+        onDelete={(it) => setDeleting(it)}
       />
       {followUp && (
         <FollowUpDialog
@@ -610,6 +629,29 @@ function InlineTimeline({ orgId, companyId }: { orgId: string; companyId: string
           }}
         />
       )}
+      <AlertDialog open={!!deleting} onOpenChange={(o) => !o && !delMut.isPending && setDeleting(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Excluir follow-up?</AlertDialogTitle>
+            <AlertDialogDescription>
+              {deleting ? `"${deleting.title}" será removido permanentemente do CRM.` : ""}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={delMut.isPending}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={delMut.isPending}
+              onClick={(ev) => {
+                ev.preventDefault();
+                if (deleting) delMut.mutate(deleting.id);
+              }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {delMut.isPending ? "Excluindo…" : "Excluir"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }
