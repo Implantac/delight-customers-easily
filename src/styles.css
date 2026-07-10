@@ -497,36 +497,50 @@
     color: var(--foreground);
   }
 
-  /* Sidebar minimal — hover escopado item-a-item (Linear/Attio) */
+  /* Sidebar compacta (Linear/Attio) — hover escopado item-a-item */
   [data-sidebar="menu-button"] {
-    border-radius: var(--radius-md);
-    margin: 1px 6px;
-    height: 34px;
+    border-radius: var(--radius-sm);
+    margin: 1px 4px;
+    height: 28px;
+    padding-inline: 8px;
+    font-size: 12.5px;
+    line-height: 1;
     color: var(--sidebar-foreground);
     background: transparent;
     transition:
       background-color 120ms var(--ease-out),
       color 120ms var(--ease-out);
   }
-  /* Estado hover — apenas o item sob o cursor */
+  [data-sidebar="menu-button"] > svg { width: 14px; height: 14px; }
+  /* Hover — apenas o item sob o cursor */
   [data-sidebar="menu-button"]:hover:not([data-active="true"]) {
-    background: color-mix(in oklab, var(--sidebar-primary) 12%, transparent);
+    background: color-mix(in oklab, var(--sidebar-primary) 10%, transparent);
     color: var(--sidebar-primary-foreground, #fff);
   }
-  /* Estado ativo — persistente, sem se confundir com hover */
+  /* Ativo — persistente, sem se confundir com hover */
   [data-sidebar="menu-button"][data-active="true"] {
-    background: color-mix(in oklab, var(--sidebar-primary) 20%, transparent);
+    background: color-mix(in oklab, var(--sidebar-primary) 18%, transparent);
     color: #fff;
     font-weight: 600;
   }
   [data-sidebar="menu-button"][data-active="true"]:hover {
-    background: color-mix(in oklab, var(--sidebar-primary) 26%, transparent);
+    background: color-mix(in oklab, var(--sidebar-primary) 24%, transparent);
   }
   /* Foco por teclado */
   [data-sidebar="menu-button"]:focus-visible {
     outline: 2px solid var(--sidebar-ring);
     outline-offset: -2px;
   }
+  /* Group labels compactos */
+  [data-sidebar="group-label"] {
+    height: 22px;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: color-mix(in oklab, var(--sidebar-foreground) 45%, transparent);
+  }
+  [data-sidebar="group"] { padding-block: 4px; }
+
   
   /* Badge refinements */
   .badge-premium {
