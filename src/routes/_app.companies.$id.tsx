@@ -621,6 +621,155 @@ function CompanyDetail() {
               )}
             </TabsContent>
 
+            <TabsContent value="whatsapp" className="mt-4">
+              <Card className="p-5">
+                <div className="flex items-center justify-between">
+                  <h3 className="flex items-center gap-2 text-sm font-semibold">
+                    <MessageSquare className="h-4 w-4 text-emerald-500" />
+                    Conversas WhatsApp {waMessages?.length ? `· ${waMessages.length}` : ""}
+                  </h3>
+                  {waLink && (
+                    <Button variant="ghost" size="sm" asChild>
+                      <a href={waLink} target="_blank" rel="noreferrer">Abrir no WhatsApp →</a>
+                    </Button>
+                  )}
+                </div>
+                <div className="mt-3 space-y-2">
+                  {(waMessages ?? []).length === 0 ? (
+                    <p className="text-sm text-muted-foreground">Nenhuma mensagem trocada com este cliente ainda.</p>
+                  ) : (
+                    waMessages!.map((m) => (
+                      <div
+                        key={m.id}
+                        className={`rounded-lg border p-3 text-sm ${
+                          m.direction === "outbound" ? "border-primary/20 bg-primary/5" : "border-border/40 bg-muted/30"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between gap-2 mb-1">
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                            {m.direction === "outbound" ? "Você → cliente" : "Cliente → você"}
+                          </span>
+                          <span className="text-[10px] text-muted-foreground tabular-nums">
+                            {new Date(m.created_at).toLocaleString("pt-BR")}
+                          </span>
+                        </div>
+                        <p className="leading-snug break-words">{m.body}</p>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="proposals" className="mt-4">
+              <Card className="p-5">
+                <div className="flex items-center justify-between">
+                  <h3 className="flex items-center gap-2 text-sm font-semibold">
+                    <FileText className="h-4 w-4" />Propostas {proposals?.length ? `· ${proposals.length}` : ""}
+                  </h3>
+                </div>
+                <div className="mt-3 space-y-2">
+                  {(proposals ?? []).length === 0 ? (
+                    <p className="text-sm text-muted-foreground">Nenhuma proposta registrada para esta empresa.</p>
+                  ) : (
+                    proposals!.map((p) => {
+                      const expired = p.valid_until && new Date(p.valid_until) < new Date() && p.status !== "accepted" && p.status !== "rejected";
+                      return (
+                        <div key={p.id} className="flex items-center justify-between rounded-md border p-3 text-sm">
+                          <div className="min-w-0">
+                            <p className="font-medium truncate">{p.title || "Proposta sem título"}</p>
+                            {p.valid_until && (
+                              <p className="text-xs text-muted-foreground">
+                                válida até {new Date(p.valid_until).toLocaleDateString("pt-BR")}
+                              </p>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2 shrink-0">
+                            <Badge variant={p.status === "accepted" ? "default" : p.status === "rejected" ? "destructive" : expired ? "destructive" : "secondary"}>
+                              {p.status === "accepted" ? "aceita" : p.status === "rejected" ? "recusada" : expired ? "expirada" : (p.status || "aberta")}
+                            </Badge>
+                            <span className="text-muted-foreground tabular-nums">{BRL(Number(p.total))}</span>
+                          </div>
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="files" className="mt-4">
+              <Card className="p-5">
+                <h3 className="flex items-center gap-2 text-sm font-semibold mb-4">
+                  <Paperclip className="h-4 w-4" />Arquivos anexados
+                </h3>
+                <Attachments entityType="company" entityId={company.id} />
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="map" className="mt-4">
+              <Card className="p-5">
+                <h3 className="flex items-center gap-2 text-sm font-semibold">
+                  <MapIcon className="h-4 w-4" />Localização
+                </h3>
+                {geoLocation ? (
+                  <div className="mt-4 space-y-3">
+                    <div className="text-sm space-y-1">
+                      {(geoLocation.street || geoLocation.number) && (
+                        <p>{[geoLocation.street, geoLocation.number].filter(Boolean).join(", ")}{geoLocation.neighborhood ? ` — ${geoLocation.neighborhood}` : ""}</p>
+                      )}
+                      {(geoLocation.city || geoLocation.state) && (
+                        <p className="text-muted-foreground">{[geoLocation.city, geoLocation.state].filter(Boolean).join(" / ")}{geoLocation.cep ? ` · CEP ${geoLocation.cep}` : ""}</p>
+                      )}
+                    </div>
+                    {geoLocation.latitude != null && geoLocation.longitude != null && (
+                      <>
+                        <div className="overflow-hidden rounded-lg border border-border/40 bg-muted/20 aspect-[16/9]">
+                          <iframe
+                            title={`Mapa de ${company.name}`}
+                            className="h-full w-full"
+                            loading="lazy"
+                            referrerPolicy="no-referrer-when-downgrade"
+                            src={`https://www.openstreetmap.org/export/embed.html?bbox=${geoLocation.longitude - 0.01}%2C${geoLocation.latitude - 0.01}%2C${geoLocation.longitude + 0.01}%2C${geoLocation.latitude + 0.01}&layer=mapnik&marker=${geoLocation.latitude}%2C${geoLocation.longitude}`}
+                          />
+                        </div>
+                        <Button variant="ghost" size="sm" asChild>
+                          <a href={`https://www.google.com/maps?q=${geoLocation.latitude},${geoLocation.longitude}`} target="_blank" rel="noreferrer">
+                            Abrir no Google Maps →
+                          </a>
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                ) : (
+                  <p className="mt-3 text-sm text-muted-foreground">
+                    Nenhuma localização geográfica cadastrada para este cliente.
+                  </p>
+                )}
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="risk" className="mt-4 space-y-4">
+              {erpLink ? (
+                <PropensityPanel
+                  organizationId={erpLink.organization_id}
+                  erpCustomerId={erpLink.id}
+                />
+              ) : (
+                <Card className="p-5 border-dashed text-sm text-muted-foreground">
+                  Conecte esta empresa a um cliente do ERP para calcular score de propensão, risco de churn e recompra.
+                </Card>
+              )}
+              <Card className="p-5">
+                <h3 className="flex items-center gap-2 text-sm font-semibold mb-3">
+                  <ShieldAlert className="h-4 w-4 text-amber-500" />Saúde comercial
+                </h3>
+                <HealthScore contactId={primaryContact?.id} companyId={company.id} />
+              </Card>
+            </TabsContent>
+
+
+
             <TabsContent value="history" className="mt-4">
               <Card className="p-5">
                 <h3 className="flex items-center gap-2 text-sm font-semibold mb-4">
