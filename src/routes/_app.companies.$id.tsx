@@ -157,6 +157,27 @@ function CompanyDetail() {
     },
   });
 
+  const { data: proposals } = useQuery({
+    queryKey: ["company-proposals", id],
+    queryFn: async () =>
+      (await supabase
+        .from("proposals")
+        .select("id, title, status, valid_until, total, created_at, share_token")
+        .eq("company_id", id)
+        .order("created_at", { ascending: false })).data ?? [],
+  });
+
+  const { data: geoLocation } = useQuery({
+    queryKey: ["company-geo", id],
+    queryFn: async () =>
+      (await supabase
+        .from("geo_locations")
+        .select("latitude, longitude, street, number, neighborhood, city, state, cep")
+        .eq("subject_type", "company")
+        .eq("subject_id", id)
+        .maybeSingle()).data,
+  });
+
   // ============ Inteligência comercial derivada ============
   const kpis = useMemo(() => {
     const won = (deals ?? []).filter((d) => d.stage === "won");
