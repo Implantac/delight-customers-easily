@@ -548,6 +548,32 @@ function Customer360Page() {
   );
 }
 
+function InlineTimeline({ orgId, companyId }: { orgId: string; companyId: string }) {
+  const fn = useServerFn(getCustomer360Timeline);
+  const q = useQuery({
+    queryKey: ["customer-360-timeline", orgId, companyId],
+    queryFn: () => fn({ data: { organizationId: orgId, companyId, limit: 15 } }),
+    staleTime: 60_000,
+  });
+  if (q.isLoading) {
+    return <div className="text-xs text-muted-foreground py-4">Carregando timeline…</div>;
+  }
+  if (q.error) {
+    return <div className="text-xs text-destructive py-4">Falha ao carregar timeline.</div>;
+  }
+  const items: TimelineItem[] = (q.data?.items ?? []).map((e) => ({
+    id: e.id,
+    kind: e.kind,
+    type: e.type ?? null,
+    title: e.title,
+    date: e.date,
+    meta: e.meta ?? null,
+    completed: e.completed,
+  }));
+  return <Timeline items={items} emptyLabel="Ainda não há eventos registrados para este cliente." />;
+}
+
+
 function BulkWhatsAppDialog({
   orgId, companyIds, onClose, onDone,
 }: { orgId: string; companyIds: string[]; onClose: () => void; onDone: () => void }) {
