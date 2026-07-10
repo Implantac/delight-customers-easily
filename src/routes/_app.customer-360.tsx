@@ -36,6 +36,10 @@ import {
   Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogDescription,
 } from "@/components/ui/dialog";
 import {
+  AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogFooter,
+  AlertDialogTitle, AlertDialogDescription, AlertDialogAction, AlertDialogCancel,
+} from "@/components/ui/alert-dialog";
+import {
   Users, Search, RefreshCw, MessageSquare, Mail, Phone,
   TrendingUp, TrendingDown, Minus, Building, ExternalLink,
   CalendarPlus, UserCog, Megaphone, X, Database, AlertTriangle, CheckCircle2,
