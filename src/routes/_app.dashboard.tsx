@@ -150,30 +150,30 @@ function DashboardPage() {
   const riskRows = (ret?.rows ?? []).filter((r) => r.level === "risco").slice(0, 5);
 
   return (
-    <div className="p-4 md:p-6 max-w-[1600px] mx-auto space-y-5 pb-16">
+    <div className="p-3 sm:p-4 md:p-6 max-w-[1600px] mx-auto space-y-4 md:space-y-5 pb-16">
       {/* Header compacto */}
       <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3 pb-2 border-b border-border/40">
         <div className="min-w-0">
           <div className="flex items-center gap-2 mb-1">
             <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.6)]" />
-            <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground truncate">
               Sincronizado · Tempo real
             </span>
           </div>
-          <h1 className="truncate font-display text-xl md:text-2xl font-semibold tracking-tight text-foreground">
+          <h1 className="truncate font-display text-lg sm:text-xl md:text-2xl font-semibold tracking-tight text-foreground">
             Olá, <span className="text-primary">{(user?.user_metadata?.full_name ?? user?.email ?? "").split(" ")[0]}</span>
           </h1>
-          <p className="mt-0.5 truncate text-xs text-muted-foreground">
+          <p className="mt-0.5 truncate text-[11px] sm:text-xs text-muted-foreground">
             Suas prioridades comerciais de hoje, geradas por IA.
           </p>
         </div>
-        <Badge variant="outline" className="h-fit py-1 px-2.5 text-[11px] font-medium capitalize">
+        <Badge variant="outline" className="h-fit py-1 px-2 sm:px-2.5 text-[10px] sm:text-[11px] font-medium capitalize shrink-0">
           {new Date().toLocaleDateString("pt-BR", { weekday: "short", day: "2-digit", month: "short" })}
         </Badge>
       </header>
 
       {/* KPI strip compacto */}
-      <section className="grid grid-cols-2 gap-2.5 md:grid-cols-4">
+      <section className="grid grid-cols-2 gap-2 sm:gap-2.5 md:grid-cols-4">
         {kpis.map((k, i) => (
           <motion.div
             key={k.label}
@@ -182,17 +182,17 @@ function DashboardPage() {
             transition={{ delay: i * 0.04, duration: 0.25, ease: "easeOut" }}
           >
             <Link to={k.href as any} className="group block h-full">
-              <Card className="relative h-full p-3.5 border-border/60 bg-card hover:border-primary/50 hover:bg-accent/30 transition-colors">
-                <div className="flex items-center justify-between mb-2">
+              <Card className="relative h-full p-3 sm:p-3.5 border-border/60 bg-card hover:border-primary/50 hover:bg-accent/30 transition-colors">
+                <div className="flex items-center justify-between gap-2 mb-1.5 sm:mb-2">
                   <span className="text-[10px] font-semibold uppercase tracking-[0.1em] text-muted-foreground truncate">
                     {k.label}
                   </span>
                   <k.icon className={`h-3.5 w-3.5 shrink-0 ${k.tone}`} />
                 </div>
-                <div className="text-lg md:text-xl font-display font-semibold tabular-nums tracking-tight text-foreground group-hover:text-primary transition-colors">
+                <div className="text-base sm:text-lg md:text-xl font-display font-semibold tabular-nums tracking-tight text-foreground group-hover:text-primary transition-colors truncate">
                   {k.value}
                 </div>
-                <div className="mt-0.5 text-[11px] text-muted-foreground truncate">{k.sub}</div>
+                <div className="mt-0.5 text-[10.5px] sm:text-[11px] text-muted-foreground truncate">{k.sub}</div>
               </Card>
             </Link>
           </motion.div>
@@ -200,12 +200,12 @@ function DashboardPage() {
       </section>
 
       {/* Foco do dia + Saúde */}
-      <section className="grid grid-cols-1 gap-4 lg:grid-cols-12">
-        <div className="lg:col-span-8 space-y-4">
+      <section className="grid grid-cols-1 gap-4 md:grid-cols-12">
+        <div className="md:col-span-7 lg:col-span-8 space-y-4 min-w-0">
           <DoTodayPanel />
           <NextActionBlock surface="dashboard" title="Copiloto — Prioridades" limit={4} showRegenerate />
         </div>
-        <div className="lg:col-span-4 space-y-4">
+        <div className="md:col-span-5 lg:col-span-4 space-y-4 min-w-0">
           <BusinessHealthCard />
           <div data-tour="dashboard-checklist">
             <OnboardingChecklist />
@@ -214,7 +214,7 @@ function DashboardPage() {
       </section>
 
       {/* Briefing + Mural lado a lado */}
-      <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <section className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <DailyBriefing />
         <MuralComercial />
       </section>
@@ -226,11 +226,12 @@ function DashboardPage() {
           title="Pipeline & Retenção"
           subtitle="Fluxo de receita e riscos"
         />
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-12">
-          <div className="lg:col-span-8"><TopOpportunities /></div>
-          <div className="lg:col-span-4"><ChurnRiskCard /></div>
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-12">
+          <div className="md:col-span-7 lg:col-span-8 min-w-0"><TopOpportunities /></div>
+          <div className="md:col-span-5 lg:col-span-4 min-w-0"><ChurnRiskCard /></div>
         </div>
       </section>
+
 
       <section>
         <Customer360Mini />
