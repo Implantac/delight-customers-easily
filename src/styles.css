@@ -10,9 +10,9 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
 
-  /* === Tipografia: Geist (Linear / Attio) === */
+  /* === Tipografia: Sora (display) + Geist (body) === */
   --font-sans: "Geist", "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-display: "Geist", "Space Grotesk", "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Sora", "Space Grotesk", "Geist", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "Geist Mono", "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace;
 
   --color-background: var(--background);
@@ -54,72 +54,73 @@
 }
 
 /* =========================================================
-   EXECUTIVE NAVY — Light mode
-   Navy profundo (#1a2234) + laranja assinatura (#ff9800).
-   Estilo executivo, sério, profissional. Bloomberg meets Linear.
+   PATRIUM COPPER — Light mode
+   Fundo warm off-white + cobre/laranja assinatura da logo 3D.
    ========================================================= */
 :root {
   --radius: 0.625rem;
 
-  --background: #ffffff;
-  --foreground: #09090b;
+  --background: #fbf7f2;
+  --foreground: #1a1410;
   --card: #ffffff;
-  --card-foreground: #09090b;
+  --card-foreground: #1a1410;
   --popover: #ffffff;
-  --popover-foreground: #09090b;
+  --popover-foreground: #1a1410;
 
-  --primary: #09090b;
+  --primary: #d95f18;
   --primary-foreground: #ffffff;
 
-  --secondary: #f4f4f5;
-  --secondary-foreground: #09090b;
-  --muted: #f4f4f5;
-  --muted-foreground: #71717a;
-  --accent: #f4f4f5;
-  --accent-foreground: #09090b;
+  --secondary: #f4ede4;
+  --secondary-foreground: #3a2a1c;
+  --muted: #f0e8dc;
+  --muted-foreground: #7a6a58;
+  --accent: #f5b26b;
+  --accent-foreground: #2a1a10;
 
-  --destructive: #ef4444;
-  --destructive-foreground: #fafafa;
-  --success: #10b981;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --success: #059669;
   --success-foreground: #ffffff;
-  --warning: #f59e0b;
+  --warning: #d97706;
   --warning-foreground: #ffffff;
+  --info: #2563eb;
+  --info-foreground: #ffffff;
 
-  --border: #e4e4e7;
-  --input: #e4e4e7;
-  --ring: #09090b;
+  --border: #e6d9c6;
+  --input: #e6d9c6;
+  --ring: #d95f18;
 
-  --sidebar: #fafafa;
-  --sidebar-foreground: #3f3f46;
-  --sidebar-primary: #09090b;
-  --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #f4f4f5;
-  --sidebar-accent-foreground: #09090b;
-  --sidebar-border: #e4e4e7;
-  --sidebar-ring: #09090b;
+  --sidebar: #23150c;
+  --sidebar-foreground: #e8d9c4;
+  --sidebar-primary: #f5b26b;
+  --sidebar-primary-foreground: #1a1008;
+  --sidebar-accent: rgba(245, 178, 107, 0.14);
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #3a2416;
+  --sidebar-ring: #f5b26b;
 
-  --chart-1: #09090b;
-  --chart-2: #27272a;
-  --chart-3: #52525b;
-  --chart-4: #a1a1aa;
-  --chart-5: #e4e4e7;
+  --chart-1: #d95f18;
+  --chart-2: #f5b26b;
+  --chart-3: #7a4a20;
+  --chart-4: #b8842a;
+  --chart-5: #4a2e18;
 
-  --primary-glow: #09090b;
-  --accent-glow: #09090b;
-  --gradient-primary: linear-gradient(135deg, #09090b, #27272a);
-  --gradient-accent: linear-gradient(135deg, #09090b, #52525b);
-  --gradient-subtle: linear-gradient(180deg, rgba(9, 9, 11, 0.03), transparent);
-  --gradient-mesh: 
-    radial-gradient(at 0% 0%, rgba(9, 9, 11, 0.03) 0, transparent 50%), 
-    radial-gradient(at 100% 0%, rgba(9, 9, 11, 0.02) 0, transparent 50%);
+  --primary-glow: #f5843a;
+  --accent-glow: #ffd4a0;
+  --gradient-primary: linear-gradient(135deg, #d95f18 0%, #f5843a 50%, #f5b26b 100%);
+  --gradient-accent: linear-gradient(135deg, #b8482a, #d95f18 60%, #f5b26b);
+  --gradient-subtle: linear-gradient(180deg, color-mix(in oklab, #d95f18 6%, transparent), transparent);
+  --gradient-mesh:
+    radial-gradient(ellipse 80% 55% at 20% 0%, color-mix(in oklab, #f5843a 14%, transparent), transparent 60%),
+    radial-gradient(ellipse 60% 50% at 100% 10%, color-mix(in oklab, #f5b26b 18%, transparent), transparent 55%),
+    radial-gradient(ellipse 90% 60% at 50% 100%, color-mix(in oklab, #d95f18 6%, transparent), transparent 60%);
 
-  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-  --shadow-glow: 0 0 20px -5px rgba(9, 9, 11, 0.1);
+  --shadow-xs: 0 1px 2px 0 rgba(60, 30, 10, 0.06);
+  --shadow-sm: 0 1px 3px 0 rgba(60, 30, 10, 0.08), 0 1px 2px -1px rgba(60, 30, 10, 0.06);
+  --shadow-md: 0 6px 16px -4px rgba(60, 30, 10, 0.12), 0 2px 5px -2px rgba(60, 30, 10, 0.08);
+  --shadow-lg: 0 18px 36px -8px rgba(60, 30, 10, 0.18), 0 6px 12px -4px rgba(60, 30, 10, 0.10);
+  --shadow-glow: 0 10px 30px -8px color-mix(in oklab, #d95f18 45%, transparent);
 
-  --radius: 0.5rem;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -149,65 +150,66 @@
    Navy profundo como background, laranja vibrante como assinatura.
    ========================================================= */
 .dark {
-  --background: #181d2e;
-  --foreground: #e8eaf0;
-  --card: #1f2740;
-  --card-foreground: #e8eaf0;
-  --popover: #1f2740;
-  --popover-foreground: #e8eaf0;
+  --background: #14100c;
+  --foreground: #f2e8dc;
+  --card: #1e1712;
+  --card-foreground: #f2e8dc;
+  --popover: #1e1712;
+  --popover-foreground: #f2e8dc;
 
-  --primary: #e8a05a;
-  --primary-foreground: #1f2740;
+  --primary: #f5843a;
+  --primary-foreground: #1a0f08;
 
-  --secondary: #2a3450;
-  --secondary-foreground: #e8eaf0;
-  --muted: #232c47;
-  --muted-foreground: #8e97ad;
-  --accent: #e8a05a;
-  --accent-foreground: #1f2740;
+  --secondary: #2a1f16;
+  --secondary-foreground: #f2e8dc;
+  --muted: #241b13;
+  --muted-foreground: #a89680;
+  --accent: #f5b26b;
+  --accent-foreground: #1a0f08;
 
-  --destructive: #d94d4d;
+  --destructive: #ef4444;
   --destructive-foreground: #ffffff;
-  --success: #4a9d6a;
+  --success: #10b981;
   --success-foreground: #ffffff;
-  --warning: #e0a93a;
-  --warning-foreground: #1f2740;
-  --info: #4a7ec0;
-  --info-foreground: #ffffff;
+  --warning: #f59e0b;
+  --warning-foreground: #1a0f08;
+  --info: #60a5fa;
+  --info-foreground: #0a0f1f;
 
-  --border: #2a3450;
-  --input: #232c47;
-  --ring: #e8a05a;
+  --border: #2f2318;
+  --input: #241b13;
+  --ring: #f5843a;
 
-  --sidebar: #131827;
-  --sidebar-foreground: #c8ccd8;
-  --sidebar-primary: #e8a05a;
-  --sidebar-primary-foreground: #1f2740;
-  --sidebar-accent: #2a3450;
+  --sidebar: #0f0b08;
+  --sidebar-foreground: #d8c8b0;
+  --sidebar-primary: #f5843a;
+  --sidebar-primary-foreground: #1a0f08;
+  --sidebar-accent: #2a1f16;
   --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: #232c47;
-  --sidebar-ring: #e8a05a;
+  --sidebar-border: #241b13;
+  --sidebar-ring: #f5843a;
 
-  --chart-1: #e8a05a;
-  --chart-2: #4a7ec0;
-  --chart-3: #4a9d6a;
-  --chart-4: #8a7cc0;
-  --chart-5: #c46a8a;
+  --chart-1: #f5843a;
+  --chart-2: #f5b26b;
+  --chart-3: #b8842a;
+  --chart-4: #7a4a20;
+  --chart-5: #4a2e18;
 
-  --primary-glow: #f0b87a;
-  --accent-glow: #f0b87a;
-  --gradient-primary: linear-gradient(135deg, #e8a05a, #f0b87a);
-  --gradient-accent: linear-gradient(135deg, #d98a3d, #e8a05a);
-  --gradient-subtle: linear-gradient(180deg, color-mix(in oklab, #e8a05a 8%, transparent), transparent);
+  --primary-glow: #ffb37a;
+  --accent-glow: #ffd4a0;
+  --gradient-primary: linear-gradient(135deg, #d95f18 0%, #f5843a 50%, #f5b26b 100%);
+  --gradient-accent: linear-gradient(135deg, #b8482a, #f5843a 60%, #f5b26b);
+  --gradient-subtle: linear-gradient(180deg, color-mix(in oklab, #f5843a 10%, transparent), transparent);
   --gradient-mesh:
-    radial-gradient(ellipse 90% 60% at 50% -10%, color-mix(in oklab, #e8a05a 9%, transparent), transparent 60%),
-    radial-gradient(ellipse 70% 50% at 100% 0%, color-mix(in oklab, #2a3450 45%, transparent), transparent 55%);
+    radial-gradient(ellipse 90% 60% at 30% -10%, color-mix(in oklab, #f5843a 14%, transparent), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 100% 0%, color-mix(in oklab, #d95f18 20%, transparent), transparent 55%),
+    radial-gradient(ellipse 80% 55% at 50% 100%, color-mix(in oklab, #7a4a20 25%, transparent), transparent 60%);
 
   --shadow-xs: 0 1px 2px 0 color-mix(in oklab, #000 35%, transparent);
   --shadow-sm: 0 1px 3px 0 color-mix(in oklab, #000 45%, transparent), 0 1px 2px -1px color-mix(in oklab, #000 35%, transparent);
   --shadow-md: 0 6px 16px -4px color-mix(in oklab, #000 55%, transparent), 0 2px 5px -2px color-mix(in oklab, #000 40%, transparent);
   --shadow-lg: 0 18px 36px -8px color-mix(in oklab, #000 65%, transparent), 0 6px 12px -4px color-mix(in oklab, #000 45%, transparent);
-  --shadow-glow: 0 8px 28px -8px color-mix(in oklab, #e8a05a 35%, transparent);
+  --shadow-glow: 0 10px 30px -8px color-mix(in oklab, #f5843a 50%, transparent);
 }
 
 @layer base {
