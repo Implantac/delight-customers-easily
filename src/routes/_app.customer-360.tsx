@@ -638,6 +638,7 @@ function FollowUpDialog({
           description: description.trim() || undefined,
           sourceKind: sourceItem.kind,
           sourceId: sourceItem.id,
+        },
       }),
     onSuccess: () => {
       toast.success("Follow-up agendado");
