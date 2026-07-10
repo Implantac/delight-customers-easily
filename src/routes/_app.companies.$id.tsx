@@ -389,12 +389,17 @@ function CompanyDetail() {
 
           <Tabs defaultValue="overview" className="w-full">
             <TabsList className="w-full justify-start overflow-x-auto">
-              <TabsTrigger value="overview" className="gap-1.5"><LayoutGrid className="h-3.5 w-3.5" />Visão geral</TabsTrigger>
-              <TabsTrigger value="deals" className="gap-1.5"><KanbanSquare className="h-3.5 w-3.5" />Oportunidades{deals?.length ? ` · ${deals.length}` : ""}</TabsTrigger>
-              <TabsTrigger value="products" className="gap-1.5"><Package className="h-3.5 w-3.5" />Produtos</TabsTrigger>
-              <TabsTrigger value="invoices" className="gap-1.5"><Receipt className="h-3.5 w-3.5" />Faturas{invoices?.length ? ` · ${invoices.length}` : ""}</TabsTrigger>
+              <TabsTrigger value="overview" className="gap-1.5"><LayoutGrid className="h-3.5 w-3.5" />Resumo</TabsTrigger>
               <TabsTrigger value="timeline" className="gap-1.5"><Clock className="h-3.5 w-3.5" />Timeline</TabsTrigger>
-              <TabsTrigger value="ai" className="gap-1.5"><Sparkles className="h-3.5 w-3.5" />IA</TabsTrigger>
+              <TabsTrigger value="whatsapp" className="gap-1.5"><MessageSquare className="h-3.5 w-3.5" />WhatsApp{waMessages?.length ? ` · ${waMessages.length}` : ""}</TabsTrigger>
+              <TabsTrigger value="deals" className="gap-1.5"><KanbanSquare className="h-3.5 w-3.5" />Oportunidades{deals?.length ? ` · ${deals.length}` : ""}</TabsTrigger>
+              <TabsTrigger value="products" className="gap-1.5"><Package className="h-3.5 w-3.5" />Pedidos</TabsTrigger>
+              <TabsTrigger value="proposals" className="gap-1.5"><FileText className="h-3.5 w-3.5" />Propostas{proposals?.length ? ` · ${proposals.length}` : ""}</TabsTrigger>
+              <TabsTrigger value="invoices" className="gap-1.5"><Receipt className="h-3.5 w-3.5" />Faturas{invoices?.length ? ` · ${invoices.length}` : ""}</TabsTrigger>
+              <TabsTrigger value="files" className="gap-1.5"><Paperclip className="h-3.5 w-3.5" />Arquivos</TabsTrigger>
+              <TabsTrigger value="map" className="gap-1.5"><MapIcon className="h-3.5 w-3.5" />Mapa</TabsTrigger>
+              <TabsTrigger value="ai" className="gap-1.5"><Sparkles className="h-3.5 w-3.5" />Insights IA</TabsTrigger>
+              <TabsTrigger value="risk" className="gap-1.5"><ShieldAlert className="h-3.5 w-3.5" />Risco / Score</TabsTrigger>
               <TabsTrigger value="history" className="gap-1.5"><HistoryIcon className="h-3.5 w-3.5" />Histórico</TabsTrigger>
             </TabsList>
 
