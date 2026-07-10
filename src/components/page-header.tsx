@@ -4,15 +4,6 @@ import { cn } from "@/lib/utils";
 
 type Tone = "primary" | "info" | "success" | "violet" | "accent" | "rose";
 
-const TONE_BAR: Record<Tone, string> = {
-  primary: "bg-primary",
-  info:    "bg-blue-500",
-  success: "bg-emerald-500",
-  violet:  "bg-violet-500",
-  accent:  "bg-amber-500",
-  rose:    "bg-rose-500",
-};
-
 const TONE_ICON: Record<Tone, string> = {
   primary: "text-primary",
   info:    "text-blue-500",
@@ -22,60 +13,73 @@ const TONE_ICON: Record<Tone, string> = {
   rose:    "text-rose-500",
 };
 
+/**
+ * Padrão de página: Header (título + ações) → Filtros/Tabs opcionais → Conteúdo.
+ * Densidade compacta (Linear/Attio). Sticky quando o slot `filters` é usado.
+ */
 export function PageHeader({
   title,
   subtitle,
   action,
+  filters,
   icon: Icon,
   tone = "accent",
   className,
+  compact = true,
 }: {
   title: string;
   subtitle?: string;
   action?: ReactNode;
+  filters?: ReactNode;
   icon?: React.ComponentType<{ className?: string }>;
   tone?: Tone;
   className?: string;
+  compact?: boolean;
 }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, x: -10 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
+    <div
       className={cn(
-        "relative flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4 border-b border-border/40 pb-6 mb-8 pl-4",
+        "sticky top-11 z-20 -mx-4 mb-4 border-b border-border/40 bg-background/80 px-4 backdrop-blur-xl sm:-mx-6 sm:px-6",
         className,
       )}
     >
-      <span
-        aria-hidden
+      <motion.div
+        initial={{ opacity: 0, y: -4 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.25, ease: "easeOut" }}
         className={cn(
-          "absolute left-0 top-1 bottom-6 w-[4px] rounded-full",
-          TONE_BAR[tone],
+          "grid grid-cols-[minmax(0,1fr)_auto] items-center gap-3",
+          compact ? "py-2.5" : "py-4",
         )}
-      />
-      <div className="flex min-w-0 items-start gap-3">
-        {Icon && (
-          <div className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border/60 bg-card shadow-[var(--shadow-xs)] sm:flex">
-            <Icon className={cn("h-[18px] w-[18px]", TONE_ICON[tone])} />
+      >
+        <div className="flex min-w-0 items-center gap-2.5">
+          {Icon && (
+            <div className="hidden h-7 w-7 shrink-0 items-center justify-center rounded-md border border-border/60 bg-card sm:flex">
+              <Icon className={cn("h-[14px] w-[14px]", TONE_ICON[tone])} />
+            </div>
+          )}
+          <div className="min-w-0 flex-1">
+            <h1 className="truncate font-display text-[15px] font-semibold leading-tight tracking-[-0.01em] text-foreground sm:text-[16px]">
+              {title}
+            </h1>
+            {subtitle && (
+              <p className="mt-0.5 truncate text-[11.5px] leading-snug text-muted-foreground sm:text-xs">
+                {subtitle}
+              </p>
+            )}
+          </div>
+        </div>
+        {action && (
+          <div className="flex flex-wrap items-center gap-1.5 justify-end [&>*]:min-w-0">
+            {action}
           </div>
         )}
-        <div className="min-w-0 flex-1">
-          <h1 className="font-display text-[1.25rem] sm:text-[1.5rem] md:text-[1.75rem] font-semibold leading-[1.15] tracking-[-0.025em] text-foreground break-words">
-            {title}
-          </h1>
-          {subtitle && (
-            <p className="mt-1.5 max-w-2xl text-[13px] sm:text-sm leading-relaxed text-muted-foreground break-words">
-              {subtitle}
-            </p>
-          )}
-        </div>
-      </div>
-      {action && (
-        <div className="flex flex-wrap items-center gap-2 sm:shrink-0 sm:justify-end [&>*]:min-w-0">
-          {action}
+      </motion.div>
+      {filters && (
+        <div className="flex flex-wrap items-center gap-2 border-t border-border/30 py-2 text-[12.5px]">
+          {filters}
         </div>
       )}
-    </motion.div>
+    </div>
   );
 }
