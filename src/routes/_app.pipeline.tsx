@@ -136,6 +136,34 @@ function PipelinePage() {
   const fire = useServerFn(triggerWebhooks);
   const runRules = useServerFn(runAutomations);
 
+  // Quick-add inline no Kanban — só título + estágio, respeita a regra de "menos digitação".
+  const quickAdd = useMutation({
+    mutationFn: async ({ title, stage }: { title: string; stage: Stage }) => {
+      if (!orgId) throw new Error("Nenhuma organização ativa");
+      const clean = title.trim();
+      if (!clean) throw new Error("Informe um título");
+      const { data: inserted, error } = await supabase.from("deals").insert({
+        user_id: user!.id,
+        organization_id: orgId,
+        title: clean,
+        stage,
+        value: 0,
+      }).select("id, title, stage, value").single();
+      if (error) throw error;
+      if (orgId && inserted) {
+        const payload = { deal_id: inserted.id, deal: inserted, title: clean, stage, value: 0 };
+        fire({ data: { organization_id: orgId, event: "deal.created", payload } }).catch(() => {});
+        runRules({ data: { organization_id: orgId, event: "deal.created", payload } }).catch(() => {});
+      }
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["deals"] });
+      setQuickAddTitle("");
+      setQuickAddStage(null);
+    },
+    onError: (e: any) => toast.error(e.message),
+  });
+
   const move = useMutation({
     mutationFn: async ({ id, stage, prevStage, deal }: { id: string; stage: Stage; prevStage: Stage; deal: any }) => {
       const { error } = await supabase.from("deals").update({ stage }).eq("id", id);
