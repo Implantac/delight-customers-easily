@@ -12,6 +12,10 @@ import {
 } from "@/lib/erp-mappings.functions";
 import { suggestFieldMapping } from "@/lib/connect-hub-ai-suggest.functions";
 import {
+  listActiveErpIntegrations,
+  autoDetectFromIntegration,
+} from "@/lib/connect-hub-autodetect.functions";
+import {
   Card,
   CardContent,
   CardHeader,
