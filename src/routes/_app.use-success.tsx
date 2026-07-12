@@ -137,7 +137,12 @@ function DeltaCard({ delta }: { delta: Awaited<ReturnType<typeof getUseSuccessRe
   );
 }
 
-function HeroCard({ report }: { report: Awaited<ReturnType<typeof getUseSuccessReport>> }) {
+function HeroCard({
+  report, history,
+}: {
+  report: Awaited<ReturnType<typeof getUseSuccessReport>>;
+  history: { score: number; classification: string; computed_at: string }[];
+}) {
   const meta = CLASS_META[report.classification];
   const TrendIcon =
     report.revenue.growth > 0.02 ? TrendingUp : report.revenue.growth < -0.02 ? TrendingDown : Minus;
@@ -169,6 +174,7 @@ function HeroCard({ report }: { report: Awaited<ReturnType<typeof getUseSuccessR
               <p className="mt-1 text-xs text-muted-foreground">
                 Recalculado em {new Date(report.computed_at).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })}
               </p>
+              {history.length >= 2 && <Sparkline data={history.map((h) => h.score)} />}
             </div>
           </div>
 
@@ -181,6 +187,25 @@ function HeroCard({ report }: { report: Awaited<ReturnType<typeof getUseSuccessR
         </div>
       </Card>
     </motion.div>
+  );
+}
+
+function Sparkline({ data }: { data: number[] }) {
+  if (data.length < 2) return null;
+  const w = 140, h = 28, pad = 2;
+  const min = Math.min(...data), max = Math.max(...data);
+  const span = Math.max(1, max - min);
+  const pts = data.map((v, i) => {
+    const x = pad + (i * (w - pad * 2)) / (data.length - 1);
+    const y = h - pad - ((v - min) / span) * (h - pad * 2);
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(" ");
+  const last = data[data.length - 1], first = data[0];
+  const stroke = last >= first ? "stroke-emerald-500" : "stroke-rose-500";
+  return (
+    <svg viewBox={`0 0 ${w} ${h}`} width={w} height={h} className="mt-2 opacity-80">
+      <polyline points={pts} fill="none" strokeWidth="1.5" className={stroke} />
+    </svg>
   );
 }
 
