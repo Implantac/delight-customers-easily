@@ -18,6 +18,7 @@ import { SendEmailDialog } from "@/components/send-email-dialog";
 import { AIInsights } from "@/components/ai-insights";
 import { Attachments } from "@/components/attachments";
 import { TagPicker } from "@/components/tag-picker";
+import { QuickActionsDock } from "@/components/quick-actions-dock";
 import { whatsappLink } from "@/lib/wa";
 import { toast } from "sonner";
 
