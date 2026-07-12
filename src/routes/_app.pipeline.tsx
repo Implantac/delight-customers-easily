@@ -57,6 +57,8 @@ function PipelinePage() {
   const [q, setQ] = useState("");
   const [minValue, setMinValue] = useState("");
   const [onlyMine, setOnlyMine] = useState(false);
+  const [quickAddStage, setQuickAddStage] = useState<Stage | null>(null);
+  const [quickAddTitle, setQuickAddTitle] = useState("");
 
 
 
