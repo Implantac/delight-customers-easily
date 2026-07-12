@@ -43,10 +43,18 @@ const fmtBRL = (n: number) =>
 function UseSuccessPage() {
   const { orgId } = useCurrentOrg();
   const run = useServerFn(getUseSuccessReport);
+  const runHist = useServerFn(listUseSuccessHistory);
   const { data, isLoading, refetch, isRefetching } = useQuery({
     queryKey: ["use-success", orgId],
     enabled: !!orgId,
     queryFn: () => run({ data: { organization_id: orgId! } }),
+    staleTime: 5 * 60_000,
+    refetchOnWindowFocus: false,
+  });
+  const { data: hist } = useQuery({
+    queryKey: ["use-success-history", orgId, data?.computed_at],
+    enabled: !!orgId && !!data,
+    queryFn: () => runHist({ data: { organization_id: orgId!, limit: 30 } }),
     staleTime: 5 * 60_000,
     refetchOnWindowFocus: false,
   });
@@ -79,13 +87,53 @@ function UseSuccessPage() {
         </div>
       ) : (
         <div className="space-y-4 md:space-y-5">
-          <HeroCard report={data} />
+          <HeroCard report={data} history={hist?.history ?? []} />
+          <DeltaCard delta={data.delta} />
           <RevenueStrip report={data} />
           <PillarsGrid pillars={data.pillars} />
           <ActionsPanel actions={data.actions} />
         </div>
       )}
     </div>
+  );
+}
+
+function DeltaCard({ delta }: { delta: Awaited<ReturnType<typeof getUseSuccessReport>>["delta"] }) {
+  const Icon =
+    delta.direction === "up" ? TrendingUp :
+    delta.direction === "down" ? TrendingDown :
+    delta.direction === "first" ? Sparkles : Minus;
+  const tone =
+    delta.direction === "up" ? "text-emerald-600 bg-emerald-500/10 border-emerald-500/30" :
+    delta.direction === "down" ? "text-rose-600 bg-rose-500/10 border-rose-500/30" :
+    delta.direction === "first" ? "text-violet-600 bg-violet-500/10 border-violet-500/30" :
+    "text-muted-foreground bg-muted/40 border-border/60";
+  return (
+    <Card className={cn("border p-3 sm:p-3.5", tone)}>
+      <div className="flex items-start gap-2.5">
+        <Icon className="mt-0.5 h-4 w-4 shrink-0" />
+        <div className="min-w-0 flex-1">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] opacity-80">
+            O que mudou desde a última medição
+          </p>
+          <p className="mt-1 text-[13px] leading-snug">{delta.explanation}</p>
+          {(delta.top_positive.length > 0 || delta.top_negative.length > 0) && (
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {delta.top_positive.map((p) => (
+                <span key={p.key} className="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-medium text-emerald-700 dark:text-emerald-300">
+                  ↑ {p.label} +{p.delta}
+                </span>
+              ))}
+              {delta.top_negative.map((p) => (
+                <span key={p.key} className="rounded-full border border-rose-500/30 bg-rose-500/10 px-2 py-0.5 text-[10px] font-medium text-rose-700 dark:text-rose-300">
+                  ↓ {p.label} {p.delta}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </Card>
   );
 }
 
