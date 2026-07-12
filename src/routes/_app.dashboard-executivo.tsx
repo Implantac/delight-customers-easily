@@ -81,6 +81,8 @@ function DashboardExecutivoPage() {
         )}
       </div>
 
+      <SignalsPanel orgId={org?.id} />
+
       <Card className="p-0 overflow-hidden">
         <Table>
           <TableHeader>
