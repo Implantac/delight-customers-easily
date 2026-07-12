@@ -27,7 +27,10 @@ export type SequenceEnrollment = {
   status: "active" | "completed" | "paused" | "cancelled";
   enrolled_at: string;
   completed_at: string | null;
+  paused_reason?: string | null;
+  paused_at?: string | null;
   contacts?: { id: string; first_name: string | null; last_name: string | null; email: string | null } | null;
+
   sequences?: { id: string; name: string } | null;
 };
 
@@ -93,7 +96,7 @@ export const getSequence = createServerFn({ method: "POST" })
         .order("step_order", { ascending: true }),
       supabase
         .from("sequence_enrollments")
-        .select("id, sequence_id, contact_id, status, enrolled_at, completed_at")
+        .select("id, sequence_id, contact_id, status, enrolled_at, completed_at, paused_reason, paused_at")
         .eq("sequence_id", data.id)
         .order("enrolled_at", { ascending: false })
         .limit(200),
