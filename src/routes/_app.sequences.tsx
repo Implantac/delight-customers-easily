@@ -2,11 +2,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Workflow, Plus, Pencil, Trash2, Users as UsersIcon, ListChecks } from "lucide-react";
+import { Workflow, Plus, Pencil, Trash2, Users as UsersIcon, ListChecks, PlayCircle, MessageSquare, Mail } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { useCurrentOrg } from "@/lib/org";
 import { useCanManage } from "@/lib/permissions";
-import { listSequences, upsertSequence, deleteSequence } from "@/lib/sequences.functions";
+import { listSequences, upsertSequence, deleteSequence, listPausedByReply, updateEnrollment } from "@/lib/sequences.functions";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
