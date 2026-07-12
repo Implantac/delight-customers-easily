@@ -464,3 +464,38 @@ export const listUseSuccessHistory = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { history: (rows ?? []).slice().reverse() as { score: number; classification: string; computed_at: string }[] };
   });
+
+/** Histórico de um pilar específico — usado no drill-down. */
+export const listPillarHistory = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) =>
+    z.object({
+      organization_id: z.string().uuid(),
+      pillar_key: z.string().min(1),
+      limit: z.number().int().min(2).max(90).default(30),
+    }).parse(i),
+  )
+  .handler(async ({ data, context }) => {
+    const { data: rows, error } = await context.supabase
+      .from("use_success_snapshots")
+      .select("pillars, computed_at")
+      .eq("organization_id", data.organization_id)
+      .order("computed_at", { ascending: false })
+      .limit(data.limit);
+    if (error) throw new Error(error.message);
+    const history = (rows ?? [])
+      .slice()
+      .reverse()
+      .map((r: any) => {
+        const pillar = Array.isArray(r.pillars)
+          ? r.pillars.find((p: any) => p?.key === data.pillar_key)
+          : null;
+        return {
+          computed_at: String(r.computed_at),
+          score: pillar ? Number(pillar.score ?? 0) : 0,
+          value: pillar ? String(pillar.value ?? "") : "",
+          detail: pillar ? String(pillar.detail ?? "") : "",
+        };
+      });
+    return { history };
+  });
