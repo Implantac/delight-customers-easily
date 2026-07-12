@@ -18,6 +18,7 @@ import { SendEmailDialog } from "@/components/send-email-dialog";
 import { AIInsights } from "@/components/ai-insights";
 import { Attachments } from "@/components/attachments";
 import { TagPicker } from "@/components/tag-picker";
+import { QuickActionsDock } from "@/components/quick-actions-dock";
 import { whatsappLink } from "@/lib/wa";
 import { toast } from "sonner";
 
@@ -358,6 +359,17 @@ function ContactDetail() {
           <Attachments entityType="contact" entityId={contact.id} />
         </aside>
       </div>
+
+      {contact.organization_id && (
+        <QuickActionsDock
+          organizationId={contact.organization_id}
+          companyId={contact.company_id ?? null}
+          contactId={contact.id}
+          phone={contact.phone ?? null}
+          email={contact.email ?? null}
+          name={contact.name}
+        />
+      )}
     </div>
   );
 }

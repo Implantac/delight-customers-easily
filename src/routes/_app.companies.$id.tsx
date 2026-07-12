@@ -22,6 +22,7 @@ import { AuditHistory } from "@/components/audit-history";
 import { AIInsights } from "@/components/ai-insights";
 import { PropensityPanel } from "@/components/propensity-panel";
 import { Company360Panel } from "@/components/company-360-panel";
+import { QuickActionsDock } from "@/components/quick-actions-dock";
 import { whatsappLink } from "@/lib/wa";
 import { toast } from "sonner";
 
@@ -843,6 +844,17 @@ function CompanyDetail() {
           <Attachments entityType="company" entityId={company.id} />
         </aside>
       </div>
+
+      {company.organization_id && (
+        <QuickActionsDock
+          organizationId={company.organization_id}
+          companyId={company.id}
+          contactId={primaryContact?.id ?? null}
+          phone={primaryContact?.phone ?? null}
+          email={primaryContact?.email ?? null}
+          name={company.name}
+        />
+      )}
     </div>
   );
 }
