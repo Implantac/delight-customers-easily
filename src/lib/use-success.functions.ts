@@ -365,18 +365,16 @@ export const getUseSuccessReport = createServerFn({ method: "POST" })
             : "Situação crítica — priorize as ações abaixo esta semana.";
 
     // ---------- Delta vs. snapshot anterior ----------
-    const { data: prevRows } = await safe(
-      supabase
+    let prev: { score: number; pillars: SuccessPillar[]; computed_at: string } | undefined;
+    try {
+      const { data: prevRows } = await supabase
         .from("use_success_snapshots")
         .select("score, pillars, computed_at")
         .eq("organization_id", org)
         .order("computed_at", { ascending: false })
-        .limit(1),
-      { data: null as any },
-    );
-    const prev = (prevRows ?? [])[0] as
-      | { score: number; pillars: SuccessPillar[]; computed_at: string }
-      | undefined;
+        .limit(1);
+      prev = (prevRows ?? [])[0] as any;
+    } catch { /* first run or table absent */ }
 
     let delta: SuccessDelta;
     if (!prev) {
