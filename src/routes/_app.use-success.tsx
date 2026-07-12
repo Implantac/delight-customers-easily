@@ -254,41 +254,212 @@ function RevenueStrip({ report }: { report: Awaited<ReturnType<typeof getUseSucc
   );
 }
 
-function PillarsGrid({ pillars }: { pillars: SuccessPillar[] }) {
+type ReportActions = Awaited<ReturnType<typeof getUseSuccessReport>>["actions"];
+
+const PILLAR_HINTS: Record<string, string> = {
+  comercial: "Receita fechada nos últimos 30 dias vs. alvo (média 90d × 1,1). Sobe com deals ganhos e ticket maior.",
+  conversao: "Taxa de ganho sobre fechamentos (90d). Depende de qualificação, proposta e follow-up.",
+  crescimento: "Variação de receita mês contra mês (MoM). Sobe com crescimento contínuo, desce em quedas.",
+  clientes: "Percentual da carteira que comprou nos últimos 90d. Sobe com reativação e recompra.",
+  carteira: "Inverso da inadimplência sobre o total faturado. Sobe reduzindo faturas vencidas.",
+  marketing: "Média ponderada de abertura (×150) e clique (×800) em campanhas de e-mail (90d).",
+  atendimento: "Conversas ativas no WhatsApp + atividades nos últimos 30d, relativas ao tamanho da carteira.",
+  cobertura: "Clientes tocados por atividade nos últimos 30d, relativos à meta de 25% da carteira.",
+  oportunidades: "Potencial de recompra menos peso do risco de churn. Sobe agindo em clientes críticos.",
+};
+
+function PillarsGrid({ pillars, actions }: { pillars: SuccessPillar[]; actions: ReportActions }) {
+  const [openKey, setOpenKey] = useState<string | null>(null);
+  const active = pillars.find((p) => p.key === openKey) ?? null;
+
   return (
-    <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3">
-      {pillars.map((p, i) => (
-        <motion.div
-          key={p.key}
-          initial={{ opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.03 * i, duration: 0.25 }}
-        >
-          <Card className="h-full p-3.5 border-border/60 bg-card hover:border-primary/40 hover:bg-accent/20 transition-colors">
-            <div className="flex items-start justify-between gap-2">
-              <div className="min-w-0">
-                <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground/80">
-                  {p.label}
-                </p>
-                <p className="mt-1 font-display text-sm font-semibold truncate">{p.value}</p>
-              </div>
-              <span className={cn("font-display text-xl font-bold tabular-nums leading-none", pillarTone(p.score))}>
-                {p.score}
-              </span>
-            </div>
-            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-secondary">
-              <div className={cn("h-full transition-all duration-700", pillarBar(p.score))} style={{ width: `${p.score}%` }} />
-            </div>
-            <p className="mt-2 line-clamp-2 text-[11px] leading-snug text-muted-foreground">{p.detail}</p>
-            <p className="mt-1 text-[10px] text-muted-foreground/60">
-              peso {(p.weight * 100).toFixed(0)}%
+    <>
+      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3">
+        {pillars.map((p, i) => (
+          <motion.div
+            key={p.key}
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.03 * i, duration: 0.25 }}
+          >
+            <button
+              type="button"
+              onClick={() => setOpenKey(p.key)}
+              className="group block h-full w-full text-left"
+            >
+              <Card className="h-full p-3.5 border-border/60 bg-card hover:border-primary/50 hover:bg-accent/30 transition-colors">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground/80">
+                      {p.label}
+                    </p>
+                    <p className="mt-1 font-display text-sm font-semibold truncate">{p.value}</p>
+                  </div>
+                  <span className={cn("font-display text-xl font-bold tabular-nums leading-none", pillarTone(p.score))}>
+                    {p.score}
+                  </span>
+                </div>
+                <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-secondary">
+                  <div className={cn("h-full transition-all duration-700", pillarBar(p.score))} style={{ width: `${p.score}%` }} />
+                </div>
+                <p className="mt-2 line-clamp-2 text-[11px] leading-snug text-muted-foreground">{p.detail}</p>
+                <div className="mt-1 flex items-center justify-between">
+                  <p className="text-[10px] text-muted-foreground/60">peso {(p.weight * 100).toFixed(0)}%</p>
+                  <span className="flex items-center gap-0.5 text-[10px] text-muted-foreground/60 opacity-0 group-hover:opacity-100 transition-opacity">
+                    Detalhes <ArrowUpRight className="h-3 w-3" />
+                  </span>
+                </div>
+              </Card>
+            </button>
+          </motion.div>
+        ))}
+      </div>
+
+      <Sheet open={!!active} onOpenChange={(v) => !v && setOpenKey(null)}>
+        <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto">
+          {active && <PillarDrilldown pillar={active} actions={actions} />}
+        </SheetContent>
+      </Sheet>
+    </>
+  );
+}
+
+function PillarDrilldown({ pillar, actions }: { pillar: SuccessPillar; actions: ReportActions }) {
+  const { orgId } = useCurrentOrg();
+  const run = useServerFn(listPillarHistory);
+  const { data, isLoading } = useQuery({
+    queryKey: ["pillar-history", orgId, pillar.key],
+    enabled: !!orgId,
+    queryFn: () => run({ data: { organization_id: orgId!, pillar_key: pillar.key, limit: 30 } }),
+    staleTime: 5 * 60_000,
+    refetchOnWindowFocus: false,
+  });
+  const hist = data?.history ?? [];
+  const scores = hist.map((h) => h.score);
+  const first = scores[0];
+  const last = scores[scores.length - 1];
+  const trend = scores.length >= 2 ? (last - first) : 0;
+  const related = actions.filter((a) => {
+    const href = a.href ?? "";
+    const map: Record<string, string[]> = {
+      comercial: ["/pipeline"],
+      conversao: ["/inteligencia-comercial"],
+      crescimento: ["/meu-dia"],
+      clientes: ["/carteira"],
+      carteira: ["/carteira"],
+      marketing: ["/campaigns"],
+      atendimento: ["/whatsapp"],
+      cobertura: ["/geo-rota"],
+      oportunidades: ["/inteligencia-comercial"],
+    };
+    return (map[pillar.key] ?? []).some((h) => href.startsWith(h));
+  });
+
+  return (
+    <div className="space-y-4">
+      <SheetHeader>
+        <SheetTitle className="flex items-center justify-between gap-3">
+          <span className="font-display">{pillar.label}</span>
+          <span className={cn("font-display text-3xl font-bold tabular-nums", pillarTone(pillar.score))}>
+            {pillar.score}
+          </span>
+        </SheetTitle>
+        <SheetDescription className="text-xs">{pillar.detail}</SheetDescription>
+      </SheetHeader>
+
+      <div className="h-1.5 overflow-hidden rounded-full bg-secondary">
+        <div className={cn("h-full", pillarBar(pillar.score))} style={{ width: `${pillar.score}%` }} />
+      </div>
+
+      <Card className="border-border/60 p-3">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+          Como este pilar é calculado
+        </p>
+        <p className="mt-1.5 text-[12px] leading-snug">{PILLAR_HINTS[pillar.key] ?? "—"}</p>
+        <p className="mt-2 text-[11px] text-muted-foreground">
+          Valor atual: <span className="font-semibold text-foreground">{pillar.value}</span> · peso {(pillar.weight * 100).toFixed(0)}%
+        </p>
+      </Card>
+
+      <Card className="border-border/60 p-3">
+        <div className="flex items-center justify-between">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+            Tendência (últimas medições)
+          </p>
+          {scores.length >= 2 && (
+            <span className={cn(
+              "text-[11px] font-semibold tabular-nums",
+              trend > 0 ? "text-emerald-600" : trend < 0 ? "text-rose-600" : "text-muted-foreground",
+            )}>
+              {trend > 0 ? "+" : ""}{trend} pts
+            </span>
+          )}
+        </div>
+        {isLoading ? (
+          <Skeleton className="mt-2 h-16 w-full" />
+        ) : scores.length < 2 ? (
+          <p className="mt-2 text-[11px] text-muted-foreground">
+            Ainda não há histórico suficiente. Recalcule o score algumas vezes para ver a tendência.
+          </p>
+        ) : (
+          <PillarSparkline data={scores} />
+        )}
+      </Card>
+
+      <div>
+        <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+          Ações sugeridas para subir este pilar
+        </p>
+        {related.length === 0 ? (
+          <Card className="border-emerald-500/30 bg-emerald-500/5 p-3">
+            <p className="flex items-center gap-2 text-[12px]">
+              <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
+              Pilar saudável — nenhuma ação urgente sugerida.
             </p>
           </Card>
-        </motion.div>
-      ))}
+        ) : (
+          <div className="space-y-1.5">
+            {related.map((a, i) => (
+              <ActionCard
+                key={i}
+                title={a.title}
+                reason={a.reason}
+                impact_brl={a.impact_brl}
+                channel={a.channel}
+                href={a.href}
+                tone="neutral"
+              />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
+
+function PillarSparkline({ data }: { data: number[] }) {
+  const w = 320, h = 60, pad = 4;
+  const min = Math.min(...data, 0);
+  const max = Math.max(...data, 100);
+  const span = Math.max(1, max - min);
+  const pts = data.map((v, i) => {
+    const x = pad + (i * (w - pad * 2)) / (data.length - 1);
+    const y = h - pad - ((v - min) / span) * (h - pad * 2);
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(" ");
+  const first = data[0], last = data[data.length - 1];
+  const stroke = last >= first ? "stroke-emerald-500" : "stroke-rose-500";
+  const fill = last >= first ? "fill-emerald-500/10" : "fill-rose-500/10";
+  const area = `${pad},${h - pad} ${pts} ${w - pad},${h - pad}`;
+  return (
+    <svg viewBox={`0 0 ${w} ${h}`} className="mt-2 w-full">
+      <polygon points={area} className={fill} />
+      <polyline points={pts} fill="none" strokeWidth="1.5" className={stroke} />
+    </svg>
+  );
+}
+
+
 
 function ActionsPanel({ actions }: { actions: Awaited<ReturnType<typeof getUseSuccessReport>>["actions"] }) {
   return (
