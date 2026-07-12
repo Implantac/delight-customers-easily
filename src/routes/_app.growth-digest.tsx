@@ -52,7 +52,7 @@ function GrowthDigestPage() {
     <div className="mx-auto max-w-6xl px-4 py-6 space-y-6">
       <PageHeader
         title="Growth Digest"
-        description="Relatório executivo automático da semana — score, vitórias, riscos e foco para os próximos 7 dias."
+        subtitle="Relatório executivo automático da semana — score, vitórias, riscos e foco para os próximos 7 dias."
         icon={Sparkles}
       />
 
