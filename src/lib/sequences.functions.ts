@@ -300,3 +300,41 @@ export const updateEnrollment = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+/** Lista matrículas pausadas automaticamente por resposta (WhatsApp/e-mail) — inbox de follow-up manual. */
+export const listPausedByReply = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i) =>
+    z.object({ organization_id: z.string().uuid(), limit: z.number().int().min(1).max(100).default(30) }).parse(i),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase } = context;
+    const { data: rows, error } = await (supabase as any)
+      .from("sequence_enrollments")
+      .select("id, sequence_id, contact_id, status, paused_reason, paused_at")
+      .eq("organization_id", data.organization_id)
+      .eq("status", "paused")
+      .not("paused_reason", "is", null)
+      .order("paused_at", { ascending: false })
+      .limit(data.limit);
+    if (error) throw new Error(error.message);
+    const list = (rows ?? []) as any[];
+    if (list.length === 0) return { items: [] };
+
+    const contactIds = Array.from(new Set(list.map((r) => r.contact_id)));
+    const seqIds = Array.from(new Set(list.map((r) => r.sequence_id)));
+    const [{ data: contacts }, { data: seqs }] = await Promise.all([
+      supabase.from("contacts").select("id, first_name, last_name, email, phone").in("id", contactIds),
+      supabase.from("sequences").select("id, name").in("id", seqIds),
+    ]);
+    const cMap = new Map((contacts ?? []).map((c: any) => [c.id, c]));
+    const sMap = new Map((seqs ?? []).map((s: any) => [s.id, s]));
+    return {
+      items: list.map((r) => ({
+        ...r,
+        contact: cMap.get(r.contact_id) ?? null,
+        sequence: sMap.get(r.sequence_id) ?? null,
+      })),
+    };
+  });
+
