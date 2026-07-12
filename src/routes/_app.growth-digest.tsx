@@ -36,16 +36,16 @@ function fmtBRL(n: number) {
 }
 
 function GrowthDigestPage() {
-  const { data: org } = useCurrentOrg();
+  const { orgId } = useCurrentOrg();
   const [weeksBack, setWeeksBack] = useState(0);
   const digestFn = useServerFn(getGrowthDigest);
 
   const q = useQuery({
-    queryKey: ["growth-digest", org?.organization_id, weeksBack],
-    enabled: !!org?.organization_id,
+    queryKey: ["growth-digest", orgId, weeksBack],
+    enabled: !!orgId,
     staleTime: 5 * 60_000,
     queryFn: async (): Promise<GrowthDigest> =>
-      digestFn({ data: { organization_id: org!.organization_id, weeks_back: weeksBack } }),
+      digestFn({ data: { organization_id: orgId!, weeks_back: weeksBack } }),
   });
 
   return (
