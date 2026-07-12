@@ -22,6 +22,7 @@ import { AuditHistory } from "@/components/audit-history";
 import { AIInsights } from "@/components/ai-insights";
 import { PropensityPanel } from "@/components/propensity-panel";
 import { Company360Panel } from "@/components/company-360-panel";
+import { QuickActionsDock } from "@/components/quick-actions-dock";
 import { whatsappLink } from "@/lib/wa";
 import { toast } from "sonner";
 
