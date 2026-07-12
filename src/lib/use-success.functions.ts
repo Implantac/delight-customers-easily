@@ -414,8 +414,8 @@ export const getUseSuccessReport = createServerFn({ method: "POST" })
     }
 
     // ---------- Persistir novo snapshot (best-effort) ----------
-    await safe(
-      supabase.from("use_success_snapshots").insert({
+    try {
+      await supabase.from("use_success_snapshots").insert({
         organization_id: org,
         score,
         classification,
@@ -424,9 +424,8 @@ export const getUseSuccessReport = createServerFn({ method: "POST" })
           won30, won_prev30: wonPrev30, growth,
           open_pipeline: openPipeline, at_risk: atRisk,
         } as any,
-      }) as unknown as PromiseLike<unknown>,
-      undefined,
-    );
+      });
+    } catch { /* histórico é best-effort; não bloqueia o relatório */ }
 
     return {
       score,
