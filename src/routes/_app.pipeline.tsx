@@ -451,6 +451,30 @@ function PipelinePage() {
                             />
                           </div>
                         )}
+                        {(() => {
+                          const ins: any = Array.isArray((d as any).ai_deal_insights)
+                            ? (d as any).ai_deal_insights[0]
+                            : (d as any).ai_deal_insights;
+                          const acts = Array.isArray(ins?.next_actions) ? ins.next_actions : [];
+                          const first = acts[0];
+                          const label = typeof first === "string"
+                            ? first
+                            : (first?.action ?? first?.title ?? first?.text ?? null);
+                          if (!label) return null;
+                          const risk = ins?.risk_level as string | undefined;
+                          const tone = risk === "high"
+                            ? "bg-rose-500/15 text-rose-700 dark:text-rose-300 ring-1 ring-rose-500/30"
+                            : "bg-primary/15 text-primary ring-1 ring-primary/25";
+                          return (
+                            <div
+                              className={`mt-2 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ${tone}`}
+                              title={ins?.summary ?? label}
+                            >
+                              <Sparkles className="h-2.5 w-2.5" />
+                              <span className="truncate max-w-[180px]">{label}</span>
+                            </div>
+                          );
+                        })()}
                         {((d.contacts as any)?.name || (d.companies as any)?.name) && (
                           <p className="mt-2 truncate text-xs text-muted-foreground">
                             {(d.contacts as any)?.name}{(d.contacts as any)?.name && (d.companies as any)?.name ? " · " : ""}{(d.companies as any)?.name}
