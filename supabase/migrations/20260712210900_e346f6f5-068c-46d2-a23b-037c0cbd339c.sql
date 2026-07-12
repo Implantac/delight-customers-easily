@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "commercial_automations_delete" ON public.commercial_automations;
