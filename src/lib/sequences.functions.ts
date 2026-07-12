@@ -27,7 +27,10 @@ export type SequenceEnrollment = {
   status: "active" | "completed" | "paused" | "cancelled";
   enrolled_at: string;
   completed_at: string | null;
+  paused_reason?: string | null;
+  paused_at?: string | null;
   contacts?: { id: string; first_name: string | null; last_name: string | null; email: string | null } | null;
+
   sequences?: { id: string; name: string } | null;
 };
 
