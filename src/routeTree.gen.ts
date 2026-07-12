@@ -38,6 +38,7 @@ import { Route as AppIntegrationsRouteImport } from './routes/_app.integrations'
 import { Route as AppInfluencersRouteImport } from './routes/_app.influencers'
 import { Route as AppGoalsRouteImport } from './routes/_app.goals'
 import { Route as AppGestaoVisaoGlobalRouteImport } from './routes/_app.gestao-visao-global'
+import { Route as AppGestaoComercialRouteImport } from './routes/_app.gestao-comercial'
 import { Route as AppGeoRotaRouteImport } from './routes/_app.geo-rota'
 import { Route as AppGeoProspeccaoRouteImport } from './routes/_app.geo-prospeccao'
 import { Route as AppGeoCoberturaRouteImport } from './routes/_app.geo-cobertura'
@@ -263,6 +264,11 @@ const AppGoalsRoute = AppGoalsRouteImport.update({
 const AppGestaoVisaoGlobalRoute = AppGestaoVisaoGlobalRouteImport.update({
   id: '/gestao-visao-global',
   path: '/gestao-visao-global',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppGestaoComercialRoute = AppGestaoComercialRouteImport.update({
+  id: '/gestao-comercial',
+  path: '/gestao-comercial',
   getParentRoute: () => AppRoute,
 } as any)
 const AppGeoRotaRoute = AppGeoRotaRouteImport.update({
@@ -721,6 +727,7 @@ export interface FileRoutesByFullPath {
   '/geo-cobertura': typeof AppGeoCoberturaRoute
   '/geo-prospeccao': typeof AppGeoProspeccaoRoute
   '/geo-rota': typeof AppGeoRotaRoute
+  '/gestao-comercial': typeof AppGestaoComercialRoute
   '/gestao-visao-global': typeof AppGestaoVisaoGlobalRoute
   '/goals': typeof AppGoalsRoute
   '/influencers': typeof AppInfluencersRoute
@@ -832,6 +839,7 @@ export interface FileRoutesByTo {
   '/geo-cobertura': typeof AppGeoCoberturaRoute
   '/geo-prospeccao': typeof AppGeoProspeccaoRoute
   '/geo-rota': typeof AppGeoRotaRoute
+  '/gestao-comercial': typeof AppGestaoComercialRoute
   '/gestao-visao-global': typeof AppGestaoVisaoGlobalRoute
   '/goals': typeof AppGoalsRoute
   '/influencers': typeof AppInfluencersRoute
@@ -945,6 +953,7 @@ export interface FileRoutesById {
   '/_app/geo-cobertura': typeof AppGeoCoberturaRoute
   '/_app/geo-prospeccao': typeof AppGeoProspeccaoRoute
   '/_app/geo-rota': typeof AppGeoRotaRoute
+  '/_app/gestao-comercial': typeof AppGestaoComercialRoute
   '/_app/gestao-visao-global': typeof AppGestaoVisaoGlobalRoute
   '/_app/goals': typeof AppGoalsRoute
   '/_app/influencers': typeof AppInfluencersRoute
@@ -1058,6 +1067,7 @@ export interface FileRouteTypes {
     | '/geo-cobertura'
     | '/geo-prospeccao'
     | '/geo-rota'
+    | '/gestao-comercial'
     | '/gestao-visao-global'
     | '/goals'
     | '/influencers'
@@ -1169,6 +1179,7 @@ export interface FileRouteTypes {
     | '/geo-cobertura'
     | '/geo-prospeccao'
     | '/geo-rota'
+    | '/gestao-comercial'
     | '/gestao-visao-global'
     | '/goals'
     | '/influencers'
@@ -1281,6 +1292,7 @@ export interface FileRouteTypes {
     | '/_app/geo-cobertura'
     | '/_app/geo-prospeccao'
     | '/_app/geo-rota'
+    | '/_app/gestao-comercial'
     | '/_app/gestao-visao-global'
     | '/_app/goals'
     | '/_app/influencers'
@@ -1607,6 +1619,13 @@ declare module '@tanstack/react-router' {
       path: '/gestao-visao-global'
       fullPath: '/gestao-visao-global'
       preLoaderRoute: typeof AppGestaoVisaoGlobalRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/gestao-comercial': {
+      id: '/_app/gestao-comercial'
+      path: '/gestao-comercial'
+      fullPath: '/gestao-comercial'
+      preLoaderRoute: typeof AppGestaoComercialRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/geo-rota': {
@@ -2363,6 +2382,7 @@ interface AppRouteChildren {
   AppGeoCoberturaRoute: typeof AppGeoCoberturaRoute
   AppGeoProspeccaoRoute: typeof AppGeoProspeccaoRoute
   AppGeoRotaRoute: typeof AppGeoRotaRoute
+  AppGestaoComercialRoute: typeof AppGestaoComercialRoute
   AppGestaoVisaoGlobalRoute: typeof AppGestaoVisaoGlobalRoute
   AppGoalsRoute: typeof AppGoalsRoute
   AppInfluencersRoute: typeof AppInfluencersRoute
@@ -2422,6 +2442,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppGeoCoberturaRoute: AppGeoCoberturaRoute,
   AppGeoProspeccaoRoute: AppGeoProspeccaoRoute,
   AppGeoRotaRoute: AppGeoRotaRoute,
+  AppGestaoComercialRoute: AppGestaoComercialRoute,
   AppGestaoVisaoGlobalRoute: AppGestaoVisaoGlobalRoute,
   AppGoalsRoute: AppGoalsRoute,
   AppInfluencersRoute: AppInfluencersRoute,
