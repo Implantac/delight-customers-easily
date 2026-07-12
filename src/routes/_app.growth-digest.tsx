@@ -73,6 +73,7 @@ function GrowthDigestPage() {
           <RefreshCw className={cn("mr-1.5 h-3.5 w-3.5", q.isFetching && "animate-spin")} />
           Recalcular
         </Button>
+        {q.data && <ShareDigestButton d={q.data} />}
       </div>
 
       {q.isLoading || !q.data ? (
