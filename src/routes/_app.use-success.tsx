@@ -11,7 +11,7 @@ import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { useCurrentOrg } from "@/lib/org";
-import { getUseSuccessReport, type SuccessClass, type SuccessPillar } from "@/lib/use-success.functions";
+import { getUseSuccessReport, listUseSuccessHistory, type SuccessClass, type SuccessPillar } from "@/lib/use-success.functions";
 import { ActionCard } from "@/components/action-card";
 import { cn } from "@/lib/utils";
 
