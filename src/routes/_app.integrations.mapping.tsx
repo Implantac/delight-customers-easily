@@ -238,6 +238,67 @@ function MappingScreen() {
       toast.error("IA indisponível", { description: e?.message }),
   });
 
+  const autoMut = useMutation({
+    mutationFn: async () => {
+      if (!selectedIntegration) throw new Error("Selecione uma integração ativa.");
+      if (entity === "orders") throw new Error("Detecção suporta apenas Empresas, Contatos e Produtos.");
+      return autoDetect({
+        data: {
+          organization_id: orgId!,
+          integration_id: selectedIntegration,
+          entity: entity as "contacts" | "companies" | "products",
+        },
+      });
+    },
+    onSuccess: (r: any) => {
+      setAutoResult({
+        headers: r?.headers ?? [],
+        sample_rows: r?.sample_rows ?? [],
+        mapping: r?.mapping ?? {},
+        source: r?.source ?? { provider: "", sampled: 0 },
+      });
+      const count = Object.keys(r?.mapping ?? {}).length;
+      if (r?.source?.sampled === 0) {
+        toast.info("Nenhuma amostra retornada pelo ERP para esta entidade.");
+      } else {
+        toast.success(`Detectados ${r?.source?.sampled ?? 0} registro(s) · ${count} sugestão(ões).`);
+      }
+    },
+    onError: (e: any) => toast.error("Falha na detecção", { description: e?.message }),
+  });
+
+  const applyAutoMut = useMutation({
+    mutationFn: async () => {
+      if (!autoResult) return 0;
+      const entries = Object.entries(autoResult.mapping);
+      let saved = 0;
+      for (const [src, info] of entries) {
+        try {
+          await upsert({
+            data: {
+              organization_id: orgId!,
+              provider,
+              entity,
+              source_field: src,
+              target_field: info.field,
+              transform: "none",
+            },
+          });
+          saved++;
+        } catch {
+          /* skip */
+        }
+      }
+      return saved;
+    },
+    onSuccess: (saved) => {
+      toast.success(`${saved} mapeamento(s) aplicados.`);
+      setAutoResult(null);
+      qc.invalidateQueries({ queryKey: ["field-mappings"] });
+    },
+    onError: (e: any) => toast.error("Falha ao aplicar", { description: e?.message }),
+  });
+
   if (!canManage) {
     return (
       <div className="p-6">
