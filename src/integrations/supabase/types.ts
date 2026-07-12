@@ -9073,6 +9073,82 @@ export type Database = {
         }
         Relationships: []
       }
+      use_success_snapshots: {
+        Row: {
+          classification: string
+          computed_at: string
+          created_by: string | null
+          id: string
+          organization_id: string
+          pillars: Json
+          revenue: Json
+          score: number
+        }
+        Insert: {
+          classification: string
+          computed_at?: string
+          created_by?: string | null
+          id?: string
+          organization_id: string
+          pillars?: Json
+          revenue?: Json
+          score: number
+        }
+        Update: {
+          classification?: string
+          computed_at?: string
+          created_by?: string | null
+          id?: string
+          organization_id?: string
+          pillars?: Json
+          revenue?: Json
+          score?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "use_success_snapshots_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["branch_org_id"]
+          },
+          {
+            foreignKeyName: "use_success_snapshots_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "use_success_snapshots_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_branch"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "use_success_snapshots_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["company_org_id"]
+          },
+          {
+            foreignKeyName: "use_success_snapshots_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "org_sales_consolidated_by_company"
+            referencedColumns: ["tenant_org_id"]
+          },
+          {
+            foreignKeyName: "use_success_snapshots_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       webhooks: {
         Row: {
           created_at: string
