@@ -220,3 +220,62 @@ function KpiCard({ label, value, sub, tone }: { label: string; value: string; su
     </Card>
   );
 }
+
+function formatDigestText(d: GrowthDigest): string {
+  const brl = (n: number) => n.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
+  const L: string[] = [];
+  L.push(`📊 *Growth Digest — ${d.period.label}*`);
+  L.push("");
+  L.push(d.headline);
+  if (d.score.current !== null) {
+    const arrow = d.score.delta > 0 ? "▲" : d.score.delta < 0 ? "▼" : "▬";
+    L.push(`USE Success: *${d.score.current}/100* ${arrow} ${d.score.delta > 0 ? "+" : ""}${d.score.delta} pts`);
+  }
+  L.push("");
+  L.push(`💰 Receita fechada: *${brl(d.revenue.won)}* (${d.wins.count} negócio${d.wins.count === 1 ? "" : "s"})`);
+  if (d.revenue.won_prev > 0) {
+    L.push(`   vs. semana anterior: ${brl(d.revenue.won_prev)} (${d.revenue.growth >= 0 ? "+" : ""}${Math.round(d.revenue.growth * 100)}%)`);
+  }
+  L.push(`📉 Perdas: ${brl(d.losses.total)} (${d.losses.count})`);
+  L.push(`🚧 Pipeline aberto: ${brl(d.revenue.open_pipeline)}`);
+  if (d.wins.top.length) {
+    L.push("");
+    L.push("🏆 *Maiores vitórias:*");
+    d.wins.top.forEach((w) => L.push(`   • ${w.title} — ${brl(w.value)}`));
+  }
+  L.push("");
+  L.push("🎯 *Foco da próxima semana:*");
+  d.focus.forEach((f) => {
+    L.push(`   ${f.priority}. ${f.title}`);
+    L.push(`      ${f.reason}`);
+  });
+  L.push("");
+  L.push(`_Gerado em ${new Date(d.computed_at).toLocaleString("pt-BR")}_`);
+  return L.join("\n");
+}
+
+function ShareDigestButton({ d }: { d: GrowthDigest }) {
+  const [copied, setCopied] = useState(false);
+  const onShare = async () => {
+    const text = formatDigestText(d);
+    try {
+      if (typeof navigator !== "undefined" && (navigator as any).share) {
+        await (navigator as any).share({ title: `Growth Digest — ${d.period.label}`, text });
+        toast.success("Digest compartilhado");
+        return;
+      }
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      toast.success("Resumo copiado — cole no WhatsApp ou email do time");
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error("Não foi possível copiar. Tente novamente.");
+    }
+  };
+  return (
+    <Button size="sm" variant="outline" onClick={onShare}>
+      {copied ? <Check className="mr-1.5 h-3.5 w-3.5" /> : <Share2 className="mr-1.5 h-3.5 w-3.5" />}
+      {copied ? "Copiado" : "Compartilhar resumo"}
+    </Button>
+  );
+}
