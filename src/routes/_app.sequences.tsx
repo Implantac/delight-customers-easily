@@ -222,6 +222,15 @@ function SequencesPage() {
                       <Button
                         variant="ghost"
                         size="sm"
+                        disabled={duplicate.isPending}
+                        onClick={() => duplicate.mutate(s.id)}
+                        title="Duplicar"
+                      >
+                        <Copy className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
                         onClick={() => {
                           if (confirm(`Excluir "${s.name}"?`)) remove.mutate(s.id);
                         }}
