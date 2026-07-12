@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
@@ -57,8 +58,16 @@ const STAGE_LABEL: Record<string, string> = {
  */
 function DashboardPage() {
   const { user } = useAuth();
-  const { orgId } = useCurrentOrg();
+  const { orgId, role } = useCurrentOrg();
   const navigate = useNavigate();
+
+  // Landing por papel: vendedor (member) cai direto no "Meu Dia" focado.
+  // Owner/admin/manager permanecem no Revenue Command Center.
+  useEffect(() => {
+    if (role && role === "member") {
+      navigate({ to: "/meu-dia", replace: true });
+    }
+  }, [role, navigate]);
 
   const forecast = useServerFn(getForecast);
   const retention = useServerFn(getRetentionInsights);
