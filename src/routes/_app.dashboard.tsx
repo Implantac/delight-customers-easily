@@ -57,7 +57,16 @@ const STAGE_LABEL: Record<string, string> = {
  */
 function DashboardPage() {
   const { user } = useAuth();
-  const { orgId } = useCurrentOrg();
+  const { orgId, role } = useCurrentOrg();
+  const navigate = useNavigate();
+
+  // Landing por papel: vendedor (member) cai direto no "Meu Dia" focado.
+  // Owner/admin/manager permanecem no Revenue Command Center.
+  useEffect(() => {
+    if (role && role === "member") {
+      navigate({ to: "/meu-dia", replace: true });
+    }
+  }, [role, navigate]);
   const navigate = useNavigate();
 
   const forecast = useServerFn(getForecast);
