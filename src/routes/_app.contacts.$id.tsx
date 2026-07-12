@@ -359,6 +359,17 @@ function ContactDetail() {
           <Attachments entityType="contact" entityId={contact.id} />
         </aside>
       </div>
+
+      {contact.organization_id && (
+        <QuickActionsDock
+          organizationId={contact.organization_id}
+          companyId={contact.company_id ?? null}
+          contactId={contact.id}
+          phone={contact.phone ?? null}
+          email={contact.email ?? null}
+          name={contact.name}
+        />
+      )}
     </div>
   );
 }
