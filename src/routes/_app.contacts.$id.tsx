@@ -12,6 +12,7 @@ import { Timeline, type TimelineItem } from "@/components/timeline";
 import {
   ArrowLeft, Mail, Phone, Briefcase, Trash2, Building2, KanbanSquare,
   Clock, MessageCircle, History as HistoryIcon, Sparkles, Paperclip, LayoutGrid,
+  Zap,
 } from "lucide-react";
 import { AuditHistory } from "@/components/audit-history";
 import { SendEmailDialog } from "@/components/send-email-dialog";
@@ -21,6 +22,8 @@ import { TagPicker } from "@/components/tag-picker";
 import { QuickActionsDock } from "@/components/quick-actions-dock";
 import { whatsappLink } from "@/lib/wa";
 import { toast } from "sonner";
+import { useServerFn } from "@tanstack/react-start";
+import { listSequences, enrollContact } from "@/lib/sequences.functions";
 
 export const Route = createFileRoute("/_app/contacts/$id")({ component: ContactDetail });
 
