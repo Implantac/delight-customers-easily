@@ -28,6 +28,7 @@ function SequencesPage() {
   const fetchSeq = useServerFn(listSequences);
   const upsertFn = useServerFn(upsertSequence);
   const delFn = useServerFn(deleteSequence);
+  const dupFn = useServerFn(duplicateSequence);
   const fetchPaused = useServerFn(listPausedByReply);
   const updateEnrollFn = useServerFn(updateEnrollment);
 
