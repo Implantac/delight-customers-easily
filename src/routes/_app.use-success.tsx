@@ -92,7 +92,7 @@ function UseSuccessPage() {
           <HeroCard report={data} history={hist?.history ?? []} />
           <DeltaCard delta={data.delta} />
           <RevenueStrip report={data} />
-          <PillarsGrid pillars={data.pillars} />
+          <PillarsGrid pillars={data.pillars} actions={data.actions} />
           <ActionsPanel actions={data.actions} />
         </div>
       )}
