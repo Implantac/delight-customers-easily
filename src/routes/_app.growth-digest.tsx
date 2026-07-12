@@ -4,7 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import {
   Sparkles, TrendingUp, TrendingDown, Minus, ArrowRight,
-  Trophy, AlertTriangle, Target, Calendar, RefreshCw, Share2, Check,
+  Trophy, AlertTriangle, Target, Calendar, RefreshCw, Share2, Check, Printer,
 } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader } from "@/components/page-header";
