@@ -84,7 +84,20 @@ export const Route = createFileRoute('/api/public/inbound-email')({
           return new Response('Insert failed', { status: 500 });
         }
 
+        // Pausa cadências ativas do contato — mesma lógica do WhatsApp reply.
+        await supabaseAdmin
+          .from('sequence_enrollments')
+          .update({
+            status: 'paused',
+            paused_reason: 'Resposta recebida por e-mail',
+            paused_at: new Date().toISOString(),
+          })
+          .eq('contact_id', contact.id)
+          .eq('organization_id', contact.organization_id)
+          .eq('status', 'active');
+
         return Response.json({ ok: true, matched: true, contact_id: contact.id });
+
       },
     },
   },
