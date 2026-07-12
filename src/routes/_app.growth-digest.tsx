@@ -50,14 +50,27 @@ function GrowthDigestPage() {
   });
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6 space-y-6">
-      <PageHeader
-        title="Growth Digest"
-        subtitle="Relatório executivo automático da semana — score, vitórias, riscos e foco para os próximos 7 dias."
-        icon={Sparkles}
-      />
+    <div className="mx-auto max-w-6xl px-4 py-6 space-y-6 growth-digest-root">
+      <style>{`
+        @media print {
+          body { background: white !important; }
+          [data-sidebar], header, nav, .mobile-bottom-nav, .no-print { display: none !important; }
+          .growth-digest-root { max-width: 100% !important; padding: 0 !important; }
+          .growth-digest-root * { box-shadow: none !important; }
+          .growth-digest-root .card, .growth-digest-root [class*="bg-gradient"] {
+            background: white !important; border-color: #ddd !important;
+          }
+        }
+      `}</style>
+      <div className="no-print">
+        <PageHeader
+          title="Growth Digest"
+          subtitle="Relatório executivo automático da semana — score, vitórias, riscos e foco para os próximos 7 dias."
+          icon={Sparkles}
+        />
+      </div>
 
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2 no-print">
         {[0, 1, 2, 4].map((w) => (
           <Button
             key={w}
@@ -74,6 +87,12 @@ function GrowthDigestPage() {
           Recalcular
         </Button>
         {q.data && <ShareDigestButton d={q.data} />}
+        {q.data && (
+          <Button size="sm" variant="outline" onClick={() => window.print()}>
+            <Printer className="mr-1.5 h-3.5 w-3.5" />
+            Imprimir / PDF
+          </Button>
+        )}
       </div>
 
       {q.isLoading || !q.data ? (
@@ -82,7 +101,9 @@ function GrowthDigestPage() {
         </div>
       ) : (
         <>
-          <TrendStrip orgId={orgId!} currentWeek={weeksBack} onPick={setWeeksBack} />
+          <div className="no-print">
+            <TrendStrip orgId={orgId!} currentWeek={weeksBack} onPick={setWeeksBack} />
+          </div>
           <DigestBody d={q.data} />
         </>
       )}
