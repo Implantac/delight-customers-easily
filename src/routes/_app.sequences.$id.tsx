@@ -248,6 +248,13 @@ function SequenceDetail() {
                       <p className="text-xs text-muted-foreground">
                         {new Date(e.enrolled_at).toLocaleDateString("pt-BR")}{c?.email ? ` · ${c.email}` : ""}
                       </p>
+                      {e.status === "paused" && e.paused_reason && (
+                        <p className="text-xs text-amber-600 dark:text-amber-400 mt-0.5">
+                          ⏸ {e.paused_reason}
+                          {e.paused_at ? ` · ${new Date(e.paused_at).toLocaleDateString("pt-BR")}` : ""}
+                        </p>
+                      )}
+
                     </div>
                     <Badge variant={STATUS_BADGE[e.status]} className="text-[10px]">{STATUS_LABEL[e.status]}</Badge>
                     <div className="flex gap-1">
