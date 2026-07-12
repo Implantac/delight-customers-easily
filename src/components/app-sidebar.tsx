@@ -10,7 +10,7 @@ import {
   Sun as SunIcon, ListChecks, CheckSquare, TrendingUp, Trophy, Repeat, DollarSign,
   Goal, GraduationCap, Workflow, FileInput, LineChart, Compass, MessagesSquare,
   Network, Headphones, Heart, Code2, Microscope, Bell, type LucideIcon,
-  ChevronRight,
+  ChevronRight, Gauge,
 } from "lucide-react";
 
 import { useAuth } from "@/lib/auth";
