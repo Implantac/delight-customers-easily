@@ -134,6 +134,97 @@ function DashboardExecutivoPage() {
   );
 }
 
+const TONE_META: Record<SignalTone, { icon: React.ComponentType<{ className?: string }>; ring: string; badge: string; label: string }> = {
+  critical: { icon: AlertTriangle, ring: "border-rose-500/40 bg-rose-500/5", badge: "bg-rose-500/15 text-rose-700 dark:text-rose-300", label: "Crítico" },
+  warn: { icon: AlertTriangle, ring: "border-amber-500/40 bg-amber-500/5", badge: "bg-amber-500/15 text-amber-700 dark:text-amber-300", label: "Atenção" },
+  opportunity: { icon: Sparkles, ring: "border-emerald-500/40 bg-emerald-500/5", badge: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300", label: "Oportunidade" },
+  info: { icon: GitBranch, ring: "border-border bg-card", badge: "bg-muted text-muted-foreground", label: "Sinal" },
+};
+
+const CATEGORY_ICON: Record<ExecutiveSignal["category"], React.ComponentType<{ className?: string }>> = {
+  churn: AlertTriangle,
+  recompra: Sparkles,
+  carteira: Wallet,
+  meta: Target,
+  cobertura: MapPin,
+  pipeline: GitBranch,
+};
+
+function SignalsPanel({ orgId }: { orgId?: string }) {
+  const run = useServerFn(getExecutiveSignals);
+  const q = useQuery({
+    queryKey: ["executive-signals", orgId],
+    enabled: !!orgId,
+    queryFn: () => run({ data: { organization_id: orgId! } }),
+    staleTime: 5 * 60_000,
+    refetchOnWindowFocus: false,
+  });
+
+  return (
+    <Card className="p-4">
+      <div className="mb-3 flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2.5">
+          <div className="grid h-7 w-7 place-items-center rounded-md border border-border/60 bg-card">
+            <Sparkles className="h-3.5 w-3.5 text-violet-500" />
+          </div>
+          <div>
+            <h3 className="font-display text-sm font-semibold tracking-tight">Sinais → Ações da IA</h3>
+            <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground/70">
+              Consolidação de churn, recompra, carteira, meta e cobertura
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {q.isLoading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2.5">
+          {[0, 1, 2].map((i) => <Skeleton key={i} className="h-28" />)}
+        </div>
+      ) : (q.data?.signals ?? []).length === 0 ? (
+        <div className="flex items-center gap-2 rounded-md border border-emerald-500/30 bg-emerald-500/5 p-3 text-sm">
+          <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+          Nenhum sinal crítico no momento — operação estável.
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2.5">
+          {q.data!.signals.map((s) => {
+            const meta = TONE_META[s.tone];
+            const CatIcon = CATEGORY_ICON[s.category];
+            return (
+              <div
+                key={s.key}
+                className={cn("group flex flex-col justify-between rounded-lg border p-3 transition-colors hover:border-primary/50", meta.ring)}
+              >
+                <div>
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-1.5">
+                      <CatIcon className="h-3.5 w-3.5 text-muted-foreground" />
+                      <span className={cn("rounded-full px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wider", meta.badge)}>
+                        {meta.label}
+                      </span>
+                    </div>
+                    {s.metric && (
+                      <span className="text-[10px] font-semibold tabular-nums text-muted-foreground">{s.metric}</span>
+                    )}
+                  </div>
+                  <p className="mt-2 font-display text-[13px] font-semibold leading-snug">{s.title}</p>
+                  <p className="mt-1 line-clamp-2 text-[11px] leading-snug text-muted-foreground">{s.reason}</p>
+                </div>
+                <Button asChild size="sm" variant="secondary" className="mt-3 h-7 justify-between text-[11px]">
+                  <Link to={s.cta.href as any}>
+                    {s.cta.label}
+                    <ArrowRight className="h-3 w-3" />
+                  </Link>
+                </Button>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </Card>
+  );
+}
+
 function KpiCard({ label, value, icon }: { label: string; value: string; icon?: React.ReactNode }) {
   return (
     <Card className="p-4">
