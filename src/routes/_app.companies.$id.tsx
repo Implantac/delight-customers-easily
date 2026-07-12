@@ -850,8 +850,8 @@ function CompanyDetail() {
           organizationId={company.organization_id}
           companyId={company.id}
           contactId={primaryContact?.id ?? null}
-          phone={primaryContact?.phone ?? company.phone ?? null}
-          email={primaryContact?.email ?? company.email ?? null}
+          phone={primaryContact?.phone ?? null}
+          email={primaryContact?.email ?? null}
           name={company.name}
         />
       )}
