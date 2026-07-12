@@ -107,6 +107,55 @@ function SequencesPage() {
         ) : undefined}
       />
 
+      {(paused?.items ?? []).length > 0 && (
+        <Card className="border-amber-500/30 bg-amber-500/5">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <MessageSquare className="h-4 w-4 text-amber-600" />
+                <h3 className="text-sm font-semibold">Cadências pausadas por resposta ({paused!.items.length})</h3>
+              </div>
+              <p className="text-xs text-muted-foreground">Contato respondeu — assuma o follow-up manualmente ou retome quando fizer sentido.</p>
+            </div>
+            <div className="divide-y divide-amber-500/10">
+              {paused!.items.map((p: any) => {
+                const c = p.contact;
+                const name = c ? `${c.first_name ?? ""} ${c.last_name ?? ""}`.trim() || c.email || "—" : "—";
+                const isEmail = (p.paused_reason ?? "").toLowerCase().includes("e-mail");
+                return (
+                  <div key={p.id} className="flex items-center justify-between gap-3 py-2">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        {isEmail ? <Mail className="h-3 w-3 text-muted-foreground" /> : <MessageSquare className="h-3 w-3 text-muted-foreground" />}
+                        <p className="text-sm font-medium truncate">{name}</p>
+                        {p.sequence?.name && (
+                          <Badge variant="outline" className="text-[10px]">{p.sequence.name}</Badge>
+                        )}
+                      </div>
+                      <p className="text-xs text-muted-foreground truncate">
+                        {p.paused_reason}
+                        {p.paused_at ? ` · ${new Date(p.paused_at).toLocaleDateString("pt-BR")}` : ""}
+                        {c?.email ? ` · ${c.email}` : ""}
+                      </p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={resume.isPending}
+                      onClick={() => resume.mutate(p.id)}
+                    >
+                      <PlayCircle className="h-4 w-4 mr-1" /> Retomar
+                    </Button>
+                  </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+
+
       {isLoading ? (
         <div className="grid gap-3 md:grid-cols-2">
           {[1, 2, 3, 4].map((i) => <Skeleton key={i} className="h-32 w-full" />)}
