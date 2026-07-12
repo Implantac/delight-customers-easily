@@ -36,6 +36,7 @@ import { Route as AppLeadFormsRouteImport } from './routes/_app.lead-forms'
 import { Route as AppInteligenciaComercialRouteImport } from './routes/_app.inteligencia-comercial'
 import { Route as AppIntegrationsRouteImport } from './routes/_app.integrations'
 import { Route as AppInfluencersRouteImport } from './routes/_app.influencers'
+import { Route as AppGrowthDigestRouteImport } from './routes/_app.growth-digest'
 import { Route as AppGoalsRouteImport } from './routes/_app.goals'
 import { Route as AppGestaoVisaoGlobalRouteImport } from './routes/_app.gestao-visao-global'
 import { Route as AppGestaoComercialRouteImport } from './routes/_app.gestao-comercial'
@@ -254,6 +255,11 @@ const AppIntegrationsRoute = AppIntegrationsRouteImport.update({
 const AppInfluencersRoute = AppInfluencersRouteImport.update({
   id: '/influencers',
   path: '/influencers',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppGrowthDigestRoute = AppGrowthDigestRouteImport.update({
+  id: '/growth-digest',
+  path: '/growth-digest',
   getParentRoute: () => AppRoute,
 } as any)
 const AppGoalsRoute = AppGoalsRouteImport.update({
@@ -730,6 +736,7 @@ export interface FileRoutesByFullPath {
   '/gestao-comercial': typeof AppGestaoComercialRoute
   '/gestao-visao-global': typeof AppGestaoVisaoGlobalRoute
   '/goals': typeof AppGoalsRoute
+  '/growth-digest': typeof AppGrowthDigestRoute
   '/influencers': typeof AppInfluencersRoute
   '/integrations': typeof AppIntegrationsRouteWithChildren
   '/inteligencia-comercial': typeof AppInteligenciaComercialRouteWithChildren
@@ -842,6 +849,7 @@ export interface FileRoutesByTo {
   '/gestao-comercial': typeof AppGestaoComercialRoute
   '/gestao-visao-global': typeof AppGestaoVisaoGlobalRoute
   '/goals': typeof AppGoalsRoute
+  '/growth-digest': typeof AppGrowthDigestRoute
   '/influencers': typeof AppInfluencersRoute
   '/integrations': typeof AppIntegrationsRouteWithChildren
   '/inteligencia-comercial': typeof AppInteligenciaComercialRouteWithChildren
@@ -956,6 +964,7 @@ export interface FileRoutesById {
   '/_app/gestao-comercial': typeof AppGestaoComercialRoute
   '/_app/gestao-visao-global': typeof AppGestaoVisaoGlobalRoute
   '/_app/goals': typeof AppGoalsRoute
+  '/_app/growth-digest': typeof AppGrowthDigestRoute
   '/_app/influencers': typeof AppInfluencersRoute
   '/_app/integrations': typeof AppIntegrationsRouteWithChildren
   '/_app/inteligencia-comercial': typeof AppInteligenciaComercialRouteWithChildren
@@ -1070,6 +1079,7 @@ export interface FileRouteTypes {
     | '/gestao-comercial'
     | '/gestao-visao-global'
     | '/goals'
+    | '/growth-digest'
     | '/influencers'
     | '/integrations'
     | '/inteligencia-comercial'
@@ -1182,6 +1192,7 @@ export interface FileRouteTypes {
     | '/gestao-comercial'
     | '/gestao-visao-global'
     | '/goals'
+    | '/growth-digest'
     | '/influencers'
     | '/integrations'
     | '/inteligencia-comercial'
@@ -1295,6 +1306,7 @@ export interface FileRouteTypes {
     | '/_app/gestao-comercial'
     | '/_app/gestao-visao-global'
     | '/_app/goals'
+    | '/_app/growth-digest'
     | '/_app/influencers'
     | '/_app/integrations'
     | '/_app/inteligencia-comercial'
@@ -1605,6 +1617,13 @@ declare module '@tanstack/react-router' {
       path: '/influencers'
       fullPath: '/influencers'
       preLoaderRoute: typeof AppInfluencersRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/growth-digest': {
+      id: '/_app/growth-digest'
+      path: '/growth-digest'
+      fullPath: '/growth-digest'
+      preLoaderRoute: typeof AppGrowthDigestRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/goals': {
@@ -2385,6 +2404,7 @@ interface AppRouteChildren {
   AppGestaoComercialRoute: typeof AppGestaoComercialRoute
   AppGestaoVisaoGlobalRoute: typeof AppGestaoVisaoGlobalRoute
   AppGoalsRoute: typeof AppGoalsRoute
+  AppGrowthDigestRoute: typeof AppGrowthDigestRoute
   AppInfluencersRoute: typeof AppInfluencersRoute
   AppIntegrationsRoute: typeof AppIntegrationsRouteWithChildren
   AppInteligenciaComercialRoute: typeof AppInteligenciaComercialRouteWithChildren
@@ -2445,6 +2465,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppGestaoComercialRoute: AppGestaoComercialRoute,
   AppGestaoVisaoGlobalRoute: AppGestaoVisaoGlobalRoute,
   AppGoalsRoute: AppGoalsRoute,
+  AppGrowthDigestRoute: AppGrowthDigestRoute,
   AppInfluencersRoute: AppInfluencersRoute,
   AppIntegrationsRoute: AppIntegrationsRouteWithChildren,
   AppInteligenciaComercialRoute: AppInteligenciaComercialRouteWithChildren,
