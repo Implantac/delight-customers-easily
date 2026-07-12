@@ -2,16 +2,18 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { motion } from "framer-motion";
+import { useState } from "react";
 import {
   Rocket, TrendingUp, TrendingDown, Minus, Sparkles,
-  AlertTriangle, CheckCircle2, Activity,
+  AlertTriangle, CheckCircle2, Activity, ArrowUpRight,
 } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { useCurrentOrg } from "@/lib/org";
-import { getUseSuccessReport, listUseSuccessHistory, type SuccessClass, type SuccessPillar } from "@/lib/use-success.functions";
+import { getUseSuccessReport, listUseSuccessHistory, listPillarHistory, type SuccessClass, type SuccessPillar } from "@/lib/use-success.functions";
 import { ActionCard } from "@/components/action-card";
 import { cn } from "@/lib/utils";
 
