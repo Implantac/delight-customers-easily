@@ -12,6 +12,7 @@ import { Timeline, type TimelineItem } from "@/components/timeline";
 import {
   ArrowLeft, Mail, Phone, Briefcase, Trash2, Building2, KanbanSquare,
   Clock, MessageCircle, History as HistoryIcon, Sparkles, Paperclip, LayoutGrid,
+  Zap,
 } from "lucide-react";
 import { AuditHistory } from "@/components/audit-history";
 import { SendEmailDialog } from "@/components/send-email-dialog";
@@ -21,6 +22,8 @@ import { TagPicker } from "@/components/tag-picker";
 import { QuickActionsDock } from "@/components/quick-actions-dock";
 import { whatsappLink } from "@/lib/wa";
 import { toast } from "sonner";
+import { useServerFn } from "@tanstack/react-start";
+import { listSequences, enrollContact } from "@/lib/sequences.functions";
 
 export const Route = createFileRoute("/_app/contacts/$id")({ component: ContactDetail });
 
@@ -87,6 +90,20 @@ function ContactDetail() {
       if (error) throw error;
     },
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["contacts"] }); toast.success("Removido"); navigate({ to: "/contacts" }); },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  const listSeqFn = useServerFn(listSequences);
+  const enrollFn = useServerFn(enrollContact);
+  const { data: seqData } = useQuery({
+    queryKey: ["sequences-for-enroll", contact?.organization_id],
+    enabled: !!contact?.organization_id,
+    queryFn: () => listSeqFn({ data: { organization_id: contact!.organization_id! } }),
+  });
+  const enroll = useMutation({
+    mutationFn: (sequence_id: string) =>
+      enrollFn({ data: { organization_id: contact!.organization_id!, sequence_id, contact_id: id } }),
+    onSuccess: (r: any) => toast.success(`Contato inscrito — ${r?.created ?? 0} atividades criadas`),
     onError: (e: any) => toast.error(e.message),
   });
 
@@ -355,6 +372,37 @@ function ContactDetail() {
               </>
             )}
           </Card>
+
+          {(seqData?.sequences ?? []).filter((s: any) => s.active && s.step_count > 0).length > 0 && (
+            <Card className="p-4">
+              <h3 className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+                <Zap className="h-3 w-3" />
+                Inscrever em sequência
+              </h3>
+              <div className="mt-3 space-y-1.5">
+                {(seqData?.sequences ?? [])
+                  .filter((s: any) => s.active && s.step_count > 0)
+                  .slice(0, 6)
+                  .map((s: any) => (
+                    <div key={s.id} className="flex items-center justify-between gap-2 rounded-md border p-2 text-[13px]">
+                      <div className="min-w-0">
+                        <div className="truncate font-medium">{s.name}</div>
+                        <div className="text-[11px] text-muted-foreground">{s.step_count} passo{s.step_count === 1 ? "" : "s"}</div>
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="h-7 shrink-0"
+                        disabled={enroll.isPending}
+                        onClick={() => enroll.mutate(s.id)}
+                      >
+                        Inscrever
+                      </Button>
+                    </div>
+                  ))}
+              </div>
+            </Card>
+          )}
 
           <Attachments entityType="contact" entityId={contact.id} />
         </aside>
