@@ -844,6 +844,17 @@ function CompanyDetail() {
           <Attachments entityType="company" entityId={company.id} />
         </aside>
       </div>
+
+      {company.organization_id && (
+        <QuickActionsDock
+          organizationId={company.organization_id}
+          companyId={company.id}
+          contactId={primaryContact?.id ?? null}
+          phone={primaryContact?.phone ?? company.phone ?? null}
+          email={primaryContact?.email ?? company.email ?? null}
+          name={company.name}
+        />
+      )}
     </div>
   );
 }
