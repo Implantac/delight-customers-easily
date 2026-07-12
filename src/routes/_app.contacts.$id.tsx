@@ -93,6 +93,20 @@ function ContactDetail() {
     onError: (e: any) => toast.error(e.message),
   });
 
+  const listSeqFn = useServerFn(listSequences);
+  const enrollFn = useServerFn(enrollContact);
+  const { data: seqData } = useQuery({
+    queryKey: ["sequences-for-enroll", contact?.organization_id],
+    enabled: !!contact?.organization_id,
+    queryFn: () => listSeqFn({ data: { organization_id: contact!.organization_id! } }),
+  });
+  const enroll = useMutation({
+    mutationFn: (sequence_id: string) =>
+      enrollFn({ data: { organization_id: contact!.organization_id!, sequence_id, contact_id: id } }),
+    onSuccess: (r: any) => toast.success(`Contato inscrito — ${r?.created ?? 0} atividades criadas`),
+    onError: (e: any) => toast.error(e.message),
+  });
+
   if (isLoading) return <div className="p-4 md:p-8 space-y-4"><Skeleton className="h-8 w-64" /><Skeleton className="h-40 w-full max-w-2xl" /></div>;
   if (!contact) return <div className="p-4 md:p-8"><p className="text-muted-foreground">Contato não encontrado.</p></div>;
 
