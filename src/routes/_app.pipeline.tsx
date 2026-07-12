@@ -69,7 +69,7 @@ function PipelinePage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("deals")
-        .select("id, title, stage, value, user_id, updated_at, created_at, expected_close, contact_id, company_id, contacts(name), companies(name)")
+        .select("id, title, stage, value, user_id, updated_at, created_at, expected_close, contact_id, company_id, contacts(name), companies(name), ai_deal_insights(win_probability, next_actions, risk_level, summary)")
         .eq("organization_id", orgId!)
         .order("created_at", { ascending: false });
       if (error) throw error;
