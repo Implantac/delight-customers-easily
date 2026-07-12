@@ -81,9 +81,71 @@ function GrowthDigestPage() {
           {Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} className="h-32" />)}
         </div>
       ) : (
-        <DigestBody d={q.data} />
+        <>
+          <TrendStrip orgId={orgId!} currentWeek={weeksBack} onPick={setWeeksBack} />
+          <DigestBody d={q.data} />
+        </>
       )}
     </div>
+  );
+}
+
+function TrendStrip({ orgId, currentWeek, onPick }: { orgId: string; currentWeek: number; onPick: (w: number) => void }) {
+  const digestFn = useServerFn(getGrowthDigest);
+  const weeks = [3, 2, 1, 0];
+  const q = useQuery({
+    queryKey: ["growth-digest-trend", orgId],
+    enabled: !!orgId,
+    staleTime: 10 * 60_000,
+    queryFn: async () => {
+      const results = await Promise.all(
+        weeks.map((w) => digestFn({ data: { organization_id: orgId, weeks_back: w } }).catch(() => null)),
+      );
+      return results.map((d, i) => ({ w: weeks[i], d }));
+    },
+  });
+
+  if (!q.data) return <Skeleton className="h-24" />;
+  const rows = q.data.filter((r): r is { w: number; d: GrowthDigest } => !!r.d);
+  const maxRev = Math.max(1, ...rows.map((r) => r.d.revenue.won));
+
+  return (
+    <Card className="p-4">
+      <div className="flex items-center justify-between mb-3">
+        <div className="text-xs font-semibold uppercase text-muted-foreground">Últimas 4 semanas</div>
+        <div className="text-[10px] text-muted-foreground">clique para navegar</div>
+      </div>
+      <div className="grid grid-cols-4 gap-2">
+        {rows.map(({ w, d }) => {
+          const h = Math.max(6, Math.round((d.revenue.won / maxRev) * 56));
+          const active = w === currentWeek;
+          return (
+            <button
+              key={w}
+              onClick={() => onPick(w)}
+              className={cn(
+                "group flex flex-col items-center gap-1 rounded-lg border p-2 transition text-left",
+                active ? "border-primary bg-primary/5" : "hover:bg-muted/50",
+              )}
+            >
+              <div className="h-14 w-full flex items-end justify-center">
+                <div
+                  className={cn("w-8 rounded-t transition-all", active ? "bg-primary" : "bg-muted-foreground/40 group-hover:bg-primary/60")}
+                  style={{ height: `${h}px` }}
+                />
+              </div>
+              <div className="text-[10px] uppercase text-muted-foreground">
+                {w === 0 ? "Atual" : w === 1 ? "-1 sem" : `-${w} sem`}
+              </div>
+              <div className="text-xs font-semibold tabular-nums">{fmtBRL(d.revenue.won)}</div>
+              {d.score.current !== null && (
+                <div className="text-[10px] text-muted-foreground">score {d.score.current}</div>
+              )}
+            </button>
+          );
+        })}
+      </div>
+    </Card>
   );
 }
 
