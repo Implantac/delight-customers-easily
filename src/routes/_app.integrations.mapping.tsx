@@ -99,11 +99,26 @@ function MappingScreen() {
   const [newTarget, setNewTarget] = useState("");
   const [newTransform, setNewTransform] = useState<Transform>("none");
   const [aiSample, setAiSample] = useState("");
+  const [selectedIntegration, setSelectedIntegration] = useState<string>("");
+  const [autoResult, setAutoResult] = useState<{
+    headers: string[];
+    sample_rows: string[][];
+    mapping: Record<string, { field: string; confidence: number; reason: string }>;
+    source: { provider: string; sampled: number };
+  } | null>(null);
 
   const fetchList = useServerFn(listFieldMappings);
   const upsert = useServerFn(upsertFieldMapping);
   const del = useServerFn(deleteFieldMapping);
   const aiSuggest = useServerFn(suggestFieldMapping);
+  const listInteg = useServerFn(listActiveErpIntegrations);
+  const autoDetect = useServerFn(autoDetectFromIntegration);
+
+  const integrationsQ = useQuery({
+    queryKey: ["erp-integrations-active", orgId],
+    queryFn: () => listInteg({ data: { organization_id: orgId! } }),
+    enabled: !!orgId,
+  });
 
   const mappings = useQuery({
     queryKey: ["field-mappings", orgId, provider, entity],
