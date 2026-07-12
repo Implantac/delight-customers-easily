@@ -2,11 +2,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Workflow, Plus, Pencil, Trash2, Users as UsersIcon, ListChecks, PlayCircle, MessageSquare, Mail } from "lucide-react";
+import { Workflow, Plus, Pencil, Trash2, Users as UsersIcon, ListChecks, PlayCircle, MessageSquare, Mail, Copy } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { useCurrentOrg } from "@/lib/org";
 import { useCanManage } from "@/lib/permissions";
-import { listSequences, upsertSequence, deleteSequence, listPausedByReply, updateEnrollment } from "@/lib/sequences.functions";
+import { listSequences, upsertSequence, deleteSequence, duplicateSequence, listPausedByReply, updateEnrollment } from "@/lib/sequences.functions";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -28,6 +28,7 @@ function SequencesPage() {
   const fetchSeq = useServerFn(listSequences);
   const upsertFn = useServerFn(upsertSequence);
   const delFn = useServerFn(deleteSequence);
+  const dupFn = useServerFn(duplicateSequence);
   const fetchPaused = useServerFn(listPausedByReply);
   const updateEnrollFn = useServerFn(updateEnrollment);
 
@@ -84,6 +85,15 @@ function SequencesPage() {
     mutationFn: (id: string) => delFn({ data: { id } }),
     onSuccess: () => {
       toast.success("Sequência excluída");
+      qc.invalidateQueries({ queryKey: ["sequences"] });
+    },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+  const duplicate = useMutation({
+    mutationFn: (id: string) => dupFn({ data: { id } }),
+    onSuccess: () => {
+      toast.success("Sequência duplicada (inativa)");
       qc.invalidateQueries({ queryKey: ["sequences"] });
     },
     onError: (e: any) => toast.error(e.message),
@@ -208,6 +218,15 @@ function SequencesPage() {
                         }}
                       >
                         <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        disabled={duplicate.isPending}
+                        onClick={() => duplicate.mutate(s.id)}
+                        title="Duplicar"
+                      >
+                        <Copy className="h-4 w-4" />
                       </Button>
                       <Button
                         variant="ghost"
