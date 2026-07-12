@@ -28,6 +28,9 @@ function SequencesPage() {
   const fetchSeq = useServerFn(listSequences);
   const upsertFn = useServerFn(upsertSequence);
   const delFn = useServerFn(deleteSequence);
+  const fetchPaused = useServerFn(listPausedByReply);
+  const updateEnrollFn = useServerFn(updateEnrollment);
+
 
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<{ id?: string; name: string; description: string; active: boolean }>({
