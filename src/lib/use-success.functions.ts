@@ -48,6 +48,16 @@ export type SuccessAction = {
   channel?: "visita" | "whatsapp" | "email" | "ligacao" | "campanha";
 };
 
+export type SuccessDelta = {
+  prev_score: number | null;
+  prev_computed_at: string | null;
+  delta: number;                              // score - prev_score
+  direction: "up" | "down" | "flat" | "first";
+  explanation: string;                        // frase pronta em pt-BR
+  top_positive: { key: string; label: string; delta: number }[];
+  top_negative: { key: string; label: string; delta: number }[];
+};
+
 export type UseSuccessReport = {
   score: number;
   classification: SuccessClass;
@@ -61,6 +71,7 @@ export type UseSuccessReport = {
     open_pipeline: number;
     at_risk: number;
   };
+  delta: SuccessDelta;
   computed_at: string;
 };
 
