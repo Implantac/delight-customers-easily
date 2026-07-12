@@ -340,14 +340,67 @@ function PipelinePage() {
                 }`}
               >
                 <div className="sticky top-0 z-10 -mx-4 -mt-4 mb-4 rounded-t-[2rem] bg-card/60 px-5 py-4 backdrop-blur-xl border-b border-border/10">
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between gap-2">
                     <span className="text-[13px] font-bold uppercase tracking-widest text-foreground/80">{stage.label}</span>
-                    <Badge variant="secondary" className="rounded-full px-2 py-0 text-[10px] bg-secondary/80 font-bold border-none">
-                      {items.length}
-                    </Badge>
+                    <div className="flex items-center gap-1">
+                      <Badge variant="secondary" className="rounded-full px-2 py-0 text-[10px] bg-secondary/80 font-bold border-none">
+                        {items.length}
+                      </Badge>
+                      {stage.id !== "won" && stage.id !== "lost" && (
+                        <Button
+                          type="button"
+                          size="icon"
+                          variant="ghost"
+                          className="h-6 w-6 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10"
+                          onClick={() => {
+                            setQuickAddStage(stage.id as Stage);
+                            setQuickAddTitle("");
+                          }}
+                          title="Adicionar rápido nesta coluna"
+                          aria-label={`Adicionar rápido em ${stage.label}`}
+                        >
+                          <Plus className="h-3.5 w-3.5" />
+                        </Button>
+                      )}
+                    </div>
                   </div>
                   <p className="mt-1 text-sm font-display font-bold tracking-tight text-primary/80">{fmtBRL(sum)}</p>
                 </div>
+
+                {quickAddStage === stage.id && (
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      quickAdd.mutate({ title: quickAddTitle, stage: stage.id as Stage });
+                    }}
+                    className="mb-2 flex items-center gap-1.5 rounded-xl border border-primary/30 bg-primary/5 p-1.5"
+                  >
+                    <Input
+                      autoFocus
+                      value={quickAddTitle}
+                      onChange={(e) => setQuickAddTitle(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Escape") { setQuickAddStage(null); setQuickAddTitle(""); }
+                      }}
+                      onBlur={() => {
+                        // se saiu vazio sem submeter, fecha
+                        if (!quickAddTitle.trim() && !quickAdd.isPending) setQuickAddStage(null);
+                      }}
+                      placeholder="Título do negócio…"
+                      maxLength={150}
+                      className="h-8 text-sm border-0 bg-transparent focus-visible:ring-0 shadow-none"
+                    />
+                    <Button
+                      type="submit"
+                      size="sm"
+                      className="h-7 px-2 text-xs"
+                      disabled={quickAdd.isPending || !quickAddTitle.trim()}
+                    >
+                      {quickAdd.isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : "Add"}
+                    </Button>
+                  </form>
+                )}
+
 
                 <div className="flex-1 space-y-2">
                   {items.length === 0 && (
