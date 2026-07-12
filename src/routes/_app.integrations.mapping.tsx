@@ -50,6 +50,8 @@ import {
   Loader2,
   GitBranch,
   Wand2,
+  Radar,
+  CheckCircle2,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/integrations/mapping")({
