@@ -2,11 +2,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Workflow, Plus, Pencil, Trash2, Users as UsersIcon, ListChecks } from "lucide-react";
+import { Workflow, Plus, Pencil, Trash2, Users as UsersIcon, ListChecks, PlayCircle, MessageSquare, Mail } from "lucide-react";
 import { PageHeader } from "@/components/page-header";
 import { useCurrentOrg } from "@/lib/org";
 import { useCanManage } from "@/lib/permissions";
-import { listSequences, upsertSequence, deleteSequence } from "@/lib/sequences.functions";
+import { listSequences, upsertSequence, deleteSequence, listPausedByReply, updateEnrollment } from "@/lib/sequences.functions";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -27,6 +28,9 @@ function SequencesPage() {
   const fetchSeq = useServerFn(listSequences);
   const upsertFn = useServerFn(upsertSequence);
   const delFn = useServerFn(deleteSequence);
+  const fetchPaused = useServerFn(listPausedByReply);
+  const updateEnrollFn = useServerFn(updateEnrollment);
+
 
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<{ id?: string; name: string; description: string; active: boolean }>({
@@ -40,6 +44,22 @@ function SequencesPage() {
     queryFn: () => fetchSeq({ data: { organization_id: orgId! } }),
     enabled: !!orgId,
   });
+
+  const { data: paused } = useQuery({
+    queryKey: ["sequences-paused-by-reply", orgId],
+    queryFn: () => fetchPaused({ data: { organization_id: orgId!, limit: 30 } }),
+    enabled: !!orgId,
+  });
+
+  const resume = useMutation({
+    mutationFn: (id: string) => updateEnrollFn({ data: { id, status: "active" } }),
+    onSuccess: () => {
+      toast.success("Cadência retomada");
+      qc.invalidateQueries({ queryKey: ["sequences-paused-by-reply"] });
+    },
+    onError: (e: any) => toast.error(e.message),
+  });
+
 
   const upsert = useMutation({
     mutationFn: () =>
@@ -86,6 +106,55 @@ function SequencesPage() {
           </Button>
         ) : undefined}
       />
+
+      {(paused?.items ?? []).length > 0 && (
+        <Card className="border-amber-500/30 bg-amber-500/5">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <MessageSquare className="h-4 w-4 text-amber-600" />
+                <h3 className="text-sm font-semibold">Cadências pausadas por resposta ({paused!.items.length})</h3>
+              </div>
+              <p className="text-xs text-muted-foreground">Contato respondeu — assuma o follow-up manualmente ou retome quando fizer sentido.</p>
+            </div>
+            <div className="divide-y divide-amber-500/10">
+              {paused!.items.map((p: any) => {
+                const c = p.contact;
+                const name = c ? `${c.first_name ?? ""} ${c.last_name ?? ""}`.trim() || c.email || "—" : "—";
+                const isEmail = (p.paused_reason ?? "").toLowerCase().includes("e-mail");
+                return (
+                  <div key={p.id} className="flex items-center justify-between gap-3 py-2">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        {isEmail ? <Mail className="h-3 w-3 text-muted-foreground" /> : <MessageSquare className="h-3 w-3 text-muted-foreground" />}
+                        <p className="text-sm font-medium truncate">{name}</p>
+                        {p.sequence?.name && (
+                          <Badge variant="outline" className="text-[10px]">{p.sequence.name}</Badge>
+                        )}
+                      </div>
+                      <p className="text-xs text-muted-foreground truncate">
+                        {p.paused_reason}
+                        {p.paused_at ? ` · ${new Date(p.paused_at).toLocaleDateString("pt-BR")}` : ""}
+                        {c?.email ? ` · ${c.email}` : ""}
+                      </p>
+                    </div>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={resume.isPending}
+                      onClick={() => resume.mutate(p.id)}
+                    >
+                      <PlayCircle className="h-4 w-4 mr-1" /> Retomar
+                    </Button>
+                  </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+
 
       {isLoading ? (
         <div className="grid gap-3 md:grid-cols-2">
