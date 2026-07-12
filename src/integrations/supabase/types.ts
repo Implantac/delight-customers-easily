@@ -7997,6 +7997,8 @@ export type Database = {
           last_dispatched_at: string | null
           last_dispatched_step: number
           organization_id: string
+          paused_at: string | null
+          paused_reason: string | null
           sequence_id: string
           status: string
         }
@@ -8009,6 +8011,8 @@ export type Database = {
           last_dispatched_at?: string | null
           last_dispatched_step?: number
           organization_id: string
+          paused_at?: string | null
+          paused_reason?: string | null
           sequence_id: string
           status?: string
         }
@@ -8021,6 +8025,8 @@ export type Database = {
           last_dispatched_at?: string | null
           last_dispatched_step?: number
           organization_id?: string
+          paused_at?: string | null
+          paused_reason?: string | null
           sequence_id?: string
           status?: string
         }
