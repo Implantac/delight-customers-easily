@@ -364,6 +364,72 @@ export const getUseSuccessReport = createServerFn({ method: "POST" })
             ? "Atenção — pilares fracos podem virar risco de receita."
             : "Situação crítica — priorize as ações abaixo esta semana.";
 
+    // ---------- Delta vs. snapshot anterior ----------
+    const { data: prevRows } = await safe(
+      supabase
+        .from("use_success_snapshots")
+        .select("score, pillars, computed_at")
+        .eq("organization_id", org)
+        .order("computed_at", { ascending: false })
+        .limit(1),
+      { data: null as any },
+    );
+    const prev = (prevRows ?? [])[0] as
+      | { score: number; pillars: SuccessPillar[]; computed_at: string }
+      | undefined;
+
+    let delta: SuccessDelta;
+    if (!prev) {
+      delta = {
+        prev_score: null,
+        prev_computed_at: null,
+        delta: 0,
+        direction: "first",
+        explanation: "Primeira medição do USE Success Score — os próximos recalculos mostrarão a variação.",
+        top_positive: [],
+        top_negative: [],
+      };
+    } else {
+      const diffs = pillars.map((p) => {
+        const before = prev.pillars.find((x) => x.key === p.key)?.score ?? p.score;
+        return { key: p.key, label: p.label, delta: p.score - before };
+      });
+      const top_positive = diffs.filter((d) => d.delta > 0).sort((a, b) => b.delta - a.delta).slice(0, 2);
+      const top_negative = diffs.filter((d) => d.delta < 0).sort((a, b) => a.delta - b.delta).slice(0, 2);
+      const d = score - prev.score;
+      const dir: SuccessDelta["direction"] = d > 1 ? "up" : d < -1 ? "down" : "flat";
+      const parts: string[] = [];
+      if (dir === "up") parts.push(`Score subiu ${d} ponto${Math.abs(d) === 1 ? "" : "s"}`);
+      else if (dir === "down") parts.push(`Score caiu ${Math.abs(d)} ponto${Math.abs(d) === 1 ? "" : "s"}`);
+      else parts.push("Score estável");
+      if (top_positive[0]) parts.push(`impulso em ${top_positive[0].label} (+${top_positive[0].delta})`);
+      if (top_negative[0]) parts.push(`pressão em ${top_negative[0].label} (${top_negative[0].delta})`);
+      delta = {
+        prev_score: prev.score,
+        prev_computed_at: prev.computed_at,
+        delta: d,
+        direction: dir,
+        explanation: parts.join(" · ") + ".",
+        top_positive,
+        top_negative,
+      };
+    }
+
+    // ---------- Persistir novo snapshot (best-effort) ----------
+    await safe(
+      supabase.from("use_success_snapshots").insert({
+        organization_id: org,
+        score,
+        classification,
+        pillars: pillars as any,
+        revenue: {
+          won30, won_prev30: wonPrev30, growth,
+          open_pipeline: openPipeline, at_risk: atRisk,
+        } as any,
+      }) as unknown as PromiseLike<unknown>,
+      undefined,
+    );
+
     return {
       score,
       classification,
@@ -377,6 +443,27 @@ export const getUseSuccessReport = createServerFn({ method: "POST" })
         open_pipeline: openPipeline,
         at_risk: atRisk,
       },
+      delta,
       computed_at: new Date().toISOString(),
     };
+  });
+
+/** Histórico dos últimos snapshots — para sparkline no painel. */
+export const listUseSuccessHistory = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i: unknown) =>
+    z.object({
+      organization_id: z.string().uuid(),
+      limit: z.number().int().min(2).max(90).default(30),
+    }).parse(i),
+  )
+  .handler(async ({ data, context }) => {
+    const { data: rows, error } = await context.supabase
+      .from("use_success_snapshots")
+      .select("score, classification, computed_at")
+      .eq("organization_id", data.organization_id)
+      .order("computed_at", { ascending: false })
+      .limit(data.limit);
+    if (error) throw new Error(error.message);
+    return { history: (rows ?? []).slice().reverse() as { score: number; classification: string; computed_at: string }[] };
   });
