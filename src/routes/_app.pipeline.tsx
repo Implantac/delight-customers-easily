@@ -17,7 +17,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PageHeader } from "@/components/page-header";
 import { NextActionBlock } from "@/components/next-action-block";
 import { EmptyState } from "@/components/empty-state";
-import { Plus, Trash2, Target, TrendingUp, Trophy, Flame, DollarSign, Search, User, Clock } from "lucide-react";
+import { Plus, Trash2, Target, TrendingUp, Trophy, Flame, DollarSign, Search, User, Clock, Snowflake, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { dealSchema, fromForm } from "@/lib/validation";
 import { AIInsights } from "@/components/ai-insights";
@@ -57,6 +57,8 @@ function PipelinePage() {
   const [q, setQ] = useState("");
   const [minValue, setMinValue] = useState("");
   const [onlyMine, setOnlyMine] = useState(false);
+  const [quickAddStage, setQuickAddStage] = useState<Stage | null>(null);
+  const [quickAddTitle, setQuickAddTitle] = useState("");
 
 
 
@@ -133,6 +135,34 @@ function PipelinePage() {
 
   const fire = useServerFn(triggerWebhooks);
   const runRules = useServerFn(runAutomations);
+
+  // Quick-add inline no Kanban — só título + estágio, respeita a regra de "menos digitação".
+  const quickAdd = useMutation({
+    mutationFn: async ({ title, stage }: { title: string; stage: Stage }) => {
+      if (!orgId) throw new Error("Nenhuma organização ativa");
+      const clean = title.trim();
+      if (!clean) throw new Error("Informe um título");
+      const { data: inserted, error } = await supabase.from("deals").insert({
+        user_id: user!.id,
+        organization_id: orgId,
+        title: clean,
+        stage,
+        value: 0,
+      }).select("id, title, stage, value").single();
+      if (error) throw error;
+      if (orgId && inserted) {
+        const payload = { deal_id: inserted.id, deal: inserted, title: clean, stage, value: 0 };
+        fire({ data: { organization_id: orgId, event: "deal.created", payload } }).catch(() => {});
+        runRules({ data: { organization_id: orgId, event: "deal.created", payload } }).catch(() => {});
+      }
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["deals"] });
+      setQuickAddTitle("");
+      setQuickAddStage(null);
+    },
+    onError: (e: any) => toast.error(e.message),
+  });
 
   const move = useMutation({
     mutationFn: async ({ id, stage, prevStage, deal }: { id: string; stage: Stage; prevStage: Stage; deal: any }) => {
@@ -310,14 +340,67 @@ function PipelinePage() {
                 }`}
               >
                 <div className="sticky top-0 z-10 -mx-4 -mt-4 mb-4 rounded-t-[2rem] bg-card/60 px-5 py-4 backdrop-blur-xl border-b border-border/10">
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between gap-2">
                     <span className="text-[13px] font-bold uppercase tracking-widest text-foreground/80">{stage.label}</span>
-                    <Badge variant="secondary" className="rounded-full px-2 py-0 text-[10px] bg-secondary/80 font-bold border-none">
-                      {items.length}
-                    </Badge>
+                    <div className="flex items-center gap-1">
+                      <Badge variant="secondary" className="rounded-full px-2 py-0 text-[10px] bg-secondary/80 font-bold border-none">
+                        {items.length}
+                      </Badge>
+                      {stage.id !== "won" && stage.id !== "lost" && (
+                        <Button
+                          type="button"
+                          size="icon"
+                          variant="ghost"
+                          className="h-6 w-6 rounded-full text-muted-foreground hover:text-primary hover:bg-primary/10"
+                          onClick={() => {
+                            setQuickAddStage(stage.id as Stage);
+                            setQuickAddTitle("");
+                          }}
+                          title="Adicionar rápido nesta coluna"
+                          aria-label={`Adicionar rápido em ${stage.label}`}
+                        >
+                          <Plus className="h-3.5 w-3.5" />
+                        </Button>
+                      )}
+                    </div>
                   </div>
                   <p className="mt-1 text-sm font-display font-bold tracking-tight text-primary/80">{fmtBRL(sum)}</p>
                 </div>
+
+                {quickAddStage === stage.id && (
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      quickAdd.mutate({ title: quickAddTitle, stage: stage.id as Stage });
+                    }}
+                    className="mb-2 flex items-center gap-1.5 rounded-xl border border-primary/30 bg-primary/5 p-1.5"
+                  >
+                    <Input
+                      autoFocus
+                      value={quickAddTitle}
+                      onChange={(e) => setQuickAddTitle(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Escape") { setQuickAddStage(null); setQuickAddTitle(""); }
+                      }}
+                      onBlur={() => {
+                        // se saiu vazio sem submeter, fecha
+                        if (!quickAddTitle.trim() && !quickAdd.isPending) setQuickAddStage(null);
+                      }}
+                      placeholder="Título do negócio…"
+                      maxLength={150}
+                      className="h-8 text-sm border-0 bg-transparent focus-visible:ring-0 shadow-none"
+                    />
+                    <Button
+                      type="submit"
+                      size="sm"
+                      className="h-7 px-2 text-xs"
+                      disabled={quickAdd.isPending || !quickAddTitle.trim()}
+                    >
+                      {quickAdd.isPending ? <Loader2 className="h-3 w-3 animate-spin" /> : "Add"}
+                    </Button>
+                  </form>
+                )}
+
 
                 <div className="flex-1 space-y-2">
                   {items.length === 0 && (
@@ -378,19 +461,33 @@ function PipelinePage() {
                           const entered = stageEntries?.get(d.id) ?? d.created_at;
                           if (!entered) return null;
                           const days = Math.max(0, Math.floor((Date.now() - new Date(entered).getTime()) / 86400000));
-                          const stale = days >= 14;
+                          const frozen = days >= 14;
+                          const cold = !frozen && days >= 5;
+                          const StaleIcon = (cold || frozen) ? Snowflake : Clock;
+                          const staleLabel = frozen
+                            ? `Gelado · ${days}d sem interação`
+                            : cold
+                              ? `Frio · ${days}d sem interação`
+                              : `Entrou no estágio em ${new Date(entered).toLocaleDateString("pt-BR")}`;
+                          const staleText = frozen
+                            ? `gelado ${days}d`
+                            : cold
+                              ? `frio ${days}d`
+                              : (days === 0 ? "hoje" : `${days}d no estágio`);
                           return (
                             <div className="mt-2 flex flex-wrap items-center gap-1.5">
                               <span
                                 className={`inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] font-medium ${
-                                  stale
-                                    ? "bg-amber-500/15 text-amber-700 dark:text-amber-400"
-                                    : "bg-muted text-muted-foreground"
+                                  frozen
+                                    ? "bg-sky-500/15 text-sky-700 dark:text-sky-300 ring-1 ring-sky-500/30"
+                                    : cold
+                                      ? "bg-sky-500/10 text-sky-700/90 dark:text-sky-300/90"
+                                      : "bg-muted text-muted-foreground"
                                 }`}
-                                title={`Entrou no estágio em ${new Date(entered).toLocaleDateString("pt-BR")}`}
+                                title={staleLabel}
                               >
-                                <Clock className="h-2.5 w-2.5" />
-                                {days === 0 ? "hoje" : `${days}d no estágio`}
+                                <StaleIcon className="h-2.5 w-2.5" />
+                                {staleText}
                               </span>
                               {d.expected_close && (() => {
                                 const dd = Math.floor((new Date(d.expected_close as string).getTime() - Date.now()) / 86400000);
@@ -409,6 +506,7 @@ function PipelinePage() {
                             </div>
                           );
                         })()}
+
 
                       </Card>
                     );
