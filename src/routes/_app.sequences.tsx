@@ -45,6 +45,22 @@ function SequencesPage() {
     enabled: !!orgId,
   });
 
+  const { data: paused } = useQuery({
+    queryKey: ["sequences-paused-by-reply", orgId],
+    queryFn: () => fetchPaused({ data: { organization_id: orgId!, limit: 30 } }),
+    enabled: !!orgId,
+  });
+
+  const resume = useMutation({
+    mutationFn: (id: string) => updateEnrollFn({ data: { id, status: "active" } }),
+    onSuccess: () => {
+      toast.success("Cadência retomada");
+      qc.invalidateQueries({ queryKey: ["sequences-paused-by-reply"] });
+    },
+    onError: (e: any) => toast.error(e.message),
+  });
+
+
   const upsert = useMutation({
     mutationFn: () =>
       upsertFn({
