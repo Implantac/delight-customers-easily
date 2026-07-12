@@ -461,19 +461,33 @@ function PipelinePage() {
                           const entered = stageEntries?.get(d.id) ?? d.created_at;
                           if (!entered) return null;
                           const days = Math.max(0, Math.floor((Date.now() - new Date(entered).getTime()) / 86400000));
-                          const stale = days >= 14;
+                          const frozen = days >= 14;
+                          const cold = !frozen && days >= 5;
+                          const StaleIcon = (cold || frozen) ? Snowflake : Clock;
+                          const staleLabel = frozen
+                            ? `Gelado · ${days}d sem interação`
+                            : cold
+                              ? `Frio · ${days}d sem interação`
+                              : `Entrou no estágio em ${new Date(entered).toLocaleDateString("pt-BR")}`;
+                          const staleText = frozen
+                            ? `gelado ${days}d`
+                            : cold
+                              ? `frio ${days}d`
+                              : (days === 0 ? "hoje" : `${days}d no estágio`);
                           return (
                             <div className="mt-2 flex flex-wrap items-center gap-1.5">
                               <span
                                 className={`inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] font-medium ${
-                                  stale
-                                    ? "bg-amber-500/15 text-amber-700 dark:text-amber-400"
-                                    : "bg-muted text-muted-foreground"
+                                  frozen
+                                    ? "bg-sky-500/15 text-sky-700 dark:text-sky-300 ring-1 ring-sky-500/30"
+                                    : cold
+                                      ? "bg-sky-500/10 text-sky-700/90 dark:text-sky-300/90"
+                                      : "bg-muted text-muted-foreground"
                                 }`}
-                                title={`Entrou no estágio em ${new Date(entered).toLocaleDateString("pt-BR")}`}
+                                title={staleLabel}
                               >
-                                <Clock className="h-2.5 w-2.5" />
-                                {days === 0 ? "hoje" : `${days}d no estágio`}
+                                <StaleIcon className="h-2.5 w-2.5" />
+                                {staleText}
                               </span>
                               {d.expected_close && (() => {
                                 const dd = Math.floor((new Date(d.expected_close as string).getTime() - Date.now()) / 86400000);
@@ -492,6 +506,7 @@ function PipelinePage() {
                             </div>
                           );
                         })()}
+
 
                       </Card>
                     );
