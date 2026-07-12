@@ -91,6 +91,20 @@ function formatDate(iso: string) {
   return d.toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "2-digit" });
 }
 
+function dayBucket(iso: string): { key: string; label: string; sort: number } {
+  const d = new Date(iso);
+  const startOfDay = (x: Date) => new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime();
+  const today = startOfDay(new Date());
+  const itemDay = startOfDay(d);
+  const diffDays = Math.round((today - itemDay) / 86400000);
+  if (diffDays === 0) return { key: "today", label: "Hoje", sort: itemDay };
+  if (diffDays === 1) return { key: "yesterday", label: "Ontem", sort: itemDay };
+  if (diffDays > 1 && diffDays < 7) return { key: "week", label: "Esta semana", sort: itemDay };
+  if (diffDays >= 7 && diffDays < 30) return { key: "month", label: "Este mês", sort: itemDay };
+  const label = d.toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
+  return { key: `m-${d.getFullYear()}-${d.getMonth()}`, label: label.charAt(0).toUpperCase() + label.slice(1), sort: itemDay };
+}
+
 export function Timeline({
   items,
   emptyLabel = "Nada por aqui.",
