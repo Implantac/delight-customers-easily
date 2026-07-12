@@ -176,6 +176,54 @@ export const deleteSequence = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+export const duplicateSequence = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((i) => z.object({ id: z.string().uuid() }).parse(i))
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const { data: src, error: srcErr } = await supabase
+      .from("sequences")
+      .select("organization_id, name, description")
+      .eq("id", data.id)
+      .single();
+    if (srcErr) throw new Error(srcErr.message);
+
+    const { data: created, error: insErr } = await supabase
+      .from("sequences")
+      .insert({
+        organization_id: src.organization_id,
+        name: `${src.name} (cópia)`,
+        description: src.description,
+        active: false,
+        created_by: userId!,
+      })
+      .select("id")
+      .single();
+    if (insErr) throw new Error(insErr.message);
+
+    const { data: steps, error: stepsErr } = await supabase
+      .from("sequence_steps")
+      .select("step_order, day_offset, type, subject, body")
+      .eq("sequence_id", data.id)
+      .order("step_order", { ascending: true });
+    if (stepsErr) throw new Error(stepsErr.message);
+
+    if (steps && steps.length > 0) {
+      const rows = steps.map((s: any) => ({
+        sequence_id: created.id,
+        organization_id: src.organization_id,
+        step_order: s.step_order,
+        day_offset: s.day_offset,
+        type: s.type,
+        subject: s.subject,
+        body: s.body,
+      }));
+      const { error: copyErr } = await supabase.from("sequence_steps").insert(rows);
+      if (copyErr) throw new Error(copyErr.message);
+    }
+    return { id: created.id };
+  });
+
 export const upsertStep = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((i) =>
