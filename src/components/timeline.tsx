@@ -125,85 +125,108 @@ export function Timeline({
       </div>
     );
   }
+  // agrupa por bucket temporal (Hoje / Ontem / Esta semana / Este mês / meses anteriores)
+  const groups = new Map<string, { label: string; sort: number; items: TimelineItem[] }>();
+  for (const item of items) {
+    const b = dayBucket(item.date);
+    const g = groups.get(b.key) ?? { label: b.label, sort: b.sort, items: [] };
+    g.items.push(item);
+    // buckets nomeados agregam vários dias; guarda o dia mais recente como sort
+    if (b.sort > g.sort) g.sort = b.sort;
+    groups.set(b.key, g);
+  }
+  const orderedGroups = Array.from(groups.entries()).sort((a, b) => b[1].sort - a[1].sort);
+
   return (
-    <ol className="relative space-y-3 before:absolute before:left-[11px] before:top-1 before:bottom-1 before:w-px before:bg-border/60">
-      {items.map((item) => {
-        const Icon =
-          KIND_ICONS[item.kind] ??
-          (item.kind === "activity" ? ACTIVITY_ICONS[item.type ?? "task"] ?? CheckSquare : CheckSquare);
-        const tone = KIND_TONE[item.kind];
-        return (
-          <li key={`${item.kind}-${item.id}`} className="relative pl-9">
-            <span
-              className={`absolute left-0 top-0.5 flex h-[22px] w-[22px] items-center justify-center rounded-full ring-2 ring-background ${tone.dot}`}
-              aria-hidden
-            >
-              <Icon className="h-3 w-3" />
-            </span>
-            <div className="group rounded-md border border-border/50 bg-card/40 px-3 py-2 transition-colors hover:border-border hover:bg-card">
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className={`inline-flex items-center rounded-full px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide ${tone.chip}`}>
-                      {tone.label}
-                    </span>
-                    {item.meta && (
-                      <span className="truncate text-[11px] text-muted-foreground tabular-nums">
-                        {item.meta}
-                      </span>
-                    )}
-                  </div>
-                  <p
-                    className={`mt-1 text-sm leading-snug ${
-                      item.completed ? "text-muted-foreground line-through" : "text-foreground"
-                    }`}
+    <div className="space-y-5">
+      {orderedGroups.map(([key, group]) => (
+        <section key={key}>
+          <h4 className="mb-2 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+            <span>{group.label}</span>
+            <span className="h-px flex-1 bg-border/60" aria-hidden />
+            <span className="tabular-nums text-muted-foreground/70">{group.items.length}</span>
+          </h4>
+          <ol className="relative space-y-3 before:absolute before:left-[11px] before:top-1 before:bottom-1 before:w-px before:bg-border/60">
+            {group.items.map((item) => {
+              const Icon =
+                KIND_ICONS[item.kind] ??
+                (item.kind === "activity" ? ACTIVITY_ICONS[item.type ?? "task"] ?? CheckSquare : CheckSquare);
+              const tone = KIND_TONE[item.kind];
+              return (
+                <li key={`${item.kind}-${item.id}`} className="relative pl-9">
+                  <span
+                    className={`absolute left-0 top-0.5 flex h-[22px] w-[22px] items-center justify-center rounded-full ring-2 ring-background ${tone.dot}`}
+                    aria-hidden
                   >
-                    {item.title}
-                  </p>
-                </div>
-                <div className="flex shrink-0 items-center gap-2">
-                  <time className="text-[11px] text-muted-foreground tabular-nums">
-                    {formatDate(item.date)}
-                  </time>
-                  {onEdit && item.kind === "activity" && (
-                    <button
-                      type="button"
-                      onClick={() => onEdit(item)}
-                      title="Editar este follow-up"
-                      aria-label="Editar follow-up"
-                      className="inline-flex h-6 w-6 items-center justify-center rounded-md border border-border/60 bg-background/60 text-muted-foreground opacity-0 transition hover:border-primary/60 hover:bg-primary/10 hover:text-primary focus-visible:opacity-100 group-hover:opacity-100"
-                    >
-                      <Pencil className="h-3 w-3" />
-                    </button>
-                  )}
-                  {onDelete && item.kind === "activity" && (
-                    <button
-                      type="button"
-                      onClick={() => onDelete(item)}
-                      title="Excluir este follow-up"
-                      aria-label="Excluir follow-up"
-                      className="inline-flex h-6 w-6 items-center justify-center rounded-md border border-border/60 bg-background/60 text-muted-foreground opacity-0 transition hover:border-destructive/60 hover:bg-destructive/10 hover:text-destructive focus-visible:opacity-100 group-hover:opacity-100"
-                    >
-                      <Trash2 className="h-3 w-3" />
-                    </button>
-                  )}
-                  {onScheduleFollowUp && (
-                    <button
-                      type="button"
-                      onClick={() => onScheduleFollowUp(item)}
-                      title="Agendar follow-up a partir deste evento"
-                      aria-label="Agendar follow-up"
-                      className="inline-flex h-6 w-6 items-center justify-center rounded-md border border-border/60 bg-background/60 text-muted-foreground opacity-0 transition hover:border-primary/60 hover:bg-primary/10 hover:text-primary focus-visible:opacity-100 group-hover:opacity-100"
-                    >
-                      <CalendarPlus className="h-3 w-3" />
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
-          </li>
-        );
-      })}
-    </ol>
+                    <Icon className="h-3 w-3" />
+                  </span>
+                  <div className="group rounded-md border border-border/50 bg-card/40 px-3 py-2 transition-colors hover:border-border hover:bg-card">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                          <span className={`inline-flex items-center rounded-full px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide ${tone.chip}`}>
+                            {tone.label}
+                          </span>
+                          {item.meta && (
+                            <span className="truncate text-[11px] text-muted-foreground tabular-nums">
+                              {item.meta}
+                            </span>
+                          )}
+                        </div>
+                        <p
+                          className={`mt-1 text-sm leading-snug ${
+                            item.completed ? "text-muted-foreground line-through" : "text-foreground"
+                          }`}
+                        >
+                          {item.title}
+                        </p>
+                      </div>
+                      <div className="flex shrink-0 items-center gap-2">
+                        <time className="text-[11px] text-muted-foreground tabular-nums">
+                          {formatDate(item.date)}
+                        </time>
+                        {onEdit && item.kind === "activity" && (
+                          <button
+                            type="button"
+                            onClick={() => onEdit(item)}
+                            title="Editar este follow-up"
+                            aria-label="Editar follow-up"
+                            className="inline-flex h-6 w-6 items-center justify-center rounded-md border border-border/60 bg-background/60 text-muted-foreground opacity-0 transition hover:border-primary/60 hover:bg-primary/10 hover:text-primary focus-visible:opacity-100 group-hover:opacity-100"
+                          >
+                            <Pencil className="h-3 w-3" />
+                          </button>
+                        )}
+                        {onDelete && item.kind === "activity" && (
+                          <button
+                            type="button"
+                            onClick={() => onDelete(item)}
+                            title="Excluir este follow-up"
+                            aria-label="Excluir follow-up"
+                            className="inline-flex h-6 w-6 items-center justify-center rounded-md border border-border/60 bg-background/60 text-muted-foreground opacity-0 transition hover:border-destructive/60 hover:bg-destructive/10 hover:text-destructive focus-visible:opacity-100 group-hover:opacity-100"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </button>
+                        )}
+                        {onScheduleFollowUp && (
+                          <button
+                            type="button"
+                            onClick={() => onScheduleFollowUp(item)}
+                            title="Agendar follow-up a partir deste evento"
+                            aria-label="Agendar follow-up"
+                            className="inline-flex h-6 w-6 items-center justify-center rounded-md border border-border/60 bg-background/60 text-muted-foreground opacity-0 transition hover:border-primary/60 hover:bg-primary/10 hover:text-primary focus-visible:opacity-100 group-hover:opacity-100"
+                          >
+                            <CalendarPlus className="h-3 w-3" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+        </section>
+      ))}
+    </div>
   );
 }
