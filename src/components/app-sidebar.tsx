@@ -10,7 +10,7 @@ import {
   Sun as SunIcon, ListChecks, CheckSquare, TrendingUp, Trophy, Repeat, DollarSign,
   Goal, GraduationCap, Workflow, FileInput, LineChart, Compass, MessagesSquare,
   Network, Headphones, Heart, Code2, Microscope, Bell, type LucideIcon,
-  ChevronRight,
+  ChevronRight, Gauge,
 } from "lucide-react";
 
 import { useAuth } from "@/lib/auth";
@@ -102,6 +102,7 @@ const navigationGroups: NavGroup[] = [
     items: [
       { to: "/multi-empresa", label: "Empresas e Filiais", icon: Building, tone: "primary", managerOnly: true },
       { to: "/dashboard-executivo", label: "Gestão Global", icon: LayoutDashboard, tone: "primary", managerOnly: true },
+      { to: "/gestao-comercial", label: "Comando Comercial", icon: Gauge, tone: "primary", managerOnly: true },
       { to: "/commissions", label: "Comissões", icon: DollarSign, tone: "success", managerOnly: true },
       { to: "/goals", label: "Metas & Ranking", icon: Trophy, tone: "accent", managerOnly: true },
       { to: "/forecast", label: "Previsão", icon: TrendingUp, tone: "info", managerOnly: true },
