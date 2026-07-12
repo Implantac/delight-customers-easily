@@ -12,6 +12,10 @@ import {
 } from "@/lib/erp-mappings.functions";
 import { suggestFieldMapping } from "@/lib/connect-hub-ai-suggest.functions";
 import {
+  listActiveErpIntegrations,
+  autoDetectFromIntegration,
+} from "@/lib/connect-hub-autodetect.functions";
+import {
   Card,
   CardContent,
   CardHeader,
@@ -46,6 +50,8 @@ import {
   Loader2,
   GitBranch,
   Wand2,
+  Radar,
+  CheckCircle2,
 } from "lucide-react";
 
 export const Route = createFileRoute("/_app/integrations/mapping")({
@@ -93,11 +99,26 @@ function MappingScreen() {
   const [newTarget, setNewTarget] = useState("");
   const [newTransform, setNewTransform] = useState<Transform>("none");
   const [aiSample, setAiSample] = useState("");
+  const [selectedIntegration, setSelectedIntegration] = useState<string>("");
+  const [autoResult, setAutoResult] = useState<{
+    headers: string[];
+    sample_rows: string[][];
+    mapping: Record<string, { field: string; confidence: number; reason: string }>;
+    source: { provider: string; sampled: number };
+  } | null>(null);
 
   const fetchList = useServerFn(listFieldMappings);
   const upsert = useServerFn(upsertFieldMapping);
   const del = useServerFn(deleteFieldMapping);
   const aiSuggest = useServerFn(suggestFieldMapping);
+  const listInteg = useServerFn(listActiveErpIntegrations);
+  const autoDetect = useServerFn(autoDetectFromIntegration);
+
+  const integrationsQ = useQuery({
+    queryKey: ["erp-integrations-active", orgId],
+    queryFn: () => listInteg({ data: { organization_id: orgId! } }),
+    enabled: !!orgId,
+  });
 
   const mappings = useQuery({
     queryKey: ["field-mappings", orgId, provider, entity],
@@ -217,6 +238,67 @@ function MappingScreen() {
       toast.error("IA indisponível", { description: e?.message }),
   });
 
+  const autoMut = useMutation({
+    mutationFn: async () => {
+      if (!selectedIntegration) throw new Error("Selecione uma integração ativa.");
+      if (entity === "orders") throw new Error("Detecção suporta apenas Empresas, Contatos e Produtos.");
+      return autoDetect({
+        data: {
+          organization_id: orgId!,
+          integration_id: selectedIntegration,
+          entity: entity as "contacts" | "companies" | "products",
+        },
+      });
+    },
+    onSuccess: (r: any) => {
+      setAutoResult({
+        headers: r?.headers ?? [],
+        sample_rows: r?.sample_rows ?? [],
+        mapping: r?.mapping ?? {},
+        source: r?.source ?? { provider: "", sampled: 0 },
+      });
+      const count = Object.keys(r?.mapping ?? {}).length;
+      if (r?.source?.sampled === 0) {
+        toast.info("Nenhuma amostra retornada pelo ERP para esta entidade.");
+      } else {
+        toast.success(`Detectados ${r?.source?.sampled ?? 0} registro(s) · ${count} sugestão(ões).`);
+      }
+    },
+    onError: (e: any) => toast.error("Falha na detecção", { description: e?.message }),
+  });
+
+  const applyAutoMut = useMutation({
+    mutationFn: async () => {
+      if (!autoResult) return 0;
+      const entries = Object.entries(autoResult.mapping);
+      let saved = 0;
+      for (const [src, info] of entries) {
+        try {
+          await upsert({
+            data: {
+              organization_id: orgId!,
+              provider,
+              entity,
+              source_field: src,
+              target_field: info.field,
+              transform: "none",
+            },
+          });
+          saved++;
+        } catch {
+          /* skip */
+        }
+      }
+      return saved;
+    },
+    onSuccess: (saved) => {
+      toast.success(`${saved} mapeamento(s) aplicados.`);
+      setAutoResult(null);
+      qc.invalidateQueries({ queryKey: ["field-mappings"] });
+    },
+    onError: (e: any) => toast.error("Falha ao aplicar", { description: e?.message }),
+  });
+
   if (!canManage) {
     return (
       <div className="p-6">
@@ -286,6 +368,161 @@ function MappingScreen() {
               </SelectContent>
             </Select>
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Detecção automática a partir do ERP conectado */}
+      <Card className="border-primary/40 bg-gradient-to-br from-primary/10 to-primary/5">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base flex items-center gap-2">
+            <Radar className="h-4 w-4 text-primary" /> Detectar do ERP conectado
+          </CardTitle>
+          <CardDescription>
+            Puxa uma amostra real do ERP integrado e sugere o de-para automaticamente — sem colar JSON.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div className="grid gap-2 sm:grid-cols-[1fr_auto] sm:items-end">
+            <div className="space-y-1">
+              <Label className="text-xs uppercase tracking-wide text-muted-foreground">
+                Integração ativa
+              </Label>
+              <Select
+                value={selectedIntegration}
+                onValueChange={setSelectedIntegration}
+                disabled={integrationsQ.isLoading}
+              >
+                <SelectTrigger>
+                  <SelectValue
+                    placeholder={
+                      integrationsQ.isLoading
+                        ? "Carregando..."
+                        : (integrationsQ.data?.integrations?.length ?? 0) === 0
+                        ? "Nenhuma integração ativa"
+                        : "Selecione uma integração"
+                    }
+                  />
+                </SelectTrigger>
+                <SelectContent>
+                  {(integrationsQ.data?.integrations ?? []).map((i: any) => (
+                    <SelectItem key={i.id} value={i.id}>
+                      {i.provider}
+                      {i.connector_type ? ` · ${i.connector_type}` : ""}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <Button
+              onClick={() => autoMut.mutate()}
+              disabled={
+                !selectedIntegration ||
+                autoMut.isPending ||
+                entity === "orders"
+              }
+              className="gap-2"
+            >
+              {autoMut.isPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Radar className="h-4 w-4" />
+              )}
+              {autoMut.isPending ? "Detectando..." : "Detectar automaticamente"}
+            </Button>
+          </div>
+
+          {autoResult && (
+            <div className="rounded-md border bg-background/60 p-3 space-y-3">
+              <div className="flex items-center justify-between gap-2 flex-wrap">
+                <div className="text-xs text-muted-foreground">
+                  Amostra: <strong>{autoResult.source.sampled}</strong> registro(s) de{" "}
+                  <strong>{autoResult.source.provider}</strong> ·{" "}
+                  {Object.keys(autoResult.mapping).length} sugestão(ões) de{" "}
+                  {autoResult.headers.length} coluna(s).
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => setAutoResult(null)}
+                  >
+                    Descartar
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={() => applyAutoMut.mutate()}
+                    disabled={
+                      applyAutoMut.isPending ||
+                      Object.keys(autoResult.mapping).length === 0
+                    }
+                    className="gap-2"
+                  >
+                    {applyAutoMut.isPending ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <CheckCircle2 className="h-4 w-4" />
+                    )}
+                    Aplicar {Object.keys(autoResult.mapping).length}
+                  </Button>
+                </div>
+              </div>
+
+              {autoResult.headers.length === 0 ? (
+                <div className="text-xs text-muted-foreground">
+                  Nenhuma coluna encontrada. Este driver pode não expor esta entidade — use
+                  o mapeamento manual abaixo.
+                </div>
+              ) : (
+                <div className="max-h-64 overflow-auto">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Campo do ERP</TableHead>
+                        <TableHead>Campo do CRM sugerido</TableHead>
+                        <TableHead className="w-24">Confiança</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {autoResult.headers.map((h) => {
+                        const s = autoResult.mapping[h];
+                        return (
+                          <TableRow key={h}>
+                            <TableCell className="font-mono text-xs">{h}</TableCell>
+                            <TableCell>
+                              {s ? (
+                                <Badge className="text-xs">{s.field}</Badge>
+                              ) : (
+                                <span className="text-xs text-muted-foreground">
+                                  ignorar
+                                </span>
+                              )}
+                              {s?.reason && (
+                                <div className="text-[10px] text-muted-foreground mt-0.5">
+                                  {s.reason}
+                                </div>
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              {s ? (
+                                <Badge
+                                  variant="outline"
+                                  className="text-[10px]"
+                                >
+                                  {Math.round(s.confidence * 100)}%
+                                </Badge>
+                              ) : (
+                                <span className="text-xs text-muted-foreground">—</span>
+                              )}
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
+            </div>
+          )}
         </CardContent>
       </Card>
 
