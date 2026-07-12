@@ -67,7 +67,6 @@ function DashboardPage() {
       navigate({ to: "/meu-dia", replace: true });
     }
   }, [role, navigate]);
-  const navigate = useNavigate();
 
   const forecast = useServerFn(getForecast);
   const retention = useServerFn(getRetentionInsights);
