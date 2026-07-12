@@ -96,7 +96,7 @@ export const getSequence = createServerFn({ method: "POST" })
         .order("step_order", { ascending: true }),
       supabase
         .from("sequence_enrollments")
-        .select("id, sequence_id, contact_id, status, enrolled_at, completed_at")
+        .select("id, sequence_id, contact_id, status, enrolled_at, completed_at, paused_reason, paused_at")
         .eq("sequence_id", data.id)
         .order("enrolled_at", { ascending: false })
         .limit(200),
