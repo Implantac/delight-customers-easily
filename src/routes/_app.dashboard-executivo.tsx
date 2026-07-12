@@ -1,16 +1,21 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { useCurrentOrg } from "@/lib/org";
 import { getOrgConsolidated, type ConsolidatedRow } from "@/lib/org-consolidated.functions";
+import { getExecutiveSignals, type ExecutiveSignal, type SignalTone } from "@/lib/executive-signals.functions";
 import { PageHeader } from "@/components/page-header";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Building2, TrendingUp } from "lucide-react";
+import {
+  Building2, TrendingUp, AlertTriangle, Sparkles, Wallet, Target, MapPin, GitBranch, ArrowRight, CheckCircle2,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_app/dashboard-executivo")({
   component: DashboardExecutivoPage,
