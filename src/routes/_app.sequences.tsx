@@ -90,6 +90,15 @@ function SequencesPage() {
     onError: (e: any) => toast.error(e.message),
   });
 
+  const duplicate = useMutation({
+    mutationFn: (id: string) => dupFn({ data: { id } }),
+    onSuccess: () => {
+      toast.success("Sequência duplicada (inativa)");
+      qc.invalidateQueries({ queryKey: ["sequences"] });
+    },
+    onError: (e: any) => toast.error(e.message),
+  });
+
   const openNew = () => {
     setEditing({ name: "", description: "", active: true });
     setOpen(true);
