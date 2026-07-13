@@ -122,6 +122,14 @@ export const copilotAsk = createServerFn({ method: "POST" })
       tarefas_atrasadas: overdue,
     };
 
+    // Base de conhecimento recuperada via RAG (numerada para citação)
+    const skillHits = skills as KnowledgeHit[];
+    const sourcesBlock = skillHits.length
+      ? skillHits
+          .map((s, i) => `[${i + 1}] ${s.title}${s.description ? " — " + s.description : ""}\n${s.content.slice(0, 2000)}`)
+          .join("\n\n---\n\n")
+      : "(nenhuma skill relevante recuperada)";
+
     const system = `Você é o Copiloto Comercial deste CRM, atuando como um Diretor Comercial Virtual.
 Responda em português do Brasil, de forma direta, executiva e acionável.
 Use APENAS os dados do snapshot fornecido — nunca invente clientes, valores ou números.
@@ -129,6 +137,14 @@ Quando recomendar ação, seja específico: cite o nome do cliente/negócio e a 
 Formate em markdown com listas curtas. Máximo 6 itens por lista. Use negrito para destaque.
 Se a pergunta não puder ser respondida com os dados, diga isso claramente.
 Valores monetários sempre em BRL formatado (R$).
+
+CITAÇÃO DE FONTES (OBRIGATÓRIO):
+Você recebe uma BASE DE CONHECIMENTO numerada [1], [2], [3]... com skills de metodologia CRM.
+Sempre que apoiar uma recomendação em uma dessas skills, insira a citação inline no formato [n]
+imediatamente após a frase relevante — ex.: "Priorize deals parados há 14+ dias [2]."
+Você pode citar múltiplas skills numa mesma frase: [1][3]. Nunca invente números de citação
+que não estejam na base fornecida. Se a resposta vier apenas dos dados do CRM (sem apoio de skill),
+não force citações.
 
 AO FINAL da sua resposta, SEMPRE inclua um bloco JSON delimitado por <<<ACTIONS>>> e <<<END>>>
 com até 3 ações sugeridas que o usuário pode executar imediatamente, neste formato:
@@ -139,6 +155,9 @@ Se não houver ação clara, devolva um array vazio.`;
 
     const user = `PERGUNTA DO USUÁRIO:
 ${data.question}
+
+BASE DE CONHECIMENTO (skills recuperadas por similaridade semântica):
+${sourcesBlock}
 
 SNAPSHOT DO CRM (JSON):
 ${JSON.stringify(snapshot)}`;
@@ -162,5 +181,18 @@ ${JSON.stringify(snapshot)}`;
         /* noop */
       }
     }
-    return { answer, actions };
+
+    // Só devolve como "fontes" as skills que foram efetivamente citadas na resposta
+    const citedNums = new Set<number>();
+    for (const match of answer.matchAll(/\[(\d{1,2})\]/g)) {
+      const n = parseInt(match[1], 10);
+      if (n >= 1 && n <= skillHits.length) citedNums.add(n);
+    }
+    const sources = skillHits
+      .map((s, i) => ({ n: i + 1, slug: s.slug, title: s.title, description: s.description, similarity: s.similarity }))
+      .filter((s) => citedNums.has(s.n));
+
+    return { answer, actions, sources };
+  });
+
   });
