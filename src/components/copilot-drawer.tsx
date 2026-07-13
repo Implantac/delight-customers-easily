@@ -20,7 +20,8 @@ const SUGGESTIONS = [
   "Quem são meus clientes mais valiosos sem contato recente?",
 ];
 
-type Turn = { role: "user" | "assistant"; content: string; actions?: Array<{ label: string; href: string }> };
+type Source = { n: number; slug: string; title: string; description: string | null; similarity: number };
+type Turn = { role: "user" | "assistant"; content: string; actions?: Array<{ label: string; href: string }>; sources?: Source[] };
 
 export function CopilotDrawer() {
   const { orgId } = useCurrentOrg();
