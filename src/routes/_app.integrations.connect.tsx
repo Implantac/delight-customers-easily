@@ -184,7 +184,7 @@ function ConnectWizard() {
         </div>
         <h1 className="text-3xl font-bold tracking-tight">Assistente de Conexão</h1>
         <p className="text-muted-foreground text-lg max-w-lg mx-auto">
-          Vamos conectar seu ERP ao USE PATRIUM em poucos minutos, sem complicações técnicas.
+          Vamos conectar seu ERP ao USE CRM em poucos minutos, sem complicações técnicas.
         </p>
       </div>
 

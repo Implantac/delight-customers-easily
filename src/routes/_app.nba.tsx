@@ -139,7 +139,7 @@ function NbaPage() {
           <div className="max-w-md mx-auto space-y-2">
             <p className="font-bold text-lg">Sua inteligência artificial está processando dados...</p>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              O USE PATRIUM analisa continuamente o comportamento dos clientes e o histórico do ERP para gerar seu plano de ação.
+              O USE CRM analisa continuamente o comportamento dos clientes e o histórico do ERP para gerar seu plano de ação.
               Certifique-se de que o ConnectHub está sincronizado.
             </p>
           </div>

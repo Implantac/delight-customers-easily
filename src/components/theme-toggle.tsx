@@ -17,7 +17,7 @@ export function ThemeToggle() {
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => setTheme("light")}><Sun className="mr-2 h-4 w-4" />Enterprise Light {theme === "light" && "✓"}</DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("dark")}><Moon className="mr-2 h-4 w-4" />Enterprise Dark {theme === "dark" && "✓"}</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("use-sistemas")}><Sparkles className="mr-2 h-4 w-4 text-amber-500" />USE PATRIUM {theme === "use-sistemas" && "✓"}</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("use-sistemas")}><Sparkles className="mr-2 h-4 w-4 text-amber-500" />USE CRM {theme === "use-sistemas" && "✓"}</DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("system")}><Monitor className="mr-2 h-4 w-4" />Sistema {theme === "system" && "✓"}</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
