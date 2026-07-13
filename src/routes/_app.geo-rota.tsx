@@ -282,6 +282,27 @@ function RotaPage() {
             </Card>
           )}
 
+          {(() => {
+            const withCoords = list.filter(
+              (c: any) => typeof c.latitude === "number" && typeof c.longitude === "number",
+            );
+            if (withCoords.length === 0) return null;
+            return (
+              <ClientsMap
+                height={360}
+                points={withCoords.map<MapPoint>((c: any) => ({
+                  id: c.id,
+                  name: c.name,
+                  lat: c.latitude,
+                  lng: c.longitude,
+                  kind: "stop",
+                  subtitle: c.reason ?? [c.city, c.state].filter(Boolean).join(" · "),
+                }))}
+                route={withCoords.map((c: any) => ({ lat: c.latitude, lng: c.longitude }))}
+              />
+            );
+          })()}
+
           <Card>
             <CardHeader className="pb-3 flex flex-row items-center justify-between space-y-0">
               <div>
