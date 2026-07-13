@@ -17,6 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ClientsMap, type MapPoint } from "@/components/clients-map";
 import {
   Route as RouteIcon, Sparkles, Plus, MapPin, Calendar, User,
   Navigation, Clock, TrendingUp, Target, ChevronRight,
