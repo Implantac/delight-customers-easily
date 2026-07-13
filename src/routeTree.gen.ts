@@ -72,6 +72,7 @@ import { Route as AppSettingsSeedAuditRouteImport } from './routes/_app.settings
 import { Route as AppSettingsSecurityRouteImport } from './routes/_app.settings.security'
 import { Route as AppSettingsOrganizationRouteImport } from './routes/_app.settings.organization'
 import { Route as AppSettingsNotificationsRouteImport } from './routes/_app.settings.notifications'
+import { Route as AppSettingsKnowledgeBaseRouteImport } from './routes/_app.settings.knowledge-base'
 import { Route as AppSettingsImportRouteImport } from './routes/_app.settings.import'
 import { Route as AppSettingsFieldsRouteImport } from './routes/_app.settings.fields'
 import { Route as AppSettingsErpAgentRouteImport } from './routes/_app.settings.erp-agent'
@@ -441,6 +442,12 @@ const AppSettingsNotificationsRoute =
     path: '/settings/notifications',
     getParentRoute: () => AppRoute,
   } as any)
+const AppSettingsKnowledgeBaseRoute =
+  AppSettingsKnowledgeBaseRouteImport.update({
+    id: '/settings/knowledge-base',
+    path: '/settings/knowledge-base',
+    getParentRoute: () => AppRoute,
+  } as any)
 const AppSettingsImportRoute = AppSettingsImportRouteImport.update({
   id: '/settings/import',
   path: '/settings/import',
@@ -795,6 +802,7 @@ export interface FileRoutesByFullPath {
   '/settings/erp-agent': typeof AppSettingsErpAgentRoute
   '/settings/fields': typeof AppSettingsFieldsRoute
   '/settings/import': typeof AppSettingsImportRoute
+  '/settings/knowledge-base': typeof AppSettingsKnowledgeBaseRoute
   '/settings/notifications': typeof AppSettingsNotificationsRoute
   '/settings/organization': typeof AppSettingsOrganizationRoute
   '/settings/security': typeof AppSettingsSecurityRoute
@@ -909,6 +917,7 @@ export interface FileRoutesByTo {
   '/settings/erp-agent': typeof AppSettingsErpAgentRoute
   '/settings/fields': typeof AppSettingsFieldsRoute
   '/settings/import': typeof AppSettingsImportRoute
+  '/settings/knowledge-base': typeof AppSettingsKnowledgeBaseRoute
   '/settings/notifications': typeof AppSettingsNotificationsRoute
   '/settings/organization': typeof AppSettingsOrganizationRoute
   '/settings/security': typeof AppSettingsSecurityRoute
@@ -1025,6 +1034,7 @@ export interface FileRoutesById {
   '/_app/settings/erp-agent': typeof AppSettingsErpAgentRoute
   '/_app/settings/fields': typeof AppSettingsFieldsRoute
   '/_app/settings/import': typeof AppSettingsImportRoute
+  '/_app/settings/knowledge-base': typeof AppSettingsKnowledgeBaseRoute
   '/_app/settings/notifications': typeof AppSettingsNotificationsRoute
   '/_app/settings/organization': typeof AppSettingsOrganizationRoute
   '/_app/settings/security': typeof AppSettingsSecurityRoute
@@ -1141,6 +1151,7 @@ export interface FileRouteTypes {
     | '/settings/erp-agent'
     | '/settings/fields'
     | '/settings/import'
+    | '/settings/knowledge-base'
     | '/settings/notifications'
     | '/settings/organization'
     | '/settings/security'
@@ -1255,6 +1266,7 @@ export interface FileRouteTypes {
     | '/settings/erp-agent'
     | '/settings/fields'
     | '/settings/import'
+    | '/settings/knowledge-base'
     | '/settings/notifications'
     | '/settings/organization'
     | '/settings/security'
@@ -1370,6 +1382,7 @@ export interface FileRouteTypes {
     | '/_app/settings/erp-agent'
     | '/_app/settings/fields'
     | '/_app/settings/import'
+    | '/_app/settings/knowledge-base'
     | '/_app/settings/notifications'
     | '/_app/settings/organization'
     | '/_app/settings/security'
@@ -1881,6 +1894,13 @@ declare module '@tanstack/react-router' {
       path: '/settings/notifications'
       fullPath: '/settings/notifications'
       preLoaderRoute: typeof AppSettingsNotificationsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings/knowledge-base': {
+      id: '/_app/settings/knowledge-base'
+      path: '/settings/knowledge-base'
+      fullPath: '/settings/knowledge-base'
+      preLoaderRoute: typeof AppSettingsKnowledgeBaseRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/settings/import': {
@@ -2453,6 +2473,7 @@ interface AppRouteChildren {
   AppSettingsErpAgentRoute: typeof AppSettingsErpAgentRoute
   AppSettingsFieldsRoute: typeof AppSettingsFieldsRoute
   AppSettingsImportRoute: typeof AppSettingsImportRoute
+  AppSettingsKnowledgeBaseRoute: typeof AppSettingsKnowledgeBaseRoute
   AppSettingsNotificationsRoute: typeof AppSettingsNotificationsRoute
   AppSettingsOrganizationRoute: typeof AppSettingsOrganizationRoute
   AppSettingsSecurityRoute: typeof AppSettingsSecurityRoute
@@ -2515,6 +2536,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSettingsErpAgentRoute: AppSettingsErpAgentRoute,
   AppSettingsFieldsRoute: AppSettingsFieldsRoute,
   AppSettingsImportRoute: AppSettingsImportRoute,
+  AppSettingsKnowledgeBaseRoute: AppSettingsKnowledgeBaseRoute,
   AppSettingsNotificationsRoute: AppSettingsNotificationsRoute,
   AppSettingsOrganizationRoute: AppSettingsOrganizationRoute,
   AppSettingsSecurityRoute: AppSettingsSecurityRoute,
@@ -2565,13 +2587,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
