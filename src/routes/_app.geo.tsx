@@ -123,6 +123,34 @@ function GeoPage() {
     ? aiM.data.stops.map((s) => ({ ...(routeQ.data?.route.find((x) => x.id === s.id)!), reason: s.reason }))
     : routeQ.data?.route ?? [];
 
+  const allCompanies = data?.companies ?? [];
+  const clientsStateOptions = useMemo(() => {
+    const s = new Set<string>();
+    allCompanies.forEach((c) => c.state && s.add(c.state as string));
+    return Array.from(s).sort();
+  }, [allCompanies]);
+  const clientsCityOptions = useMemo(() => {
+    const s = new Set<string>();
+    allCompanies
+      .filter((c) => clientsState === "all" || c.state === clientsState)
+      .forEach((c) => c.city && s.add(c.city as string));
+    return Array.from(s).sort();
+  }, [allCompanies, clientsState]);
+  const filteredClients = useMemo(() => {
+    const q = clientsSearch.trim().toLowerCase();
+    return allCompanies.filter((c) => {
+      if (clientsState !== "all" && c.state !== clientsState) return false;
+      if (clientsCity !== "all" && c.city !== clientsCity) return false;
+      if (!q) return true;
+      return (
+        (c.name ?? "").toLowerCase().includes(q) ||
+        (c.city ?? "").toLowerCase().includes(q) ||
+        (c.industry ?? "").toLowerCase().includes(q)
+      );
+    });
+  }, [allCompanies, clientsSearch, clientsState, clientsCity]);
+  const filteredWithCoords = filteredClients.filter((c) => c.latitude != null && c.longitude != null);
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
