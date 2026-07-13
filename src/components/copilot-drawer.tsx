@@ -178,26 +178,48 @@ export function CopilotDrawer() {
   );
 }
 
-// Minimal markdown rendering: bold + line breaks + bullets. Avoids new dep.
-function renderMarkdown(text: string) {
+// Minimal markdown rendering: bold + line breaks + bullets + citações [n].
+function renderMarkdown(text: string, sources?: Source[]) {
+  const validNums = new Set((sources ?? []).map((s) => s.n));
   const lines = text.split("\n");
   return (
     <div className="space-y-1">
       {lines.map((line, i) => {
         if (/^[-*]\s+/.test(line)) {
-          return <div key={i} className="pl-3">• {inlineFmt(line.replace(/^[-*]\s+/, ""))}</div>;
+          return <div key={i} className="pl-3">• {inlineFmt(line.replace(/^[-*]\s+/, ""), validNums)}</div>;
         }
         if (/^\s*$/.test(line)) return <div key={i} className="h-1" />;
-        return <div key={i}>{inlineFmt(line)}</div>;
+        return <div key={i}>{inlineFmt(line, validNums)}</div>;
       })}
     </div>
   );
 }
-function inlineFmt(s: string) {
-  const parts = s.split(/(\*\*[^*]+\*\*)/g);
-  return parts.map((p, i) =>
-    p.startsWith("**") && p.endsWith("**")
-      ? <strong key={i}>{p.slice(2, -2)}</strong>
-      : <span key={i}>{p}</span>
-  );
+function inlineFmt(s: string, validNums?: Set<number>) {
+  // Split simultaneamente por **bold** e por [n] citações
+  const parts = s.split(/(\*\*[^*]+\*\*|\[\d{1,2}\])/g);
+  return parts.map((p, i) => {
+    if (p.startsWith("**") && p.endsWith("**")) {
+      return <strong key={i}>{p.slice(2, -2)}</strong>;
+    }
+    const cite = p.match(/^\[(\d{1,2})\]$/);
+    if (cite) {
+      const n = parseInt(cite[1], 10);
+      const valid = !validNums || validNums.has(n);
+      return (
+        <sup
+          key={i}
+          className={
+            valid
+              ? "ml-0.5 inline-flex h-4 min-w-[16px] items-center justify-center rounded bg-primary/15 text-primary font-medium px-1 text-[10px] cursor-help"
+              : "ml-0.5 text-[10px] text-muted-foreground/60"
+          }
+          title={valid ? `Fonte ${n}` : "Citação sem fonte correspondente"}
+        >
+          {n}
+        </sup>
+      );
+    }
+    return <span key={i}>{p}</span>;
+  });
 }
+
