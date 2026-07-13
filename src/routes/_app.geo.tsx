@@ -14,6 +14,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { MapPin, Route as RouteIcon, Building, TrendingUp, Compass, ArrowRight, Sparkles, Navigation, Share2 } from "lucide-react";
+import { ClientsMap, type MapPoint } from "@/components/clients-map";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/geo")({ component: GeoPage });
@@ -151,38 +152,19 @@ function GeoPage() {
         </TabsList>
 
         <TabsContent value="heatmap" className="space-y-4">
-          <Card className="p-8 border-dashed bg-muted/5 flex flex-col items-center justify-center text-center">
-            <div className="h-16 w-16 rounded-full bg-primary/5 flex items-center justify-center mb-4">
-              <MapPin className="h-8 w-8 text-primary" />
-            </div>
-            <h3 className="text-lg font-bold">Mapa de Calor (Heatmap)</h3>
-            <p className="text-muted-foreground max-w-sm mx-auto mb-6">
-              Visualize onde estão as maiores concentrações de faturamento e pipeline aberto para planejar sua expansão.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-2xl">
-              <div className="p-4 rounded-xl border bg-card/50">
-                <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-1">Sudeste</div>
-                <div className="text-2xl font-bold">R$ 1.2M</div>
-                <div className="h-1.5 w-full bg-muted rounded-full mt-2 overflow-hidden">
-                  <div className="h-full bg-primary w-[85%]" />
-                </div>
-              </div>
-              <div className="p-4 rounded-xl border bg-card/50">
-                <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-1">Sul</div>
-                <div className="text-2xl font-bold">R$ 480k</div>
-                <div className="h-1.5 w-full bg-muted rounded-full mt-2 overflow-hidden">
-                  <div className="h-full bg-primary w-[45%]" />
-                </div>
-              </div>
-              <div className="p-4 rounded-xl border bg-card/50">
-                <div className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-1">Centro-Oeste</div>
-                <div className="text-2xl font-bold">R$ 210k</div>
-                <div className="h-1.5 w-full bg-muted rounded-full mt-2 overflow-hidden">
-                  <div className="h-full bg-primary w-[20%]" />
-                </div>
-              </div>
-            </div>
-          </Card>
+          <ClientsMap
+            height={480}
+            points={(data?.companies ?? [])
+              .filter((c) => c.latitude != null && c.longitude != null)
+              .map<MapPoint>((c) => ({
+                id: c.id,
+                name: c.name,
+                lat: c.latitude as number,
+                lng: c.longitude as number,
+                kind: "customer",
+                subtitle: [c.city, c.state, c.industry].filter(Boolean).join(" · "),
+              }))}
+          />
         </TabsContent>
 
         <TabsContent value="estados">
@@ -320,6 +302,26 @@ function GeoPage() {
               <p className="text-muted-foreground">{aiM.data.summary}</p>
             </Card>
           )}
+          {(() => {
+            const stopsWithCoords = displayRoute.filter(
+              (r: any) => typeof r.latitude === "number" && typeof r.longitude === "number",
+            );
+            if (stopsWithCoords.length === 0) return null;
+            return (
+              <ClientsMap
+                height={360}
+                points={stopsWithCoords.map<MapPoint>((r: any) => ({
+                  id: r.id,
+                  name: r.name,
+                  lat: r.latitude,
+                  lng: r.longitude,
+                  kind: "stop",
+                  subtitle: r.reason ?? [r.city, r.state].filter(Boolean).join(" · "),
+                }))}
+                route={stopsWithCoords.map((r: any) => ({ lat: r.latitude, lng: r.longitude }))}
+              />
+            );
+          })()}
 
           {routeQ.isLoading ? <Skeleton className="h-40 w-full" /> : (
             <div className="space-y-2">

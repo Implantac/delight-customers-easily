@@ -17,6 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ClientsMap, type MapPoint } from "@/components/clients-map";
 import {
   Route as RouteIcon, Sparkles, Plus, MapPin, Calendar, User,
   Navigation, Clock, TrendingUp, Target, ChevronRight,
@@ -280,6 +281,27 @@ function RotaPage() {
               </CardContent>
             </Card>
           )}
+
+          {(() => {
+            const withCoords = list.filter(
+              (c: any) => typeof c.latitude === "number" && typeof c.longitude === "number",
+            );
+            if (withCoords.length === 0) return null;
+            return (
+              <ClientsMap
+                height={360}
+                points={withCoords.map<MapPoint>((c: any) => ({
+                  id: c.id,
+                  name: c.name,
+                  lat: c.latitude,
+                  lng: c.longitude,
+                  kind: "stop",
+                  subtitle: c.reason ?? [c.city, c.state].filter(Boolean).join(" · "),
+                }))}
+                route={withCoords.map((c: any) => ({ lat: c.latitude, lng: c.longitude }))}
+              />
+            );
+          })()}
 
           <Card>
             <CardHeader className="pb-3 flex flex-row items-center justify-between space-y-0">

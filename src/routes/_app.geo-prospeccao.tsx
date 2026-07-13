@@ -19,6 +19,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Compass, Search, Plus, Sparkles, MapPin, Building, ArrowRight } from "lucide-react";
+import { ClientsMap, type MapPoint } from "@/components/clients-map";
 import { toast } from "sonner";
 
 
@@ -169,7 +170,26 @@ function ProspeccaoPage() {
                   )}
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-3">
+                {(() => {
+                  const withCoords = (searchQ.data?.results ?? []).filter(
+                    (r: any) => typeof r.latitude === "number" && typeof r.longitude === "number",
+                  );
+                  if (withCoords.length === 0) return null;
+                  return (
+                    <ClientsMap
+                      height={340}
+                      points={withCoords.map<MapPoint>((r: any) => ({
+                        id: r.id,
+                        name: r.name,
+                        lat: r.latitude,
+                        lng: r.longitude,
+                        kind: "prospect",
+                        subtitle: [r.city, r.state, r.industry].filter(Boolean).join(" · "),
+                      }))}
+                    />
+                  );
+                })()}
                 {searchQ.isLoading ? (
                   <Skeleton className="h-40 w-full" />
                 ) : !searchQ.data?.results.length ? (
