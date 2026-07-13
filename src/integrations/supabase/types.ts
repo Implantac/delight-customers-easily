@@ -5657,6 +5657,48 @@ export type Database = {
         }
         Relationships: []
       }
+      knowledge_docs: {
+        Row: {
+          content: string
+          content_hash: string
+          created_at: string
+          description: string | null
+          embedding: string | null
+          id: string
+          kind: string
+          slug: string
+          title: string
+          tokens: number | null
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          content_hash: string
+          created_at?: string
+          description?: string | null
+          embedding?: string | null
+          id?: string
+          kind?: string
+          slug: string
+          title: string
+          tokens?: number | null
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          content_hash?: string
+          created_at?: string
+          description?: string | null
+          embedding?: string | null
+          id?: string
+          kind?: string
+          slug?: string
+          title?: string
+          tokens?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       lead_form_submissions: {
         Row: {
           consent_at: string | null
@@ -9845,6 +9887,18 @@ export type Database = {
       is_org_or_descendant_member: {
         Args: { _root: string; _user: string }
         Returns: boolean
+      }
+      match_knowledge_docs: {
+        Args: { match_count?: number; query_embedding: string }
+        Returns: {
+          content: string
+          description: string
+          id: string
+          kind: string
+          similarity: number
+          slug: string
+          title: string
+        }[]
       }
       match_similar_customers: {
         Args: { _limit?: number; _org: string; _query_embedding: string }
