@@ -61,6 +61,10 @@ function GeoPage() {
   const runRoute = useServerFn(suggestRoute);
   const [state, setState] = useState<string>("all");
   const [city, setCity] = useState<string>("all");
+  const [clientsView, setClientsView] = useState<"map" | "list">("map");
+  const [clientsSearch, setClientsSearch] = useState<string>("");
+  const [clientsState, setClientsState] = useState<string>("all");
+  const [clientsCity, setClientsCity] = useState<string>("all");
 
   const { data, isLoading } = useQuery({
     queryKey: ["geo", orgId],
