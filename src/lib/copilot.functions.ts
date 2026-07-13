@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { retrieveSkills, type KnowledgeHit } from "@/lib/rag.functions";
 
 const input = z.object({
   organization_id: z.string().uuid(),
@@ -8,6 +9,7 @@ const input = z.object({
 });
 
 const DAY = 86400000;
+
 
 async function callLovableAI(systemPrompt: string, userPrompt: string) {
   const key = process.env.LOVABLE_API_KEY;
