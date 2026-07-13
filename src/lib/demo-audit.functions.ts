@@ -33,16 +33,16 @@ export const auditDemoData = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((i) => Input.parse(i))
   .handler(async ({ data, context }) => {
-    const { supabase } = context;
+    const sb = context.supabase as any;
     const org = data.organization_id;
     const checks: AuditCheck[] = [];
 
     const countOf = async (table: string, filter?: (q: any) => any) => {
-      let q = supabase.from(table).select("id", { count: "exact", head: true }).eq("organization_id", org);
+      let q = sb.from(table).select("id", { count: "exact", head: true }).eq("organization_id", org);
       if (filter) q = filter(q);
       const { count, error } = await q;
       if (error) return { count: -1, err: error.message };
-      return { count: count ?? 0 };
+      return { count: (count ?? 0) as number };
     };
 
     const min = (
