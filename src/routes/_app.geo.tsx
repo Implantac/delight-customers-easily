@@ -13,7 +13,8 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MapPin, Route as RouteIcon, Building, TrendingUp, Compass, ArrowRight, Sparkles, Navigation, Share2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { MapPin, Route as RouteIcon, Building, TrendingUp, Compass, ArrowRight, Sparkles, Navigation, Share2, List, Map as MapIcon, Search } from "lucide-react";
 import { ClientsMap, type MapPoint } from "@/components/clients-map";
 import { toast } from "sonner";
 
