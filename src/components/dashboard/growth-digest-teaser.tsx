@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { useCurrentOrg } from "@/lib/org";
-import { getGrowthDigest } from "@/lib/growth-digest.functions";
+import { getGrowthDigest, type GrowthDigest } from "@/lib/growth-digest.functions";
 import { cn } from "@/lib/utils";
 
 const brl = (n: number) =>
@@ -15,7 +15,7 @@ const brl = (n: number) =>
 
 /**
  * Teaser compacto do Growth Digest para o Dashboard.
- * Mostra headline da semana + score delta + CTA para abrir o relatório completo.
+ * Mostra headline da semana + score delta + sparkline 4 semanas + CTA para o relatório completo.
  */
 export function GrowthDigestTeaser() {
   const { orgId } = useCurrentOrg();
@@ -25,16 +25,30 @@ export function GrowthDigestTeaser() {
     queryKey: ["growth-digest-teaser", orgId],
     enabled: !!orgId,
     staleTime: 10 * 60_000,
-    queryFn: () => digestFn({ data: { organization_id: orgId!, weeks_back: 0 } }),
+    queryFn: async () => {
+      const weeks = [3, 2, 1, 0];
+      const results = await Promise.all(
+        weeks.map((w) =>
+          digestFn({ data: { organization_id: orgId!, weeks_back: w } }).catch(() => null),
+        ),
+      );
+      const rows = results
+        .map((d, i) => ({ w: weeks[i], d }))
+        .filter((r): r is { w: number; d: GrowthDigest } => !!r.d);
+      const current = rows.find((r) => r.w === 0)?.d ?? null;
+      return { current, rows };
+    },
   });
 
-  if (q.isLoading || !q.data) {
+  if (q.isLoading || !q.data?.current) {
     return <Skeleton className="h-32" />;
   }
 
-  const d = q.data;
+  const d = q.data.current;
   const Icon = d.score.delta > 0 ? TrendingUp : d.score.delta < 0 ? TrendingDown : Minus;
   const tone = d.score.delta > 0 ? "text-emerald-600" : d.score.delta < 0 ? "text-rose-600" : "text-muted-foreground";
+  const spark = q.data.rows.slice().sort((a, b) => b.w - a.w); // ordem cronológica: -3, -2, -1, 0
+  const maxRev = Math.max(1, ...spark.map((r) => r.d.revenue.won));
 
   return (
     <Card className="p-5 bg-gradient-to-br from-violet-500/10 via-transparent to-transparent border-violet-500/20">
@@ -64,6 +78,31 @@ export function GrowthDigestTeaser() {
             )}
           </div>
         </div>
+
+        {spark.length > 1 && (
+          <div className="flex items-end gap-1.5 h-12" aria-label="Receita das últimas 4 semanas">
+            {spark.map((r) => {
+              const h = Math.max(4, Math.round((r.d.revenue.won / maxRev) * 44));
+              const active = r.w === 0;
+              return (
+                <div key={r.w} className="flex flex-col items-center gap-1">
+                  <div
+                    className={cn(
+                      "w-2.5 rounded-sm transition-all",
+                      active ? "bg-violet-500" : "bg-violet-500/30",
+                    )}
+                    style={{ height: `${h}px` }}
+                    title={`${r.w === 0 ? "Atual" : `-${r.w} sem`}: ${brl(r.d.revenue.won)}`}
+                  />
+                  <span className="text-[9px] text-muted-foreground leading-none">
+                    {r.w === 0 ? "hj" : `-${r.w}`}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
         <Button size="sm" variant="outline" asChild>
           <Link to="/growth-digest">Abrir relatório <ArrowRight className="ml-1 h-3.5 w-3.5" /></Link>
         </Button>
