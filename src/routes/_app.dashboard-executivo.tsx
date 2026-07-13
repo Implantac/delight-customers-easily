@@ -16,6 +16,7 @@ import {
   Building2, TrendingUp, AlertTriangle, Sparkles, Wallet, Target, MapPin, GitBranch, ArrowRight, CheckCircle2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SalesVelocityCard } from "@/components/sales-velocity-card";
 
 export const Route = createFileRoute("/_app/dashboard-executivo")({
   component: DashboardExecutivoPage,
@@ -80,8 +81,11 @@ function DashboardExecutivoPage() {
           </>
         )}
       </div>
+      <div className="grid gap-4 md:grid-cols-3">
+        <div className="md:col-span-1"><SalesVelocityCard orgId={org?.id} windowDays={days} /></div>
+        <div className="md:col-span-2"><SignalsPanel orgId={org?.id} /></div>
+      </div>
 
-      <SignalsPanel orgId={org?.id} />
 
       <Card className="p-0 overflow-hidden">
         <Table>
