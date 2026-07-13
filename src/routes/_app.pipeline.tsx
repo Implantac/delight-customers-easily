@@ -31,6 +31,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { triggerWebhooks } from "@/lib/webhooks.functions";
 import { runAutomations } from "@/lib/automations.functions";
 import { scoreDeal, HEAT_STYLES } from "@/lib/deal-score";
+import { DealRotRadar } from "@/components/deal-rot-radar";
 
 export const Route = createFileRoute("/_app/pipeline")({ component: PipelinePage });
 
@@ -251,6 +252,8 @@ function PipelinePage() {
       <PipelineKpis loading={isLoading} deals={deals ?? []} />
 
       <div className="mt-4"><NextActionBlock surface="pipeline" /></div>
+
+      <div className="mt-4"><DealRotRadar orgId={orgId ?? undefined} onOpenDeal={(id) => setSelectedId(id)} /></div>
 
       {/* Filter bar */}
       <div className="mt-4 flex flex-wrap items-center gap-2">
