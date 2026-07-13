@@ -13,7 +13,8 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MapPin, Route as RouteIcon, Building, TrendingUp, Compass, ArrowRight, Sparkles, Navigation, Share2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { MapPin, Route as RouteIcon, Building, TrendingUp, Compass, ArrowRight, Sparkles, Navigation, Share2, List, Map as MapIcon, Search } from "lucide-react";
 import { ClientsMap, type MapPoint } from "@/components/clients-map";
 import { toast } from "sonner";
 
@@ -60,6 +61,10 @@ function GeoPage() {
   const runRoute = useServerFn(suggestRoute);
   const [state, setState] = useState<string>("all");
   const [city, setCity] = useState<string>("all");
+  const [clientsView, setClientsView] = useState<"map" | "list">("map");
+  const [clientsSearch, setClientsSearch] = useState<string>("");
+  const [clientsState, setClientsState] = useState<string>("all");
+  const [clientsCity, setClientsCity] = useState<string>("all");
 
   const { data, isLoading } = useQuery({
     queryKey: ["geo", orgId],
@@ -118,6 +123,34 @@ function GeoPage() {
     ? aiM.data.stops.map((s) => ({ ...(routeQ.data?.route.find((x) => x.id === s.id)!), reason: s.reason }))
     : routeQ.data?.route ?? [];
 
+  const allCompanies = data?.companies ?? [];
+  const clientsStateOptions = useMemo(() => {
+    const s = new Set<string>();
+    allCompanies.forEach((c) => c.state && s.add(c.state as string));
+    return Array.from(s).sort();
+  }, [allCompanies]);
+  const clientsCityOptions = useMemo(() => {
+    const s = new Set<string>();
+    allCompanies
+      .filter((c) => clientsState === "all" || c.state === clientsState)
+      .forEach((c) => c.city && s.add(c.city as string));
+    return Array.from(s).sort();
+  }, [allCompanies, clientsState]);
+  const filteredClients = useMemo(() => {
+    const q = clientsSearch.trim().toLowerCase();
+    return allCompanies.filter((c) => {
+      if (clientsState !== "all" && c.state !== clientsState) return false;
+      if (clientsCity !== "all" && c.city !== clientsCity) return false;
+      if (!q) return true;
+      return (
+        (c.name ?? "").toLowerCase().includes(q) ||
+        (c.city ?? "").toLowerCase().includes(q) ||
+        (c.industry ?? "").toLowerCase().includes(q)
+      );
+    });
+  }, [allCompanies, clientsSearch, clientsState, clientsCity]);
+  const filteredWithCoords = filteredClients.filter((c) => c.latitude != null && c.longitude != null);
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -143,29 +176,125 @@ function GeoPage() {
         <KPI loading={isLoading} label="Pipeline em Rota" value={data ? fmt(data.summary.open_value) : "—"} icon={TrendingUp} tone="ok" />
       </div>
 
-      <Tabs defaultValue="cidades" className="space-y-4">
+      <Tabs defaultValue="clientes" className="space-y-4">
         <TabsList className="bg-muted/50 p-1 rounded-full w-full justify-start overflow-x-auto">
-          <TabsTrigger value="heatmap" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm">Heatmap</TabsTrigger>
+          <TabsTrigger value="clientes" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm">Clientes</TabsTrigger>
           <TabsTrigger value="cidades" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm">Cidades</TabsTrigger>
           <TabsTrigger value="estados" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm">Estados</TabsTrigger>
           <TabsTrigger value="rota" className="rounded-full data-[state=active]:bg-background data-[state=active]:shadow-sm">Rota Inteligente</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="heatmap" className="space-y-4">
-          <ClientsMap
-            height={480}
-            points={(data?.companies ?? [])
-              .filter((c) => c.latitude != null && c.longitude != null)
-              .map<MapPoint>((c) => ({
-                id: c.id,
-                name: c.name,
-                lat: c.latitude as number,
-                lng: c.longitude as number,
-                kind: "customer",
-                subtitle: [c.city, c.state, c.industry].filter(Boolean).join(" · "),
-              }))}
-          />
+        <TabsContent value="clientes" className="space-y-3">
+          <Card className="p-3 flex flex-col md:flex-row md:items-center gap-2">
+            <div className="relative flex-1 min-w-0">
+              <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                value={clientsSearch}
+                onChange={(e) => setClientsSearch(e.target.value)}
+                placeholder="Buscar por nome, cidade ou setor..."
+                className="pl-9 h-9"
+              />
+            </div>
+            <Select value={clientsState} onValueChange={(v) => { setClientsState(v); setClientsCity("all"); }}>
+              <SelectTrigger className="w-full md:w-32 h-9"><SelectValue placeholder="UF" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas UFs</SelectItem>
+                {clientsStateOptions.map((s) => (<SelectItem key={s} value={s}>{s}</SelectItem>))}
+              </SelectContent>
+            </Select>
+            <Select value={clientsCity} onValueChange={setClientsCity}>
+              <SelectTrigger className="w-full md:w-56 h-9"><SelectValue placeholder="Cidade" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todas cidades</SelectItem>
+                {clientsCityOptions.slice(0, 200).map((c) => (<SelectItem key={c} value={c}>{c}</SelectItem>))}
+              </SelectContent>
+            </Select>
+            <div className="inline-flex rounded-full border bg-muted/40 p-0.5 self-start md:self-auto">
+              <Button
+                size="sm"
+                variant={clientsView === "map" ? "default" : "ghost"}
+                className="h-8 rounded-full gap-1.5 px-3"
+                onClick={() => setClientsView("map")}
+                aria-pressed={clientsView === "map"}
+              >
+                <MapIcon className="h-3.5 w-3.5" /> Mapa
+              </Button>
+              <Button
+                size="sm"
+                variant={clientsView === "list" ? "default" : "ghost"}
+                className="h-8 rounded-full gap-1.5 px-3"
+                onClick={() => setClientsView("list")}
+                aria-pressed={clientsView === "list"}
+              >
+                <List className="h-3.5 w-3.5" /> Lista
+              </Button>
+            </div>
+          </Card>
+
+          <div className="flex items-center justify-between text-xs text-muted-foreground px-1">
+            <span>{filteredClients.length} cliente{filteredClients.length === 1 ? "" : "s"}</span>
+            {clientsView === "map" && filteredClients.length !== filteredWithCoords.length && (
+              <span>{filteredClients.length - filteredWithCoords.length} sem coordenadas</span>
+            )}
+          </div>
+
+          {clientsView === "map" ? (
+            filteredWithCoords.length === 0 ? (
+              <Card className="p-8 text-center text-sm text-muted-foreground">
+                Nenhum cliente com coordenadas nesse filtro. Alterne para Lista ou ajuste os filtros.
+              </Card>
+            ) : (
+              <ClientsMap
+                height={480}
+                points={filteredWithCoords.map<MapPoint>((c) => ({
+                  id: c.id,
+                  name: c.name,
+                  lat: c.latitude as number,
+                  lng: c.longitude as number,
+                  kind: "customer",
+                  subtitle: [c.city, c.state, c.industry].filter(Boolean).join(" · "),
+                }))}
+              />
+            )
+          ) : (
+            <Card className="overflow-hidden">
+              <div className="max-h-[520px] overflow-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-muted/30 text-xs uppercase text-muted-foreground sticky top-0">
+                    <tr>
+                      <th className="text-left px-3 py-2">Cliente</th>
+                      <th className="text-left px-3 py-2">Cidade</th>
+                      <th className="text-left px-3 py-2">UF</th>
+                      <th className="text-left px-3 py-2">Setor</th>
+                      <th className="px-3 py-2"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredClients.slice(0, 200).map((c) => (
+                      <tr key={c.id} className="border-t hover:bg-muted/30">
+                        <td className="px-3 py-2 font-medium truncate max-w-[240px]">{c.name}</td>
+                        <td className="px-3 py-2 text-muted-foreground">{c.city ?? "—"}</td>
+                        <td className="px-3 py-2 text-muted-foreground">{c.state ?? "—"}</td>
+                        <td className="px-3 py-2 text-muted-foreground truncate max-w-[180px]">{c.industry ?? "—"}</td>
+                        <td className="px-3 py-2 text-right">
+                          <Button asChild size="sm" variant="ghost">
+                            <Link to="/companies/$id" params={{ id: c.id }}>Abrir <ArrowRight className="h-3 w-3 ml-1" /></Link>
+                          </Button>
+                        </td>
+                      </tr>
+                    ))}
+                    {filteredClients.length === 0 && (
+                      <tr><td colSpan={5} className="text-center p-8 text-muted-foreground text-sm">
+                        Nenhum cliente encontrado com esses filtros.
+                      </td></tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </Card>
+          )}
         </TabsContent>
+
 
         <TabsContent value="estados">
           {isLoading ? <Skeleton className="h-40 w-full" /> : (
