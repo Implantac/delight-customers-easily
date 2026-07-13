@@ -31,7 +31,7 @@ export const summarizeWhatsAppConversation = createServerFn({ method: "POST" })
 
     const { data: conv, error: convErr } = await supabase
       .from("whatsapp_conversations")
-      .select("id, organization_id, customer_name, customer_phone")
+      .select("id, organization_id, contact_name, contact_phone")
       .eq("id", data.conversation_id)
       .maybeSingle();
     if (convErr) throw new Error(convErr.message);
@@ -50,7 +50,7 @@ export const summarizeWhatsAppConversation = createServerFn({ method: "POST" })
 
     const transcript = ordered
       .map((m: any) => {
-        const who = m.direction === "in" ? (conv.customer_name || "Cliente") : "Vendedor";
+        const who = m.direction === "in" ? (conv.contact_name || "Cliente") : "Vendedor";
         const when = new Date(m.created_at).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" });
         return `[${when}] ${who}: ${(m.body ?? "").toString().replace(/\s+/g, " ").slice(0, 500)}`;
       })
