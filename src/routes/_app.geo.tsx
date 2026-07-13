@@ -302,6 +302,26 @@ function GeoPage() {
               <p className="text-muted-foreground">{aiM.data.summary}</p>
             </Card>
           )}
+          {(() => {
+            const stopsWithCoords = displayRoute.filter(
+              (r: any) => typeof r.latitude === "number" && typeof r.longitude === "number",
+            );
+            if (stopsWithCoords.length === 0) return null;
+            return (
+              <ClientsMap
+                height={360}
+                points={stopsWithCoords.map<MapPoint>((r: any) => ({
+                  id: r.id,
+                  name: r.name,
+                  lat: r.latitude,
+                  lng: r.longitude,
+                  kind: "stop",
+                  subtitle: r.reason ?? [r.city, r.state].filter(Boolean).join(" · "),
+                }))}
+                route={stopsWithCoords.map((r: any) => ({ lat: r.latitude, lng: r.longitude }))}
+              />
+            );
+          })()}
 
           {routeQ.isLoading ? <Skeleton className="h-40 w-full" /> : (
             <div className="space-y-2">
