@@ -227,27 +227,73 @@ function Hero({ ctaHref, ctaLabel }: { ctaHref: string; ctaLabel: string }) {
           </ul>
         </div>
 
-        {/* Visual 3D Hero Element */}
+        {/* Mock estático do Revenue Command Center */}
         <div className="mx-auto mt-16 max-w-5xl">
-          <div className="relative aspect-video w-full rounded-3xl border border-primary/20 bg-card/30 shadow-2xl backdrop-blur-sm overflow-hidden group">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/10 pointer-events-none" />
-            <ThreeDLogo className="h-full w-full" rotationSpeed={1.5} />
-            
-            {/* Overlay informativo flutuante */}
-            <div className="absolute bottom-8 left-8 right-8 flex justify-between items-end pointer-events-none">
-              <div className="bg-background/80 backdrop-blur-md p-4 rounded-2xl border border-border/40 shadow-xl animate-in fade-in slide-in-from-bottom-4 duration-1000">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-primary mb-1">Status do Sistema</p>
-                <div className="flex items-center gap-3">
-                  <div className="flex h-2 w-2 rounded-full bg-success animate-pulse" />
-                  <span className="text-xs font-medium">Motores de IA Operacionais</span>
+          <div className="relative w-full rounded-3xl border border-primary/20 bg-card shadow-2xl overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-transparent to-accent/8 pointer-events-none" />
+
+            {/* Barra tipo browser */}
+            <div className="relative flex items-center gap-1.5 border-b border-border/60 bg-muted/40 px-4 py-2.5">
+              <span className="h-2.5 w-2.5 rounded-full bg-red-400/70" />
+              <span className="h-2.5 w-2.5 rounded-full bg-yellow-400/70" />
+              <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/70" />
+              <div className="ml-4 flex items-center gap-1.5 rounded-md bg-background/60 px-3 py-1 text-[11px] text-muted-foreground font-mono">
+                app.usecrm.com.br / dashboard
+              </div>
+            </div>
+
+            {/* Conteúdo mock */}
+            <div className="relative grid gap-4 p-6 md:grid-cols-3">
+              <div className="rounded-xl border border-border/60 bg-background/70 p-4">
+                <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Pipeline aberto</div>
+                <div className="mt-2 font-display text-2xl font-semibold tabular-nums">R$ 4,82M</div>
+                <div className="mt-1 flex items-center gap-1 text-xs text-success"><TrendingUp className="h-3.5 w-3.5" /> +18,4% vs mês passado</div>
+              </div>
+              <div className="rounded-xl border border-border/60 bg-background/70 p-4">
+                <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Deals no radar</div>
+                <div className="mt-2 font-display text-2xl font-semibold tabular-nums">127</div>
+                <div className="mt-1 text-xs text-muted-foreground">32 quentes · 41 mornos · 54 frios</div>
+              </div>
+              <div className="rounded-xl border border-border/60 bg-background/70 p-4">
+                <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">USE Success Score</div>
+                <div className="mt-2 flex items-baseline gap-1 font-display text-2xl font-semibold tabular-nums">
+                  87<span className="text-sm text-muted-foreground">/100</span>
+                </div>
+                <div className="mt-1 text-xs text-success">Excelente · +4 na semana</div>
+              </div>
+
+              <div className="md:col-span-2 rounded-xl border border-border/60 bg-background/70 p-4">
+                <div className="mb-3 flex items-center justify-between">
+                  <div className="text-xs font-semibold">O que fazer agora</div>
+                  <div className="text-[10px] font-bold uppercase tracking-widest text-primary">IA prioriza</div>
+                </div>
+                <div className="space-y-2">
+                  {[
+                    { c: "Metalcorp Ind.", why: "Comprou 3× seguido, sem contato há 42 dias", tag: "Recompra" },
+                    { c: "Distribuidora Andrade", why: "Ticket caiu 38% no trimestre", tag: "Churn" },
+                    { c: "TecPar Solutions", why: "Abriu proposta 4× nas últimas 24h", tag: "Fechar" },
+                  ].map((r) => (
+                    <div key={r.c} className="flex items-center justify-between rounded-md border border-border/40 bg-card/60 px-3 py-2">
+                      <div>
+                        <div className="text-xs font-medium">{r.c}</div>
+                        <div className="text-[11px] text-muted-foreground">{r.why}</div>
+                      </div>
+                      <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary">{r.tag}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
-              
-              <div className="bg-background/80 backdrop-blur-md p-4 rounded-2xl border border-border/40 shadow-xl animate-in fade-in slide-in-from-bottom-4 duration-1000 delay-200">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-primary mb-1">Performance Global</p>
-                <div className="flex items-center gap-2">
-                  <TrendingUp className="h-3.5 w-3.5 text-success" />
-                  <span className="text-xs font-bold">+32% Conversão</span>
+
+              <div className="rounded-xl border border-border/60 bg-background/70 p-4">
+                <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Meta do mês</div>
+                <div className="mt-2 font-display text-xl font-semibold tabular-nums">R$ 1,20M / 1,50M</div>
+                <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-muted">
+                  <div className="h-full rounded-full bg-primary" style={{ width: "80%" }} />
+                </div>
+                <div className="mt-2 text-xs text-muted-foreground">80% · 7 dias restantes</div>
+                <div className="mt-4 flex items-center gap-2 rounded-md bg-success/10 px-2 py-1.5 text-[11px] text-success">
+                  <div className="h-1.5 w-1.5 rounded-full bg-success animate-pulse" />
+                  Motores de IA operacionais · +32% conversão
                 </div>
               </div>
             </div>
