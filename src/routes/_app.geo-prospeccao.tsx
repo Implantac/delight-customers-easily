@@ -19,6 +19,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Compass, Search, Plus, Sparkles, MapPin, Building, ArrowRight } from "lucide-react";
+import { ClientsMap, type MapPoint } from "@/components/clients-map";
 import { toast } from "sonner";
 
 
