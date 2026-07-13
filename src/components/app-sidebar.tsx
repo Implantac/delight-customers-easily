@@ -158,7 +158,7 @@ export function AppSidebar() {
               <div className="relative flex h-8 w-full items-center justify-start overflow-hidden">
                 <img 
                   src="https://hckncgrfhedoswsdkyni.supabase.co/storage/v1/object/public/uploads/9fa2115e-e837-46f2-abac-57d602f8b76a/logo.png" 
-                  alt="USE PATRIUM" 
+                  alt="USE CRM" 
                   className="h-6 w-auto object-contain"
                 />
               </div>

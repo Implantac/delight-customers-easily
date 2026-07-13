@@ -4,7 +4,7 @@ import { Text, Float, Environment, Center } from "@react-three/drei";
 import * as THREE from "three";
 
 /**
- * Motor de Renderização 3D - USE PATRIUM Premium
+ * Motor de Renderização 3D - USE CRM Premium
  * Implementação de logo sólida e texto com efeito de profundidade.
  */
 
@@ -49,7 +49,7 @@ const Logo3D = ({ rotationSpeed = 1.2 }: SceneProps) => {
           <meshBasicMaterial color={primaryColor} transparent opacity={0.3} />
         </mesh>
 
-        {/* Texto USE PATRIUM em 3D */}
+        {/* Texto USE CRM em 3D */}
         <Float
           speed={2} 
           rotationIntensity={0.5} 
@@ -89,7 +89,7 @@ const Logo3D = ({ rotationSpeed = 1.2 }: SceneProps) => {
               textAlign="center"
               position={[0, -0.6, 0]}
             >
-              PATRIUM
+              CRM
               <meshStandardMaterial 
                 color={primaryColor} 
                 metalness={1} 

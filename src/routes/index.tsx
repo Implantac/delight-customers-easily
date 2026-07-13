@@ -36,7 +36,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "Funciona para times com poucos vendedores?",
-    a: "Sim. O USE PATRIUM foi pensado para escalar de 1 vendedor a operações com dezenas de equipes.",
+    a: "Sim. O USE CRM foi pensado para escalar de 1 vendedor a operações com dezenas de equipes.",
   },
   {
     q: "Meus dados ficam isolados de outras empresas?",
@@ -56,7 +56,7 @@ export const Route = createFileRoute("/")({
   component: LandingPage,
   head: () => ({
     meta: [
-      { title: "CRM comercial com IA para times que vendem mais — USE PATRIUM" },
+      { title: "CRM comercial com IA para times que vendem mais — USE CRM" },
       {
         name: "description",
         content:
@@ -83,7 +83,7 @@ export const Route = createFileRoute("/")({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "SoftwareApplication",
-          name: "USE PATRIUM",
+          name: "USE CRM",
           applicationCategory: "BusinessApplication",
           operatingSystem: "Web",
           url: SITE_URL,
@@ -149,7 +149,7 @@ function SiteHeader({ ctaHref, ctaLabel }: { ctaHref: string; ctaLabel: string }
         <Link to="/" className="flex items-center gap-2">
           <img 
             src="https://hckncgrfhedoswsdkyni.supabase.co/storage/v1/object/public/uploads/9fa2115e-e837-46f2-abac-57d602f8b76a/logo.png" 
-            alt="USE PATRIUM" 
+            alt="USE CRM" 
             className="h-8 w-auto object-contain"
           />
         </Link>
@@ -302,7 +302,7 @@ function StatsStrip() {
     <section className="border-b border-border/60 bg-muted/30 py-12">
       <div className="mx-auto max-w-6xl px-4">
         <p className="text-center text-xs uppercase tracking-widest text-muted-foreground">
-          Resultados observados em times que adotaram o USE PATRIUM
+          Resultados observados em times que adotaram o USE CRM
         </p>
         <div className="mt-8 grid grid-cols-2 gap-6 md:grid-cols-4">
           {stats.map((s) => (
@@ -728,9 +728,9 @@ function SiteFooter() {
           <span className="grid h-7 w-7 place-items-center rounded-md bg-primary text-primary-foreground">
             <Sparkles className="h-3.5 w-3.5" />
           </span>
-          <span className="font-medium text-foreground">USE PATRIUM</span>
+          <span className="font-medium text-foreground">USE CRM</span>
         </div>
-        <p>© {new Date().getFullYear()} USE PATRIUM. Todos os direitos reservados.</p>
+        <p>© {new Date().getFullYear()} USE CRM. Todos os direitos reservados.</p>
         <div className="flex gap-5">
           <Link to="/login" className="hover:text-foreground">Entrar</Link>
           <a href="#pricing" className="hover:text-foreground">Planos</a>

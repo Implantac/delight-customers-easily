@@ -7,7 +7,7 @@ const WIDGET_JS = `(function(){
   var script = document.currentScript;
   var SITE_KEY = (script && script.getAttribute('data-site-key')) || window.USE_CRM_SITE_KEY;
   var API = (script && script.getAttribute('data-api')) || (location.origin);
-  if (!SITE_KEY) { console.warn('[USE PATRIUM] data-site-key missing'); return; }
+  if (!SITE_KEY) { console.warn('[USE CRM] data-site-key missing'); return; }
 
   var STORAGE = 'usecrm_site_chat_' + SITE_KEY;
   function load(){ try { return JSON.parse(localStorage.getItem(STORAGE)||'null'); } catch(_){ return null; } }

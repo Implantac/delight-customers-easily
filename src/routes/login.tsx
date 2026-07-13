@@ -133,7 +133,7 @@ function LoginPage() {
               transition={{ delay: 1.4, duration: 0.8 }}
               className="text-slate-400 text-lg max-w-lg leading-relaxed"
             >
-              A Use Patrium transforma seus dados em decisões estratégicas, 
+              A USE CRM transforma seus dados em decisões estratégicas, 
               acelerando o crescimento da sua operação comercial.
             </motion.p>
           </div>
@@ -222,7 +222,7 @@ function LoginPage() {
       </div>
 
       <p className="absolute bottom-8 text-center text-[10px] text-slate-600 uppercase tracking-[0.5em] font-medium">
-        © 2026 USE PATRIUM • ENTERPRISE SOLUTIONS
+        © 2026 USE CRM • ENTERPRISE SOLUTIONS
       </p>
     </div>
   );
