@@ -254,9 +254,26 @@ export function QuickAdd() {
               <Input id="qa-phone" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="(11) 99999-9999" />
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="qa-pain">Dor / Notas</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="qa-pain">Dor / Notas</Label>
+                <button
+                  type="button"
+                  onClick={toggleVoice}
+                  className={`flex items-center gap-1 text-xs transition-colors ${listening ? "text-red-500" : "text-muted-foreground hover:text-foreground"}`}
+                  aria-label={listening ? "Parar gravação" : "Ditar por voz"}
+                >
+                  {listening ? <MicOff className="h-3.5 w-3.5 animate-pulse" /> : <Mic className="h-3.5 w-3.5" />}
+                  {listening ? "Ouvindo…" : "Ditar"}
+                </button>
+              </div>
               <Textarea id="qa-pain" value={pain} onChange={(e) => setPain(e.target.value)} placeholder="Qual problema queremos resolver?" rows={2} />
             </div>
+
+            {!online && (
+              <div className="flex items-center gap-2 rounded-md border border-amber-500/40 bg-amber-500/10 px-2.5 py-1.5 text-xs text-amber-700 dark:text-amber-400">
+                <WifiOff className="h-3.5 w-3.5" /> Sem conexão — a captura será enfileirada e sincronizada.
+              </div>
+            )}
 
             <button
               type="button"
