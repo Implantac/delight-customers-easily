@@ -68,6 +68,7 @@ import { Route as ApiPublicInboundEmailRouteImport } from './routes/api/public/i
 import { Route as AppSettingsWhatsappRouteImport } from './routes/_app.settings.whatsapp'
 import { Route as AppSettingsWebhooksRouteImport } from './routes/_app.settings.webhooks'
 import { Route as AppSettingsSiteChatRouteImport } from './routes/_app.settings.site-chat'
+import { Route as AppSettingsSeedAuditRouteImport } from './routes/_app.settings.seed-audit'
 import { Route as AppSettingsSecurityRouteImport } from './routes/_app.settings.security'
 import { Route as AppSettingsOrganizationRouteImport } from './routes/_app.settings.organization'
 import { Route as AppSettingsNotificationsRouteImport } from './routes/_app.settings.notifications'
@@ -417,6 +418,11 @@ const AppSettingsWebhooksRoute = AppSettingsWebhooksRouteImport.update({
 const AppSettingsSiteChatRoute = AppSettingsSiteChatRouteImport.update({
   id: '/settings/site-chat',
   path: '/settings/site-chat',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsSeedAuditRoute = AppSettingsSeedAuditRouteImport.update({
+  id: '/settings/seed-audit',
+  path: '/settings/seed-audit',
   getParentRoute: () => AppRoute,
 } as any)
 const AppSettingsSecurityRoute = AppSettingsSecurityRouteImport.update({
@@ -792,6 +798,7 @@ export interface FileRoutesByFullPath {
   '/settings/notifications': typeof AppSettingsNotificationsRoute
   '/settings/organization': typeof AppSettingsOrganizationRoute
   '/settings/security': typeof AppSettingsSecurityRoute
+  '/settings/seed-audit': typeof AppSettingsSeedAuditRoute
   '/settings/site-chat': typeof AppSettingsSiteChatRoute
   '/settings/webhooks': typeof AppSettingsWebhooksRoute
   '/settings/whatsapp': typeof AppSettingsWhatsappRoute
@@ -905,6 +912,7 @@ export interface FileRoutesByTo {
   '/settings/notifications': typeof AppSettingsNotificationsRoute
   '/settings/organization': typeof AppSettingsOrganizationRoute
   '/settings/security': typeof AppSettingsSecurityRoute
+  '/settings/seed-audit': typeof AppSettingsSeedAuditRoute
   '/settings/site-chat': typeof AppSettingsSiteChatRoute
   '/settings/webhooks': typeof AppSettingsWebhooksRoute
   '/settings/whatsapp': typeof AppSettingsWhatsappRoute
@@ -1020,6 +1028,7 @@ export interface FileRoutesById {
   '/_app/settings/notifications': typeof AppSettingsNotificationsRoute
   '/_app/settings/organization': typeof AppSettingsOrganizationRoute
   '/_app/settings/security': typeof AppSettingsSecurityRoute
+  '/_app/settings/seed-audit': typeof AppSettingsSeedAuditRoute
   '/_app/settings/site-chat': typeof AppSettingsSiteChatRoute
   '/_app/settings/webhooks': typeof AppSettingsWebhooksRoute
   '/_app/settings/whatsapp': typeof AppSettingsWhatsappRoute
@@ -1135,6 +1144,7 @@ export interface FileRouteTypes {
     | '/settings/notifications'
     | '/settings/organization'
     | '/settings/security'
+    | '/settings/seed-audit'
     | '/settings/site-chat'
     | '/settings/webhooks'
     | '/settings/whatsapp'
@@ -1248,6 +1258,7 @@ export interface FileRouteTypes {
     | '/settings/notifications'
     | '/settings/organization'
     | '/settings/security'
+    | '/settings/seed-audit'
     | '/settings/site-chat'
     | '/settings/webhooks'
     | '/settings/whatsapp'
@@ -1362,6 +1373,7 @@ export interface FileRouteTypes {
     | '/_app/settings/notifications'
     | '/_app/settings/organization'
     | '/_app/settings/security'
+    | '/_app/settings/seed-audit'
     | '/_app/settings/site-chat'
     | '/_app/settings/webhooks'
     | '/_app/settings/whatsapp'
@@ -1841,6 +1853,13 @@ declare module '@tanstack/react-router' {
       path: '/settings/site-chat'
       fullPath: '/settings/site-chat'
       preLoaderRoute: typeof AppSettingsSiteChatRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/settings/seed-audit': {
+      id: '/_app/settings/seed-audit'
+      path: '/settings/seed-audit'
+      fullPath: '/settings/seed-audit'
+      preLoaderRoute: typeof AppSettingsSeedAuditRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/settings/security': {
@@ -2437,6 +2456,7 @@ interface AppRouteChildren {
   AppSettingsNotificationsRoute: typeof AppSettingsNotificationsRoute
   AppSettingsOrganizationRoute: typeof AppSettingsOrganizationRoute
   AppSettingsSecurityRoute: typeof AppSettingsSecurityRoute
+  AppSettingsSeedAuditRoute: typeof AppSettingsSeedAuditRoute
   AppSettingsSiteChatRoute: typeof AppSettingsSiteChatRoute
   AppSettingsWebhooksRoute: typeof AppSettingsWebhooksRoute
   AppSettingsWhatsappRoute: typeof AppSettingsWhatsappRoute
@@ -2498,6 +2518,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSettingsNotificationsRoute: AppSettingsNotificationsRoute,
   AppSettingsOrganizationRoute: AppSettingsOrganizationRoute,
   AppSettingsSecurityRoute: AppSettingsSecurityRoute,
+  AppSettingsSeedAuditRoute: AppSettingsSeedAuditRoute,
   AppSettingsSiteChatRoute: AppSettingsSiteChatRoute,
   AppSettingsWebhooksRoute: AppSettingsWebhooksRoute,
   AppSettingsWhatsappRoute: AppSettingsWhatsappRoute,

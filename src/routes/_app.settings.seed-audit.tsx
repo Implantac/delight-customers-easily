@@ -23,12 +23,12 @@ const STATUS_META = {
 } as const;
 
 function SeedAuditPage() {
-  const { current } = useCurrentOrg();
+  const { orgId } = useCurrentOrg();
   const run = useServerFn(auditDemoData);
   const q = useQuery({
-    queryKey: ["demo-audit", current?.organization_id],
-    queryFn: () => run({ data: { organization_id: current!.organization_id } }),
-    enabled: !!current?.organization_id,
+    queryKey: ["demo-audit", orgId],
+    queryFn: () => run({ data: { organization_id: orgId! } }),
+    enabled: !!orgId,
   });
 
   const grouped = useMemo(() => {
