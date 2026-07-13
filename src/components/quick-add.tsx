@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Zap, Loader2, Building2, ChevronDown } from "lucide-react";
+import { Zap, Loader2, Building2, ChevronDown, Mic, MicOff, WifiOff } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { useCurrentOrg } from "@/lib/org";
+import { enqueueCapture, installOfflineReplay, getQueue } from "@/lib/offline-queue";
 
 /**
  * QuickAdd — captura universal em 4 campos + CNPJ opcional.
@@ -27,6 +28,10 @@ export function QuickAdd() {
   const [cnpj, setCnpj] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [enriching, setEnriching] = useState(false);
+  const [listening, setListening] = useState(false);
+  const [online, setOnline] = useState(typeof navigator === "undefined" ? true : navigator.onLine);
+  const [queueSize, setQueueSize] = useState(0);
+  const recognitionRef = useRef<any>(null);
 
   const { user } = useAuth();
   const { orgId } = useCurrentOrg();
@@ -46,6 +51,57 @@ export function QuickAdd() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
+
+  // Online/offline + replay automático
+  useEffect(() => {
+    const refresh = () => setQueueSize(getQueue().length);
+    const onOn = () => { setOnline(true); refresh(); };
+    const onOff = () => setOnline(false);
+    const onChange = () => refresh();
+    window.addEventListener("online", onOn);
+    window.addEventListener("offline", onOff);
+    window.addEventListener("offline-queue:changed", onChange);
+    refresh();
+    const uninstall = installOfflineReplay((n) => {
+      toast.success(`${n} captura(s) sincronizada(s)`);
+      qc.invalidateQueries({ queryKey: ["deals"] });
+      qc.invalidateQueries({ queryKey: ["contacts"] });
+      refresh();
+    });
+    return () => {
+      window.removeEventListener("online", onOn);
+      window.removeEventListener("offline", onOff);
+      window.removeEventListener("offline-queue:changed", onChange);
+      uninstall();
+    };
+  }, [qc]);
+
+  // Voice-to-note (Web Speech API — Chrome/Edge/Safari mobile)
+  function toggleVoice() {
+    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SR) { toast.error("Reconhecimento de voz não suportado neste navegador"); return; }
+    if (listening) { recognitionRef.current?.stop(); return; }
+    const rec = new SR();
+    rec.lang = "pt-BR";
+    rec.interimResults = true;
+    rec.continuous = true;
+    let base = pain;
+    rec.onresult = (ev: any) => {
+      let interim = "";
+      let finalTxt = "";
+      for (let i = ev.resultIndex; i < ev.results.length; i++) {
+        const t = ev.results[i][0].transcript;
+        if (ev.results[i].isFinal) finalTxt += t; else interim += t;
+      }
+      if (finalTxt) { base = (base ? base + " " : "") + finalTxt.trim(); }
+      setPain(base + (interim ? " " + interim : ""));
+    };
+    rec.onerror = (e: any) => { toast.error(`Voz: ${e.error ?? "erro"}`); setListening(false); };
+    rec.onend = () => setListening(false);
+    recognitionRef.current = rec;
+    rec.start();
+    setListening(true);
+  }
 
   function reset() {
     setDealTitle(""); setContactName(""); setPhone(""); setPain("");
@@ -78,6 +134,16 @@ export function QuickAdd() {
       const title = dealTitle.trim() || (contactName.trim() && `Oportunidade — ${contactName.trim()}`) || (companyName.trim() && `Oportunidade — ${companyName.trim()}`);
       if (!title) throw new Error("Informe ao menos o título ou o contato");
 
+      // Offline → enfileira e sai
+      if (!navigator.onLine) {
+        enqueueCapture({
+          orgId, userId: user.id,
+          dealTitle: dealTitle.trim(), contactName: contactName.trim(),
+          phone: phone.trim(), pain: pain.trim(), companyName: companyName.trim(),
+        });
+        return { queued: true as const };
+      }
+
       // 1. Company (opcional, se veio via CNPJ)
       let companyId: string | null = null;
       if (companyName.trim()) {
@@ -88,7 +154,7 @@ export function QuickAdd() {
         companyId = c?.id ?? null;
       }
 
-      // 2. Contact (se nome fornecido)
+      // 2. Contact
       let contactId: string | null = null;
       if (contactName.trim()) {
         const { data: ct, error } = await supabase.from("contacts")
@@ -117,17 +183,28 @@ export function QuickAdd() {
           company_id: companyId,
         })
         .select("id").single();
-      if (dErr) throw dErr;
-      return dl?.id as string;
+      if (dErr) {
+        enqueueCapture({
+          orgId, userId: user.id,
+          dealTitle: dealTitle.trim(), contactName: contactName.trim(),
+          phone: phone.trim(), pain: pain.trim(), companyName: companyName.trim(),
+        });
+        return { queued: true as const };
+      }
+      return { queued: false as const, id: dl?.id as string };
     },
-    onSuccess: () => {
-      toast.success("Capturado! Deal criado.");
-      qc.invalidateQueries({ queryKey: ["deals"] });
-      qc.invalidateQueries({ queryKey: ["contacts"] });
-      qc.invalidateQueries({ queryKey: ["companies"] });
+    onSuccess: (res) => {
+      if (res.queued) {
+        toast.success("Sem conexão — captura salva. Sincronizará quando voltar online.");
+      } else {
+        toast.success("Capturado! Deal criado.");
+        qc.invalidateQueries({ queryKey: ["deals"] });
+        qc.invalidateQueries({ queryKey: ["contacts"] });
+        qc.invalidateQueries({ queryKey: ["companies"] });
+      }
       reset();
       setOpen(false);
-      navigate({ to: "/pipeline" });
+      if (!res.queued) navigate({ to: "/pipeline" });
     },
     onError: (e: any) => toast.error(e.message ?? "Falha ao criar"),
   });
@@ -142,6 +219,11 @@ export function QuickAdd() {
         className="fixed bottom-24 right-4 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30 transition-transform hover:scale-105 md:bottom-6 md:right-6 md:h-14 md:w-14"
       >
         <Zap className="h-5 w-5" />
+        {(!online || queueSize > 0) && (
+          <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-500 px-1 text-[10px] font-bold text-white ring-2 ring-background">
+            {queueSize > 0 ? queueSize : <WifiOff className="h-3 w-3" />}
+          </span>
+        )}
       </button>
 
       <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) reset(); }}>
@@ -172,9 +254,26 @@ export function QuickAdd() {
               <Input id="qa-phone" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="(11) 99999-9999" />
             </div>
             <div className="space-y-1.5">
-              <Label htmlFor="qa-pain">Dor / Notas</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="qa-pain">Dor / Notas</Label>
+                <button
+                  type="button"
+                  onClick={toggleVoice}
+                  className={`flex items-center gap-1 text-xs transition-colors ${listening ? "text-red-500" : "text-muted-foreground hover:text-foreground"}`}
+                  aria-label={listening ? "Parar gravação" : "Ditar por voz"}
+                >
+                  {listening ? <MicOff className="h-3.5 w-3.5 animate-pulse" /> : <Mic className="h-3.5 w-3.5" />}
+                  {listening ? "Ouvindo…" : "Ditar"}
+                </button>
+              </div>
               <Textarea id="qa-pain" value={pain} onChange={(e) => setPain(e.target.value)} placeholder="Qual problema queremos resolver?" rows={2} />
             </div>
+
+            {!online && (
+              <div className="flex items-center gap-2 rounded-md border border-amber-500/40 bg-amber-500/10 px-2.5 py-1.5 text-xs text-amber-700 dark:text-amber-400">
+                <WifiOff className="h-3.5 w-3.5" /> Sem conexão — a captura será enfileirada e sincronizada.
+              </div>
+            )}
 
             <button
               type="button"
