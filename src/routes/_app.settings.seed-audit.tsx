@@ -79,7 +79,7 @@ function SeedAuditPage() {
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <h3 className="font-semibold text-sm">Tela</h3>
-                  <Link to={screen} className="text-sm text-primary hover:underline font-mono">{screen}</Link>
+                  <Link to={screen as any} className="text-sm text-primary hover:underline font-mono">{screen}</Link>
                 </div>
                 <div className="flex gap-1">
                   {(["fail", "warn", "ok"] as const).map((st) => {
