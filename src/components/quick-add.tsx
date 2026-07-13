@@ -219,6 +219,11 @@ export function QuickAdd() {
         className="fixed bottom-24 right-4 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30 transition-transform hover:scale-105 md:bottom-6 md:right-6 md:h-14 md:w-14"
       >
         <Zap className="h-5 w-5" />
+        {(!online || queueSize > 0) && (
+          <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-500 px-1 text-[10px] font-bold text-white ring-2 ring-background">
+            {queueSize > 0 ? queueSize : <WifiOff className="h-3 w-3" />}
+          </span>
+        )}
       </button>
 
       <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) reset(); }}>
