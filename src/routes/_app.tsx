@@ -40,7 +40,7 @@ function AppLayout() {
 
   return (
     <SidebarProvider>
-      <div className="flex h-screen w-full overflow-hidden bg-background">
+      <div className="flex h-[100dvh] w-full overflow-hidden bg-background">
         <AppSidebar />
         <div className="flex flex-1 flex-col min-w-0">
           <header className="sticky top-0 z-30 flex h-11 items-center gap-2 border-b border-border/40 bg-background/70 px-3 backdrop-blur-xl md:px-4">
@@ -55,7 +55,7 @@ function AppLayout() {
             </div>
           </header>
 
-          <main className="flex-1 overflow-auto pb-20 md:pb-0">
+          <main className="flex-1 overflow-y-auto overflow-x-hidden overscroll-contain pb-20 md:pb-0" style={{ WebkitOverflowScrolling: "touch" }}>
             <AnimatePresence mode="wait">
               <motion.div
                 key={location}
