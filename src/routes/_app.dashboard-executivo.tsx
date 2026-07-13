@@ -16,6 +16,7 @@ import {
   Building2, TrendingUp, AlertTriangle, Sparkles, Wallet, Target, MapPin, GitBranch, ArrowRight, CheckCircle2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SalesVelocityCard } from "@/components/sales-velocity-card";
 
 export const Route = createFileRoute("/_app/dashboard-executivo")({
   component: DashboardExecutivoPage,
