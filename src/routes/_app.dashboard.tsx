@@ -26,6 +26,7 @@ import { DoTodayPanel } from "@/components/dashboard/do-today-panel";
 import { DailyBriefing } from "@/components/dashboard/daily-briefing";
 import { GrowthPulse } from "@/components/dashboard/growth-pulse";
 import { GrowthCentral } from "@/components/dashboard/growth-central";
+import { GrowthDigestTeaser } from "@/components/dashboard/growth-digest-teaser";
 import { useCurrentOrg } from "@/lib/org";
 import { getForecast } from "@/lib/forecast.functions";
 import { getRetentionInsights } from "@/lib/churn.functions";
@@ -185,6 +186,10 @@ function DashboardPage() {
 
       {/* Growth Pulse — USE Success + próxima jogada */}
       <GrowthPulse />
+
+      {/* Growth Digest — teaser do relatório semanal */}
+      <GrowthDigestTeaser />
+
 
       {/* KPI strip compacto */}
       <section className="grid grid-cols-2 gap-2 sm:gap-2.5 md:grid-cols-4">
