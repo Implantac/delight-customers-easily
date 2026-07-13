@@ -26,6 +26,7 @@ import { DoTodayPanel } from "@/components/dashboard/do-today-panel";
 import { DailyBriefing } from "@/components/dashboard/daily-briefing";
 import { GrowthPulse } from "@/components/dashboard/growth-pulse";
 import { GrowthCentral } from "@/components/dashboard/growth-central";
+import { GrowthDigestTeaser } from "@/components/dashboard/growth-digest-teaser";
 import { useCurrentOrg } from "@/lib/org";
 import { getForecast } from "@/lib/forecast.functions";
 import { getRetentionInsights } from "@/lib/churn.functions";
