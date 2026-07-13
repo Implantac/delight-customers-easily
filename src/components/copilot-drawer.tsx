@@ -98,8 +98,33 @@ export function CopilotDrawer() {
                     : "mr-4 rounded-lg border bg-card px-3 py-2 text-sm whitespace-pre-wrap prose prose-sm dark:prose-invert max-w-none"
                 }
               >
-                {renderMarkdown(t.content)}
+                {renderMarkdown(t.content, t.sources)}
               </div>
+              {t.role === "assistant" && t.sources && t.sources.length > 0 && (
+                <div className="mr-4 rounded-lg border border-border/60 bg-muted/30 px-3 py-2 space-y-1.5">
+                  <div className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+                    Fontes ({t.sources.length})
+                  </div>
+                  <ol className="space-y-1">
+                    {t.sources.map((s) => (
+                      <li key={s.n} className="text-xs flex gap-2">
+                        <span className="inline-flex h-4 min-w-[16px] items-center justify-center rounded bg-primary/15 text-primary font-medium px-1 text-[10px]">
+                          {s.n}
+                        </span>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-medium text-foreground truncate">{s.title}</div>
+                          {s.description && (
+                            <div className="text-muted-foreground text-[11px] line-clamp-2">{s.description}</div>
+                          )}
+                        </div>
+                        <span className="text-muted-foreground/70 text-[10px] shrink-0">
+                          {Math.round(s.similarity * 100)}%
+                        </span>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              )}
               {t.role === "assistant" && t.actions && t.actions.length > 0 && (
                 <div className="mr-4 flex flex-wrap gap-1.5">
                   {t.actions.map((a, j) => (
