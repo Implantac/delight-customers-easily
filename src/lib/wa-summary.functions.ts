@@ -65,7 +65,7 @@ export const summarizeWhatsAppConversation = createServerFn({ method: "POST" })
         model: "google/gemini-2.5-flash",
         messages: [
           { role: "system", content: SYSTEM },
-          { role: "user", content: `Cliente: ${conv.customer_name ?? conv.customer_phone ?? "—"}\n\nTranscrição (mais antiga → mais recente):\n${transcript}` },
+          { role: "user", content: `Cliente: ${conv.contact_name ?? conv.contact_phone ?? "—"}\n\nTranscrição (mais antiga → mais recente):\n${transcript}` },
         ],
         response_format: { type: "json_object" },
       }),
