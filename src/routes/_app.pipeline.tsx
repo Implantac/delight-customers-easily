@@ -253,7 +253,7 @@ function PipelinePage() {
 
       <div className="mt-4"><NextActionBlock surface="pipeline" /></div>
 
-      <div className="mt-4"><DealRotRadar orgId={org?.id} onOpenDeal={(id) => setActiveDealId(id)} /></div>
+      <div className="mt-4"><DealRotRadar orgId={orgId ?? undefined} onOpenDeal={(id) => setSelectedId(id)} /></div>
 
       {/* Filter bar */}
       <div className="mt-4 flex flex-wrap items-center gap-2">
