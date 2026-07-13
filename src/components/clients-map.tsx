@@ -14,6 +14,7 @@
  *   <ClientsMap points={...} route={[{lat,lng}, {lat,lng}]} />
  */
 
+/// <reference types="google.maps" />
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { MapPin, Loader2 } from "lucide-react";
