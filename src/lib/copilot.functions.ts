@@ -44,7 +44,7 @@ export const copilotAsk = createServerFn({ method: "POST" })
     const org = data.organization_id;
     const now = Date.now();
 
-    const [deals, acts, contacts, companies] = await Promise.all([
+    const [deals, acts, contacts, companies, skills] = await Promise.all([
       supabase.from("deals")
         .select("id, title, value, stage, expected_close, updated_at, user_id, contact_id, contacts(name), companies(name)")
         .eq("organization_id", org).limit(500),
@@ -54,7 +54,9 @@ export const copilotAsk = createServerFn({ method: "POST" })
       supabase.from("contacts").select("id, name, email, phone, position, created_at, company_id, companies(name)")
         .eq("organization_id", org).limit(500),
       supabase.from("companies").select("id, name, industry, size").eq("organization_id", org).limit(200),
+      retrieveSkills(data.question, 5).catch((): KnowledgeHit[] => []),
     ]);
+
 
     const dealsArr = deals.data ?? [];
     const actsArr = acts.data ?? [];
