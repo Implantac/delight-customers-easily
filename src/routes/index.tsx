@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ThreeDLogo } from "@/components/ui/three-d-logo";
+
 import {
   Accordion,
   AccordionContent,
