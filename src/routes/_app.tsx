@@ -9,6 +9,7 @@ import { NotificationsBell } from "@/components/notifications-bell";
 import { MobileBottomNav } from "@/components/mobile-bottom-nav";
 import { ShortcutsHelp } from "@/components/shortcuts-help";
 import { PwaInstallBanner } from "@/components/pwa-install-banner";
+import { QuickAdd } from "@/components/quick-add";
 import { useGoToShortcuts } from "@/hooks/use-shortcuts";
 import { useNotificationsRealtime } from "@/lib/use-notifications-realtime";
 import { motion, AnimatePresence } from "framer-motion";
