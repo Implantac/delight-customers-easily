@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Zap, Loader2, Building2, ChevronDown } from "lucide-react";
+import { Zap, Loader2, Building2, ChevronDown, Mic, MicOff, WifiOff } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { useCurrentOrg } from "@/lib/org";
+import { enqueueCapture, installOfflineReplay, getQueue } from "@/lib/offline-queue";
 
 /**
  * QuickAdd — captura universal em 4 campos + CNPJ opcional.
