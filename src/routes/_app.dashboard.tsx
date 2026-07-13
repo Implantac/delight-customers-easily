@@ -187,6 +187,10 @@ function DashboardPage() {
       {/* Growth Pulse — USE Success + próxima jogada */}
       <GrowthPulse />
 
+      {/* Growth Digest — teaser do relatório semanal */}
+      <GrowthDigestTeaser />
+
+
       {/* KPI strip compacto */}
       <section className="grid grid-cols-2 gap-2 sm:gap-2.5 md:grid-cols-4">
         {kpis.map((k, i) => (
