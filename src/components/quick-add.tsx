@@ -28,6 +28,10 @@ export function QuickAdd() {
   const [cnpj, setCnpj] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [enriching, setEnriching] = useState(false);
+  const [listening, setListening] = useState(false);
+  const [online, setOnline] = useState(typeof navigator === "undefined" ? true : navigator.onLine);
+  const [queueSize, setQueueSize] = useState(0);
+  const recognitionRef = useRef<any>(null);
 
   const { user } = useAuth();
   const { orgId } = useCurrentOrg();
@@ -47,6 +51,57 @@ export function QuickAdd() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
+
+  // Online/offline + replay automático
+  useEffect(() => {
+    const refresh = () => setQueueSize(getQueue().length);
+    const onOn = () => { setOnline(true); refresh(); };
+    const onOff = () => setOnline(false);
+    const onChange = () => refresh();
+    window.addEventListener("online", onOn);
+    window.addEventListener("offline", onOff);
+    window.addEventListener("offline-queue:changed", onChange);
+    refresh();
+    const uninstall = installOfflineReplay((n) => {
+      toast.success(`${n} captura(s) sincronizada(s)`);
+      qc.invalidateQueries({ queryKey: ["deals"] });
+      qc.invalidateQueries({ queryKey: ["contacts"] });
+      refresh();
+    });
+    return () => {
+      window.removeEventListener("online", onOn);
+      window.removeEventListener("offline", onOff);
+      window.removeEventListener("offline-queue:changed", onChange);
+      uninstall();
+    };
+  }, [qc]);
+
+  // Voice-to-note (Web Speech API — Chrome/Edge/Safari mobile)
+  function toggleVoice() {
+    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SR) { toast.error("Reconhecimento de voz não suportado neste navegador"); return; }
+    if (listening) { recognitionRef.current?.stop(); return; }
+    const rec = new SR();
+    rec.lang = "pt-BR";
+    rec.interimResults = true;
+    rec.continuous = true;
+    let base = pain;
+    rec.onresult = (ev: any) => {
+      let interim = "";
+      let finalTxt = "";
+      for (let i = ev.resultIndex; i < ev.results.length; i++) {
+        const t = ev.results[i][0].transcript;
+        if (ev.results[i].isFinal) finalTxt += t; else interim += t;
+      }
+      if (finalTxt) { base = (base ? base + " " : "") + finalTxt.trim(); }
+      setPain(base + (interim ? " " + interim : ""));
+    };
+    rec.onerror = (e: any) => { toast.error(`Voz: ${e.error ?? "erro"}`); setListening(false); };
+    rec.onend = () => setListening(false);
+    recognitionRef.current = rec;
+    rec.start();
+    setListening(true);
+  }
 
   function reset() {
     setDealTitle(""); setContactName(""); setPhone(""); setPain("");
