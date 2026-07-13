@@ -194,5 +194,3 @@ ${JSON.stringify(snapshot)}`;
 
     return { answer, actions, sources };
   });
-
-  });
