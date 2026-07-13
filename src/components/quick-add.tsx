@@ -134,6 +134,16 @@ export function QuickAdd() {
       const title = dealTitle.trim() || (contactName.trim() && `Oportunidade — ${contactName.trim()}`) || (companyName.trim() && `Oportunidade — ${companyName.trim()}`);
       if (!title) throw new Error("Informe ao menos o título ou o contato");
 
+      // Offline → enfileira e sai
+      if (!navigator.onLine) {
+        enqueueCapture({
+          orgId, userId: user.id,
+          dealTitle: dealTitle.trim(), contactName: contactName.trim(),
+          phone: phone.trim(), pain: pain.trim(), companyName: companyName.trim(),
+        });
+        return { queued: true as const };
+      }
+
       // 1. Company (opcional, se veio via CNPJ)
       let companyId: string | null = null;
       if (companyName.trim()) {
@@ -144,7 +154,7 @@ export function QuickAdd() {
         companyId = c?.id ?? null;
       }
 
-      // 2. Contact (se nome fornecido)
+      // 2. Contact
       let contactId: string | null = null;
       if (contactName.trim()) {
         const { data: ct, error } = await supabase.from("contacts")
@@ -173,17 +183,28 @@ export function QuickAdd() {
           company_id: companyId,
         })
         .select("id").single();
-      if (dErr) throw dErr;
-      return dl?.id as string;
+      if (dErr) {
+        enqueueCapture({
+          orgId, userId: user.id,
+          dealTitle: dealTitle.trim(), contactName: contactName.trim(),
+          phone: phone.trim(), pain: pain.trim(), companyName: companyName.trim(),
+        });
+        return { queued: true as const };
+      }
+      return { queued: false as const, id: dl?.id as string };
     },
-    onSuccess: () => {
-      toast.success("Capturado! Deal criado.");
-      qc.invalidateQueries({ queryKey: ["deals"] });
-      qc.invalidateQueries({ queryKey: ["contacts"] });
-      qc.invalidateQueries({ queryKey: ["companies"] });
+    onSuccess: (res) => {
+      if (res.queued) {
+        toast.success("Sem conexão — captura salva. Sincronizará quando voltar online.");
+      } else {
+        toast.success("Capturado! Deal criado.");
+        qc.invalidateQueries({ queryKey: ["deals"] });
+        qc.invalidateQueries({ queryKey: ["contacts"] });
+        qc.invalidateQueries({ queryKey: ["companies"] });
+      }
       reset();
       setOpen(false);
-      navigate({ to: "/pipeline" });
+      if (!res.queued) navigate({ to: "/pipeline" });
     },
     onError: (e: any) => toast.error(e.message ?? "Falha ao criar"),
   });
