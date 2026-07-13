@@ -107,12 +107,12 @@ export const auditDemoData = createServerFn({ method: "POST" })
       fk: string,
       warnDetail: string,
     ) => {
-      const { count } = await supabase
+      const { count } = await sb
         .from(table)
         .select("id", { count: "exact", head: true })
         .eq("organization_id", org)
         .is(fk, null);
-      const n = count ?? 0;
+      const n = (count ?? 0) as number;
       checks.push({
         id,
         screen,
