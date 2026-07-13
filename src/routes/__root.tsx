@@ -130,6 +130,7 @@ function RootComponent() {
           <Outlet />
           <Toaster richColors position="top-right" duration={3000} closeButton />
           <LgpdConsentBanner />
+          <AuthStatusIndicator />
         </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>
