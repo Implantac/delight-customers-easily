@@ -24,6 +24,7 @@ import { AIInsights } from "@/components/ai-insights";
 import { Attachments } from "@/components/attachments";
 import { TagPicker } from "@/components/tag-picker";
 import { DealHistory } from "@/components/deal-history";
+import { MeetingPrepDialog } from "@/components/meeting-prep-dialog";
 import { DealPlaybook } from "@/components/deal-playbook";
 import { DealInsightPanel } from "@/components/deal-insight-panel";
 import { DraftEmailButton } from "@/components/draft-email-button";
@@ -697,6 +698,10 @@ function DealDrawer({
             </div>
 
             <Attachments entityType="deal" entityId={deal.id} />
+
+            <div className="border-t pt-4">
+              <MeetingPrepDialog orgId={orgId ?? undefined} dealId={deal.id} />
+            </div>
 
             <DealHistory dealId={deal.id} />
 
