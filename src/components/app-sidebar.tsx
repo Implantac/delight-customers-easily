@@ -110,6 +110,7 @@ const navigationGroups: NavGroup[] = [
       { to: "/integrations", label: "ConnectHub ERP", icon: Plug, tone: "primary", managerOnly: true },
       { to: "/settings/alerts", label: "Alertas Inteligentes", icon: Bell, tone: "violet", managerOnly: true },
       { to: "/settings/seed-audit", label: "Auditoria de Dados", icon: ShieldCheck, tone: "primary", managerOnly: true },
+      { to: "/settings/knowledge-base", label: "Base de Conhecimento", icon: Sparkles, tone: "violet", managerOnly: true },
       { to: "/settings/organization", label: "Configurações", icon: Settings, tone: "primary", managerOnly: true },
     ],
   },
